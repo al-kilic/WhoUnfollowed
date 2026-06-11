@@ -12,14 +12,14 @@ import { PricingSection } from './PricingSection';
 import { FAQSection }    from './FAQSection';
 import { FinalCTA, LandingFooter } from './FinalCTA';
 
-export function LandingPage() {
+export function LandingPage({ userEmail }: { userEmail: string | null }) {
   return (
     <div style={{
       width: '100%', minHeight: '100%',
       background: T.bg, color: T.ink, fontFamily: T.sans,
       overflowX: 'hidden',
     }}>
-      <SiteNav />
+      <SiteNav userEmail={userEmail} />
       <main>
         <HeroSection />
         <MarqueeBand />

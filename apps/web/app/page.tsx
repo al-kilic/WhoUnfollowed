@@ -1,4 +1,5 @@
 import { LandingPage } from '@/components/landing/LandingPage';
+import { validateRequest } from '@/lib/auth/session';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -23,14 +24,15 @@ const jsonLd = {
   ],
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const { user } = await validateRequest();
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <LandingPage />
+      <LandingPage userEmail={user?.email ?? null} />
     </>
   );
 }

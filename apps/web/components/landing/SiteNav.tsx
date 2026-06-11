@@ -169,7 +169,7 @@ function HowItWorksDropdown() {
   );
 }
 
-export function SiteNav() {
+export function SiteNav({ userEmail }: { userEmail: string | null }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -208,6 +208,20 @@ export function SiteNav() {
             <Icon.gh size={13} color={T.ink} />
           </a>
           <ThemeToggle />
+          {userEmail ? (
+            <form action="/logout" method="POST" style={{ display: 'inline' }}>
+              <button type="submit" style={{ fontSize: 13, color: T.inkDim, background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: T.sans }}>
+                Log out
+              </button>
+            </form>
+          ) : (
+            <>
+              <Link href="/login" style={{ fontSize: 13, color: T.inkDim, textDecoration: 'none' }}>Log in</Link>
+              <Link href="/signup" style={{ fontSize: 13, fontWeight: 600, color: T.cream, textDecoration: 'none', padding: '7px 14px', borderRadius: 9, background: T.teal, border: `1px solid rgba(2,136,143,0.5)` }}>
+                Sign up
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile: toggle + hamburger */}
@@ -265,6 +279,16 @@ export function SiteNav() {
             <Icon.gh size={16} color={T.ink} />
             GitHub
           </a>
+          {userEmail ? (
+            <form action="/logout" method="POST">
+              <button type="submit" style={{ fontSize: 16, color: T.terra, background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: T.sans }}>Log out</button>
+            </form>
+          ) : (
+            <>
+              <Link href="/login" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>Log in</Link>
+              <Link href="/signup" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, fontWeight: 600, color: T.tealLight, textDecoration: 'none' }}>Sign up</Link>
+            </>
+          )}
         </div>
       )}
     </>
