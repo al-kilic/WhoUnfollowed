@@ -9,6 +9,7 @@ import { useSnapshotList, deleteSnapshot, updateSnapshotLabel, redateSnapshot, s
 import { useCloudSync } from '@/hooks/useCloudSync';
 import { UnlockSyncForm } from '@/components/sync/UnlockSyncForm';
 import { getUserSyncSalt } from '@/app/api/sync/actions';
+import { NavBarClient } from '@/components/NavBarClient';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { T } from '@/components/landing/tokens';
 import { Icon } from '@/components/landing/atoms';
@@ -74,30 +75,7 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      {/* Nav */}
-      <nav
-        className="flex items-center justify-between px-4 sm:px-8 py-4 sticky top-0 z-50"
-        style={{ borderBottom: `1px solid ${T.border1}`, backdropFilter: 'blur(14px)', background: T.navBg }}
-      >
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <img src="/logo.png" alt="WhoUnfollowed Logo" width={26} height={26} style={{ borderRadius: 7, objectFit: 'contain' }} />
-          <span style={{ fontFamily: T.serif, fontSize: 17, color: T.ink }}>WhoUnfollowed</span>
-        </Link>
-        <div className="flex items-center gap-3 sm:gap-6" style={{ fontSize: 13 }}>
-          <Link href="/dashboard" style={{
-            color: T.tealLight, textDecoration: 'none', fontWeight: 600,
-            display: 'inline-flex', alignItems: 'center', gap: 5,
-            padding: '5px 12px', borderRadius: 8,
-            background: 'rgba(2,136,143,0.1)', border: '1px solid rgba(2,136,143,0.25)',
-          }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: T.tealLight, display: 'inline-block' }} />
-            Radar
-          </Link>
-          <Link href="/results" className="hidden sm:inline" style={{ color: T.inkDim, textDecoration: 'none' }}>Snapshot</Link>
-          <Link href="/" className="hidden sm:inline" style={{ color: T.inkDim, textDecoration: 'none' }}>Home</Link>
-          <ThemeToggle />
-        </div>
-      </nav>
+      <NavBarClient userEmail={userEmail} />
 
       {subscriptionStatus === 'grace' && gracePeriodEndsAt && (
         <div style={{ background: 'rgba(168,75,47,0.08)', borderBottom: '1px solid rgba(168,75,47,0.2)', padding: '12px 24px', textAlign: 'center' }}>
