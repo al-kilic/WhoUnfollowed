@@ -43,3 +43,7 @@ export async function redateSnapshot(id: number, oldExportedAt: number, newExpor
     }
   });
 }
+
+export async function setSnapshotCloudId(id: number, cloudId: string): Promise<void> {
+  await db.snapshots.update(id, { cloudId });
+}

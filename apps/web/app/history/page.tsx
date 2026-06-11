@@ -5,7 +5,10 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { useSnapshotStore } from '@/lib/store';
-import { useSnapshotList, deleteSnapshot, updateSnapshotLabel, redateSnapshot, FREE_SNAPSHOT_LIMIT, type SnapshotRecord } from '@/hooks/useSnapshots';
+import { useSnapshotList, deleteSnapshot, updateSnapshotLabel, redateSnapshot, setSnapshotCloudId, FREE_SNAPSHOT_LIMIT, type SnapshotRecord } from '@/hooks/useSnapshots';
+import { useCloudSync } from '@/hooks/useCloudSync';
+import { UnlockSyncForm } from '@/components/sync/UnlockSyncForm';
+import { getUserSyncSalt } from '@/app/api/sync/actions';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { T } from '@/components/landing/tokens';
 import { Icon } from '@/components/landing/atoms';
@@ -17,6 +20,9 @@ export default function HistoryPage() {
   const snapshots    = useSnapshotList();
   const [deletingId, setDeletingId]     = useState<number | null>(null);
   const [compareBaseId, setCompareBase] = useState<number | null>(null);
+  const [syncingId, setSyncingId]       = useState<number | null>(null);
+  const [showUnlock, setShowUnlock]     = useState(false);
+  const { isUnlocked, unlock, syncSnapshot } = useCloudSync();
 
   function handleView(record: SnapshotRecord) {
     setSnapshot(record.data);
@@ -35,6 +41,23 @@ export default function HistoryPage() {
     if (!base || !target) return;
     const [old, cur] = base.exportedAt <= target.exportedAt ? [base, target] : [target, base];
     router.push(`/diff?old=${old.id}&current=${cur.id}`);
+  }
+
+  async function handleSync(record: SnapshotRecord) {
+    if (record.id == null) return;
+    if (!isUnlocked) {
+      setShowUnlock(true);
+      return;
+    }
+    setSyncingId(record.id);
+    const cloudId = await syncSnapshot(record.label, record.exportedAt, record.data);
+    if (cloudId) await setSnapshotCloudId(record.id, cloudId);
+    setSyncingId(null);
+  }
+
+  async function handleUnlock(passphrase: string) {
+    const saltB64 = await getUserSyncSalt();
+    return unlock(passphrase, saltB64 ?? undefined);
   }
 
   const slotsUsed = snapshots.length;
@@ -113,6 +136,13 @@ export default function HistoryPage() {
           )}
         </div>
 
+        {/* Cloud sync unlock */}
+        {showUnlock && !isUnlocked && (
+          <div style={{ padding: '16px 20px', borderRadius: 12, background: 'var(--t-surface1)', border: '1px solid var(--t-border1)', marginBottom: 20 }}>
+            <UnlockSyncForm onUnlock={async (p) => { const ok = await handleUnlock(p); if (ok) setShowUnlock(false); return ok; }} />
+          </div>
+        )}
+
         {/* Empty state */}
         {snapshots.length === 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20, padding: '80px 40px', borderRadius: 20, border: '1px dashed var(--t-border2)', textAlign: 'center' }}>
@@ -139,10 +169,12 @@ export default function HistoryPage() {
                 allSnapshots={snapshots}
                 compareBaseId={compareBaseId}
                 isDeleting={deletingId === record.id}
+                isSyncing={syncingId === record.id}
                 onView={() => handleView(record)}
                 onDelete={() => record.id != null && handleDelete(record.id)}
                 onSetCompareBase={() => setCompareBase(compareBaseId === record.id ? null : (record.id ?? null))}
                 onCompareWith={(targetId) => record.id != null && handleCompare(record.id, targetId)}
+                onSync={() => handleSync(record)}
               />
             ))}
           </div>
@@ -161,13 +193,15 @@ interface CardProps {
   allSnapshots: SnapshotRecord[];
   compareBaseId: number | null;
   isDeleting: boolean;
+  isSyncing: boolean;
   onView: () => void;
   onDelete: () => void;
   onSetCompareBase: () => void;
   onCompareWith: (targetId: number) => void;
+  onSync: () => void;
 }
 
-function SnapshotCard({ record, allSnapshots, compareBaseId, isDeleting, onView, onDelete, onSetCompareBase, onCompareWith }: CardProps) {
+function SnapshotCard({ record, allSnapshots, compareBaseId, isDeleting, isSyncing, onView, onDelete, onSetCompareBase, onCompareWith, onSync }: CardProps) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editLabel, setEditLabel] = useState(record.label);
@@ -234,7 +268,14 @@ function SnapshotCard({ record, allSnapshots, compareBaseId, isDeleting, onView,
               </div>
             ) : (
               <>
-                <div style={{ fontFamily: T.serif, fontSize: 19, color: T.ink, letterSpacing: '-0.01em', marginBottom: 4 }}>{record.label}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                  <span style={{ fontFamily: T.serif, fontSize: 19, color: T.ink, letterSpacing: '-0.01em' }}>{record.label}</span>
+                  {record.cloudId ? (
+                    <span style={{ fontSize: 10, fontFamily: T.mono, letterSpacing: '0.08em', color: T.tealMid, background: 'rgba(2,136,143,0.1)', border: '1px solid rgba(2,136,143,0.25)', borderRadius: 5, padding: '2px 7px' }}>SYNCED</span>
+                  ) : (
+                    <span style={{ fontSize: 10, fontFamily: T.mono, letterSpacing: '0.08em', color: T.inkMute, background: 'var(--t-surface2)', border: '1px solid var(--t-border2)', borderRadius: 5, padding: '2px 7px' }}>DEVICE</span>
+                  )}
+                </div>
                 <div style={{ fontSize: 12, color: T.inkMute, fontFamily: T.mono }}>
                   {followers.toLocaleString()} followers · {following.toLocaleString()} following · export {format(new Date(record.exportedAt * 1000), 'MMM d, yyyy')}
                 </div>
@@ -256,6 +297,15 @@ function SnapshotCard({ record, allSnapshots, compareBaseId, isDeleting, onView,
         {!editing && (
           <button onClick={() => setEditing(true)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 8, border: '1px solid var(--t-border3)', background: 'transparent', color: T.inkDim, fontSize: 12, cursor: 'pointer', fontFamily: T.sans }}>
             Rename / Redate
+          </button>
+        )}
+        {!record.cloudId && (
+          <button
+            onClick={onSync}
+            disabled={isSyncing}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 8, border: '1px solid rgba(2,136,143,0.3)', background: 'transparent', color: T.tealMid, fontSize: 12, cursor: isSyncing ? 'not-allowed' : 'pointer', fontFamily: T.sans, opacity: isSyncing ? 0.6 : 1 }}
+          >
+            {isSyncing ? 'Syncing...' : 'Sync to cloud'}
           </button>
         )}
 
