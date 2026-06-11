@@ -8,6 +8,13 @@
       "when": 1781179346160,
       "tag": "0000_round_redwing",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1781179469693,
+      "tag": "0001_fuzzy_paper_doll",
+      "breakpoints": true
     }
   ]
 }
