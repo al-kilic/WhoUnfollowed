@@ -77,7 +77,7 @@ This is a **TypeScript monorepo** managed with [Turborepo](https://turbo.build/)
 | Local DB | [Dexie (IndexedDB)](https://dexie.org/) |
 | Monorepo | [Turborepo](https://turbo.build/), pnpm workspaces |
 | Linting | ESLint 10, Prettier, Husky + lint-staged |
-| Deployment | [Railway](https://railway.app/) |
+| Deployment | Self-hosted on [Hetzner Cloud](https://www.hetzner.com/cloud/) via Docker + Caddy |
 
 **Node ≥ 20 and pnpm ≥ 9 required.**
 
@@ -157,9 +157,9 @@ pnpm clean
 3. Set date range to **All Time**, format to **JSON**
 4. Hit **Request** — Instagram emails you a download link (usually within minutes)
 5. Download the ZIP
-6. **Drop the ZIP** at [whounfollowed-production.up.railway.app](https://whounfollowed-production.up.railway.app/)
+6. **Drop the ZIP** at [http://49.13.115.190](http://49.13.115.190) (domain coming soon)
 
-Full guide: [How to Export Your Instagram Data](https://whounfollowed-production.up.railway.app/how-to-export)
+Full guide: [How to Export Your Instagram Data](https://49.13.115.190/how-to-export)
 
 ***
 
@@ -174,7 +174,7 @@ Full guide: [How to Export Your Instagram Data](https://whounfollowed-production
 
 The core parser (`packages/core`) is MIT-licensed — you can read exactly what happens to your data. The web app is AGPL-3.0.
 
-→ [Full Privacy Policy](https://whounfollowed-production.up.railway.app/privacy)
+→ [Full Privacy Policy](https://49.13.115.190/privacy)
 
 ***
 
@@ -201,7 +201,7 @@ You can self-host the full open-source app. Clone the repo, set up the env vars 
 - [ ] iOS app
 - [ ] Android app
 
-See the full [Changelog](https://whounfollowed-production.up.railway.app/changelog).
+See the full [Changelog](https://49.13.115.190/changelog).
 
 ***
 
