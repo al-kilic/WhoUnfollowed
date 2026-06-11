@@ -1,5 +1,4 @@
 
-> @ig-tracker/core@0.0.1 typecheck /Users/alan/Documents/VS Code Projects/ig tracker/packages/core
-> echo 'no typecheck yet'
+> @ig-tracker/core@0.0.1 typecheck /Users/alan/Documents/WhoUnfollowed/packages/core
+> tsc --noEmit
 
-no typecheck yet

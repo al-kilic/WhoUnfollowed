@@ -51,7 +51,7 @@ export async function signupAction(formData: FormData) {
   const user = result[0];
   if (!user) return { error: 'Failed to create account. Please try again.' };
 
-  await db.insert(profiles).values({ userId: user.id, plan: 'free' });
+  await db.insert(profiles).values({ userId: user.id, subscriptionStatus: 'active' });
 
   await createSession(user.id);
 

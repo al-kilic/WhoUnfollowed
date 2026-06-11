@@ -55,6 +55,13 @@ type ParsedSnapshot = z.infer<typeof parsedSnapshotSchema>;
 
 declare function parseInstagramZip(zipFile: File | Blob | ArrayBuffer): Promise<ParsedSnapshot>;
 
+type DeltaReason = 'small_counts' | 'all_recent_timestamps' | 'massive_count_drop';
+interface DeltaDetectionResult {
+    isDelta: boolean;
+    reasons: DeltaReason[];
+}
+declare function detectDeltaExport(snapshot: ParsedSnapshot, previousSnapshot?: ParsedSnapshot): DeltaDetectionResult;
+
 interface SingleSnapshotAnalysis {
     nonFollowers: Account[];
     fans: Account[];
@@ -93,4 +100,4 @@ declare class SchemaValidationError extends Error {
     constructor(filename: string, detail: string);
 }
 
-export { type Account, type FollowersFile, type FollowingFile, InvalidZipError, MissingFilesError, MixedFormatError, type ParsedSnapshot, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, analyzeSnapshot, compareSnapshots, findGhostFollowers, parseInstagramZip };
+export { type Account, type DeltaDetectionResult, type DeltaReason, type FollowersFile, type FollowingFile, InvalidZipError, MissingFilesError, MixedFormatError, type ParsedSnapshot, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, analyzeSnapshot, compareSnapshots, detectDeltaExport, findGhostFollowers, parseInstagramZip };

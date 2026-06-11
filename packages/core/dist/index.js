@@ -59,6 +59,12 @@ var accountSchema = z.object({
   href: z.string(),
   followedAt: z.number().nullable()
 });
+var labelValuesEntrySchema = z.object({
+  timestamp: z.number().optional(),
+  label_values: z.array(z.object({ label: z.string(), value: z.string() })),
+  fbid: z.string().optional()
+});
+var labelValuesFileSchema = z.array(labelValuesEntrySchema);
 var pendingRequestsFileSchema = z.object({
   relationships_follow_requests_sent: z.array(relationshipEntrySchema)
 });
@@ -74,6 +80,18 @@ var parsedSnapshotSchema = z.object({
 });
 
 // src/parser.ts
+function labelValuesToAccount(entry) {
+  const get = (label) => entry.label_values.find((lv) => lv.label === label)?.value ?? "";
+  const username = get("Username");
+  if (!username) return null;
+  const url = get("URL");
+  const href = url || `https://www.instagram.com/${username}`;
+  return {
+    username,
+    href,
+    followedAt: entry.timestamp && entry.timestamp > 0 ? entry.timestamp : null
+  };
+}
 function entryToAccount(entry) {
   const item = entry.string_list_data[0];
   const username = item.value ?? entry.title ?? "";
@@ -186,8 +204,9 @@ async function parseInstagramZip(zipFile) {
     fileNames,
     /pending_follow_requests\.json$/i,
     (data) => {
-      const r = pendingRequestsFileSchema.safeParse(data);
-      return r.success ? r.data.relationships_follow_requests_sent.map(entryToAccount) : null;
+      const r = labelValuesFileSchema.safeParse(data);
+      if (!r.success) return null;
+      return r.data.map(labelValuesToAccount).filter((a) => a !== null);
     }
   );
   const recentlyUnfollowed = await parseOptionalRelationships(
@@ -195,8 +214,9 @@ async function parseInstagramZip(zipFile) {
     fileNames,
     /recently_unfollowed_profiles\.json$/i,
     (data) => {
-      const r = recentlyUnfollowedFileSchema.safeParse(data);
-      return r.success ? r.data.relationships_unfollowed_users.map(entryToAccount) : null;
+      const r = labelValuesFileSchema.safeParse(data);
+      if (!r.success) return null;
+      return r.data.map(labelValuesToAccount).filter((a) => a !== null);
     }
   );
   return {
@@ -216,6 +236,35 @@ async function parseOptionalRelationships(zip, fileNames, pattern, parse) {
   } catch {
     return null;
   }
+}
+
+// src/delta.ts
+var SMALL_COUNT_THRESHOLD = 50;
+var RECENT_WINDOW_DAYS = 14;
+var DROP_THRESHOLD = 0.8;
+function detectDeltaExport(snapshot, previousSnapshot) {
+  const reasons = [];
+  const now = Math.floor(Date.now() / 1e3);
+  const recentCutoff = now - RECENT_WINDOW_DAYS * 86400;
+  if (snapshot.followers.length < SMALL_COUNT_THRESHOLD) {
+    reasons.push("small_counts");
+  }
+  const withTimestamp = [
+    ...snapshot.followers.filter((a) => a.followedAt !== null),
+    ...snapshot.following.filter((a) => a.followedAt !== null)
+  ];
+  if (withTimestamp.length >= 3) {
+    const allRecent = withTimestamp.every((a) => (a.followedAt ?? 0) >= recentCutoff);
+    if (allRecent) reasons.push("all_recent_timestamps");
+  }
+  if (previousSnapshot) {
+    const prevCount = previousSnapshot.followers.length;
+    const newCount = snapshot.followers.length;
+    if (prevCount > 0 && newCount < prevCount * (1 - DROP_THRESHOLD)) {
+      reasons.push("massive_count_drop");
+    }
+  }
+  return { isDelta: reasons.length > 0, reasons };
 }
 
 // src/diff.ts
@@ -314,6 +363,7 @@ export {
   SchemaValidationError,
   analyzeSnapshot,
   compareSnapshots,
+  detectDeltaExport,
   findGhostFollowers,
   parseInstagramZip
 };
