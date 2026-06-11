@@ -3,7 +3,7 @@ FROM node:20-alpine AS builder
 RUN corepack enable && corepack prepare pnpm@10.33.2 --activate
 
 WORKDIR /app
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml turbo.json ./
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml turbo.json tsconfig.base.json ./
 COPY packages/core/package.json ./packages/core/
 COPY packages/ui/package.json ./packages/ui/
 COPY apps/web/package.json ./apps/web/
