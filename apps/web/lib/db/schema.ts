@@ -13,7 +13,11 @@ const bytea = customType<{ data: Buffer; driverData: Buffer }>({
   },
 });
 
-export const planEnum = pgEnum('plan', ['free', 'pro', 'team', 'agency']);
+export const subscriptionStatusEnum = pgEnum('subscription_status', [
+  'active',
+  'grace',
+  'cancelled',
+]);
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -34,8 +38,12 @@ export const profiles = pgTable('profiles', {
   userId: uuid('user_id')
     .primaryKey()
     .references(() => users.id, { onDelete: 'cascade' }),
-  plan: planEnum('plan').notNull().default('free'),
+  subscriptionStatus: subscriptionStatusEnum('subscription_status')
+    .notNull()
+    .default('active'),
   stripeCustomerId: text('stripe_customer_id'),
+  stripeSubscriptionId: text('stripe_subscription_id'),
+  gracePeriodEndsAt: timestamp('grace_period_ends_at'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 

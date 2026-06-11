@@ -17,9 +17,11 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 interface HistoryClientProps {
   userEmail: string | null;
   isPro: boolean;
+  subscriptionStatus: 'active' | 'grace' | 'cancelled' | 'none';
+  gracePeriodEndsAt: string | null;
 }
 
-export function HistoryClient({ userEmail, isPro }: HistoryClientProps) {
+export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePeriodEndsAt }: HistoryClientProps) {
   const router       = useRouter();
   const setSnapshot  = useSnapshotStore(s => s.setSnapshot);
   const snapshots    = useSnapshotList();
@@ -96,6 +98,16 @@ export function HistoryClient({ userEmail, isPro }: HistoryClientProps) {
           <ThemeToggle />
         </div>
       </nav>
+
+      {subscriptionStatus === 'grace' && gracePeriodEndsAt && (
+        <div style={{ background: 'rgba(168,75,47,0.08)', borderBottom: '1px solid rgba(168,75,47,0.2)', padding: '12px 24px', textAlign: 'center' }}>
+          <span style={{ fontSize: 13, color: T.terra }}>
+            Your subscription has ended. Your account and cloud snapshots will be deleted on{' '}
+            <strong>{new Date(gracePeriodEndsAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</strong>.{' '}
+            <Link href="/pricing" style={{ color: T.terra, fontWeight: 600 }}>Re-subscribe to keep your data.</Link>
+          </span>
+        </div>
+      )}
 
       <main className="px-4 sm:px-8 py-10 sm:py-12" style={{ maxWidth: 800, margin: '0 auto' }}>
         {/* Header */}

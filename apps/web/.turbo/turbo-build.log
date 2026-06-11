@@ -1,9 +1,23 @@
 
-
-> @ig-tracker/web@0.0.1 build /Users/alan/Documents/IG-Tracker/apps/web
+> @ig-tracker/web@0.0.1 build /Users/alan/Documents/WhoUnfollowed/apps/web
 > next build
 
-   [1m[38;2;173;127;168m▲ Next.js 15.5.15[39m[22m
+   ▲ Next.js 15.5.15
 
- [37m[1m [22m[39m Creating an optimized production build ...
-[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 143.[39m
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 2.3min
+   Linting and checking validity of types ...
+Failed to compile.
+
+./app/changelog/page.tsx:98:115
+Type error: 'tag' is possibly 'undefined'.
+
+[0m [90m  96 |[39m                       v{entry[33m.[39mversion}
+ [90m  97 |[39m                     [33m<[39m[33m/[39m[33mspan[39m[33m>[39m
+[31m[1m>[22m[39m[90m  98 |[39m                     [33m<[39m[33mspan[39m style[33m=[39m{{ fontSize[33m:[39m [35m10[39m[33m,[39m fontFamily[33m:[39m [33mT[39m[33m.[39mmono[33m,[39m padding[33m:[39m [32m'3px 9px'[39m[33m,[39m borderRadius[33m:[39m [35m20[39m[33m,[39m color[33m:[39m tag[33m.[39mcolor[33m,[39m background[33m:[39m tag[33m.[39mbg[33m,[39m letterSpacing[33m:[39m [32m'0.06em'[39m }}[33m>[39m
+ [90m     |[39m                                                                                                                   [31m[1m^[22m[39m
+ [90m  99 |[39m                       {tag[33m.[39mlabel[33m.[39mtoUpperCase()}
+ [90m 100 |[39m                     [33m<[39m[33m/[39m[33mspan[39m[33m>[39m
+ [90m 101 |[39m                     [33m<[39m[33mspan[39m style[33m=[39m{{ fontSize[33m:[39m [35m12[39m[33m,[39m color[33m:[39m [33mT[39m[33m.[39minkMute[33m,[39m fontFamily[33m:[39m [33mT[39m[33m.[39mmono[33m,[39m marginLeft[33m:[39m [32m'auto'[39m }}[33m>[39m[0m
+Next.js build worker exited with code: 1 and signal: null
+ ELIFECYCLE  Command failed with exit code 1.

@@ -16,9 +16,13 @@ export default async function SettingsPage() {
     db.query.syncSettings.findFirst({ where: eq(syncSettings.userId, user.id) }),
   ]);
 
-  const plan = profile?.plan ?? 'free';
+  const status = profile?.subscriptionStatus ?? 'active';
   const paymentsEnabled = isPaidFeaturesEnabled();
   const hasSyncSetup = !!syncRow;
+
+  const statusLabel = paymentsEnabled
+    ? status === 'active' ? 'Pro' : status === 'grace' ? 'Cancelled (grace period)' : 'Cancelled'
+    : 'Pro (Free during beta)';
 
   return (
     <main className="max-w-xl mx-auto px-4 py-12 flex flex-col gap-10">
@@ -30,10 +34,7 @@ export default async function SettingsPage() {
           <div>
             <p className="text-sm font-medium">{user.email}</p>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Plan:{' '}
-              <span className="capitalize font-medium">
-                {paymentsEnabled ? plan : `${plan} (Free during beta)`}
-              </span>
+              Subscription: <span className="font-medium">{statusLabel}</span>
             </p>
           </div>
           {!paymentsEnabled && (
