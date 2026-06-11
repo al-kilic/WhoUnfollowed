@@ -13,6 +13,7 @@ RUN pnpm install --frozen-lockfile
 COPY packages/ ./packages/
 COPY apps/web/ ./apps/web/
 
+RUN pnpm --filter @ig-tracker/core build
 RUN pnpm --filter @ig-tracker/web build
 
 # Stage 2: runtime
