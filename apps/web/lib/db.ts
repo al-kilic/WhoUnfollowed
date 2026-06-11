@@ -7,6 +7,7 @@ export interface SnapshotRecord {
   exportedAt: number;
   savedAt: number;
   data: ParsedSnapshot;
+  cloudId?: string; // UUID from cloud_snapshots table if synced
 }
 
 export type TriageState = 'not_a_fan' | 'let_it_slide' | 'done' | 'check_later' | 'deactivated';
@@ -30,6 +31,10 @@ class IgTrackerDb extends Dexie {
     });
     this.version(2).stores({
       snapshots: '++id, exportedAt, savedAt',
+      triageStates: '++id, [snapshotKey+username], snapshotKey',
+    });
+    this.version(3).stores({
+      snapshots: '++id, exportedAt, savedAt, cloudId',
       triageStates: '++id, [snapshotKey+username], snapshotKey',
     });
   }
