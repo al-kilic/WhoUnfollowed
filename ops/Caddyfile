@@ -1,0 +1,22 @@
+# Replace with your domain when ready. For now uses IP (no HTTPS with plain IP).
+# To enable HTTPS: replace the IP with yourdomain.com and Caddy handles certs automatically.
+
+:80 {
+    reverse_proxy web:3000
+
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "camera=(), microphone=(), geolocation=()"
+        -Server
+    }
+
+    encode gzip
+
+    log {
+        output stdout
+        format console
+    }
+}
