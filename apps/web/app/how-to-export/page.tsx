@@ -5,12 +5,12 @@ export const metadata: Metadata = {
   title: 'How to Export Instagram Followers & Following Data - Step-by-Step Guide (2026)',
   description: 'Step-by-step guide to downloading your Instagram followers and following list as a ZIP. Takes under 5 minutes. No third-party app, no password needed.',
   alternates: {
-    canonical: 'https://whounfollowed.app/how-to-export',
+    canonical: 'https://whounfollowed.co/how-to-export',
   },
   openGraph: {
     title: 'How to Export Instagram Followers & Following Data - Step-by-Step Guide (2026)',
     description: 'Step-by-step guide to downloading your Instagram followers and following list as a ZIP. Takes under 5 minutes. No third-party app, no password needed.',
-    url: 'https://whounfollowed.app/how-to-export',
+    url: 'https://whounfollowed.co/how-to-export',
   },
 };
 
