@@ -5,17 +5,13 @@ import { eq } from 'drizzle-orm';
 
 const GRACE_PERIOD_DAYS = 14;
 
-// Stripe sends webhook events here. We verify the signature and handle
-// subscription lifecycle events to keep profiles in sync.
 export async function POST(request: NextRequest) {
   const stripeSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-  // When payments are disabled, webhook is a no-op
   if (!stripeSecret || process.env.NEXT_PUBLIC_PAYMENTS_ENABLED !== 'true') {
     return NextResponse.json({ received: true });
   }
 
-  // Lazy-import Stripe only when payments are enabled to avoid bundle bloat
   const Stripe = (await import('stripe')).default;
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: '2026-05-27.dahlia',
@@ -47,7 +43,7 @@ export async function POST(request: NextRequest) {
             stripeSubscriptionId: sub.id,
             gracePeriodEndsAt: null,
           })
-          .where(eq(profiles.stripeCustomerId, sub.customer as string));
+          .where(eq(profiles.stripeCustomerId, sub.customer));
       }
       break;
     }
@@ -59,22 +55,22 @@ export async function POST(request: NextRequest) {
 
       await db
         .update(profiles)
-        .set({
-          subscriptionStatus: 'grace',
-          gracePeriodEndsAt,
-        })
-        .where(eq(profiles.stripeCustomerId, sub.customer as string));
+        .set({ subscriptionStatus: 'grace', gracePeriodEndsAt })
+        .where(eq(profiles.stripeCustomerId, sub.customer));
       break;
     }
 
     case 'checkout.session.completed': {
-      // New subscriber — create account if not exists
       const session = event.data.object as {
         customer: string;
         customer_email: string | null;
+        customer_details?: { email?: string | null };
         subscription: string;
         metadata?: { userId?: string };
       };
+
+      const email =
+        session.customer_email ?? session.customer_details?.email ?? null;
 
       if (session.metadata?.userId) {
         // Existing user upgrading
@@ -87,12 +83,44 @@ export async function POST(request: NextRequest) {
             gracePeriodEndsAt: null,
           })
           .where(eq(profiles.userId, session.metadata.userId));
+      } else if (email) {
+        // New subscriber — create account without password (set on /welcome page)
+        const existing = await db.query.users.findFirst({
+          where: eq(users.email, email.toLowerCase()),
+        });
+
+        if (!existing) {
+          const result = await db
+            .insert(users)
+            .values({ email: email.toLowerCase(), passwordHash: '' })
+            .returning({ id: users.id });
+
+          const newUser = result[0];
+          if (newUser) {
+            await db.insert(profiles).values({
+              userId: newUser.id,
+              subscriptionStatus: 'active',
+              stripeCustomerId: session.customer,
+              stripeSubscriptionId: session.subscription,
+            });
+          }
+        } else {
+          // Re-subscribing after grace period
+          await db
+            .update(profiles)
+            .set({
+              subscriptionStatus: 'active',
+              stripeCustomerId: session.customer,
+              stripeSubscriptionId: session.subscription,
+              gracePeriodEndsAt: null,
+            })
+            .where(eq(profiles.userId, existing.id));
+        }
       }
       break;
     }
 
     default:
-      // Ignore unhandled events
       break;
   }
 
