@@ -1,7 +1,4 @@
-# Replace with your domain when ready. For now uses IP (no HTTPS with plain IP).
-# To enable HTTPS: replace the IP with yourdomain.com and Caddy handles certs automatically.
-
-:80 {
+whounfollowed.co {
     reverse_proxy web:3000
 
     header {
