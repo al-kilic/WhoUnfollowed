@@ -53,7 +53,7 @@ function PreviewCard({ active }: { active: boolean }) {
           <div style={{ width: 9, height: 9, borderRadius: '50%', background: '#ff5f57' }} />
           <div style={{ width: 9, height: 9, borderRadius: '50%', background: 'rgba(255,255,255,0.15)' }} />
           <div style={{ width: 9, height: 9, borderRadius: '50%', background: 'rgba(255,255,255,0.15)' }} />
-          <span style={{ marginLeft: 8, fontSize: 10, color: 'rgba(244,240,232,0.3)', fontFamily: T.mono, letterSpacing: '0.08em' }}>whounfollowed.app · results</span>
+          <span style={{ marginLeft: 8, fontSize: 10, color: 'rgba(244,240,232,0.3)', fontFamily: T.mono, letterSpacing: '0.08em' }}>whounfollowed.co · results</span>
         </div>
 
         {/* Big number */}

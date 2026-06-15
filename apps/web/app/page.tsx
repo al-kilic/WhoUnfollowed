@@ -7,7 +7,7 @@ const jsonLd = {
   name: 'WhoUnfollowed',
   applicationCategory: 'UtilitiesApplication',
   operatingSystem: 'Web',
-  url: 'https://whounfollowed.app',
+  url: 'https://whounfollowed.co',
   description:
     "Privacy-first Instagram follower analysis. Upload your data export, see who unfollowed you, who doesn't follow back, and track changes over time. Nothing leaves your browser.",
   offers: [

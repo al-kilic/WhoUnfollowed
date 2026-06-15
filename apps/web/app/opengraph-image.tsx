@@ -174,7 +174,7 @@ export default function OgImage() {
           }}
         >
           <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#01696f' }} />
-          <div style={{ color: '#01696f', fontSize: 16, fontWeight: 600 }}>whounfollowed.app</div>
+          <div style={{ color: '#01696f', fontSize: 16, fontWeight: 600 }}>whounfollowed.co</div>
         </div>
       </div>
     </div>,

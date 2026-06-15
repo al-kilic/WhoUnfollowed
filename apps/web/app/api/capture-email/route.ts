@@ -46,7 +46,7 @@ export async function POST(req: Request) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'WhoUnfollowed <hello@whounfollowed.app>',
+          from: 'WhoUnfollowed <hello@whounfollowed.co>',
           to:   [email],
           subject: `You exported: ${csvFilename}`,
           html: `
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
               </p>
               <p style="color: #999; font-size: 12px;">
                 You're receiving this because you entered your email on WhoUnfollowed.
-                <a href="https://whounfollowed.app" style="color: #01696F;">whounfollowed.app</a>
+                <a href="https://whounfollowed.co" style="color: #01696F;">whounfollowed.co</a>
               </p>
             </div>
           `,

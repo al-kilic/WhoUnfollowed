@@ -267,7 +267,7 @@ export function ValueSection() {
 
         {/* Mobile: stacked mocks */}
         <div className="flex flex-col gap-4 md:hidden" style={{ marginTop: 32 }}>
-          <ProductMock title="whounfollowed.app · Non-followers" variant="list" featured />
+          <ProductMock title="whounfollowed.co · Non-followers" variant="list" featured />
           <ProductMock title="Radar · Account Health" variant="csv" />
           <ProductMock title="Radar · Compare snapshots" variant="diff" />
         </div>
@@ -292,7 +292,7 @@ export function ValueSection() {
           {/* Centre */}
           <div ref={centerRef} style={{ position: 'absolute', top: 0, left: '22%', width: '56%', zIndex: 3, transform: 'rotate(0.4deg) translate(0px,0px)', transition: 'transform 0.12s ease-out' }}>
             <PanelLabel>Results · Non-followers</PanelLabel>
-            <ProductMock title="whounfollowed.app · Non-followers" variant="list" featured />
+            <ProductMock title="whounfollowed.co · Non-followers" variant="list" featured />
           </div>
 
           {/* Right */}

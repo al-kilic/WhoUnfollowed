@@ -3,7 +3,7 @@ import { ThemeProvider } from 'next-themes';
 import { FontLoader } from '@/components/FontLoader';
 import './globals.css';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.app';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
 export const viewport: Viewport = {
   width: 'device-width',

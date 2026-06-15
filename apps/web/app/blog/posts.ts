@@ -40,7 +40,7 @@ Click the link in the email and download your file. It's a ZIP archive containin
 
 ## Step 3: Upload the ZIP to WhoUnfollowed
 
-Go to [whounfollowed.app](/) and drop your ZIP into the upload zone. The app reads the file entirely inside your browser. Nothing is sent to a server. You can disconnect from the internet before uploading if you want to verify this yourself.
+Go to [whounfollowed.co](/) and drop your ZIP into the upload zone. The app reads the file entirely inside your browser. Nothing is sent to a server. You can disconnect from the internet before uploading if you want to verify this yourself.
 
 If you want to see who specifically unfollowed you between two points in time, upload a second ZIP from a later date. WhoUnfollowed diffs them and shows you exactly who dropped off.
 
