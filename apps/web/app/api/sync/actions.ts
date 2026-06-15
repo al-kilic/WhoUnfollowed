@@ -4,7 +4,7 @@ import { db } from '@/lib/db/index';
 import { cloudSnapshots, syncSettings } from '@/lib/db/schema';
 import { validateRequest } from '@/lib/auth/session';
 import { isProUser } from '@/lib/flags';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 export interface CloudSnapshotMeta {
   id: string;
@@ -101,7 +101,7 @@ export async function deleteCloudSnapshot(
   await db
     .delete(cloudSnapshots)
     .where(
-      eq(cloudSnapshots.id, id),
+      and(eq(cloudSnapshots.id, id), eq(cloudSnapshots.userId, user.id)),
     );
 
   return { ok: true };
