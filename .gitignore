@@ -27,6 +27,9 @@ AI_OPS_ROOM.md
 .DS_Store
 Thumbs.db
 
+# Runtime-generated data files
+apps/web/data/stats.json
+
 # Editor
 .vscode/
 .idea/
