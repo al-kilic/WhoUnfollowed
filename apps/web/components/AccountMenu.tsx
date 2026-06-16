@@ -7,9 +7,24 @@ import { T } from './landing/tokens';
 interface Props {
   userEmail: string | null;
   isPro: boolean;
-  /** 'bar' = PRO badge + dropdown (default). 'mobile' = flat list for drawers. */
+  /** 'bar' = button + dropdown (default). 'mobile' = flat list for drawers. */
   variant?: 'bar' | 'mobile';
 }
+
+// Gold "gifted" palette for the earned PRO badge (intentionally distinct from
+// the teal brand CTA, so being Pro feels like a reward, not another button).
+const GOLD = {
+  grad: 'linear-gradient(135deg, #F7DC8A 0%, #E6B954 48%, #C9952F 100%)',
+  ink: '#3a2a05',
+  border: 'rgba(201,149,47,0.65)',
+  glow: '0 2px 12px rgba(214,165,70,0.45)',
+};
+
+const sparkle = (
+  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden style={{ flexShrink: 0 }}>
+    <path d="M12 2l1.9 5.6L19.5 9.5 13.9 11.4 12 17l-1.9-5.6L4.5 9.5l5.6-1.9L12 2z" />
+  </svg>
+);
 
 const userIcon = (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -25,6 +40,22 @@ const logoutIcon = (
     <line x1="21" y1="12" x2="9" y2="12" />
   </svg>
 );
+
+const goProStyle: CSSProperties = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: 6,
+  fontSize: 13,
+  fontWeight: 600,
+  fontFamily: T.sans,
+  color: T.cream,
+  textDecoration: 'none',
+  padding: '7px 15px',
+  borderRadius: 9,
+  background: T.teal,
+  border: '1px solid rgba(2,136,143,0.5)',
+  whiteSpace: 'nowrap',
+};
 
 const menuItemStyle: CSSProperties = {
   display: 'flex',
@@ -50,6 +81,19 @@ function AccountBadge({ userEmail, isPro }: { userEmail: string; isPro: boolean 
     return () => document.removeEventListener('keydown', onKey);
   }, [open]);
 
+  const badgeStyle: CSSProperties = isPro
+    ? {
+        color: GOLD.ink,
+        background: GOLD.grad,
+        border: `1px solid ${GOLD.border}`,
+        boxShadow: GOLD.glow,
+      }
+    : {
+        color: T.inkDim,
+        background: 'transparent',
+        border: `1px solid ${T.border3}`,
+      };
+
   return (
     <div style={{ position: 'relative' }}>
       <button
@@ -59,35 +103,33 @@ function AccountBadge({ userEmail, isPro }: { userEmail: string; isPro: boolean 
         style={{
           display: 'inline-flex',
           alignItems: 'center',
-          gap: 6,
-          padding: '6px 9px 6px 12px',
+          gap: 5,
+          padding: '6px 11px',
           borderRadius: 100,
           cursor: 'pointer',
           fontFamily: T.sans,
           fontSize: 11.5,
-          fontWeight: 700,
-          letterSpacing: '0.05em',
-          color: isPro ? T.cream : T.inkDim,
-          background: isPro ? T.teal : 'transparent',
-          border: isPro ? `1px solid rgba(2,136,143,0.5)` : `1px solid ${T.border3}`,
-          transition: 'all 0.15s',
+          fontWeight: 800,
+          letterSpacing: '0.06em',
+          transition: 'transform 0.15s, box-shadow 0.15s',
+          ...badgeStyle,
         }}
       >
-        {isPro ? 'PRO' : 'FREE'}
+        {isPro && sparkle}
+        {isPro ? 'PRO' : 'ACCOUNT'}
         <svg
           width="9"
           height="9"
           viewBox="0 0 10 10"
           fill="none"
-          style={{ opacity: 0.7, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}
+          style={{ opacity: 0.65, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}
         >
-          <path d="M2 3.5 L5 6.5 L8 3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M2 3.5 L5 6.5 L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
 
       {open && (
         <>
-          {/* click-away backdrop */}
           <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 150 }} />
           <div
             role="menu"
@@ -96,7 +138,7 @@ function AccountBadge({ userEmail, isPro }: { userEmail: string; isPro: boolean 
               top: '100%',
               right: 0,
               marginTop: 8,
-              width: 224,
+              width: 230,
               borderRadius: 14,
               background: T.overlay,
               border: `1px solid ${T.overlayBorder}`,
@@ -106,13 +148,28 @@ function AccountBadge({ userEmail, isPro }: { userEmail: string; isPro: boolean 
             }}
           >
             <div style={{ padding: '8px 10px 10px', borderBottom: `1px solid ${T.border1}`, marginBottom: 4 }}>
-              <div style={{ fontSize: 10, fontFamily: T.mono, letterSpacing: '0.1em', color: T.inkMute, marginBottom: 3 }}>
-                {isPro ? 'PRO MEMBER' : 'ACCOUNT'}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                {isPro && <span style={{ color: '#C9952F', lineHeight: 0 }}>{sparkle}</span>}
+                <span style={{ fontSize: 10, fontFamily: T.mono, letterSpacing: '0.1em', color: isPro ? '#C9952F' : T.inkMute }}>
+                  {isPro ? 'PRO MEMBER' : 'ACCOUNT'}
+                </span>
               </div>
               <div style={{ fontSize: 12.5, color: T.ink, fontWeight: 500, wordBreak: 'break-all', lineHeight: 1.3 }}>
                 {userEmail}
               </div>
             </div>
+
+            {!isPro && (
+              <Link
+                href="/pricing"
+                role="menuitem"
+                onClick={() => setOpen(false)}
+                style={{ ...menuItemStyle, color: GOLD.ink, background: GOLD.grad, fontWeight: 700, marginBottom: 2 }}
+              >
+                <span style={{ lineHeight: 0 }}>{sparkle}</span>
+                Go Pro
+              </Link>
+            )}
 
             <Link
               href="/account"
@@ -156,55 +213,44 @@ function AccountBadge({ userEmail, isPro }: { userEmail: string; isPro: boolean 
 }
 
 export function AccountMenu({ userEmail, isPro, variant = 'bar' }: Props) {
-  // Logged out
+  // Logged out: a single "Go Pro" CTA (the upgrade door). Login lives on the
+  // destination page, so the nav never pushes "create an account".
   if (!userEmail) {
     if (variant === 'mobile') {
       return (
         <>
-          <Link href="/login" style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>
-            Log in
+          <Link href="/pricing" style={{ ...goProStyle, justifyContent: 'center' }}>
+            {sparkle} Go Pro
           </Link>
-          <Link href="/signup" style={{ fontSize: 16, fontWeight: 600, color: T.tealLight, textDecoration: 'none' }}>
-            Sign up
+          <Link href="/login" style={{ fontSize: 15, color: T.inkDim, textDecoration: 'none' }}>
+            Log in
           </Link>
         </>
       );
     }
     return (
-      <>
-        <Link href="/login" style={{ fontSize: 13, color: T.inkDim, textDecoration: 'none' }}>
-          Log in
-        </Link>
-        <Link
-          href="/signup"
-          style={{
-            fontSize: 13,
-            fontWeight: 600,
-            color: T.cream,
-            textDecoration: 'none',
-            padding: '7px 14px',
-            borderRadius: 9,
-            background: T.teal,
-            border: `1px solid rgba(2,136,143,0.5)`,
-          }}
-        >
-          Sign up
-        </Link>
-      </>
+      <Link href="/pricing" style={goProStyle}>
+        {sparkle} Go Pro
+      </Link>
     );
   }
 
-  // Logged in, mobile drawer: flat list (no floating dropdown)
+  // Logged in, mobile drawer: flat list
   if (variant === 'mobile') {
     return (
       <>
-        <Link href="/account" style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>
+        {!isPro && (
+          <Link href="/pricing" style={{ ...goProStyle, justifyContent: 'center', color: GOLD.ink, background: GOLD.grad, border: `1px solid ${GOLD.border}` }}>
+            {sparkle} Go Pro
+          </Link>
+        )}
+        <Link href="/account" style={{ fontSize: 15, color: T.inkDim, textDecoration: 'none' }}>
           Account &amp; billing
         </Link>
         <form action="/logout" method="POST">
           <button
             type="submit"
-            style={{ fontSize: 16, color: T.terra, background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: T.sans }}
+            style={{ fontSize: 15, color: T.terra, background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: T.sans }}
           >
             Log out
           </button>
@@ -213,6 +259,6 @@ export function AccountMenu({ userEmail, isPro, variant = 'bar' }: Props) {
     );
   }
 
-  // Logged in, bar: PRO badge + dropdown
+  // Logged in, bar: gold PRO badge (or ACCOUNT chip) + dropdown
   return <AccountBadge userEmail={userEmail} isPro={isPro} />;
 }
