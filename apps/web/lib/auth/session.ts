@@ -14,22 +14,30 @@ export async function validateRequest(): Promise<
 
   const result = await lucia.validateSession(sessionId);
 
-  if (result.session?.fresh) {
-    const sessionCookie = lucia.createSessionCookie(result.session.id);
-    cookieStore.set(
-      sessionCookie.name,
-      sessionCookie.value,
-      sessionCookie.attributes,
-    );
-  }
+  // Next.js disallows mutating cookies while rendering a Server Component.
+  // validateRequest() is called from RSC pages as well as actions/route
+  // handlers, so swallow the refresh write when it isn't permitted — the
+  // session is still valid and gets refreshed on the next action/route hit.
+  try {
+    if (result.session?.fresh) {
+      const sessionCookie = lucia.createSessionCookie(result.session.id);
+      cookieStore.set(
+        sessionCookie.name,
+        sessionCookie.value,
+        sessionCookie.attributes,
+      );
+    }
 
-  if (!result.session) {
-    const blankCookie = lucia.createBlankSessionCookie();
-    cookieStore.set(
-      blankCookie.name,
-      blankCookie.value,
-      blankCookie.attributes,
-    );
+    if (!result.session) {
+      const blankCookie = lucia.createBlankSessionCookie();
+      cookieStore.set(
+        blankCookie.name,
+        blankCookie.value,
+        blankCookie.attributes,
+      );
+    }
+  } catch {
+    // Called during a Server Component render — cookie refresh not allowed here.
   }
 
   return result;
