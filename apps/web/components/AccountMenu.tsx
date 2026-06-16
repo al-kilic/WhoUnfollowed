@@ -81,9 +81,8 @@ function GoProButton() {
       <div style={{
         position: 'absolute',
         top: '100%',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        paddingTop: 8,           // bridge gap — keeps hover active while crossing
+        right: 0,
+        paddingTop: 8,
         zIndex: 200,
         pointerEvents: hovered ? 'auto' : 'none',
         opacity: hovered ? 1 : 0,
