@@ -9,7 +9,7 @@ import { useSnapshotList, deleteSnapshot, updateSnapshotLabel, redateSnapshot, s
 import { useCloudSync } from '@/hooks/useCloudSync';
 import { UnlockSyncForm } from '@/components/sync/UnlockSyncForm';
 import { getUserSyncSalt } from '@/app/api/sync/actions';
-import { NavBarClient } from '@/components/NavBarClient';
+import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { T } from '@/components/landing/tokens';
 import { Icon } from '@/components/landing/atoms';
@@ -75,7 +75,7 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <NavBarClient userEmail={userEmail} isPro={isPro} />
+      <SiteNav userEmail={userEmail} isPro={isPro} />
 
       {subscriptionStatus === 'grace' && gracePeriodEndsAt && (
         <div style={{ background: 'rgba(168,75,47,0.08)', borderBottom: '1px solid rgba(168,75,47,0.2)', padding: '12px 24px', textAlign: 'center' }}>
