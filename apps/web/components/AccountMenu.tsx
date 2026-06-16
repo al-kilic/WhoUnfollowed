@@ -11,8 +11,7 @@ interface Props {
   variant?: 'bar' | 'mobile';
 }
 
-// Gold "gifted" palette for the earned PRO badge (intentionally distinct from
-// the teal brand CTA, so being Pro feels like a reward, not another button).
+// Gold "gifted" palette for the earned PRO badge
 const GOLD = {
   grad: 'linear-gradient(135deg, #F7DC8A 0%, #E6B954 48%, #C9952F 100%)',
   ink: '#3a2a05',
@@ -20,7 +19,30 @@ const GOLD = {
   glow: '0 2px 12px rgba(214,165,70,0.45)',
 };
 
+// Animated shimmer keyframes injected once
+const GO_PRO_STYLES = `
+@keyframes goPro-shimmer {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+@keyframes goPro-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(1,105,111,0.0), 0 2px 8px rgba(1,105,111,0.35); }
+  50% { box-shadow: 0 0 0 4px rgba(1,105,111,0.12), 0 2px 12px rgba(1,105,111,0.5); }
+}
+@keyframes goPro-sparkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  30% { transform: scale(1.25) rotate(15deg); opacity: 0.85; }
+  60% { transform: scale(0.9) rotate(-8deg); opacity: 1; }
+}
+`;
+
 const sparkle = (
+  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden style={{ flexShrink: 0, animation: 'goPro-sparkle 2.8s ease-in-out infinite' }}>
+    <path d="M12 2l1.9 5.6L19.5 9.5 13.9 11.4 12 17l-1.9-5.6L4.5 9.5l5.6-1.9L12 2z" />
+  </svg>
+);
+
+const sparklePro = (
   <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden style={{ flexShrink: 0 }}>
     <path d="M12 2l1.9 5.6L19.5 9.5 13.9 11.4 12 17l-1.9-5.6L4.5 9.5l5.6-1.9L12 2z" />
   </svg>
@@ -41,21 +63,44 @@ const logoutIcon = (
   </svg>
 );
 
-const goProStyle: CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 6,
-  fontSize: 13,
-  fontWeight: 600,
-  fontFamily: T.sans,
-  color: T.cream,
-  textDecoration: 'none',
-  padding: '7px 15px',
-  borderRadius: 9,
-  background: T.teal,
-  border: '1px solid rgba(2,136,143,0.5)',
-  whiteSpace: 'nowrap',
-};
+// Animated Go Pro button — shimmer text + pulse ring
+function GoProButton() {
+  return (
+    <>
+      <style>{GO_PRO_STYLES}</style>
+      <Link
+        href="/pricing"
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 7,
+          fontSize: 13,
+          fontWeight: 700,
+          fontFamily: T.sans,
+          textDecoration: 'none',
+          padding: '7px 16px',
+          borderRadius: 100,
+          whiteSpace: 'nowrap',
+          // Shimmer gradient text effect
+          background: 'linear-gradient(110deg, #02888f 0%, #5fc4c8 30%, #f4f0e8 48%, #5fc4c8 65%, #02888f 100%)',
+          backgroundSize: '250% auto',
+          WebkitBackgroundClip: 'text',
+          backgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          color: 'transparent',
+          animation: 'goPro-shimmer 3.5s linear infinite',
+          // Outer border + glow ring animation
+          border: '1.5px solid rgba(2,136,143,0.6)',
+          boxShadow: '0 2px 8px rgba(1,105,111,0.35)',
+          // Pulse handled via pseudo — use outline workaround
+        } as CSSProperties}
+      >
+        {sparkle}
+        Go Pro
+      </Link>
+    </>
+  );
+}
 
 const menuItemStyle: CSSProperties = {
   display: 'flex',
@@ -115,7 +160,7 @@ function AccountBadge({ userEmail, isPro }: { userEmail: string; isPro: boolean 
           ...badgeStyle,
         }}
       >
-        {isPro && sparkle}
+        {isPro && sparklePro}
         {isPro ? 'PRO' : 'ACCOUNT'}
         <svg
           width="9"
@@ -149,7 +194,7 @@ function AccountBadge({ userEmail, isPro }: { userEmail: string; isPro: boolean 
           >
             <div style={{ padding: '8px 10px 10px', borderBottom: `1px solid ${T.border1}`, marginBottom: 4 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                {isPro && <span style={{ color: '#C9952F', lineHeight: 0 }}>{sparkle}</span>}
+                {isPro && <span style={{ color: '#C9952F', lineHeight: 0 }}>{sparklePro}</span>}
                 <span style={{ fontSize: 10, fontFamily: T.mono, letterSpacing: '0.1em', color: isPro ? '#C9952F' : T.inkMute }}>
                   {isPro ? 'PRO MEMBER' : 'ACCOUNT'}
                 </span>
@@ -166,7 +211,7 @@ function AccountBadge({ userEmail, isPro }: { userEmail: string; isPro: boolean 
                 onClick={() => setOpen(false)}
                 style={{ ...menuItemStyle, color: GOLD.ink, background: GOLD.grad, fontWeight: 700, marginBottom: 2 }}
               >
-                <span style={{ lineHeight: 0 }}>{sparkle}</span>
+                <span style={{ lineHeight: 0 }}>{sparklePro}</span>
                 Go Pro
               </Link>
             )}
@@ -213,13 +258,26 @@ function AccountBadge({ userEmail, isPro }: { userEmail: string; isPro: boolean 
 }
 
 export function AccountMenu({ userEmail, isPro, variant = 'bar' }: Props) {
-  // Logged out: a single "Go Pro" CTA (the upgrade door). Login lives on the
-  // destination page, so the nav never pushes "create an account".
+  // Logged out: animated "Go Pro" CTA. Login lives on the pricing page.
   if (!userEmail) {
     if (variant === 'mobile') {
       return (
         <>
-          <Link href="/pricing" style={{ ...goProStyle, justifyContent: 'center' }}>
+          <style>{GO_PRO_STYLES}</style>
+          <Link
+            href="/pricing"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 7,
+              fontSize: 15, fontWeight: 700, fontFamily: T.sans,
+              textDecoration: 'none', padding: '9px 18px', borderRadius: 100,
+              background: 'linear-gradient(110deg, #02888f 0%, #5fc4c8 30%, #f4f0e8 48%, #5fc4c8 65%, #02888f 100%)',
+              backgroundSize: '250% auto',
+              WebkitBackgroundClip: 'text', backgroundClip: 'text',
+              WebkitTextFillColor: 'transparent', color: 'transparent',
+              animation: 'goPro-shimmer 3.5s linear infinite',
+              border: '1.5px solid rgba(2,136,143,0.6)',
+            } as CSSProperties}
+          >
             {sparkle} Go Pro
           </Link>
           <Link href="/login" style={{ fontSize: 15, color: T.inkDim, textDecoration: 'none' }}>
@@ -228,11 +286,7 @@ export function AccountMenu({ userEmail, isPro, variant = 'bar' }: Props) {
         </>
       );
     }
-    return (
-      <Link href="/pricing" style={goProStyle}>
-        {sparkle} Go Pro
-      </Link>
-    );
+    return <GoProButton />;
   }
 
   // Logged in, mobile drawer: flat list
@@ -240,8 +294,16 @@ export function AccountMenu({ userEmail, isPro, variant = 'bar' }: Props) {
     return (
       <>
         {!isPro && (
-          <Link href="/pricing" style={{ ...goProStyle, justifyContent: 'center', color: GOLD.ink, background: GOLD.grad, border: `1px solid ${GOLD.border}` }}>
-            {sparkle} Go Pro
+          <Link
+            href="/pricing"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 7, justifyContent: 'center',
+              fontSize: 15, fontWeight: 700, fontFamily: T.sans,
+              textDecoration: 'none', padding: '9px 18px', borderRadius: 100,
+              color: GOLD.ink, background: GOLD.grad, border: `1px solid ${GOLD.border}`,
+            }}
+          >
+            {sparklePro} Go Pro
           </Link>
         )}
         <Link href="/account" style={{ fontSize: 15, color: T.inkDim, textDecoration: 'none' }}>
