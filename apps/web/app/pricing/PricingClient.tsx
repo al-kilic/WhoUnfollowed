@@ -73,7 +73,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
   }
 
   const monthlyPrice = 4.99;
-  const yearlyPrice = 29;
+  const yearlyPrice = 39;
   const yearlyMonthly = (yearlyPrice / 12).toFixed(2);
   const saving = Math.round((1 - yearlyPrice / (monthlyPrice * 12)) * 100);
 
