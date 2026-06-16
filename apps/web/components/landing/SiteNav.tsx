@@ -205,7 +205,6 @@ export function SiteNav({ userEmail, isPro = false }: { userEmail: string | null
           )}
           <WhatIsDropdown />
           {!userEmail && <HowItWorksDropdown />}
-          <Link href="/pricing" style={{ cursor: 'pointer', color: 'inherit', textDecoration: 'none' }}>Pricing</Link>
           <a href="/privacy" style={{ cursor: 'pointer', color: 'inherit', textDecoration: 'none' }}>Privacy</a>
           <a
             href="https://github.com/al-kilic/IG-Tracker"
@@ -255,7 +254,6 @@ export function SiteNav({ userEmail, isPro = false }: { userEmail: string | null
         >
           <Link href="/dashboard" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.tealLight, fontWeight: 600, textDecoration: 'none' }}>Radar Dashboard</Link>
           <Link href="/history" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>Snapshot History</Link>
-          <Link href="/#pricing" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>Pricing</Link>
           <Link href="/what-is-whounfollowed" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>What is WhoUnfollowed?</Link>
           <Link href="/compare" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>Compare</Link>
           <Link href="/blog" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>Blog</Link>
