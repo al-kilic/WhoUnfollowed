@@ -13,7 +13,7 @@ import {
 import { useSnapshotStore } from '@/lib/store';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { T } from '@/components/landing/tokens';
-import { useSnapshotList } from '@/hooks/useSnapshots';
+import { useSnapshotList, useSnapshotsLoaded } from '@/hooks/useSnapshots';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { AccountMenu } from '@/components/AccountMenu';
 import { Tutorial } from '@/components/Tutorial';
@@ -1081,21 +1081,18 @@ export function DashboardClient({ account }: DashboardClientProps) {
   const storeSnapshot = useSnapshotStore(s => s.currentSnapshot);
   const setSnapshot   = useSnapshotStore(s => s.setSnapshot);
   const snapshots     = useSnapshotList();
+  const snapshotsLoaded = useSnapshotsLoaded();
   const [radarModalOpen, setRadarModalOpen] = useState(false);
   const [loading, setLoading] = useState(!storeSnapshot);
 
-  // If no in-memory snapshot, load the most recent one from DB
+  // If no in-memory snapshot, load the most recent one from local storage.
   useEffect(() => {
     if (storeSnapshot) { setLoading(false); return; }
-    if (snapshots.length === 0) return; // still loading list
+    if (!snapshotsLoaded) return; // local store not read yet — keep loading
     const latest = snapshots[0];
-    if (latest) {
-      setSnapshot(latest.data);
-      setLoading(false);
-    } else {
-      router.replace('/');
-    }
-  }, [storeSnapshot, snapshots, setSnapshot, router]);
+    if (latest) setSnapshot(latest.data);
+    setLoading(false); // resolved: either we loaded the latest, or there are none
+  }, [storeSnapshot, snapshots, snapshotsLoaded, setSnapshot]);
 
   const snapshot = storeSnapshot;
 
@@ -1110,9 +1107,59 @@ export function DashboardClient({ account }: DashboardClientProps) {
     };
   }, [snapshot]);
 
-  if (loading || !snapshot) return (
+  if (loading) return (
     <div style={{ minHeight: '100vh', background: T.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ fontSize: 13, color: T.inkMute, fontFamily: T.mono }}>Loading Radar…</div>
+    </div>
+  );
+
+  // No snapshot in memory and none in local history — nothing to scan yet.
+  if (!snapshot) return (
+    <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
+      <nav
+        className="flex items-center justify-between px-4 sm:px-8 py-4 sticky top-0 z-50"
+        style={{ borderBottom: '1px solid var(--t-border1)', backdropFilter: 'blur(14px)', background: 'var(--t-navBg)' }}
+      >
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+          <img src="/logo.png" alt="WhoUnfollowed" width={26} height={26} style={{ borderRadius: 7, objectFit: 'contain' }} />
+          <span style={{ fontFamily: T.serif, fontSize: 17, color: T.ink }}>WhoUnfollowed</span>
+        </Link>
+        <div className="flex items-center gap-4 sm:gap-6" style={{ fontSize: 13 }}>
+          <Link href="/history" className="hidden sm:inline" style={{ color: T.inkDim, textDecoration: 'none' }}>History</Link>
+          <ThemeToggle />
+          <AccountMenu userEmail={account.userEmail} isPro={account.isPro} />
+        </div>
+      </nav>
+
+      <main style={{ maxWidth: 520, margin: '0 auto', padding: '88px 24px', textAlign: 'center' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 64, height: 64, borderRadius: '50%', background: T.surface2, border: `1px solid ${T.border2}`, marginBottom: 24 }}>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={T.tealMid} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M19.07 4.93A10 10 0 1 1 4.93 19.07" />
+            <path d="M15.54 8.46A5 5 0 1 0 8.46 15.54" />
+            <circle cx="12" cy="12" r="1.5" fill={T.tealMid} stroke="none" />
+          </svg>
+        </div>
+        <h1 style={{ fontFamily: T.serif, fontSize: 28, fontWeight: 400, letterSpacing: '-0.02em', marginBottom: 12, lineHeight: 1.15 }}>
+          No data to scan yet
+        </h1>
+        <p style={{ fontSize: 14.5, color: T.inkDim, lineHeight: 1.6, marginBottom: 28 }}>
+          Radar needs an Instagram export to analyze. Upload your data once and your follower radar, non-followers, and growth show up here. Nothing leaves your browser.
+        </p>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <Link
+            href="/"
+            style={{ fontSize: 14, fontWeight: 600, color: T.cream, textDecoration: 'none', padding: '11px 20px', borderRadius: 10, background: T.teal, border: '1px solid rgba(2,136,143,0.5)' }}
+          >
+            Upload your export
+          </Link>
+          <Link
+            href="/how-to-export"
+            style={{ fontSize: 14, fontWeight: 500, color: T.inkDim, textDecoration: 'none', padding: '11px 20px', borderRadius: 10, border: `1px solid ${T.border3}` }}
+          >
+            How to export
+          </Link>
+        </div>
+      </main>
     </div>
   );
 

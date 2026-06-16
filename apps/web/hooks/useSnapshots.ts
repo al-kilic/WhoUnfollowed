@@ -12,6 +12,13 @@ export function useSnapshotList(): SnapshotRecord[] {
   return useLiveQuery(() => db.snapshots.orderBy('exportedAt').reverse().toArray(), [], []) ?? [];
 }
 
+// True once the local snapshot store has been read at least once.
+// useLiveQuery returns `undefined` until its first query resolves, which lets
+// callers tell "still loading" apart from "loaded and genuinely empty".
+export function useSnapshotsLoaded(): boolean {
+  return useLiveQuery(() => db.snapshots.count(), []) !== undefined;
+}
+
 export async function saveSnapshot(data: ParsedSnapshot, label?: string): Promise<number> {
   const autoLabel = `Upload ${format(new Date(data.exportedAt * 1000), 'MMM d, yyyy HH:mm')}`;
   return db.snapshots.add({
