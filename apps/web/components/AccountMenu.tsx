@@ -75,30 +75,36 @@ function GoProButton() {
         </span>
       </Link>
 
-      {/* Hover tooltip: Log in link */}
-      {hovered && (
+      {/* Tooltip — always mounted, fades in/out via opacity so the mouse
+          can travel from the button into it without it disappearing.
+          The invisible top padding bridges the gap between button and card. */}
+      <div style={{
+        position: 'absolute',
+        top: '100%',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        paddingTop: 8,           // bridge gap — keeps hover active while crossing
+        zIndex: 200,
+        pointerEvents: hovered ? 'auto' : 'none',
+        opacity: hovered ? 1 : 0,
+        transition: 'opacity 0.15s ease',
+      }}>
         <div style={{
-          position: 'absolute',
-          top: '100%',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          marginTop: 6,
           whiteSpace: 'nowrap',
           background: T.overlay,
           border: `1px solid ${T.overlayBorder}`,
           borderRadius: 8,
-          padding: '6px 12px',
+          padding: '8px 14px',
           fontSize: 12,
           color: T.inkDim,
           boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
-          zIndex: 200,
         }}>
           Already a member?{' '}
           <Link href="/login" style={{ color: T.tealMid, fontWeight: 600, textDecoration: 'none' }}>
             Log in
           </Link>
         </div>
-      )}
+      </div>
     </div>
   );
 }
