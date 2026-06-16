@@ -1,5 +1,5 @@
 import { validateRequest } from '@/lib/auth/session';
-import { isPaidFeaturesEnabled } from '@/lib/flags';
+import { isPaidFeaturesEnabled, isProUser } from '@/lib/flags';
 import { PricingClient } from './PricingClient';
 
 export const metadata = {
@@ -10,11 +10,13 @@ export const metadata = {
 export default async function PricingPage() {
   const { user } = await validateRequest();
   const paymentsEnabled = isPaidFeaturesEnabled();
+  const isPro = await isProUser();
 
   return (
     <PricingClient
       userEmail={user?.email ?? null}
       paymentsEnabled={paymentsEnabled}
+      isPro={isPro}
     />
   );
 }

@@ -11,6 +11,19 @@ export const metadata: Metadata = {
 
 const entries: { version: string; date: string; tag: 'launch' | 'fix' | 'improvement' | 'feature'; items: string[] }[] = [
   {
+    version: '0.7',
+    date: 'June 16, 2026',
+    tag: 'feature',
+    items: [
+      'New Account page. Your plan, billing, cloud sync, and account controls are now all in one place.',
+      'A PRO badge in the top bar shows your plan at a glance. Click it for a quick menu with your account and log out.',
+      'Redesigned login and signup pages. Cleaner, on-brand, and consistent with the rest of the site.',
+      'The top bar is now consistent everywhere you go, including the Radar dashboard.',
+      'Fixed: logging in could land on an error page. Login is reliable again.',
+      'The whole site now runs on a secure HTTPS connection with a verified certificate.',
+    ],
+  },
+  {
     version: '0.6',
     date: 'May 15, 2026',
     tag: 'improvement',

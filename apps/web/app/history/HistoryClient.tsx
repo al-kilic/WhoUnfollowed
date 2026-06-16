@@ -75,7 +75,7 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <NavBarClient userEmail={userEmail} />
+      <NavBarClient userEmail={userEmail} isPro={isPro} />
 
       {subscriptionStatus === 'grace' && gracePeriodEndsAt && (
         <div style={{ background: 'rgba(168,75,47,0.08)', borderBottom: '1px solid rgba(168,75,47,0.2)', padding: '12px 24px', textAlign: 'center' }}>
