@@ -8,6 +8,7 @@ import { T } from '@/components/landing/tokens';
 interface Props {
   userEmail: string | null;
   paymentsEnabled: boolean;
+  isPro?: boolean;
 }
 
 const FEATURES = [
@@ -21,7 +22,7 @@ const FEATURES = [
   'Email alerts (coming soon)',
 ];
 
-export function PricingClient({ userEmail, paymentsEnabled }: Props) {
+export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Props) {
   const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -62,7 +63,7 @@ export function PricingClient({ userEmail, paymentsEnabled }: Props) {
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <NavBarClient userEmail={userEmail} />
+      <NavBarClient userEmail={userEmail} isPro={isPro} />
 
       <main style={{ maxWidth: 560, margin: '0 auto', padding: '64px 24px' }}>
 

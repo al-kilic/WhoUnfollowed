@@ -8,7 +8,7 @@ import type { NextRequest } from 'next/server';
 const SESSION_COOKIE = 'auth_session';
 
 // Routes that require a valid session (any subscription status)
-const AUTH_REQUIRED = ['/settings'];
+const AUTH_REQUIRED = ['/account', '/settings'];
 
 // Routes that require an account (subscription status checked server-side)
 const ACTIVE_SUB_REQUIRED = ['/dashboard', '/history'];
@@ -35,5 +35,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/history/:path*', '/settings/:path*'],
+  matcher: ['/dashboard/:path*', '/history/:path*', '/account/:path*', '/settings/:path*'],
 };

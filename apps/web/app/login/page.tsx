@@ -3,6 +3,8 @@
 import { useActionState } from 'react';
 import Link from 'next/link';
 import { loginAction } from './actions';
+import { AuthShell, AuthField, AuthError, AuthButton } from '@/components/auth/AuthShell';
+import { T } from '@/components/landing/tokens';
 
 export default function LoginPage() {
   const [state, action, pending] = useActionState(
@@ -11,59 +13,33 @@ export default function LoginPage() {
   );
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
-        <h1 className="text-2xl font-semibold mb-6">Log in</h1>
-
-        <form action={action} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="email" className="text-sm font-medium">
-              Email
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              autoComplete="email"
-              className="border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <label htmlFor="password" className="text-sm font-medium">
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              autoComplete="current-password"
-              className="border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
-
-          {state?.error && (
-            <p className="text-sm text-destructive">{state.error}</p>
-          )}
-
-          <button
-            type="submit"
-            disabled={pending}
-            className="bg-primary text-primary-foreground rounded-md px-4 py-2 text-sm font-medium hover:bg-primary/90 disabled:opacity-50"
-          >
-            {pending ? 'Logging in...' : 'Log in'}
-          </button>
-        </form>
-
-        <p className="text-sm text-muted-foreground mt-4 text-center">
+    <AuthShell
+      title="Welcome back"
+      subtitle="Log in to your WhoUnfollowed account."
+      footer={
+        <>
           No account?{' '}
-          <Link href="/signup" className="underline">
+          <Link href="/signup" style={{ color: T.tealMid, fontWeight: 600, textDecoration: 'none' }}>
             Sign up free
           </Link>
-        </p>
-      </div>
-    </main>
+        </>
+      }
+    >
+      <form action={action} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <AuthField label="Email" id="email" name="email" type="email" required autoComplete="email" />
+        <AuthField
+          label="Password"
+          id="password"
+          name="password"
+          type="password"
+          required
+          autoComplete="current-password"
+        />
+
+        {state?.error && <AuthError>{state.error}</AuthError>}
+
+        <AuthButton pending={pending}>{pending ? 'Logging in...' : 'Log in'}</AuthButton>
+      </form>
+    </AuthShell>
   );
 }
