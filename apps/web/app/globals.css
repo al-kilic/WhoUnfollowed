@@ -392,6 +392,13 @@ body.tutorial-active #tutorial-triage-buttons {
   .animate-spin-slow,
   .animate-ticker,
   .animate-scale-in,
+/* Go Pro button shimmer */
+@keyframes goPro-shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
   .animate-pulse-ring,
   .animate-shimmer,
   .animate-glow-pulse,
