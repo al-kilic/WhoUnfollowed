@@ -36,37 +36,70 @@ const logoutIcon = (
   </svg>
 );
 
-// Animated Go Pro button — shimmer text only, no icon
+// Animated Go Pro button — shimmer text, with a "Log in" tooltip on hover
 function GoProButton() {
+  const [hovered, setHovered] = useState(false);
+
   return (
-    <Link
-      href="/pricing"
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        fontSize: 13,
-        fontWeight: 700,
-        fontFamily: T.sans,
-        textDecoration: 'none',
-        padding: '7px 16px',
-        borderRadius: 100,
-        whiteSpace: 'nowrap',
-        border: '1.5px solid rgba(2,136,143,0.55)',
-        boxShadow: '0 2px 8px rgba(1,105,111,0.28)',
-      }}
+    <div
+      style={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
-      <span style={{
-        background: 'linear-gradient(110deg, #02888f 0%, #5fc4c8 28%, #f4f0e8 46%, #5fc4c8 64%, #02888f 100%)',
-        backgroundSize: '250% auto',
-        WebkitBackgroundClip: 'text',
-        backgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        color: 'transparent',
-        animation: 'goPro-shimmer 3.5s linear infinite',
-      } as CSSProperties}>
-        Go Pro
-      </span>
-    </Link>
+      <Link
+        href="/pricing"
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          fontSize: 13,
+          fontWeight: 700,
+          fontFamily: T.sans,
+          textDecoration: 'none',
+          padding: '7px 16px',
+          borderRadius: 100,
+          whiteSpace: 'nowrap',
+          border: '1.5px solid rgba(2,136,143,0.55)',
+          boxShadow: '0 2px 8px rgba(1,105,111,0.28)',
+        }}
+      >
+        <span style={{
+          background: 'linear-gradient(110deg, #02888f 0%, #5fc4c8 28%, #f4f0e8 46%, #5fc4c8 64%, #02888f 100%)',
+          backgroundSize: '250% auto',
+          WebkitBackgroundClip: 'text',
+          backgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          color: 'transparent',
+          animation: 'goPro-shimmer 3.5s linear infinite',
+        } as CSSProperties}>
+          Go Pro
+        </span>
+      </Link>
+
+      {/* Hover tooltip: Log in link */}
+      {hovered && (
+        <div style={{
+          position: 'absolute',
+          top: '100%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          marginTop: 6,
+          whiteSpace: 'nowrap',
+          background: T.overlay,
+          border: `1px solid ${T.overlayBorder}`,
+          borderRadius: 8,
+          padding: '6px 12px',
+          fontSize: 12,
+          color: T.inkDim,
+          boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
+          zIndex: 200,
+        }}>
+          Already a member?{' '}
+          <Link href="/login" style={{ color: T.tealMid, fontWeight: 600, textDecoration: 'none' }}>
+            Log in
+          </Link>
+        </div>
+      )}
+    </div>
   );
 }
 
