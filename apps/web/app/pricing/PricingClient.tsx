@@ -167,20 +167,34 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
 
               {error && <p style={{ color: '#ef4444', fontSize: 13, marginBottom: 12 }}>{error}</p>}
 
-              <button
-                onClick={handleSubscribe}
-                disabled={loading}
-                style={{
-                  width: '100%', padding: '13px 24px', borderRadius: 12,
-                  border: 'none', cursor: loading ? 'not-allowed' : 'pointer',
-                  background: T.teal, color: T.cream,
-                  fontSize: 15, fontWeight: 600, fontFamily: T.sans,
-                  opacity: loading ? 0.7 : 1,
-                  transition: 'opacity 0.15s, transform 0.1s',
-                }}
-              >
-                {ctaLabel}
-              </button>
+              {/* Primary CTA */}
+              {!userEmail ? (
+                <Link
+                  href="/signup"
+                  style={{
+                    display: 'block', width: '100%', padding: '13px 24px', borderRadius: 12,
+                    background: T.teal, color: T.cream, textDecoration: 'none',
+                    fontSize: 15, fontWeight: 600, fontFamily: T.sans, textAlign: 'center',
+                    boxSizing: 'border-box',
+                  }}
+                >
+                  Sign up now
+                </Link>
+              ) : (
+                <button
+                  onClick={handleSubscribe}
+                  disabled={loading}
+                  style={{
+                    width: '100%', padding: '13px 24px', borderRadius: 12,
+                    border: 'none', cursor: loading ? 'not-allowed' : 'pointer',
+                    background: T.teal, color: T.cream,
+                    fontSize: 15, fontWeight: 600, fontFamily: T.sans,
+                    opacity: loading ? 0.7 : 1,
+                  }}
+                >
+                  {ctaLabel}
+                </button>
+              )}
 
               {!paymentsEnabled && (
                 <p style={{ fontSize: 12, color: T.inkMute, textAlign: 'center', marginTop: 10 }}>
@@ -190,17 +204,19 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
 
               <div style={{ borderTop: `1px solid ${T.border2}`, margin: '18px 0 14px' }} />
 
-              {/* Prominent login link */}
+              {/* Login / account link */}
               {!userEmail ? (
-                <p style={{ fontSize: 13, color: T.inkDim, textAlign: 'center', lineHeight: 1.5 }}>
-                  Already a member?{' '}
-                  <Link
-                    href="/login"
-                    style={{ color: T.tealMid, fontWeight: 600, textDecoration: 'none' }}
-                  >
-                    Go to your account
-                  </Link>
-                </p>
+                <Link
+                  href="/login"
+                  style={{
+                    display: 'block', width: '100%', padding: '11px 24px', borderRadius: 12,
+                    border: `1px solid ${T.border3}`, textAlign: 'center', textDecoration: 'none',
+                    fontSize: 14, fontWeight: 500, fontFamily: T.sans, color: T.inkDim,
+                    boxSizing: 'border-box',
+                  }}
+                >
+                  Already a member? Log in
+                </Link>
               ) : (
                 <p style={{ fontSize: 13, color: T.inkDim, textAlign: 'center' }}>
                   <Link href="/account" style={{ color: T.tealMid, fontWeight: 600, textDecoration: 'none' }}>
@@ -249,7 +265,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
                   'Your ZIP file is parsed entirely in your browser. Nothing is uploaded to us.',
                   'Snapshots are encrypted on your device before they leave. We store blobs we cannot read.',
                   'You hold the encryption key. We cannot recover your data even if we wanted to.',
-                  'EU servers (Hetzner, Germany). Open-source parsing core (MIT). No ads, no brokers.',
+                  'EU-based servers. Open-source parsing core (MIT). No ads, no brokers.',
                 ].map((line) => (
                   <li key={line} style={{ fontSize: 13, color: T.teal, lineHeight: 1.5, display: 'flex', alignItems: 'flex-start', gap: 8 }}>
                     <span style={{ flexShrink: 0, marginTop: 1 }}>·</span>
