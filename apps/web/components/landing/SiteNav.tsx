@@ -197,8 +197,15 @@ export function SiteNav({ userEmail, isPro = false }: { userEmail: string | null
 
         {/* Desktop nav */}
         <div className="hidden sm:flex items-center" style={{ gap: 32, fontSize: 13, color: T.inkDim }}>
+          {userEmail && (
+            <>
+              <Link href="/dashboard" style={{ color: 'inherit', textDecoration: 'none' }}>Radar</Link>
+              <Link href="/history" style={{ color: 'inherit', textDecoration: 'none' }}>History</Link>
+            </>
+          )}
           <WhatIsDropdown />
-          <HowItWorksDropdown />
+          {!userEmail && <HowItWorksDropdown />}
+          <Link href="/pricing" style={{ cursor: 'pointer', color: 'inherit', textDecoration: 'none' }}>Pricing</Link>
           <a href="/privacy" style={{ cursor: 'pointer', color: 'inherit', textDecoration: 'none' }}>Privacy</a>
           <a
             href="https://github.com/al-kilic/IG-Tracker"

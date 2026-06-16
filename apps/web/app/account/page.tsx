@@ -7,7 +7,7 @@ import { validateRequest } from '@/lib/auth/session';
 import { db } from '@/lib/db/index';
 import { profiles, syncSettings } from '@/lib/db/schema';
 import { isPaidFeaturesEnabled, isProUser } from '@/lib/flags';
-import { NavBarClient } from '@/components/NavBarClient';
+import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { T } from '@/components/landing/tokens';
 import { SyncSetup } from '@/app/settings/SyncSetup';
@@ -85,7 +85,7 @@ export default async function AccountPage() {
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <NavBarClient userEmail={user.email} isPro={isPro} />
+      <SiteNav userEmail={user.email} isPro={isPro} />
 
       <main style={{ maxWidth: 640, margin: '0 auto', padding: '48px 24px 80px' }}>
         <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(28px, 5vw, 40px)', fontWeight: 400, letterSpacing: '-0.02em', marginBottom: 8, lineHeight: 1.1 }}>

@@ -14,8 +14,7 @@ import { useSnapshotStore } from '@/lib/store';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { T } from '@/components/landing/tokens';
 import { useSnapshotList, useSnapshotsLoaded } from '@/hooks/useSnapshots';
-import { ThemeToggle } from '@/components/ThemeToggle';
-import { AccountMenu } from '@/components/AccountMenu';
+import { SiteNav } from '@/components/landing/SiteNav';
 import { Tutorial } from '@/components/Tutorial';
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
@@ -1116,20 +1115,7 @@ export function DashboardClient({ account }: DashboardClientProps) {
   // No snapshot in memory and none in local history — nothing to scan yet.
   if (!snapshot) return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <nav
-        className="flex items-center justify-between px-4 sm:px-8 py-4 sticky top-0 z-50"
-        style={{ borderBottom: '1px solid var(--t-border1)', backdropFilter: 'blur(14px)', background: 'var(--t-navBg)' }}
-      >
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <img src="/logo.png" alt="WhoUnfollowed" width={26} height={26} style={{ borderRadius: 7, objectFit: 'contain' }} />
-          <span style={{ fontFamily: T.serif, fontSize: 17, color: T.ink }}>WhoUnfollowed</span>
-        </Link>
-        <div className="flex items-center gap-4 sm:gap-6" style={{ fontSize: 13 }}>
-          <Link href="/history" className="hidden sm:inline" style={{ color: T.inkDim, textDecoration: 'none' }}>History</Link>
-          <ThemeToggle />
-          <AccountMenu userEmail={account.userEmail} isPro={account.isPro} />
-        </div>
-      </nav>
+      <SiteNav userEmail={account.userEmail} isPro={account.isPro} />
 
       <main style={{ maxWidth: 520, margin: '0 auto', padding: '88px 24px', textAlign: 'center' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 64, height: 64, borderRadius: '50%', background: T.surface2, border: `1px solid ${T.border2}`, marginBottom: 24 }}>
@@ -1165,23 +1151,7 @@ export function DashboardClient({ account }: DashboardClientProps) {
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      {/* Nav */}
-      <nav
-        className="flex items-center justify-between px-4 sm:px-8 py-4 sticky top-0 z-50"
-        style={{ borderBottom: '1px solid var(--t-border1)', backdropFilter: 'blur(14px)', background: 'var(--t-navBg)' }}
-      >
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <img src="/logo.png" alt="WhoUnfollowed" width={26} height={26} style={{ borderRadius: 7, objectFit: 'contain' }} />
-          <span style={{ fontFamily: T.serif, fontSize: 17, color: T.ink }}>WhoUnfollowed</span>
-        </Link>
-        <div className="flex items-center gap-4 sm:gap-6" style={{ fontSize: 13 }}>
-          <Link href="/results" style={{ color: T.inkDim, textDecoration: 'none' }}>Snapshot</Link>
-          <Link href="/history" className="hidden sm:inline" style={{ color: T.inkDim, textDecoration: 'none' }}>History</Link>
-          <Link href="/"        className="hidden sm:inline" style={{ color: T.inkDim, textDecoration: 'none' }}>Home</Link>
-          <ThemeToggle />
-          <AccountMenu userEmail={account.userEmail} isPro={account.isPro} />
-        </div>
-      </nav>
+      <SiteNav userEmail={account.userEmail} isPro={account.isPro} />
 
       {radarModalOpen && <RadarModal onClose={() => setRadarModalOpen(false)} />}
       <Tutorial

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { NavBarClient } from '@/components/NavBarClient';
+import { SiteNav } from '@/components/landing/SiteNav';
 import { T } from '@/components/landing/tokens';
 
 interface Props {
@@ -63,7 +63,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <NavBarClient userEmail={userEmail} isPro={isPro} />
+      <SiteNav userEmail={userEmail} isPro={isPro} />
 
       <main style={{ maxWidth: 560, margin: '0 auto', padding: '64px 24px' }}>
 
