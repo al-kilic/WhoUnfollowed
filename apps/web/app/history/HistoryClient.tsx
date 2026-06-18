@@ -8,7 +8,6 @@ import { useSnapshotStore } from '@/lib/store';
 import { useSnapshotList, deleteSnapshot, updateSnapshotLabel, redateSnapshot, setSnapshotCloudId, FREE_SNAPSHOT_LIMIT, type SnapshotRecord } from '@/hooks/useSnapshots';
 import { useCloudSync } from '@/hooks/useCloudSync';
 import { UnlockSyncForm } from '@/components/sync/UnlockSyncForm';
-import { getUserSyncSalt } from '@/app/api/sync/actions';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { T } from '@/components/landing/tokens';
@@ -30,7 +29,7 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
   const [compareBaseId, setCompareBase] = useState<number | null>(null);
   const [syncingId, setSyncingId]       = useState<number | null>(null);
   const [showUnlock, setShowUnlock]     = useState(false);
-  const { isUnlocked, unlock, syncSnapshot } = useCloudSync();
+  const { isUnlocked, unlockWithPassword, syncSnapshot } = useCloudSync();
 
   function handleView(record: SnapshotRecord) {
     setSnapshot(record.data);
@@ -65,9 +64,8 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
     setSyncingId(null);
   }
 
-  async function handleUnlock(passphrase: string) {
-    const saltB64 = await getUserSyncSalt();
-    return unlock(passphrase, saltB64 ?? undefined);
+  async function handleUnlock(password: string) {
+    return unlockWithPassword(password);
   }
 
   const slotsUsed = snapshots.length;

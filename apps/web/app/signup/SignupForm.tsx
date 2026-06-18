@@ -1,16 +1,34 @@
 'use client';
 
 import { useActionState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { signupAction } from './actions';
+import { deriveAndStoreSyncKey } from '@/lib/syncKey';
 import { AuthShell, AuthField, AuthError, AuthButton } from '@/components/auth/AuthShell';
 import { T } from '@/components/landing/tokens';
 
 export function SignupForm() {
+  const router = useRouter();
   const [state, action, pending] = useActionState(
-    async (_prev: unknown, formData: FormData) => signupAction(formData),
+    async (_prev: unknown, formData: FormData) => {
+      const password = (formData.get('password') as string) ?? '';
+      const res = await signupAction(formData);
+      if (res && 'ok' in res && res.ok) {
+        // Derive + cache the cloud-sync key from the password, then navigate.
+        try {
+          await deriveAndStoreSyncKey(password, res.saltB64);
+        } catch {
+          // sync key derivation must never block signup
+        }
+        router.push('/history?welcome=1');
+      }
+      return res;
+    },
     null,
   );
+
+  const error = state && 'error' in state ? state.error : null;
 
   return (
     <AuthShell
@@ -38,7 +56,7 @@ export function SignupForm() {
           hint="Minimum 8 characters."
         />
 
-        {state?.error && <AuthError>{state.error}</AuthError>}
+        {error && <AuthError>{error}</AuthError>}
 
         <AuthButton pending={pending}>{pending ? 'Creating account...' : 'Create account'}</AuthButton>
       </form>

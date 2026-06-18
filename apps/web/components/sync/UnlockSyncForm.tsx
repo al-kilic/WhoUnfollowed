@@ -3,11 +3,11 @@
 import { useState } from 'react';
 
 interface Props {
-  onUnlock: (passphrase: string) => Promise<boolean>;
+  onUnlock: (password: string) => Promise<boolean>;
 }
 
 export function UnlockSyncForm({ onUnlock }: Props) {
-  const [passphrase, setPassphrase] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -15,22 +15,22 @@ export function UnlockSyncForm({ onUnlock }: Props) {
     e.preventDefault();
     setError('');
     setLoading(true);
-    const ok = await onUnlock(passphrase);
+    const ok = await onUnlock(password);
     setLoading(false);
-    if (!ok) setError('Wrong passphrase. Try again.');
+    if (!ok) setError('Wrong password. Try again.');
   }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
       <p className="text-sm text-muted-foreground">
-        Enter your sync passphrase to enable cloud sync on this device.
+        Re-enter your account password to unlock cloud sync on this device.
       </p>
       <div className="flex gap-2">
         <input
           type="password"
-          value={passphrase}
-          onChange={(e) => setPassphrase(e.target.value)}
-          placeholder="Sync passphrase"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Account password"
           required
           autoComplete="current-password"
           className="flex-1 border rounded-md px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"

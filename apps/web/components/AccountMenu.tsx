@@ -3,6 +3,7 @@
 import { useState, useEffect, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { T } from './landing/tokens';
+import { clearSyncKey } from '@/lib/syncKey';
 
 interface Props {
   userEmail: string | null;
@@ -237,7 +238,7 @@ function AccountBadge({ userEmail, isPro }: { userEmail: string; isPro: boolean 
               Account &amp; billing
             </Link>
 
-            <form action="/logout" method="POST">
+            <form action="/logout" method="POST" onSubmit={() => clearSyncKey()}>
               <button
                 type="submit"
                 role="menuitem"
@@ -314,7 +315,7 @@ export function AccountMenu({ userEmail, isPro, variant = 'bar' }: Props) {
         <Link href="/account" style={{ fontSize: 15, color: T.inkDim, textDecoration: 'none' }}>
           Account &amp; billing
         </Link>
-        <form action="/logout" method="POST">
+        <form action="/logout" method="POST" onSubmit={() => clearSyncKey()}>
           <button
             type="submit"
             style={{ fontSize: 15, color: T.terra, background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: T.sans }}
