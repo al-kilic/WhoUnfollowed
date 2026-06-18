@@ -113,9 +113,6 @@ export function UpgradeDialog({ oldestLabel, onDeleteOldest, onUpgrade, onClose 
                 <path d="M7.5 1 L9 5.5 H13.5 L10 8 L11.5 12.5 L7.5 10 L3.5 12.5 L5 8 L1.5 5.5 H6 Z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
               </svg>
               Upgrade to Pro
-              <span style={{ marginLeft: 'auto', fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.65)', background: 'rgba(255,255,255,0.12)', borderRadius: 20, padding: '3px 9px' }}>
-                Free during beta
-              </span>
             </button>
           </div>
         </div>
