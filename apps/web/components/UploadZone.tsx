@@ -26,6 +26,7 @@ import {
 import { UpgradeDialog } from '@/components/UpgradeDialog';
 import { DeltaWarning } from '@/components/DeltaWarning';
 import { cn } from '@/lib/utils';
+import { track } from '@/lib/analytics';
 import { Button } from '@/components/ui/button';
 
 const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500 MB
@@ -61,6 +62,7 @@ export function UploadZone() {
     async (snapshot: ParsedSnapshot) => {
       await saveSnapshot(snapshot);
       setSnapshot(snapshot);
+      track('zip-upload');
       setState({ status: 'success' });
       router.push('/results');
     },

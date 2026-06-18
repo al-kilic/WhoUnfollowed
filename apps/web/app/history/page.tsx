@@ -4,8 +4,14 @@ import { db } from '@/lib/db/index';
 import { profiles } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { HistoryClient } from './HistoryClient';
+import { AnalyticsEvent } from '@/components/AnalyticsEvent';
 
-export default async function HistoryPage() {
+export default async function HistoryPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ welcome?: string }>;
+}) {
+  const { welcome } = await searchParams;
   const { user } = await validateRequest();
   const [isPro, status] = await Promise.all([
     isProUser(),
@@ -22,11 +28,14 @@ export default async function HistoryPage() {
   }
 
   return (
-    <HistoryClient
-      userEmail={user?.email ?? null}
-      isPro={isPro}
-      subscriptionStatus={status}
-      gracePeriodEndsAt={gracePeriodEndsAt}
-    />
+    <>
+      {welcome === '1' && <AnalyticsEvent event="signup" />}
+      <HistoryClient
+        userEmail={user?.email ?? null}
+        isPro={isPro}
+        subscriptionStatus={status}
+        gracePeriodEndsAt={gracePeriodEndsAt}
+      />
+    </>
   );
 }

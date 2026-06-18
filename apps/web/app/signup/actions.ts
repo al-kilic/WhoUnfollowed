@@ -55,5 +55,5 @@ export async function signupAction(formData: FormData) {
 
   await createSession(user.id);
 
-  redirect('/history');
+  redirect('/history?welcome=1');
 }
