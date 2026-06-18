@@ -14,6 +14,7 @@ import { detectDeltaExport, type DeltaReason } from '@ig-tracker/core';
 import { useSnapshotStore } from '@/lib/store';
 import { useSnapshotList, saveSnapshot, deleteSnapshot, FREE_SNAPSHOT_LIMIT } from '@/hooks/useSnapshots';
 import { db } from '@/lib/db';
+import { track } from '@/lib/analytics';
 import { DeltaWarning } from '@/components/DeltaWarning';
 import { UpgradeDialog } from '@/components/UpgradeDialog';
 import { createPortal } from 'react-dom';
@@ -89,6 +90,7 @@ export function HeroSection() {
   const commit = useCallback(async (snap: ParsedSnapshot) => {
     // Navigate immediately — results page reads from Zustand, not IndexedDB
     setSnapshot(snap);
+    track('zip-upload');
     router.push('/results');
     // Save to IndexedDB + stats in background (non-blocking)
     void saveSnapshot(snap);
