@@ -288,26 +288,6 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Eyebrow badge */}
-      <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 20, position: 'relative', zIndex: 5 }}>
-        <div style={{
-          display: 'inline-flex', alignItems: 'center', gap: 8,
-          padding: '7px 18px 7px 8px',
-          border: `1px solid rgba(2,136,143,0.4)`,
-          background: 'rgba(2,136,143,0.08)',
-          borderRadius: 100,
-          animation: 'fade-up 0.7s 0.0s cubic-bezier(0.16,1,0.3,1) both',
-        }}>
-          <div style={{ position: 'relative', width: 18, height: 18 }}>
-            <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: `1px solid ${T.tealMid}`, animation: 'pulse-ring 2.4s ease-out infinite' }} />
-            <div style={{ position: 'absolute', inset: 4, borderRadius: '50%', background: T.tealMid, boxShadow: `0 0 10px ${T.tealMid}` }} />
-          </div>
-          <span style={{ fontSize: 12, color: T.tealLight, fontWeight: 500, letterSpacing: '0.01em', whiteSpace: 'nowrap' }}>
-            Beta&nbsp;·&nbsp;<span style={{ color: T.inkDim }}>Free during launch</span>
-          </span>
-        </div>
-      </div>
-
       {/* Headline */}
       <h1 style={{
         fontFamily: T.serif, fontWeight: 400,

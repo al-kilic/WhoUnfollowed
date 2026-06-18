@@ -91,22 +91,6 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
 
       <main style={{ maxWidth: 980, margin: '0 auto', padding: '56px 32px 80px' }}>
 
-        {/* Beta banner */}
-        {!paymentsEnabled && (
-          <div style={{
-            background: T.tealGlow,
-            border: `1px solid ${T.teal}`,
-            borderRadius: 10,
-            padding: '12px 18px',
-            marginBottom: 44,
-            fontSize: 13,
-            color: T.teal,
-            maxWidth: 700,
-          }}>
-            Free during beta. Sign up now and get full Pro access at no cost until we launch paid plans.
-          </div>
-        )}
-
         {/* Header row */}
         <div style={{ marginBottom: 48 }}>
           <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 12 }}>PRICING</div>

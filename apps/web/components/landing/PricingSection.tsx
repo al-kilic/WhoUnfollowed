@@ -58,9 +58,6 @@ function PricingMobileTabs({ billing, mobileEmail, setMobileEmail, mobileStatus,
       {/* Pro */}
       {tab === 'pro' && (
         <div style={{ padding: '28px 24px', borderRadius: 20, background: `linear-gradient(180deg, rgba(2,136,143,0.16) 0%, rgba(2,136,143,0.04) 100%)`, border: `1px solid ${T.tealMid}`, boxShadow: `0 20px 60px rgba(2,136,143,0.18)`, position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: 14, right: 14, display: 'inline-flex', alignItems: 'center', gap: 5, padding: '4px 10px', borderRadius: 100, background: T.tealMid, fontSize: 9, fontWeight: 700, color: T.cream, letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: T.sans }}>
-            <span style={{ width: 4, height: 4, borderRadius: '50%', background: T.cream }} />Free during beta
-          </div>
           <div style={{ fontSize: 10, color: T.tealLight, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 8, fontFamily: T.mono }}>Pro</div>
           <div style={{ fontFamily: T.serif, fontSize: 52, lineHeight: 1, letterSpacing: '-0.04em', color: T.ink, marginBottom: 4 }}>
             ${billing === 'monthly' ? '4.99' : '3.74'}<span style={{ fontSize: 16, color: T.inkMute, fontFamily: T.sans, fontWeight: 400 }}>/mo</span>
@@ -197,10 +194,6 @@ function PricingBig() {
           boxShadow: `0 16px 48px rgba(2,136,143,0.14)`,
           display: 'flex', flexDirection: 'column', overflow: 'hidden',
         }}>
-          <div style={{ position: 'absolute', top: 14, right: 14, display: 'inline-flex', alignItems: 'center', gap: 5, padding: '4px 9px', borderRadius: 100, background: T.tealMid, fontSize: 9, fontWeight: 700, color: T.cream, letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: T.sans }}>
-            <span style={{ width: 4, height: 4, borderRadius: '50%', background: T.cream, animation: 'glow-soft 2s ease-in-out infinite' }} />
-            Free during beta
-          </div>
           <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', flex: 1 }}>
             <div style={{ fontSize: 10, color: T.tealLight, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 10, fontFamily: T.mono }}>Pro</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
