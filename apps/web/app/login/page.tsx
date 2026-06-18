@@ -1,16 +1,34 @@
 'use client';
 
 import { useActionState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { loginAction } from './actions';
+import { deriveAndStoreSyncKey } from '@/lib/syncKey';
 import { AuthShell, AuthField, AuthError, AuthButton } from '@/components/auth/AuthShell';
 import { T } from '@/components/landing/tokens';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [state, action, pending] = useActionState(
-    async (_prev: unknown, formData: FormData) => loginAction(formData),
+    async (_prev: unknown, formData: FormData) => {
+      const password = (formData.get('password') as string) ?? '';
+      const res = await loginAction(formData);
+      if (res && 'ok' in res && res.ok) {
+        // Derive + cache the cloud-sync key from the password, then navigate.
+        try {
+          await deriveAndStoreSyncKey(password, res.saltB64);
+        } catch {
+          // sync key derivation must never block login
+        }
+        router.push('/history');
+      }
+      return res;
+    },
     null,
   );
+
+  const error = state && 'error' in state ? state.error : null;
 
   return (
     <AuthShell
@@ -36,7 +54,7 @@ export default function LoginPage() {
           autoComplete="current-password"
         />
 
-        {state?.error && <AuthError>{state.error}</AuthError>}
+        {error && <AuthError>{error}</AuthError>}
 
         <AuthButton pending={pending}>{pending ? 'Logging in...' : 'Log in'}</AuthButton>
       </form>

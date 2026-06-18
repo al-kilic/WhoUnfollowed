@@ -29,7 +29,27 @@ export async function deriveKey(
     },
     keyMaterial,
     { name: 'AES-GCM', length: KEY_LENGTH },
-    false,
+    // extractable: the derived key is exported to raw bytes and cached in
+    // sessionStorage so cloud sync stays unlocked across page refreshes
+    // without re-prompting. Cleared on logout / tab close.
+    true,
+    ['encrypt', 'decrypt'],
+  );
+}
+
+// Export an AES-GCM key to a base64 string for short-lived sessionStorage caching.
+export async function exportKeyRaw(key: CryptoKey): Promise<string> {
+  const raw = await crypto.subtle.exportKey('raw', key);
+  return bufferToBase64(raw);
+}
+
+// Re-import a base64 raw key produced by exportKeyRaw.
+export async function importKeyRaw(b64: string): Promise<CryptoKey> {
+  return crypto.subtle.importKey(
+    'raw',
+    base64ToBuffer(b64).buffer as ArrayBuffer,
+    { name: 'AES-GCM', length: KEY_LENGTH },
+    true,
     ['encrypt', 'decrypt'],
   );
 }

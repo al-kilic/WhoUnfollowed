@@ -1,18 +1,22 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import {
-  deriveKey,
   encrypt,
   decrypt,
   bufferToBase64,
   base64ToBuffer,
-  generateSalt,
 } from '@/lib/crypto';
+import {
+  deriveAndStoreSyncKey,
+  loadSyncKey,
+  loadSyncSalt,
+} from '@/lib/syncKey';
 import {
   uploadSnapshot,
   downloadSnapshot,
   listCloudSnapshots,
+  getUserSyncSalt,
   type CloudSnapshotMeta,
 } from '@/app/api/sync/actions';
 import type { ParsedSnapshot } from '@ig-tracker/core';
@@ -25,20 +29,42 @@ export function useCloudSync() {
   const [state, setState] = useState<SyncState>('idle');
   const [error, setError] = useState<string | null>(null);
 
-  const unlock = useCallback(async (passphrase: string, existingSaltB64?: string) => {
+  // Cloud sync unlocks automatically: the key was derived from the account
+  // password at login and cached in sessionStorage. Load it on mount.
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      const cached = await loadSyncKey();
+      if (active && cached) {
+        setKey(cached);
+        setSaltB64(loadSyncSalt());
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  // Fallback used only when the session key is missing (e.g. sessionStorage was
+  // cleared but the login cookie is still valid). Re-derives from the account
+  // password — no separate passphrase.
+  const unlockWithPassword = useCallback(async (password: string) => {
     setState('loading');
     setError(null);
     try {
-      const salt = existingSaltB64
-        ? base64ToBuffer(existingSaltB64)
-        : generateSalt();
-      const derived = await deriveKey(passphrase, salt);
+      const salt = await getUserSyncSalt();
+      if (!salt) {
+        setError('Sync is not set up for this account yet.');
+        setState('error');
+        return false;
+      }
+      const derived = await deriveAndStoreSyncKey(password, salt);
       setKey(derived);
-      setSaltB64(existingSaltB64 ?? bufferToBase64(salt));
+      setSaltB64(salt);
       setState('idle');
       return true;
     } catch {
-      setError('Failed to unlock. Check your passphrase.');
+      setError('Wrong password. Try again.');
       setState('error');
       return false;
     }
@@ -46,8 +72,13 @@ export function useCloudSync() {
 
   const syncSnapshot = useCallback(
     async (label: string, exportedAt: number, data: ParsedSnapshot) => {
-      if (!key || !saltB64) {
-        setError('Unlock sync first by entering your passphrase.');
+      if (!key) {
+        setError('Cloud sync is locked. Re-enter your password to unlock.');
+        return null;
+      }
+      const salt = saltB64 ?? loadSyncSalt() ?? (await getUserSyncSalt());
+      if (!salt) {
+        setError('Sync salt missing. Try logging in again.');
         return null;
       }
       setState('loading');
@@ -59,7 +90,7 @@ export function useCloudSync() {
           exportedAt,
           ciphertextB64: bufferToBase64(ciphertext),
           ivB64: bufferToBase64(iv),
-          saltB64,
+          saltB64: salt,
         });
         setState('idle');
         if (!result.ok) {
@@ -79,7 +110,7 @@ export function useCloudSync() {
   const fetchSnapshot = useCallback(
     async (id: string): Promise<ParsedSnapshot | null> => {
       if (!key) {
-        setError('Unlock sync first by entering your passphrase.');
+        setError('Cloud sync is locked. Re-enter your password to unlock.');
         return null;
       }
       setState('loading');
@@ -123,7 +154,7 @@ export function useCloudSync() {
     isUnlocked: key !== null,
     state,
     error,
-    unlock,
+    unlockWithPassword,
     syncSnapshot,
     fetchSnapshot,
     listSnapshots,

@@ -4,6 +4,8 @@ import {
   deriveKey,
   encrypt,
   decrypt,
+  exportKeyRaw,
+  importKeyRaw,
   bufferToBase64,
   base64ToBuffer,
 } from './crypto';
@@ -100,6 +102,30 @@ describe('encrypt / decrypt', () => {
     await expect(decrypt(ciphertext, iv, wrongKey)).rejects.toThrow(
       'Decryption failed',
     );
+  });
+});
+
+describe('exportKeyRaw / importKeyRaw', () => {
+  it('re-imported key decrypts data encrypted with the original (sessionStorage path)', async () => {
+    const salt = generateSalt();
+    const key = await deriveKey('account-password', salt);
+    const { ciphertext, iv } = await encrypt({ secret: 'data' }, key);
+
+    const exported = await exportKeyRaw(key);
+    const reimported = await importKeyRaw(exported);
+
+    expect(await decrypt(ciphertext, iv, reimported)).toEqual({ secret: 'data' });
+  });
+
+  it('a key re-derived from the same password + salt decrypts (new-device login)', async () => {
+    const salt = generateSalt();
+    const saltB64 = bufferToBase64(salt);
+    const key1 = await deriveKey('account-password', salt);
+    const { ciphertext, iv } = await encrypt({ n: 7 }, key1);
+
+    // simulate logging in on another device: same password, salt from server
+    const key2 = await deriveKey('account-password', base64ToBuffer(saltB64));
+    expect(await decrypt(ciphertext, iv, key2)).toEqual({ n: 7 });
   });
 });
 

@@ -1,10 +1,10 @@
 'use server';
 
-import { redirect } from 'next/navigation';
 import { hash } from '@node-rs/argon2';
 import { db } from '@/lib/db/index';
 import { users, profiles } from '@/lib/db/schema';
 import { createSession } from '@/lib/auth/session';
+import { ensureSyncSalt } from '@/lib/sync/salt';
 import { checkRateLimit } from '@/lib/auth/rate-limit';
 import { headers } from 'next/headers';
 
@@ -55,5 +55,8 @@ export async function signupAction(formData: FormData) {
 
   await createSession(user.id);
 
-  redirect('/history?welcome=1');
+  // Create the sync salt now and return it so the client can derive the
+  // cloud-sync encryption key from the password, then navigate to /history.
+  const saltB64 = await ensureSyncSalt(user.id);
+  return { ok: true as const, saltB64 };
 }
