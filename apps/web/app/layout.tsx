@@ -1,9 +1,15 @@
 import type { Metadata, Viewport } from 'next';
+import Script from 'next/script';
 import { ThemeProvider } from 'next-themes';
 import { FontLoader } from '@/components/FontLoader';
 import './globals.css';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
+
+// Self-hosted Umami analytics (cookieless, privacy-friendly). No data leaves our VPS.
+const UMAMI_SRC =
+  process.env.NEXT_PUBLIC_UMAMI_SRC ?? 'https://analytics.whounfollowed.co/script.js';
+const UMAMI_WEBSITE_ID = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID ?? '380314e5-fc79-480f-9483-d5ddded7ad59';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -84,6 +90,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Fontshare - app pages */}
         <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.fontshare.com" />
+        {UMAMI_WEBSITE_ID ? (
+          <Script
+            defer
+            src={UMAMI_SRC}
+            data-website-id={UMAMI_WEBSITE_ID}
+            strategy="afterInteractive"
+          />
+        ) : null}
       </head>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
