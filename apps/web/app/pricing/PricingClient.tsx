@@ -32,9 +32,11 @@ const PRO_CORE = [
 
 const PRO_MORE = [
   { label: 'Get alerted the moment someone drops', note: 'email alerts, soon' },
+  { label: 'See pending follow requests, and how long they\'ve been waiting', note: '' },
   { label: 'Compare any two snapshots side by side', note: '' },
+  { label: 'Surface restricted, blocked, and close-friends lists', note: '' },
   { label: 'Clean up fast: batch-open everyone who left', note: '' },
-  { label: 'Mobile app included', note: 'iOS + Android' },
+  { label: 'Mobile app included', note: 'iOS + Android, soon' },
   { label: 'Keep the app free and independent', note: 'no ads, no investors' },
 ];
 
