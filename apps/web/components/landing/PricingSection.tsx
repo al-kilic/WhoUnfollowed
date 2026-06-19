@@ -63,9 +63,9 @@ function PricingMobileTabs({ billing, mobileEmail, setMobileEmail, mobileStatus,
         <div style={{ padding: '28px 24px', borderRadius: 20, background: `linear-gradient(180deg, rgba(2,136,143,0.16) 0%, rgba(2,136,143,0.04) 100%)`, border: `1px solid ${T.tealMid}`, boxShadow: `0 20px 60px rgba(2,136,143,0.18)`, position: 'relative', overflow: 'hidden' }}>
           <div style={{ fontSize: 10, color: T.tealLight, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 8, fontFamily: T.mono }}>Pro</div>
           <div style={{ fontFamily: T.serif, fontSize: 52, lineHeight: 1, letterSpacing: '-0.04em', color: T.ink, marginBottom: 4 }}>
-            ${billing === 'monthly' ? '4.99' : '3.74'}<span style={{ fontSize: 16, color: T.inkMute, fontFamily: T.sans, fontWeight: 400 }}>/mo</span>
+            ${billing === 'monthly' ? '4.99' : '3.25'}<span style={{ fontSize: 16, color: T.inkMute, fontFamily: T.sans, fontWeight: 400 }}>/mo</span>
           </div>
-          <div style={{ fontSize: 12, color: T.inkMute, marginBottom: 16 }}>{billing === 'monthly' ? 'billed monthly' : 'billed annually · save $18/year'}</div>
+          <div style={{ fontSize: 12, color: T.inkMute, marginBottom: 16 }}>{billing === 'monthly' ? 'billed monthly' : 'billed annually · save 35%'}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
             {['Everything in Free','Unlimited snapshot history','Radar: follow age, health score','Compare snapshots','Follower growth charts','Triage workflow','Cloud sync (coming soon)'].map(f => (
               <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: T.ink }}>
@@ -155,7 +155,7 @@ function PricingBig() {
                 background: billing === 'annual' ? T.terra : 'rgba(168,75,47,0.2)',
                 color: billing === 'annual' ? T.cream : T.terra,
                 fontWeight: 700,
-              }}>−25%</span>
+              }}>−35%</span>
             )}
           </button>
         ))}
@@ -205,12 +205,12 @@ function PricingBig() {
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
               <span style={{ fontSize: 16, color: T.inkMute, marginRight: -2 }}>$</span>
               <span style={{ fontFamily: T.serif, fontSize: 52, lineHeight: 1, letterSpacing: '-0.03em', color: T.ink }}>
-                {billing === 'monthly' ? '4.99' : '3.74'}
+                {billing === 'monthly' ? '4.99' : '3.25'}
               </span>
               <span style={{ fontSize: 12, color: T.inkMute }}>/month</span>
             </div>
             <div style={{ fontSize: 11, color: T.inkMute, marginBottom: 16 }}>
-              {billing === 'monthly' ? 'billed monthly · cancel anytime' : 'billed annually · save $18/year'}
+              {billing === 'monthly' ? 'billed monthly · cancel anytime' : 'billed annually · save 35%'}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20, flex: 1 }}>
               {['Everything in Free','Unlimited snapshot history','Radar: health score, follow age, pending','Compare snapshots, see who unfollowed','Follower growth charts','Triage workflow','Cloud sync (coming soon)'].map(f => (
