@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { SiteNav } from '@/components/landing/SiteNav';
+import { GridBg, ProfileCard } from '@/components/landing/atoms';
 import { T } from '@/components/landing/tokens';
 
 interface Props {
@@ -122,14 +123,37 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
         : 'Try Pro free';
 
   return (
-    <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <SiteNav userEmail={userEmail} isPro={isPro} />
+    <div style={{ position: 'relative', minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans, overflow: 'hidden' }}>
+      {/* Decorative background — same grid, glow, and floating cards as the landing page */}
+      <div aria-hidden style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
+        <GridBg opacity={0.05} />
+        <div style={{
+          position: 'absolute', left: '50%', top: '34%', transform: 'translate(-50%,-50%)',
+          width: 620, height: 620, borderRadius: '50%',
+          background: `radial-gradient(circle, ${T.tealGlow} 0%, transparent 60%)`, filter: 'blur(40px)',
+        }} />
+        <div className="hidden lg:block" style={{ position: 'absolute', left: 36, top: 150, animation: 'drift-1 6s ease-in-out infinite', opacity: 0.5 }}>
+          <ProfileCard handle="@alex.studio" status="not_following_back" small />
+        </div>
+        <div className="hidden lg:block" style={{ position: 'absolute', right: 44, top: 184, animation: 'drift-3 6.5s ease-in-out infinite', opacity: 0.5 }}>
+          <ProfileCard handle="@marco.visuals" status="mutual" small />
+        </div>
+        <div className="hidden xl:block" style={{ position: 'absolute', left: 70, bottom: 130, animation: 'drift-2 7.5s ease-in-out infinite', opacity: 0.4 }}>
+          <ProfileCard handle="@nova.frames" status="fan" small />
+        </div>
+        <div className="hidden xl:block" style={{ position: 'absolute', right: 74, bottom: 160, animation: 'drift-4 8s ease-in-out infinite', opacity: 0.4 }}>
+          <ProfileCard handle="@sarah_creates" status="not_following_back" small />
+        </div>
+      </div>
 
-      <main style={{ maxWidth: 1160, margin: '0 auto', padding: '44px 28px 88px' }}>
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <SiteNav userEmail={userEmail} isPro={isPro} />
+
+      <main style={{ maxWidth: 1160, margin: '0 auto', padding: '26px 28px 72px' }}>
 
         {/* Beta badge: the single, intentional "free during beta" callout */}
         {!paymentsEnabled && (
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 26 }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 14 }}>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
               padding: '7px 16px', borderRadius: 100,
@@ -144,11 +168,11 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
         )}
 
         {/* Slogan / value header */}
-        <div style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto 48px' }}>
-          <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(36px, 5.5vw, 60px)', fontWeight: 400, letterSpacing: '-0.03em', lineHeight: 1.04, marginBottom: 18 }}>
-            Always free.<br />Pro helps keep it alive.
+        <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 28px' }}>
+          <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(30px, 4.5vw, 46px)', fontWeight: 400, letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 12 }}>
+            Always free. Pro helps keep it alive.
           </h1>
-          <p style={{ color: T.inkDim, fontSize: 16, lineHeight: 1.7, margin: '0 auto', maxWidth: 580 }}>
+          <p style={{ color: T.inkDim, fontSize: 14.5, lineHeight: 1.6, margin: '0 auto', maxWidth: 560 }}>
             See when someone unfollows you, who never follows back, and how your audience
             shifts over time. WhoUnfollowed is free, open source, and runs entirely in your
             browser. Pro adds memory and depth (history, trends, and alerts) and keeps the
@@ -330,6 +354,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
           ))}
         </div>
       </main>
+      </div>
     </div>
   );
 }
