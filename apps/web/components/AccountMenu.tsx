@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, type CSSProperties } from 'react';
+import { useState, useEffect, useRef, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { T } from './landing/tokens';
 import { clearSyncKey } from '@/lib/syncKey';
@@ -39,72 +39,105 @@ const logoutIcon = (
 
 // Animated Go Pro button — shimmer text, with a "Log in" tooltip on hover
 function GoProButton() {
-  const [hovered, setHovered] = useState(false);
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Click-to-open dropdown (no hover): close on outside click or Escape.
+  useEffect(() => {
+    if (!open) return;
+    function onDocClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setOpen(false);
+    }
+    document.addEventListener('mousedown', onDocClick);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDocClick);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
 
   return (
-    <div
-      style={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <Link
-        href="/pricing"
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          fontSize: 13,
-          fontWeight: 700,
-          fontFamily: T.sans,
-          textDecoration: 'none',
-          padding: '7px 16px',
-          borderRadius: 100,
-          whiteSpace: 'nowrap',
-          border: '1.5px solid rgba(2,136,143,0.55)',
-          boxShadow: '0 2px 8px rgba(1,105,111,0.28)',
-        }}
-      >
-        <span style={{
-          background: 'linear-gradient(110deg, #02888f 0%, #5fc4c8 28%, #f4f0e8 46%, #5fc4c8 64%, #02888f 100%)',
-          backgroundSize: '250% auto',
-          WebkitBackgroundClip: 'text',
-          backgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          color: 'transparent',
-          animation: 'goPro-shimmer 3.5s linear infinite',
-        } as CSSProperties}>
-          Go Pro
-        </span>
-      </Link>
-
-      {/* Tooltip — always mounted, fades in/out via opacity so the mouse
-          can travel from the button into it without it disappearing.
-          The invisible top padding bridges the gap between button and card. */}
+    <div ref={ref} style={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+      {/* Pill: "See When" navigates to /pricing; the chevron opens the login panel */}
       <div style={{
-        position: 'absolute',
-        top: '100%',
-        right: 0,
-        paddingTop: 8,
-        zIndex: 200,
-        pointerEvents: hovered ? 'auto' : 'none',
-        opacity: hovered ? 1 : 0,
-        transition: 'opacity 0.15s ease',
+        display: 'inline-flex',
+        alignItems: 'stretch',
+        borderRadius: 100,
+        whiteSpace: 'nowrap',
+        border: '1.5px solid rgba(2,136,143,0.55)',
+        boxShadow: '0 2px 8px rgba(1,105,111,0.28)',
+        overflow: 'hidden',
       }}>
-        <div style={{
-          whiteSpace: 'nowrap',
-          background: T.overlay,
-          border: `1px solid ${T.overlayBorder}`,
-          borderRadius: 8,
-          padding: '8px 14px',
-          fontSize: 12,
-          color: T.inkDim,
-          boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
-        }}>
-          Already a member?{' '}
-          <Link href="/login" style={{ color: T.tealMid, fontWeight: 600, textDecoration: 'none' }}>
-            Log in
-          </Link>
-        </div>
+        <Link
+          href="/pricing"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            fontSize: 13,
+            fontWeight: 700,
+            fontFamily: T.sans,
+            textDecoration: 'none',
+            padding: '7px 14px',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          <span style={{
+            background: 'linear-gradient(110deg, #02888f 0%, #5fc4c8 28%, #f4f0e8 46%, #5fc4c8 64%, #02888f 100%)',
+            backgroundSize: '250% auto',
+            WebkitBackgroundClip: 'text',
+            backgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            color: 'transparent',
+            animation: 'goPro-shimmer 3.5s linear infinite',
+          } as CSSProperties}>
+            See When
+          </span>
+        </Link>
+        <button
+          type="button"
+          aria-label="Account options"
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '0 9px',
+            background: 'transparent',
+            border: 'none',
+            borderLeft: '1px solid rgba(2,136,143,0.30)',
+            cursor: 'pointer',
+            color: T.tealMid,
+          }}
+        >
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.18s ease' }}>
+            <path d="M2.5 4.5 L6 8 L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
       </div>
+
+      {open && (
+        <div style={{ position: 'absolute', top: '100%', right: 0, paddingTop: 8, zIndex: 200 }}>
+          <div style={{
+            whiteSpace: 'nowrap',
+            background: T.overlay,
+            border: `1px solid ${T.overlayBorder}`,
+            borderRadius: 8,
+            padding: '8px 14px',
+            fontSize: 12,
+            color: T.inkDim,
+            boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
+          }}>
+            Already a member?{' '}
+            <Link href="/login" style={{ color: T.tealMid, fontWeight: 600, textDecoration: 'none' }}>
+              Log in
+            </Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

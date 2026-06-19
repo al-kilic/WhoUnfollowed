@@ -464,28 +464,30 @@ export function HeroSection() {
         </div>
 
         {/* Trust line */}
-        <div style={{
-          marginTop: 14, textAlign: 'center',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap',
-          gap: '8px 20px', fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.03em',
-        }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
-            <Icon.shield size={12} color={T.tealMid} />
-            <span>no login,</span>
-            <span style={{ color: T.ink, fontWeight: 600 }}>no risk</span>
-          </span>
-          <span style={{ width: 3, height: 3, borderRadius: '50%', background: T.inkMute, flexShrink: 0 }} />
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
-            <Icon.code size={12} color={T.tealMid} />
+        <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 9 }}>
+          {/* Lead benefit: open source, free forever */}
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap', fontSize: 13, color: T.inkDim, fontFamily: T.mono, letterSpacing: '0.03em' }}>
+            <Icon.code size={13} color={T.tealMid} />
             <span>open source,</span>
-            <span style={{ color: T.ink, fontWeight: 600 }}>MIT licensed</span>
+            <span style={{ color: T.ink, fontWeight: 700 }}>free forever</span>
           </span>
-          <span style={{ width: 3, height: 3, borderRadius: '50%', background: T.inkMute, flexShrink: 0 }} />
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
-            <Icon.bolt size={12} color={T.tealMid} />
-            <span>nothing stored,</span>
-            <span style={{ color: T.ink, fontWeight: 600 }}>nothing shared</span>
-          </span>
+          {/* Supporting benefits */}
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap',
+            gap: '8px 18px', fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.03em',
+          }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
+              <Icon.shield size={12} color={T.tealMid} />
+              <span>no login,</span>
+              <span style={{ color: T.ink, fontWeight: 600 }}>no risk</span>
+            </span>
+            <span style={{ width: 3, height: 3, borderRadius: '50%', background: T.inkMute, flexShrink: 0 }} />
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
+              <Icon.bolt size={12} color={T.tealMid} />
+              <span>nothing stored,</span>
+              <span style={{ color: T.ink, fontWeight: 600 }}>nothing shared</span>
+            </span>
+          </div>
         </div>
       </div>
 
