@@ -20,7 +20,7 @@ const GOLD = {
   glow: '0 2px 12px rgba(214,165,70,0.45)',
 };
 
-// Keyframes (goPro-shimmer) live in globals.css — no runtime injection needed.
+// Keyframes (goPro-shimmer) live in globals.css; no runtime injection needed.
 
 const userIcon = (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -37,7 +37,7 @@ const logoutIcon = (
   </svg>
 );
 
-// Animated Go Pro button — shimmer text, with a "Log in" tooltip on hover
+// "See When" button (links to /pricing) with a click-to-open "Log in" dropdown
 function GoProButton() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
