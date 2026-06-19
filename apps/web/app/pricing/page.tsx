@@ -3,8 +3,8 @@ import { isPaidFeaturesEnabled, isProUser } from '@/lib/flags';
 import { PricingClient } from './PricingClient';
 
 export const metadata = {
-  title: 'Pricing — WhoUnfollowed',
-  description: 'Simple, honest pricing. One plan, full access.',
+  title: 'Pricing',
+  description: 'Always free and open source. Pro adds history, trends, and alerts, and helps keep the app alive.',
 };
 
 export default async function PricingPage() {

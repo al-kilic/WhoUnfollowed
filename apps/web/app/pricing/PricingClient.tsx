@@ -19,13 +19,22 @@ const FREE_BULLETS = [
   'No account needed',
 ];
 
-const PRO_BULLETS = [
-  { label: 'Unlimited snapshot history', note: '' },
-  { label: 'Track who unfollowed you over time', note: '' },
-  { label: 'Cloud sync across your devices', note: 'encrypted in your browser' },
-  { label: 'Follower growth charts', note: '' },
-  { label: 'Ghost follower detection', note: '' },
-  { label: 'Email alerts when someone drops', note: 'coming soon' },
+// Core perks shown by default, plus more revealed on "See everything in Pro".
+// Outcome-led copy, kept honest (no fluff, no em dashes).
+const PRO_CORE = [
+  { label: 'Keep every snapshot forever', note: 'unlimited history' },
+  { label: 'See exactly who unfollowed you, and when', note: '' },
+  { label: 'Cloud sync across all your devices', note: 'encrypted in your browser' },
+  { label: 'Watch your follower count trend over time', note: '' },
+  { label: 'Catch the ghosts who never engage', note: '' },
+];
+
+const PRO_MORE = [
+  { label: 'Get alerted the moment someone drops', note: 'email alerts, soon' },
+  { label: 'Compare any two snapshots side by side', note: '' },
+  { label: 'Clean up fast: batch-open everyone who left', note: '' },
+  { label: 'Mobile app included', note: 'iOS + Android' },
+  { label: 'Keep the app free and independent', note: 'no ads, no investors' },
 ];
 
 const PRIVACY = [
@@ -37,11 +46,11 @@ const PRIVACY = [
 const FAQ = [
   {
     q: 'Is it really free?',
-    a: 'Yes. The core app — see who unfollowed you, who doesn\'t follow back, CSV export — is free forever and needs no account. Pro is optional and adds history, cloud sync, and trends.',
+    a: 'Yes. The core app (see who unfollowed you, who doesn\'t follow back, CSV export) is free forever and needs no account. Pro is optional and adds history, cloud sync, and trends.',
   },
   {
     q: 'Why charge for Pro at all?',
-    a: 'To keep the lights on. Pro covers servers and storage so the free app stays free, fast, and independent — no ads, no investors, no selling your data.',
+    a: 'To keep the lights on. Pro covers servers and storage so the free app stays free, fast, and independent. No ads, no investors, no selling your data.',
   },
   {
     q: 'Do I need to give you my Instagram password?',
@@ -49,12 +58,27 @@ const FAQ = [
   },
   {
     q: 'Is my Instagram data safe?',
-    a: 'Yes. ZIP parsing happens entirely in your browser — nothing is sent to us. Cloud-synced snapshots are encrypted in your browser before leaving your device. We store only blobs we cannot read.',
+    a: 'Yes. ZIP parsing happens entirely in your browser, so nothing is sent to us. Cloud-synced snapshots are encrypted in your browser before leaving your device. We store only blobs we cannot read.',
   },
 ];
 
+function Perk({ label, note }: { label: string; note: string }) {
+  return (
+    <li style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.tealMid} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 2 }}>
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
+      <span style={{ fontSize: 14, color: T.ink, lineHeight: 1.45 }}>
+        {label}
+        {note && <span style={{ fontSize: 12, color: T.inkMute, marginLeft: 6 }}>({note})</span>}
+      </span>
+    </li>
+  );
+}
+
 export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Props) {
   const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly');
+  const [showAll, setShowAll] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -103,7 +127,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
 
       <main style={{ maxWidth: 1160, margin: '0 auto', padding: '44px 28px 88px' }}>
 
-        {/* Beta badge — the single, intentional "free during beta" callout */}
+        {/* Beta badge: the single, intentional "free during beta" callout */}
         {!paymentsEnabled && (
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 26 }}>
             <div style={{
@@ -113,7 +137,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
             }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: T.tealLight, flexShrink: 0 }} />
               <span style={{ fontSize: 13, color: T.tealLight, fontWeight: 600 }}>
-                Pro is free during beta — try everything for now.
+                Pro is free during beta. Try everything for now.
               </span>
             </div>
           </div>
@@ -125,9 +149,10 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
             Always free.<br />Pro helps keep it alive.
           </h1>
           <p style={{ color: T.inkDim, fontSize: 16, lineHeight: 1.7, margin: '0 auto', maxWidth: 580 }}>
-            WhoUnfollowed is free and open source. See who unfollowed you with no account,
-            no password, and nothing leaving your browser. Pro adds memory and depth — history,
-            trends, and alerts — and keeps the servers running so the free app stays free.
+            See when someone unfollows you, who never follows back, and how your audience
+            shifts over time. WhoUnfollowed is free, open source, and runs entirely in your
+            browser. Pro adds memory and depth (history, trends, and alerts) and keeps the
+            servers running so the free app stays free.
           </p>
         </div>
 
@@ -178,7 +203,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>Pro</div>
 
-              {/* Animated monthly / yearly toggle */}
+              {/* Animated monthly / yearly toggle with a pulsing savings badge */}
               <div style={{ position: 'relative', display: 'inline-flex', background: T.surface2, borderRadius: 9, padding: 3 }}>
                 <div style={{
                   position: 'absolute', top: 3, bottom: 3, left: 3, width: 'calc(50% - 3px)',
@@ -191,15 +216,25 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
                     key={b}
                     onClick={() => setBilling(b)}
                     style={{
-                      position: 'relative', zIndex: 1, width: 74, textAlign: 'center',
+                      position: 'relative', zIndex: 1, width: 78, textAlign: 'center',
                       padding: '6px 0', border: 'none', background: 'transparent', cursor: 'pointer',
                       fontSize: 12, fontWeight: 600, fontFamily: T.sans,
                       color: billing === b ? T.cream : T.inkDim, transition: 'color 0.2s',
                     }}
                   >
-                    {b === 'monthly' ? 'Monthly' : `Yearly`}
+                    {b === 'monthly' ? 'Monthly' : 'Yearly'}
                   </button>
                 ))}
+                {/* Savings badge floating over the Yearly side: terra accent + pulse */}
+                <div style={{
+                  position: 'absolute', top: -11, right: -9, zIndex: 2,
+                  background: T.terra, color: '#fff',
+                  fontSize: 8.5, fontWeight: 800, letterSpacing: '0.05em',
+                  padding: '3px 7px', borderRadius: 100, fontFamily: T.sans, whiteSpace: 'nowrap',
+                  animation: 'save-pulse 2.2s ease-in-out infinite',
+                }}>
+                  SAVE {saving}%
+                </div>
               </div>
             </div>
 
@@ -213,19 +248,33 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
               {billing === 'yearly' ? `Billed $${yearlyPrice}/year · save ${saving}%` : `or $${yearlyMonthly}/mo billed yearly`}
             </div>
 
-            <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 22px', display: 'flex', flexDirection: 'column', gap: 11, flex: 1 }}>
-              {PRO_BULLETS.map(({ label, note }) => (
-                <li key={label} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.tealMid} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 2 }}>
-                    <polyline points="20 6 9 17 4 12" />
+            <div style={{ flex: 1, marginBottom: 22 }}>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 11 }}>
+                {PRO_CORE.map((p) => <Perk key={p.label} {...p} />)}
+              </ul>
+
+              {showAll && (
+                <ul style={{ listStyle: 'none', padding: 0, margin: '11px 0 0', display: 'flex', flexDirection: 'column', gap: 11, animation: 'fade-in 0.3s ease both' }}>
+                  {PRO_MORE.map((p) => <Perk key={p.label} {...p} />)}
+                </ul>
+              )}
+
+              {!showAll && (
+                <button
+                  onClick={() => setShowAll(true)}
+                  style={{
+                    marginTop: 14, background: 'transparent', border: 'none', cursor: 'pointer',
+                    color: T.tealMid, fontSize: 13, fontWeight: 600, fontFamily: T.sans,
+                    display: 'inline-flex', alignItems: 'center', gap: 6, padding: 0,
+                  }}
+                >
+                  See everything you get
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                    <path d="M2.5 4.5 L6 8 L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                  <span style={{ fontSize: 14, color: T.ink, lineHeight: 1.45 }}>
-                    {label}
-                    {note && <span style={{ fontSize: 12, color: T.inkMute, marginLeft: 6 }}>({note})</span>}
-                  </span>
-                </li>
-              ))}
-            </ul>
+                </button>
+              )}
+            </div>
 
             {error && <p style={{ color: '#ef4444', fontSize: 13, marginBottom: 12 }}>{error}</p>}
 
@@ -253,7 +302,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
           </div>
         </div>
 
-        {/* Privacy / why-different — value, not sales */}
+        {/* Privacy / why-different: value, not sales */}
         <div style={{
           maxWidth: 760, margin: '40px auto 0',
           background: T.tealGlow, border: '1px solid rgba(1,105,111,0.2)', borderRadius: 14,
