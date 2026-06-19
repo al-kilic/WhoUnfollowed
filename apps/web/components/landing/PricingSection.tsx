@@ -41,9 +41,12 @@ function PricingMobileTabs({ billing, mobileEmail, setMobileEmail, mobileStatus,
       {/* Free */}
       {tab === 'free' && (
         <div style={{ padding: '24px', borderRadius: 18, background: T.surface1, border: `1px solid ${T.border1}` }}>
-          <div style={{ fontSize: 10, color: T.inkMute, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 8, fontFamily: T.mono }}>Free</div>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 11px', borderRadius: 100, background: T.tealGlow, marginBottom: 10 }}>
+            <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.tealLight, flexShrink: 0 }} />
+            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>Free forever</span>
+          </div>
           <div style={{ fontFamily: T.serif, fontSize: 52, lineHeight: 1, letterSpacing: '-0.04em', color: T.ink, marginBottom: 4 }}>$0</div>
-          <div style={{ fontSize: 12, color: T.inkMute, marginBottom: 16 }}>forever, no signup</div>
+          <div style={{ fontSize: 12, color: T.inkMute, marginBottom: 16 }}>no sign up required</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
             {['One snapshot at a time','Full non-followers list','CSV export','No account needed'].map(f => (
               <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: T.ink }}>
@@ -166,11 +169,14 @@ function PricingBig() {
           background: T.surface1, border: `1px solid ${T.border1}`,
           display: 'flex', flexDirection: 'column',
         }}>
-          <div style={{ fontSize: 10, color: T.inkMute, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 10, fontFamily: T.mono }}>Free</div>
+          <div style={{ display: 'inline-flex', alignSelf: 'flex-start', alignItems: 'center', gap: 6, padding: '4px 11px', borderRadius: 100, background: T.tealGlow, marginBottom: 10 }}>
+            <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.tealLight, flexShrink: 0 }} />
+            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>Free forever</span>
+          </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
             <span style={{ fontFamily: T.serif, fontSize: 44, lineHeight: 1, letterSpacing: '-0.03em', color: T.ink }}>$0</span>
           </div>
-          <div style={{ fontSize: 11, color: T.inkMute, marginBottom: 16 }}>forever, no signup</div>
+          <div style={{ fontSize: 11, color: T.inkMute, marginBottom: 16 }}>no sign up required</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20, flex: 1 }}>
             {['One snapshot at a time','Full non-followers list','CSV export','No account needed'].map(f => (
               <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: T.ink }}>
