@@ -3,26 +3,27 @@
 import { useActionState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { signupAction } from './actions';
+import { loginAction } from './actions';
 import { deriveAndStoreSyncKey } from '@/lib/syncKey';
 import { AuthShell, AuthField, AuthError, AuthButton } from '@/components/auth/AuthShell';
 import { T } from '@/components/landing/tokens';
 
-export function SignupForm() {
+export function LoginForm() {
   const router = useRouter();
   const [state, action, pending] = useActionState(
     async (_prev: unknown, formData: FormData) => {
       const password = (formData.get('password') as string) ?? '';
-      const res = await signupAction(formData);
+      const res = await loginAction(formData);
       if (res && 'ok' in res && res.ok) {
         // Derive + cache the cloud-sync key from the password, then navigate.
         try {
           await deriveAndStoreSyncKey(password, res.saltB64);
         } catch {
-          // sync key derivation must never block signup
+          // sync key derivation must never block login
         }
-        // replace (not push) so Back can't return to the signup form.
-        router.replace('/history?welcome=1');
+        // replace (not push) so the browser Back button can't return to the
+        // login form after a successful login.
+        router.replace('/history');
       }
       return res;
     },
@@ -33,13 +34,13 @@ export function SignupForm() {
 
   return (
     <AuthShell
-      title="Create your account"
-      subtitle="Free during beta. No credit card required."
+      title="Welcome back"
+      subtitle="Log in to your WhoUnfollowed account."
       footer={
         <>
-          Already have an account?{' '}
-          <Link href="/login" style={{ color: T.tealMid, fontWeight: 600, textDecoration: 'none' }}>
-            Log in
+          No account?{' '}
+          <Link href="/signup" style={{ color: T.tealMid, fontWeight: 600, textDecoration: 'none' }}>
+            Sign up free
           </Link>
         </>
       }
@@ -52,14 +53,12 @@ export function SignupForm() {
           name="password"
           type="password"
           required
-          minLength={8}
-          autoComplete="new-password"
-          hint="Minimum 8 characters."
+          autoComplete="current-password"
         />
 
         {error && <AuthError>{error}</AuthError>}
 
-        <AuthButton pending={pending}>{pending ? 'Creating account...' : 'Create account'}</AuthButton>
+        <AuthButton pending={pending}>{pending ? 'Logging in...' : 'Log in'}</AuthButton>
       </form>
     </AuthShell>
   );
