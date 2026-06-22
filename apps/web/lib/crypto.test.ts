@@ -143,4 +143,26 @@ describe('bufferToBase64 / base64ToBuffer', () => {
     const back = base64ToBuffer(b64);
     expect(back).toEqual(new Uint8Array([10, 20, 30]));
   });
+
+  it('round-trips a large buffer without overflowing the call stack', () => {
+    // Regression: spreading the whole array into String.fromCharCode(...)
+    // threw "Maximum call stack size exceeded" on real snapshot ciphertexts.
+    const large = new Uint8Array(500_000);
+    for (let i = 0; i < large.length; i++) large[i] = i % 256;
+    const b64 = bufferToBase64(large);
+    expect(base64ToBuffer(b64)).toEqual(large);
+  });
+
+  it('round-trips an encrypted blob from a large snapshot', async () => {
+    const key = await deriveKey('account-password', generateSalt());
+    const big = {
+      followers: Array.from({ length: 4000 }, (_, i) => ({ username: `user_${i}`, href: `https://instagram.com/user_${i}`, timestamp: 1700000000 + i })),
+      following: Array.from({ length: 3000 }, (_, i) => ({ username: `follow_${i}`, href: `https://instagram.com/follow_${i}`, timestamp: 1700000000 + i })),
+    };
+    const { ciphertext, iv } = await encrypt(big, key);
+    // This is the upload path that previously overflowed.
+    const b64 = bufferToBase64(ciphertext);
+    const restored = base64ToBuffer(b64).buffer as ArrayBuffer;
+    expect(await decrypt(restored, iv, key)).toEqual(big);
+  });
 });
