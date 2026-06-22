@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { T } from './tokens';
 import { Icon } from './atoms';
 
@@ -73,7 +74,7 @@ function PricingMobileTabs({ billing, mobileEmail, setMobileEmail, mobileStatus,
               </div>
             ))}
           </div>
-          <button style={{ width: '100%', padding: '14px', borderRadius: 12, background: T.teal, color: T.cream, border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: T.sans, boxShadow: `0 8px 24px ${T.tealGlow}` }}>Joining soon. Reserve your spot</button>
+          <Link href="/pricing" style={{ display: 'block', width: '100%', padding: '14px', borderRadius: 12, background: T.teal, color: T.cream, border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: T.sans, boxShadow: `0 8px 24px ${T.tealGlow}`, textAlign: 'center', textDecoration: 'none', boxSizing: 'border-box' }}>See everything in Pro</Link>
         </div>
       )}
 
@@ -219,13 +220,14 @@ function PricingBig() {
                 </div>
               ))}
             </div>
-            <button
-              style={{ width: '100%', padding: '11px 18px', borderRadius: 10, background: T.teal, color: T.cream, border: 'none', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: T.sans, boxShadow: `0 6px 20px ${T.tealGlow}`, transition: 'transform 0.2s' }}
+            <Link
+              href="/pricing"
+              style={{ display: 'block', width: '100%', padding: '11px 18px', borderRadius: 10, background: T.teal, color: T.cream, border: 'none', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: T.sans, boxShadow: `0 6px 20px ${T.tealGlow}`, transition: 'transform 0.2s', textAlign: 'center', textDecoration: 'none', boxSizing: 'border-box' }}
               onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1px)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; }}
             >
-              Joining soon. Reserve your spot
-            </button>
+              See everything in Pro
+            </Link>
           </div>
         </div>
 
@@ -291,6 +293,13 @@ function PricingBig() {
             <Icon.check size={11} color={T.tealMid} />{l}
           </span>
         ))}
+      </div>
+
+      {/* Learn more */}
+      <div style={{ marginTop: 18, textAlign: 'center' }}>
+        <Link href="/pricing" style={{ fontSize: 13, color: T.tealMid, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans }}>
+          Get more information about Pro →
+        </Link>
       </div>
     </div>
   );
