@@ -92,7 +92,18 @@ export async function decrypt(
 
 export function bufferToBase64(buffer: ArrayBuffer | Uint8Array): string {
   const bytes = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
-  return btoa(String.fromCharCode(...bytes));
+  // Encode in chunks. Spreading the whole array into String.fromCharCode(...)
+  // overflows the call stack on large blobs (a snapshot ciphertext is hundreds
+  // of KB), which is what surfaced as "Maximum call stack size exceeded".
+  let binary = '';
+  const chunkSize = 0x8000; // 32 KB per chunk stays well under the arg limit
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode.apply(
+      null,
+      bytes.subarray(i, i + chunkSize) as unknown as number[],
+    );
+  }
+  return btoa(binary);
 }
 
 export function base64ToBuffer(b64: string): Uint8Array {
