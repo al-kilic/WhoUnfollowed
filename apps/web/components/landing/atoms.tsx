@@ -138,29 +138,35 @@ export function CountUp({
 }) {
   // Always start at 0 for SSR — client useEffect handles the real starting point
   const [v, setV] = React.useState(0);
+  // Becomes true only once the first animation actually starts, so live updates
+  // snap instead of replaying. Set inside the timeout (not before it) so a
+  // StrictMode setup→cleanup→setup cycle doesn't skip the first animation.
   const initialised = React.useRef(false);
 
   React.useEffect(() => {
-    // After first run: just snap to new value (handles live updates)
+    // After the first animation has begun: just snap to new value (live updates)
     if (initialised.current) { setV(to); return; }
-    initialised.current = true;
 
     // First run: snap if return visit or tiny diff, otherwise animate
-    if (to - from <= 2) { setV(to); return; }
+    if (to - from <= 2) { initialised.current = true; setV(to); return; }
 
+    let raf = 0;
+    let cancelled = false;
     setV(from);
     const t = setTimeout(() => {
+      initialised.current = true;
       const start = performance.now();
       const range = to - from;
       const tick  = (now: number) => {
+        if (cancelled) return;
         const p     = Math.min(1, (now - start) / duration);
         const eased = 1 - Math.pow(1 - p, 3);
         setV(Math.round(from + range * eased));
-        if (p < 1) requestAnimationFrame(tick);
+        if (p < 1) raf = requestAnimationFrame(tick);
       };
-      requestAnimationFrame(tick);
+      raf = requestAnimationFrame(tick);
     }, delay);
-    return () => clearTimeout(t);
+    return () => { cancelled = true; clearTimeout(t); cancelAnimationFrame(raf); };
   }, [to, from, duration, delay]);
 
   return <span>{prefix}{v.toLocaleString()}{suffix}</span>;
