@@ -13,6 +13,21 @@ export const metadata: Metadata = {
 
 const entries: { version: string; date: string; tag: 'launch' | 'fix' | 'improvement' | 'feature'; items: string[] }[] = [
   {
+    version: '0.8',
+    date: 'June 22, 2026',
+    tag: 'improvement',
+    items: [
+      'Redesigned pricing page. Value first, wider layout, and the yearly plan now shows its real savings up front.',
+      'Pricing buttons across the home page now take you to the full pricing page instead of dead ends.',
+      'The mobile app is marked as coming soon, and Pro now lists more of what you get.',
+      'Pro accounts now correctly show unlimited snapshot history, with Add New Snapshot always available. Uploading more snapshots is never blocked on Pro.',
+      'Cloud sync now tells you when something goes wrong instead of failing silently.',
+      'Already logged in? The login and signup pages send you straight to your snapshots, and the back button no longer drops you back on the login screen.',
+      'Fixed: the chart tooltip on Radar showed as a solid black box in light mode. It now matches your theme.',
+      'Fixed: the live counters on the home page now animate reliably every time.',
+    ],
+  },
+  {
     version: '0.7',
     date: 'June 16, 2026',
     tag: 'feature',
