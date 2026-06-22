@@ -114,7 +114,7 @@ const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?:
   const displayName = LABEL_MAP[entry.name] ?? entry.name;
   const displayValue = entry.name === 'ratio' ? entry.value.toFixed(2) : entry.value.toLocaleString();
   return (
-    <div style={{ background: 'rgba(16,20,20,0.97)', border: '1px solid var(--t-border3)', borderRadius: 8, padding: '8px 12px', fontSize: 12, color: T.inkDim }}>
+    <div style={{ background: 'var(--t-bgCard)', border: '1px solid var(--t-border3)', borderRadius: 8, padding: '8px 12px', fontSize: 12, color: T.inkDim, boxShadow: '0 4px 16px rgba(0,0,0,0.12)' }}>
       {label && <div style={{ color: T.inkMute, marginBottom: 4, fontSize: 11 }}>{label}</div>}
       <span style={{ color: T.ink }}>{displayName}</span>: {displayValue}
     </div>
