@@ -21,7 +21,8 @@ export function SignupForm() {
         } catch {
           // sync key derivation must never block signup
         }
-        router.push('/history?welcome=1');
+        // replace (not push) so Back can't return to the signup form.
+        router.replace('/history?welcome=1');
       }
       return res;
     },
