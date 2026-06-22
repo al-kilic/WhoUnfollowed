@@ -29,7 +29,7 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
   const [compareBaseId, setCompareBase] = useState<number | null>(null);
   const [syncingId, setSyncingId]       = useState<number | null>(null);
   const [showUnlock, setShowUnlock]     = useState(false);
-  const { isUnlocked, unlockWithPassword, syncSnapshot } = useCloudSync();
+  const { isUnlocked, unlockWithPassword, syncSnapshot, error: syncError, state: syncState } = useCloudSync();
 
   function handleView(record: SnapshotRecord) {
     setSnapshot(record.data);
@@ -101,23 +101,29 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '14px 20px', borderRadius: 12,
-          background: slotsLeft === 0 ? 'rgba(168,75,47,0.06)' : 'var(--t-surface1)',
-          border: `1px solid ${slotsLeft === 0 ? 'rgba(168,75,47,0.25)' : 'var(--t-border1)'}`,
+          background: (!isPro && slotsLeft === 0) ? 'rgba(168,75,47,0.06)' : 'var(--t-surface1)',
+          border: `1px solid ${(!isPro && slotsLeft === 0) ? 'rgba(168,75,47,0.25)' : 'var(--t-border1)'}`,
           marginBottom: 28,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{ display: 'flex', gap: 6 }}>
-              {Array.from({ length: FREE_SNAPSHOT_LIMIT }).map((_, i) => (
-                <div key={i} style={{ width: 28, height: 8, borderRadius: 4, background: i < slotsUsed ? T.tealMid : 'var(--t-border2)', transition: 'background 0.3s' }} />
-              ))}
-            </div>
-            <span style={{ fontSize: 13, color: T.inkDim, fontFamily: T.mono }}>
-              {slotsUsed} of {FREE_SNAPSHOT_LIMIT} free slots used
-            </span>
+            {isPro ? (
+              <span style={{ fontSize: 13, color: T.inkDim, fontFamily: T.mono }}>
+                {slotsUsed} {slotsUsed === 1 ? 'snapshot' : 'snapshots'} saved · unlimited history
+              </span>
+            ) : (
+              <>
+                <div style={{ display: 'flex', gap: 6 }}>
+                  {Array.from({ length: FREE_SNAPSHOT_LIMIT }).map((_, i) => (
+                    <div key={i} style={{ width: 28, height: 8, borderRadius: 4, background: i < slotsUsed ? T.tealMid : 'var(--t-border2)', transition: 'background 0.3s' }} />
+                  ))}
+                </div>
+                <span style={{ fontSize: 13, color: T.inkDim, fontFamily: T.mono }}>
+                  {slotsUsed} of {FREE_SNAPSHOT_LIMIT} free slots used
+                </span>
+              </>
+            )}
           </div>
-          {slotsLeft === 0 ? (
-            <span style={{ fontSize: 12, color: T.terra, fontFamily: T.mono }}>Upgrade to Pro for unlimited history</span>
-          ) : (
+          {(isPro || slotsLeft > 0) ? (
             <Link href="/" style={{
               fontSize: 13, fontWeight: 600, fontFamily: T.sans,
               color: T.cream, textDecoration: 'none',
@@ -128,6 +134,8 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
               <Icon.upload size={13} color={T.cream} />
               Add New Snapshot
             </Link>
+          ) : (
+            <span style={{ fontSize: 12, color: T.terra, fontFamily: T.mono }}>Upgrade to Pro for unlimited history</span>
           )}
         </div>
 
@@ -135,6 +143,17 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
         {showUnlock && !isUnlocked && (
           <div style={{ padding: '16px 20px', borderRadius: 12, background: 'var(--t-surface1)', border: '1px solid var(--t-border1)', marginBottom: 20 }}>
             <UnlockSyncForm onUnlock={async (p) => { const ok = await handleUnlock(p); if (ok) setShowUnlock(false); return ok; }} />
+          </div>
+        )}
+
+        {/* Cloud sync error — surfaced so failures aren't silent */}
+        {syncError && syncState !== 'loading' && (
+          <div role="alert" style={{ padding: '14px 18px', borderRadius: 12, background: 'rgba(168,75,47,0.08)', border: '1px solid rgba(168,75,47,0.3)', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+              <circle cx="12" cy="12" r="9" stroke={T.terra} strokeWidth="1.6" />
+              <path d="M12 7 V13 M12 16 V16.5" stroke={T.terra} strokeWidth="1.8" strokeLinecap="round" />
+            </svg>
+            <span style={{ fontSize: 13, color: T.terra }}>Cloud sync failed: {syncError}</span>
           </div>
         )}
 
