@@ -21,7 +21,7 @@ export function LandingPage({ userEmail, isPro = false }: { userEmail: string | 
     }}>
       <SiteNav userEmail={userEmail} isPro={isPro} />
       <main>
-        <HeroSection />
+        <HeroSection isPro={isPro} />
         <MarqueeBand />
         <ValueSection />
         <FlowSection />

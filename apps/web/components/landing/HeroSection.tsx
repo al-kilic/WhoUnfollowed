@@ -36,7 +36,7 @@ function errorMessage(err: unknown): string {
 
 // ─── HeroSection ────────────────────────────────────────────────────────────
 
-export function HeroSection() {
+export function HeroSection({ isPro = false }: { isPro?: boolean }) {
   const router       = useRouter();
   const setSnapshot  = useSnapshotStore((s) => s.setSnapshot);
   const snapshots    = useSnapshotList();
@@ -86,14 +86,8 @@ export function HeroSection() {
 
   useEffect(() => { setMounted(true); }, []);
 
-  // ── Commit a parsed snapshot ──────────────────────────────────────────────
-  const commit = useCallback(async (snap: ParsedSnapshot) => {
-    // Navigate immediately — results page reads from Zustand, not IndexedDB
-    setSnapshot(snap);
-    track('zip-upload');
-    router.push('/results');
-    // Save to IndexedDB + stats in background (non-blocking)
-    void saveSnapshot(snap);
+  // ── Record a parse in the global counter (fire once per successful parse) ──
+  const recordParse = useCallback((snap: ParsedSnapshot) => {
     const followerSet = new Set(snap.followers.map(f => f.username));
     const nonFollowerCount = snap.following.filter(f => !followerSet.has(f.username)).length;
     void fetch('/api/stats', {
@@ -101,6 +95,16 @@ export function HeroSection() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nonFollowerCount }),
     });
+  }, []);
+
+  // ── Commit a parsed snapshot ──────────────────────────────────────────────
+  const commit = useCallback(async (snap: ParsedSnapshot) => {
+    // Navigate immediately — results page reads from Zustand, not IndexedDB
+    setSnapshot(snap);
+    track('zip-upload');
+    router.push('/results');
+    // Save to IndexedDB in background (non-blocking)
+    void saveSnapshot(snap);
   }, [router, setSnapshot]);
 
   // ── Process a dropped / selected file ────────────────────────────────────
@@ -126,6 +130,11 @@ export function HeroSection() {
       const snap = await parseInstagramZip(file);
       clearInterval(iv);
       setProgress(100);
+
+      // Count every successful parse, regardless of what the user does next
+      // (delta warning, snapshot-limit dialog, or straight to results).
+      recordParse(snap);
+
       await new Promise(r => setTimeout(r, 300));
 
       // Delta detection — always query DB directly (never stale)
@@ -137,7 +146,7 @@ export function HeroSection() {
         return;
       }
 
-      if (snapshots.length >= FREE_SNAPSHOT_LIMIT) {
+      if (!isPro && snapshots.length >= FREE_SNAPSHOT_LIMIT) {
         setPhase('idle');
         setPending(snap);
       } else {
@@ -202,7 +211,7 @@ export function HeroSection() {
     const dismissAndProceed = async () => {
       const snap = deltaWarning.snapshot;
       setDeltaWarning(null);
-      if (snapshots.length >= FREE_SNAPSHOT_LIMIT) {
+      if (!isPro && snapshots.length >= FREE_SNAPSHOT_LIMIT) {
         setPending(snap);
       } else {
         await commit(snap);
