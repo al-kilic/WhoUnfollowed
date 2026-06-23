@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { T } from '@/components/landing/tokens';
+import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 
 // ─── Shared CTA card ─────────────────────────────────────────────────────────
@@ -27,17 +28,7 @@ export function HowToExportContent() {
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      {/* Nav */}
-      <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 32px', borderBottom: '1px solid var(--t-border1)', position: 'sticky', top: 0, zIndex: 50, backdropFilter: 'blur(14px)', background: 'var(--t-navBg)' }}>
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <img src="/logo.png" alt="WhoUnfollowed Logo" width={26} height={26} style={{ borderRadius: 7, objectFit: 'contain' }} />
-          <span style={{ fontFamily: T.serif, fontSize: 17, color: T.ink }}>WhoUnfollowed</span>
-        </Link>
-        <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 18px', borderRadius: 10, background: T.teal, color: T.cream, fontSize: 13, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans }}>
-          Upload ZIP
-          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 7 H11 M11 7 L8 4 M11 7 L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-        </Link>
-      </nav>
+      <SiteNav userEmail={null} />
 
       <main style={{ maxWidth: 720, margin: '0 auto', padding: '56px 32px 80px' }}>
         {/* Header */}

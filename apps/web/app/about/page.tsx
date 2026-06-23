@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { T } from '@/components/landing/tokens';
-import { ThemeToggle } from '@/components/ThemeToggle';
+import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { Icon } from '@/components/landing/atoms';
 
@@ -13,28 +13,10 @@ const APPS_COMING = [
   { name: 'TrackOut',      initial: 'T', hue: 30,  status: 'soon', desc: 'Find hidden trackers across the apps on your phone.' },
 ];
 
-function Nav() {
-  return (
-    <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: `1px solid ${T.border1}`, position: 'sticky', top: 0, zIndex: 50, backdropFilter: 'blur(14px)', background: T.navBg }}>
-      <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-        <img src="/logo.png" alt="WhoUnfollowed" width={26} height={26} style={{ borderRadius: 7, objectFit: 'contain' }} />
-        <span style={{ fontFamily: T.serif, fontSize: 17, color: T.ink }}>WhoUnfollowed</span>
-      </Link>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        <Link href="/" style={{ fontSize: 13, color: T.inkDim, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M11 7 H3 M3 7 L6 4 M3 7 L6 10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
-          Back
-        </Link>
-        <ThemeToggle />
-      </div>
-    </nav>
-  );
-}
-
 export default function AboutPage() {
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <Nav />
+      <SiteNav userEmail={null} />
 
       <main className="px-4 sm:px-8" style={{ maxWidth: 760, margin: '0 auto', paddingTop: 64, paddingBottom: 96 }}>
 
