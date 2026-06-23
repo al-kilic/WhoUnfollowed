@@ -1,6 +1,7 @@
 import { LandingPage } from '@/components/landing/LandingPage';
 import { validateRequest } from '@/lib/auth/session';
 import { isProUser } from '@/lib/flags';
+import { getStats } from '@/lib/stats';
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -27,14 +28,14 @@ const jsonLd = {
 
 export default async function HomePage() {
   const { user } = await validateRequest();
-  const isPro = await isProUser();
+  const [isPro, initialStats] = await Promise.all([isProUser(), getStats()]);
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <LandingPage userEmail={user?.email ?? null} isPro={isPro} />
+      <LandingPage userEmail={user?.email ?? null} isPro={isPro} initialStats={initialStats} />
     </>
   );
 }

@@ -12,7 +12,7 @@ import { PricingSection } from './PricingSection';
 import { FAQSection }    from './FAQSection';
 import { FinalCTA, LandingFooter } from './FinalCTA';
 
-export function LandingPage({ userEmail, isPro = false }: { userEmail: string | null; isPro?: boolean }) {
+export function LandingPage({ userEmail, isPro = false, initialStats }: { userEmail: string | null; isPro?: boolean; initialStats: { snapshots: number; avgNonFollowers: number } }) {
   return (
     <div style={{
       width: '100%', minHeight: '100%',
@@ -21,7 +21,7 @@ export function LandingPage({ userEmail, isPro = false }: { userEmail: string | 
     }}>
       <SiteNav userEmail={userEmail} isPro={isPro} />
       <main>
-        <HeroSection isPro={isPro} />
+        <HeroSection isPro={isPro} initialStats={initialStats} />
         <MarqueeBand />
         <ValueSection />
         <FlowSection />
