@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { T } from '@/components/landing/tokens';
-import { ThemeToggle } from '@/components/ThemeToggle';
+import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { getComparison, COMPARISONS } from '../comparisons';
 import { Icon } from '@/components/landing/atoms';
@@ -18,16 +18,7 @@ export default function ComparePage({ params }: { params: Promise<{ slug: string
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: `1px solid ${T.border1}`, position: 'sticky', top: 0, zIndex: 50, backdropFilter: 'blur(14px)', background: T.navBg }}>
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <img src="/logo.png" alt="WhoUnfollowed" width={26} height={26} style={{ borderRadius: 7, objectFit: 'contain' }} />
-          <span style={{ fontFamily: T.serif, fontSize: 17, color: T.ink }}>WhoUnfollowed</span>
-        </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <Link href="/compare" style={{ fontSize: 13, color: T.inkDim, textDecoration: 'none' }}>Compare</Link>
-          <ThemeToggle />
-        </div>
-      </nav>
+      <SiteNav userEmail={null} />
 
       <main className="px-4 sm:px-8" style={{ maxWidth: 720, margin: '0 auto', paddingTop: 56, paddingBottom: 80 }}>
 

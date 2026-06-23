@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Check, X, Minus } from 'lucide-react';
 import { T } from '@/components/landing/tokens';
-import { ThemeToggle } from '@/components/ThemeToggle';
+import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 
 // ── Competitors ───────────────────────────────────────────────────────────────
@@ -114,16 +114,7 @@ export default function ComparePage() {
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: `1px solid ${T.border1}`, position: 'sticky', top: 0, zIndex: 100, backdropFilter: 'blur(14px)', background: T.navBg }}>
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <img src="/logo.png" alt="WhoUnfollowed" width={26} height={26} style={{ borderRadius: 7, objectFit: 'contain' }} />
-          <span style={{ fontFamily: T.serif, fontSize: 17, color: T.ink }}>WhoUnfollowed</span>
-        </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <Link href="/" style={{ fontSize: 13, color: T.inkDim, textDecoration: 'none' }}>Home</Link>
-          <ThemeToggle />
-        </div>
-      </nav>
+      <SiteNav userEmail={null} />
 
       <main style={{ paddingBottom: 80 }}>
         {/* Hero */}
