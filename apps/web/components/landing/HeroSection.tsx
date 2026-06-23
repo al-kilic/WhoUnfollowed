@@ -15,6 +15,7 @@ import { useSnapshotStore } from '@/lib/store';
 import { useSnapshotList, saveSnapshot, deleteSnapshot, FREE_SNAPSHOT_LIMIT } from '@/hooks/useSnapshots';
 import { db } from '@/lib/db';
 import { track } from '@/lib/analytics';
+import { recordParse as recordParseAction } from '@/app/actions/stats';
 import { DeltaWarning } from '@/components/DeltaWarning';
 import { UpgradeDialog } from '@/components/UpgradeDialog';
 import { createPortal } from 'react-dom';
@@ -36,7 +37,7 @@ function errorMessage(err: unknown): string {
 
 // ─── HeroSection ────────────────────────────────────────────────────────────
 
-export function HeroSection({ isPro = false }: { isPro?: boolean }) {
+export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; initialStats: { snapshots: number; avgNonFollowers: number } }) {
   const router       = useRouter();
   const setSnapshot  = useSnapshotStore((s) => s.setSnapshot);
   const snapshots    = useSnapshotList();
@@ -47,37 +48,18 @@ export function HeroSection({ isPro = false }: { isPro?: boolean }) {
   const [pending, setPending] = useState<ParsedSnapshot | null>(null);
   const [mounted, setMounted] = useState(false);
   const [deltaWarning, setDeltaWarning] = useState<{ snapshot: ParsedSnapshot; reasons: DeltaReason[] } | null>(null);
-  const STATS_SEED = { snapshots: 1047, avgNonFollowers: 230 };
 
-  // isReturn: true if user has been here before this session (stats cached)
+  // Stats are server-rendered (always the true global value, no blockable fetch,
+  // no seed flash). The count-up animates once per session, then snaps.
+  const liveStats = initialStats;
   const [isReturn] = useState<boolean>(() => {
-    try { return !!sessionStorage.getItem('ig-tracker:stats'); } catch { return false; }
-  });
-
-  const [liveStats, setLiveStats] = useState<{ snapshots: number; avgNonFollowers: number }>(() => {
-    try {
-      const cached = sessionStorage.getItem('ig-tracker:stats');
-      return cached ? JSON.parse(cached) as { snapshots: number; avgNonFollowers: number } : STATS_SEED;
-    } catch { return STATS_SEED; }
+    try { return sessionStorage.getItem('wu:seenStats') === '1'; } catch { return false; }
   });
 
   useEffect(() => {
     // Prefetch results page immediately so Turbopack compiles it before user uploads
     router.prefetch('/results');
-
-    // Delay stats fetch so it doesn't compete with route compilation on first load
-    const t = setTimeout(() => {
-      fetch('/api/stats')
-        .then(r => r.json())
-        .then(d => {
-          const stats = d as { snapshots: number; avgNonFollowers: number };
-          setLiveStats(stats);
-          try { sessionStorage.setItem('ig-tracker:stats', JSON.stringify(stats)); } catch {}
-        })
-        .catch(() => {});
-    }, 2000); // wait 2s before hitting the stats API
-
-    return () => clearTimeout(t);
+    try { sessionStorage.setItem('wu:seenStats', '1'); } catch {}
   }, [router]);
 
   const dropRef  = useRef<HTMLDivElement>(null);
@@ -90,11 +72,8 @@ export function HeroSection({ isPro = false }: { isPro?: boolean }) {
   const recordParse = useCallback((snap: ParsedSnapshot) => {
     const followerSet = new Set(snap.followers.map(f => f.username));
     const nonFollowerCount = snap.following.filter(f => !followerSet.has(f.username)).length;
-    void fetch('/api/stats', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nonFollowerCount }),
-    });
+    // Server Action (not a /api/stats fetch) so privacy/content blockers can't drop it.
+    void recordParseAction(nonFollowerCount);
   }, []);
 
   // ── Commit a parsed snapshot ──────────────────────────────────────────────
