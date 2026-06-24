@@ -6,6 +6,8 @@ import { users } from '@/lib/db/schema';
 import { createSession } from '@/lib/auth/session';
 import { ensureSyncSalt } from '@/lib/sync/salt';
 import { checkRateLimit, clientIpFromXff } from '@/lib/auth/rate-limit';
+import { isEmailConfigured } from '@/lib/email/send';
+import { generateAndSendVerification } from '@/lib/auth/verification';
 import { headers } from 'next/headers';
 
 const ARGON2_OPTIONS = {
@@ -48,5 +50,13 @@ export async function loginAction(formData: FormData) {
   // Return the sync salt so the client can derive the cloud-sync encryption key
   // from the password (the password never leaves as a key). Client navigates.
   const saltB64 = await ensureSyncSalt(user.id);
-  return { ok: true as const, saltB64 };
+
+  // Unverified account (signed up while email was on, never confirmed): send a
+  // fresh code and route to verification instead of the app.
+  if (isEmailConfigured() && !user.emailVerifiedAt) {
+    await generateAndSendVerification(user.id, user.email);
+    return { ok: true as const, saltB64, needsVerification: true as const };
+  }
+
+  return { ok: true as const, saltB64, needsVerification: false as const };
 }
