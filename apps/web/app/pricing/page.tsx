@@ -1,5 +1,5 @@
 import { validateRequest } from '@/lib/auth/session';
-import { isPaidFeaturesEnabled, isProUser } from '@/lib/flags';
+import { isPaidFeaturesEnabled, isPaidSubscriber } from '@/lib/flags';
 import { PricingClient } from './PricingClient';
 
 export const metadata = {
@@ -10,7 +10,9 @@ export const metadata = {
 export default async function PricingPage() {
   const { user } = await validateRequest();
   const paymentsEnabled = isPaidFeaturesEnabled();
-  const isPro = await isProUser();
+  // "Manage billing" should only show for real subscribers (they have a Stripe
+  // customer); beta users with free access still see the subscribe CTA.
+  const isPro = await isPaidSubscriber();
 
   return (
     <PricingClient
