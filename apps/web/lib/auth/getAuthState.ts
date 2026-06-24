@@ -1,7 +1,7 @@
 import 'server-only';
 import { cache } from 'react';
 import { validateRequest } from '@/lib/auth/session';
-import { isProUser } from '@/lib/flags';
+import { isPaidSubscriber } from '@/lib/flags';
 
 export interface AuthState {
   userEmail: string | null;
@@ -10,9 +10,11 @@ export interface AuthState {
 
 // Resolved once per request (React cache dedupes), used by the root layout to
 // feed the shared nav context so SiteNav reflects the real login state on every
-// page without each page having to fetch auth itself.
+// page without each page having to fetch auth itself. isPro here means "paying
+// subscriber" (drives the PRO badge) — not mere beta access, which every
+// logged-in user has.
 export const getAuthState = cache(async (): Promise<AuthState> => {
   const { user } = await validateRequest();
-  const isPro = user ? await isProUser() : false;
+  const isPro = user ? await isPaidSubscriber() : false;
   return { userEmail: user?.email ?? null, isPro };
 });

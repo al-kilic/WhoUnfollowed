@@ -172,12 +172,15 @@ function HowItWorksDropdown() {
 }
 
 export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = {}) {
-  // Props win where a page passes them (app pages); otherwise fall back to the
+  // userEmail: props win where a page passes them; otherwise fall back to the
   // auth context provided by the root layout so every page (privacy, blog, etc.)
   // reflects the real login state.
+  // isPro (the PRO badge): always the global paid-subscriber state from the auth
+  // context — never the page-level isPro, which means "Pro feature access" (open
+  // to every logged-in user during beta) and would mislabel free users as PRO.
   const auth = useAuth();
   const userEmail = props.userEmail !== undefined ? props.userEmail : auth.userEmail;
-  const isPro     = props.isPro !== undefined ? props.isPro : auth.isPro;
+  const isPro     = auth.isPro;
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
