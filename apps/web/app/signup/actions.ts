@@ -5,7 +5,7 @@ import { db } from '@/lib/db/index';
 import { users, profiles } from '@/lib/db/schema';
 import { createSession } from '@/lib/auth/session';
 import { ensureSyncSalt } from '@/lib/sync/salt';
-import { checkRateLimit } from '@/lib/auth/rate-limit';
+import { checkRateLimit, clientIpFromXff } from '@/lib/auth/rate-limit';
 import { headers } from 'next/headers';
 
 const ARGON2_OPTIONS = {
@@ -27,7 +27,7 @@ export async function signupAction(formData: FormData) {
   }
 
   const headersList = await headers();
-  const ip = headersList.get('x-forwarded-for') ?? 'unknown';
+  const ip = clientIpFromXff(headersList.get('x-forwarded-for'));
   const { allowed } = checkRateLimit(`signup:${ip}`);
   if (!allowed) {
     return { error: 'Too many attempts. Try again in 15 minutes.' };
