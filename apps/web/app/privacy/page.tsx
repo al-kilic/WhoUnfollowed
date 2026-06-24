@@ -135,7 +135,7 @@ export default function PrivacyPage() {
             Data protection enquiries and rights requests:<br />
             <a href="mailto:aekilicc@gmail.com" style={{ color: T.tealLight, textDecoration: 'none' }}>aekilicc@gmail.com</a>
             <br /><br />
-            <span style={{ fontSize: 13, color: T.inkMute }}>WhoUnfollowed · Independent · Not affiliated with Instagram or Meta Platforms, Inc.</span>
+            <span style={{ fontSize: 13, color: T.inkMute }}>WhoUnfollowed · Not affiliated with Instagram or Meta Platforms, Inc.</span>
           </Section>
 
         </div>

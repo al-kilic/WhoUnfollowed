@@ -341,7 +341,7 @@ export function LandingFooter() {
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, paddingTop: 24, borderTop: `1px solid ${T.border1}` }}>
           <div style={{ fontSize: 12, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.04em' }}>
-            © 2026 WhoUnfollowed · Independent · Not affiliated with Instagram or Meta
+            © 2026 WhoUnfollowed · Not affiliated with Instagram or Meta
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             {[
