@@ -304,23 +304,13 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
 
             {error && <p style={{ color: '#ef4444', fontSize: 13, marginBottom: 12 }}>{error}</p>}
 
-            {!userEmail ? (
-              <Link href="/signup" style={{
-                display: 'block', width: '100%', padding: '13px 24px', borderRadius: 12,
-                background: T.teal, color: T.cream, textDecoration: 'none',
-                fontSize: 15, fontWeight: 600, fontFamily: T.sans, textAlign: 'center', boxSizing: 'border-box',
-              }}>
-                {paymentsEnabled ? 'Sign up now' : 'Try Pro free'}
-              </Link>
-            ) : (
-              <button onClick={handleSubscribe} disabled={loading} style={{
-                width: '100%', padding: '13px 24px', borderRadius: 12, border: 'none',
-                cursor: loading ? 'not-allowed' : 'pointer', background: T.teal, color: T.cream,
-                fontSize: 15, fontWeight: 600, fontFamily: T.sans, opacity: loading ? 0.7 : 1,
-              }}>
-                {ctaLabel}
-              </button>
-            )}
+            <button onClick={handleSubscribe} disabled={loading} style={{
+              width: '100%', padding: '13px 24px', borderRadius: 12, border: 'none',
+              cursor: loading ? 'not-allowed' : 'pointer', background: T.teal, color: T.cream,
+              fontSize: 15, fontWeight: 600, fontFamily: T.sans, opacity: loading ? 0.7 : 1,
+            }}>
+              {ctaLabel}
+            </button>
 
             <p style={{ fontSize: 12, color: T.inkMute, textAlign: 'center', marginTop: 10 }}>
               {paymentsEnabled ? 'Cancel any time.' : 'No credit card required during beta.'}
