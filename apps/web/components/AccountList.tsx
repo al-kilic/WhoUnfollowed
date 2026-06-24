@@ -6,9 +6,8 @@ import { ExternalLink, Download, Search } from 'lucide-react';
 import { format } from 'date-fns';
 import type { Account } from '@ig-tracker/core';
 import { Button } from '@/components/ui/button';
-import { downloadCsv, buildCsv } from '@/lib/csv';
 import { cn } from '@/lib/utils';
-import { EmailCaptureModal } from '@/components/EmailCaptureModal';
+import { useCsvExport } from '@/hooks/useCsvExport';
 
 interface AccountListProps {
   accounts: Account[];
@@ -24,7 +23,7 @@ export function AccountList({
   emptyMessage = 'No accounts here.',
 }: AccountListProps) {
   const [search, setSearch] = useState('');
-  const [showEmailModal, setShowEmailModal] = useState(false);
+  const { requestExport, modal } = useCsvExport(csvFilename);
   const parentRef = useRef<HTMLDivElement>(null);
 
   const filtered = useMemo(() => {
@@ -59,19 +58,13 @@ export function AccountList({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => setShowEmailModal(true)}
+          onClick={() => requestExport(filtered)}
           disabled={filtered.length === 0}
         >
           <Download className="size-4" />
           Export CSV
         </Button>
-        {showEmailModal && (
-          <EmailCaptureModal
-            csvFilename={csvFilename}
-            onClose={() => setShowEmailModal(false)}
-            onDownload={() => downloadCsv(filtered, csvFilename)}
-          />
-        )}
+        {modal}
       </div>
 
       {/* Count */}
