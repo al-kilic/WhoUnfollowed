@@ -5,6 +5,7 @@ import { hash } from '@node-rs/argon2';
 import { db } from '@/lib/db/index';
 import { users } from '@/lib/db/schema';
 import { createSession } from '@/lib/auth/session';
+import { getStripe, isStripeConfigured } from '@/lib/stripe';
 import { eq } from 'drizzle-orm';
 
 const ARGON2_OPTIONS = {
@@ -23,12 +24,9 @@ export async function setPasswordAction(formData: FormData) {
   if (password !== confirmPassword) return { error: 'Passwords do not match.' };
 
   // Verify the Stripe checkout session and find the user's email
-  if (!process.env.STRIPE_SECRET_KEY) return { error: 'Payments not configured.' };
+  if (!isStripeConfigured()) return { error: 'Payments not configured.' };
 
-  const Stripe = (await import('stripe')).default;
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-    apiVersion: '2026-05-27.dahlia',
-  });
+  const stripe = getStripe();
 
   let email: string;
   try {
@@ -55,7 +53,11 @@ export async function setPasswordAction(formData: FormData) {
   }
 
   const passwordHash = await hash(password, ARGON2_OPTIONS);
-  await db.update(users).set({ passwordHash }).where(eq(users.id, user.id));
+  // Stripe checkout confirmed the email, so mark verified if it isn't already.
+  await db
+    .update(users)
+    .set({ passwordHash, emailVerifiedAt: user.emailVerifiedAt ?? new Date() })
+    .where(eq(users.id, user.id));
 
   await createSession(user.id);
   redirect('/history');

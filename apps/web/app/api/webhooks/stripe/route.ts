@@ -2,20 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db/index';
 import { profiles, users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
+import { getStripe, isStripeConfigured } from '@/lib/stripe';
 
 const GRACE_PERIOD_DAYS = 14;
 
 export async function POST(request: NextRequest) {
   const stripeSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-  if (!stripeSecret || process.env.NEXT_PUBLIC_PAYMENTS_ENABLED !== 'true') {
+  if (!stripeSecret || !isStripeConfigured() || process.env.NEXT_PUBLIC_PAYMENTS_ENABLED !== 'true') {
     return NextResponse.json({ received: true });
   }
 
-  const Stripe = (await import('stripe')).default;
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: '2026-05-27.dahlia',
-  });
+  const stripe = getStripe();
 
   const body = await request.text();
   const sig = request.headers.get('stripe-signature');
@@ -92,7 +90,9 @@ export async function POST(request: NextRequest) {
         if (!existing) {
           const result = await db
             .insert(users)
-            .values({ email: email.toLowerCase(), passwordHash: '' })
+            // Paying via Stripe with a confirmed email counts as verified, so the
+            // user is not bounced to /verify-email after setting their password.
+            .values({ email: email.toLowerCase(), passwordHash: '', emailVerifiedAt: new Date() })
             .returning({ id: users.id });
 
           const newUser = result[0];
