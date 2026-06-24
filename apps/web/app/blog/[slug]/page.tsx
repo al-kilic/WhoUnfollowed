@@ -60,7 +60,7 @@ export default function BlogPostPage({ params }: { params: Promise<{ slug: strin
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <SiteNav userEmail={null} />
+      <SiteNav />
 
       <main className="px-4 sm:px-8" style={{ maxWidth: 680, margin: '0 auto', paddingTop: 56, paddingBottom: 80 }}>
         {/* Header */}

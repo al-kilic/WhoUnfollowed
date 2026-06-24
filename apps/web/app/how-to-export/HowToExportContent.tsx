@@ -28,7 +28,7 @@ export function HowToExportContent() {
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <SiteNav userEmail={null} />
+      <SiteNav />
 
       <main style={{ maxWidth: 720, margin: '0 auto', padding: '56px 32px 80px' }}>
         {/* Header */}

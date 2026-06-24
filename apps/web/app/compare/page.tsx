@@ -114,7 +114,7 @@ export default function ComparePage() {
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <SiteNav userEmail={null} />
+      <SiteNav />
 
       <main style={{ paddingBottom: 80 }}>
         {/* Hero */}

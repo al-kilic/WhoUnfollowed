@@ -6,6 +6,7 @@ import { T } from './tokens';
 import { Icon } from './atoms';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { AccountMenu } from '@/components/AccountMenu';
+import { useAuth } from '@/components/AuthProvider';
 
 function WhatIsDropdown() {
   const [open, setOpen] = useState(false);
@@ -170,7 +171,13 @@ function HowItWorksDropdown() {
   );
 }
 
-export function SiteNav({ userEmail, isPro = false }: { userEmail: string | null; isPro?: boolean }) {
+export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = {}) {
+  // Props win where a page passes them (app pages); otherwise fall back to the
+  // auth context provided by the root layout so every page (privacy, blog, etc.)
+  // reflects the real login state.
+  const auth = useAuth();
+  const userEmail = props.userEmail !== undefined ? props.userEmail : auth.userEmail;
+  const isPro     = props.isPro !== undefined ? props.isPro : auth.isPro;
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -204,7 +211,7 @@ export function SiteNav({ userEmail, isPro = false }: { userEmail: string | null
             </>
           )}
           <WhatIsDropdown />
-          {!userEmail && <HowItWorksDropdown />}
+          <HowItWorksDropdown />
           <a href="/privacy" style={{ cursor: 'pointer', color: 'inherit', textDecoration: 'none' }}>Privacy</a>
           <a
             href="https://github.com/al-kilic/IG-Tracker"
