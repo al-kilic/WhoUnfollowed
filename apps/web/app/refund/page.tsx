@@ -33,7 +33,7 @@ export default function RefundPage() {
           </Section>
 
           <Section title="Exceptions">
-            In exceptional circumstances (such as accidental duplicate billing due to a technical error on our part), we may issue a refund at our sole discretion. If you believe such an error has occurred, please contact us at <a href="mailto:aekilicc@gmail.com" style={{ color: T.tealLight, textDecoration: 'none' }}>aekilicc@gmail.com</a> within 14 days of the transaction.
+            In exceptional circumstances (such as accidental duplicate billing due to a technical error on our part), we may issue a refund at our sole discretion. If you believe such an error has occurred, please contact us at <a href="mailto:hello@whounfollowed.co" style={{ color: T.tealLight, textDecoration: 'none' }}>hello@whounfollowed.co</a> within 14 days of the transaction.
           </Section>
         </div>
 

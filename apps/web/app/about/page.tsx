@@ -69,7 +69,7 @@ export default function AboutPage() {
                   <Icon.gh size={13} color="currentColor" />
                   al-kilic
                 </a>
-                <a href="mailto:aekilicc@gmail.com"
+                <a href="mailto:hello@whounfollowed.co"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '8px 14px', borderRadius: 9, border: `1px solid ${T.border2}`, background: T.surface1, color: T.inkDim, textDecoration: 'none', fontSize: 12, fontFamily: T.mono, transition: 'color 0.15s, border-color 0.15s' }}
                   onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.color = T.ink; e.currentTarget.style.borderColor = T.border3; }}
                   onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.color = T.inkDim; e.currentTarget.style.borderColor = T.border2; }}

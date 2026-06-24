@@ -18,7 +18,7 @@ export default function ContactPage() {
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const EMAIL = 'aekilicc@gmail.com';
+  const EMAIL = 'hello@whounfollowed.co';
 
   function copyEmail() {
     navigator.clipboard.writeText(EMAIL).then(() => {

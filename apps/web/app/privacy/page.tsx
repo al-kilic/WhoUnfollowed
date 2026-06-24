@@ -133,7 +133,7 @@ export default function PrivacyPage() {
 
           <Section title="12. Contact">
             Data protection enquiries and rights requests:<br />
-            <a href="mailto:aekilicc@gmail.com" style={{ color: T.tealLight, textDecoration: 'none' }}>aekilicc@gmail.com</a>
+            <a href="mailto:hello@whounfollowed.co" style={{ color: T.tealLight, textDecoration: 'none' }}>hello@whounfollowed.co</a>
             <br /><br />
             <span style={{ fontSize: 13, color: T.inkMute }}>WhoUnfollowed · Not affiliated with Instagram or Meta Platforms, Inc.</span>
           </Section>

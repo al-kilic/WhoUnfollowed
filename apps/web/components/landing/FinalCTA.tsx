@@ -346,7 +346,7 @@ export function LandingFooter() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             {[
               { name: 'GitHub', href: 'https://github.com/al-kilic/IG-Tracker', icon: <Icon.gh size={16} color={T.inkDim} /> },
-              { name: 'Email',  href: 'mailto:aekilicc@gmail.com', icon: (
+              { name: 'Email',  href: 'mailto:hello@whounfollowed.co', icon: (
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="3" width="13" height="10" rx="1.5" stroke={T.inkDim} strokeWidth="1.3"/><path d="M2 4 L8 9 L14 4" stroke={T.inkDim} strokeWidth="1.3" fill="none" strokeLinecap="round"/></svg>
               )},
             ].map(s => (
