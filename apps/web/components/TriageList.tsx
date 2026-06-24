@@ -6,8 +6,7 @@ import { ExternalLink, Download, Search, ChevronDown, ChevronRight, ArrowUpDown 
 import { format } from 'date-fns';
 import type { Account } from '@ig-tracker/core';
 import { Button } from '@/components/ui/button';
-import { downloadCsv, buildCsv } from '@/lib/csv';
-import { EmailCaptureModal } from '@/components/EmailCaptureModal';
+import { useCsvExport } from '@/hooks/useCsvExport';
 import Link from 'next/link';
 import { T } from '@/components/landing/tokens';
 import { useTriage, usePreviousTriage, type TriageState } from '@/hooks/useTriage';
@@ -456,7 +455,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
   const [deactivatedOpen, setDeactivatedOpen] = useState(false);
   const [visited, setVisited]         = useState<Set<string>>(() => new Set());
   const [toast, setToast]             = useState<ToastData | null>(null);
-  const [showEmailModal, setShowEmailModal] = useState(false);
+  const { requestExport, modal } = useCsvExport(csvFilename);
   const [importDismissed, setImportDismissed] = useState(false);
   const [importStates, setImportStates] = useState<Set<TriageState>>(
     new Set(['let_it_slide', 'check_later']),
@@ -744,20 +743,14 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
           id="tutorial-export-csv"
           variant="outline"
           size="sm"
-          onClick={() => setShowEmailModal(true)}
+          onClick={() => requestExport(mainAccounts)}
           disabled={mainAccounts.length === 0}
         >
           <Download size={14} />
           Export CSV
         </Button>
       </div>
-      {showEmailModal && (
-        <EmailCaptureModal
-          csvFilename={csvFilename}
-          onClose={() => setShowEmailModal(false)}
-          onDownload={() => downloadCsv(mainAccounts, csvFilename)}
-        />
-      )}
+      {modal}
 
       {/* Filter pills */}
       {(() => {

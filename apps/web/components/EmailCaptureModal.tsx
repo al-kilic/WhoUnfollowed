@@ -19,44 +19,49 @@ interface Props {
   onDownload: () => void;
 }
 
+// Shown to logged-out users on their first CSV export. The CSV is generated and
+// downloaded entirely in the browser — we never receive or email the file. The
+// optional email is only for the product-update list.
 export function EmailCaptureModal({ csvFilename, onClose, onDownload }: Props) {
-  const [email, setEmail]     = useState('');
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [email, setEmail] = useState('');
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     const saved = getSavedEmail();
     if (saved) setEmail(saved);
   }, []);
 
-  const validEmail = email.trim().length > 0 && email.includes('@');
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [onClose]);
 
-  async function handleSendEmail() {
-    if (!validEmail) return;
-    setStatus('sending');
-    saveEmail(email.trim());
-    // Only email + filename sent to server — CSV stays client-side (GDPR compliance)
-    try {
-      const res = await fetch('/api/capture-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim(), csvFilename }),
-      });
-      setStatus(res.ok ? 'sent' : 'error');
-    } catch {
-      setStatus('error');
+  const validEmail = email.trim().includes('@');
+
+  async function handleDownload() {
+    setBusy(true);
+    if (validEmail) {
+      saveEmail(email.trim());
+      // Only the email + filename are sent (for product updates). The CSV stays
+      // in the browser — it is not uploaded or emailed.
+      try {
+        await fetch('/api/capture-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email.trim(), csvFilename }),
+        });
+      } catch {
+        // non-blocking — the download still happens
+      }
     }
-    onDownload();
-  }
-
-  function handleDownloadOnly() {
-    // Download never requires email (GDPR: consent must not be bundled with data access)
-    if (validEmail) saveEmail(email.trim());
     onDownload();
     onClose();
   }
 
   return (
     <div
+      onClick={onClose}
       style={{
         position: 'fixed', inset: 0, zIndex: 1000,
         background: 'rgba(8,12,12,0.8)', backdropFilter: 'blur(6px)',
@@ -64,100 +69,62 @@ export function EmailCaptureModal({ csvFilename, onClose, onDownload }: Props) {
       }}
     >
       <div
+        onClick={e => e.stopPropagation()}
         style={{
-          background: 'rgba(14,18,18,0.98)', border: '1px solid rgba(244,240,232,0.1)',
-          borderRadius: 20, padding: '32px 36px', maxWidth: 440, width: '100%',
+          position: 'relative', background: 'rgba(14,18,18,0.98)',
+          border: '1px solid rgba(244,240,232,0.1)', borderRadius: 20,
+          padding: '32px 36px', maxWidth: 440, width: '100%',
           boxShadow: '0 32px 80px rgba(0,0,0,0.6)',
         }}
-        onClick={e => e.stopPropagation()}
       >
+        <button
+          onClick={onClose}
+          aria-label="Close"
+          style={{ position: 'absolute', top: 14, right: 14, width: 30, height: 30, borderRadius: 8, border: '1px solid rgba(244,240,232,0.12)', background: 'transparent', color: T.inkMute, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 2 L10 10 M10 2 L2 10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
+        </button>
+
         {/* Header */}
-        <div style={{ marginBottom: 20 }}>
+        <div style={{ marginBottom: 20, paddingRight: 24 }}>
           <div style={{ fontSize: 10, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.12em', marginBottom: 8 }}>EXPORT CSV</div>
           <h2 style={{ fontFamily: T.serif, fontSize: 24, fontWeight: 400, letterSpacing: '-0.02em', color: T.ink, marginBottom: 6 }}>
             Your CSV is ready.
           </h2>
           <p style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.6 }}>
-            Download it now, or enter your email to also receive a copy and occasional product updates. Unsubscribe anytime.
+            It downloads straight to your device. Want occasional product updates? Add your email (optional). We never upload or email your data.
           </p>
         </div>
 
-        {/* Email input */}
+        {/* Optional email */}
         <div style={{ marginBottom: 16 }}>
           <input
             type="email"
-            placeholder="your@email.com"
+            placeholder="your@email.com (optional)"
             value={email}
-            onChange={e => { setEmail(e.target.value); setStatus('idle'); }}
+            onChange={e => setEmail(e.target.value)}
             autoFocus
             style={{
               width: '100%', padding: '12px 14px', borderRadius: 10, boxSizing: 'border-box',
-              border: `1px solid ${status === 'error' ? 'rgba(168,75,47,0.4)' : 'rgba(244,240,232,0.15)'}`,
+              border: '1px solid rgba(244,240,232,0.15)',
               background: 'rgba(244,240,232,0.03)', color: T.ink,
               fontSize: 14, fontFamily: T.sans, outline: 'none',
             }}
           />
-          {status === 'error' && (
-            <p style={{ fontSize: 11, color: T.terra, marginTop: 6, fontFamily: T.mono }}>Something went wrong. Your CSV still downloaded.</p>
-          )}
-          {status === 'sent' && (
-            <p style={{ fontSize: 11, color: T.tealLight, marginTop: 6, fontFamily: T.mono }}>Sent. Check your inbox.</p>
-          )}
         </div>
 
-        {/* Actions */}
-        {status === 'sent' ? (
-          <div style={{ display: 'flex', gap: 10 }}>
-            <button
-              onClick={() => { onDownload(); onClose(); }}
-              style={{
-                flex: 1, padding: '11px 0', borderRadius: 10, cursor: 'pointer',
-                background: T.teal, border: 'none', color: T.cream, fontSize: 13, fontWeight: 600, fontFamily: T.sans,
-              }}
-            >
-              Download CSV too
-            </button>
-            <button
-              onClick={onClose}
-              style={{
-                padding: '11px 18px', borderRadius: 10, cursor: 'pointer',
-                background: 'transparent', border: '1px solid rgba(244,240,232,0.1)',
-                color: T.inkDim, fontSize: 13, fontFamily: T.sans,
-              }}
-            >
-              Done
-            </button>
-          </div>
-        ) : (
-          <div style={{ display: 'flex', gap: 10 }}>
-            <button
-              onClick={handleSendEmail}
-              disabled={!validEmail || status === 'sending'}
-              style={{
-                flex: 1, padding: '11px 0', borderRadius: 10,
-                cursor: validEmail ? 'pointer' : 'not-allowed',
-                background: validEmail ? T.teal : 'rgba(2,136,143,0.15)',
-                border: 'none', color: validEmail ? T.cream : T.inkMute,
-                fontSize: 13, fontWeight: 600, fontFamily: T.sans, transition: 'all 0.15s',
-              }}
-            >
-              {status === 'sending' ? 'Sending…' : 'Send to email & download'}
-            </button>
-            <button
-              onClick={handleDownloadOnly}
-              style={{
-                padding: '11px 16px', borderRadius: 10,
-                cursor: 'pointer',
-                background: 'rgba(244,240,232,0.04)',
-                border: '1px solid rgba(244,240,232,0.12)',
-                color: T.inkDim,
-                fontSize: 13, fontFamily: T.sans, transition: 'all 0.15s',
-              }}
-            >
-              Download only
-            </button>
-          </div>
-        )}
+        <button
+          onClick={handleDownload}
+          disabled={busy}
+          style={{
+            width: '100%', padding: '12px 0', borderRadius: 10,
+            cursor: busy ? 'not-allowed' : 'pointer',
+            background: T.teal, border: 'none', color: T.cream,
+            fontSize: 13, fontWeight: 600, fontFamily: T.sans,
+          }}
+        >
+          {busy ? 'Preparing…' : validEmail ? 'Download CSV & get updates' : 'Download CSV'}
+        </button>
       </div>
     </div>
   );
