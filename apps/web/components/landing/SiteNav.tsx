@@ -171,6 +171,56 @@ function HowItWorksDropdown() {
   );
 }
 
+// Eye-catching animated "Radar" nav item: a teal sonar ping + rotating sweep
+// icon and a teal shimmer on the label. Deliberately different from the amber
+// lightning "How It Works" treatment so the two don't read as the same thing.
+function RadarNavLink({ onClick = () => {}, mobile = false }: { onClick?: () => void; mobile?: boolean }) {
+  const size = mobile ? 16 : 13;
+  return (
+    <Link
+      href="/dashboard"
+      onClick={onClick}
+      style={{ color: 'inherit', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 7, whiteSpace: 'nowrap' }}
+    >
+      <style>{`
+        @keyframes radar-ping {
+          0%   { transform: scale(0.5); opacity: 0.8; }
+          70%  { transform: scale(1.9); opacity: 0; }
+          100% { transform: scale(1.9); opacity: 0; }
+        }
+        @keyframes radar-sweep {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
+        @keyframes radar-shimmer {
+          0%   { background-position: 200% center; }
+          100% { background-position: -200% center; }
+        }
+      `}</style>
+      <span style={{ position: 'relative', width: size, height: size, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <span style={{ position: 'absolute', width: '100%', height: '100%', borderRadius: '50%', border: `1.5px solid ${T.tealLight}`, animation: 'radar-ping 2s ease-out infinite' }} />
+        <svg width={size} height={size} viewBox="0 0 14 14" fill="none" style={{ position: 'relative' }}>
+          <circle cx="7" cy="7" r="6" stroke={T.tealMid} strokeWidth="1.1" opacity="0.45" />
+          <circle cx="7" cy="7" r="3.2" stroke={T.tealMid} strokeWidth="1" opacity="0.4" />
+          <circle cx="7" cy="7" r="1.1" fill={T.tealLight} />
+          <line x1="7" y1="7" x2="7" y2="1.2" stroke={T.tealLight} strokeWidth="1.3" strokeLinecap="round" style={{ transformOrigin: 'center', transformBox: 'view-box', animation: 'radar-sweep 2.6s linear infinite' }} />
+        </svg>
+      </span>
+      <span style={{
+        background: 'linear-gradient(110deg, #015e63 0%, #02b3bd 28%, #6df0f7 50%, #02b3bd 72%, #015e63 100%)',
+        backgroundSize: '200% 100%',
+        WebkitBackgroundClip: 'text',
+        backgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        color: 'transparent',
+        animation: 'radar-shimmer 5.5s linear infinite',
+        fontWeight: 600,
+        fontSize: mobile ? 16 : undefined,
+      }}>{mobile ? 'Radar Dashboard' : 'Radar'}</span>
+    </Link>
+  );
+}
+
 export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = {}) {
   // userEmail: props win where a page passes them; otherwise fall back to the
   // auth context provided by the root layout so every page (privacy, blog, etc.)
@@ -209,7 +259,7 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
         <div className="hidden sm:flex items-center" style={{ gap: 32, fontSize: 13, color: T.inkDim }}>
           {userEmail && (
             <>
-              <Link href="/dashboard" style={{ color: 'inherit', textDecoration: 'none' }}>Radar</Link>
+              <RadarNavLink />
               <Link href="/history" style={{ color: 'inherit', textDecoration: 'none' }}>History</Link>
             </>
           )}
@@ -262,7 +312,7 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
             display: 'flex', flexDirection: 'column', gap: 20,
           }}
         >
-          <Link href="/dashboard" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.tealLight, fontWeight: 600, textDecoration: 'none' }}>Radar Dashboard</Link>
+          <RadarNavLink onClick={() => setMenuOpen(false)} mobile />
           <Link href="/history" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>Snapshot History</Link>
           <Link href="/what-is-whounfollowed" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>What is WhoUnfollowed?</Link>
           <Link href="/compare" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>Compare</Link>
