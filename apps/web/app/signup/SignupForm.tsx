@@ -22,7 +22,11 @@ export function SignupForm() {
           // sync key derivation must never block signup
         }
         // replace (not push) so Back can't return to the signup form.
-        router.replace('/history?welcome=1');
+        if ('needsVerification' in res && res.needsVerification) {
+          router.replace('/verify-email');
+        } else {
+          router.replace('/history?welcome=1');
+        }
       }
       return res;
     },

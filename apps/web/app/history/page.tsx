@@ -1,5 +1,7 @@
+import { redirect } from 'next/navigation';
 import { validateRequest } from '@/lib/auth/session';
 import { isProUser, getSubscriptionStatus } from '@/lib/flags';
+import { isUserVerified } from '@/lib/auth/verification';
 import { db } from '@/lib/db/index';
 import { profiles } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
@@ -13,6 +15,7 @@ export default async function HistoryPage({
 }) {
   const { welcome } = await searchParams;
   const { user } = await validateRequest();
+  if (user && !(await isUserVerified(user.id))) redirect('/verify-email');
   const [isPro, status] = await Promise.all([
     isProUser(),
     getSubscriptionStatus(),

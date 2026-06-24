@@ -23,7 +23,11 @@ export function LoginForm() {
         }
         // replace (not push) so the browser Back button can't return to the
         // login form after a successful login.
-        router.replace('/history');
+        if ('needsVerification' in res && res.needsVerification) {
+          router.replace('/verify-email');
+        } else {
+          router.replace('/history');
+        }
       }
       return res;
     },

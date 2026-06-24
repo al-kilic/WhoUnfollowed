@@ -7,6 +7,7 @@ import { validateRequest } from '@/lib/auth/session';
 import { db } from '@/lib/db/index';
 import { profiles, syncSettings } from '@/lib/db/schema';
 import { isPaidFeaturesEnabled, isProUser } from '@/lib/flags';
+import { isUserVerified } from '@/lib/auth/verification';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { T } from '@/components/landing/tokens';
@@ -47,6 +48,7 @@ function Row({ label, value }: { label: string; value: string }) {
 export default async function AccountPage() {
   const { user } = await validateRequest();
   if (!user) redirect('/login');
+  if (!(await isUserVerified(user.id))) redirect('/verify-email');
 
   const [profile, syncRow, isPro] = await Promise.all([
     db.query.profiles.findFirst({ where: eq(profiles.userId, user.id) }),

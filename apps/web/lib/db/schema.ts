@@ -23,6 +23,20 @@ export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
   email: text('email').notNull().unique(),
   passwordHash: text('password_hash').notNull(),
+  // Null = email not yet verified. Set once the user enters the emailed code.
+  // Enforced only when email sending is configured (RESEND_API_KEY present).
+  emailVerifiedAt: timestamp('email_verified_at'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+});
+
+// One pending email-verification code per user (upserted on resend). The code
+// itself is never stored, only its SHA-256 hash, and it expires.
+export const emailVerifications = pgTable('email_verifications', {
+  userId: uuid('user_id')
+    .primaryKey()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  codeHash: text('code_hash').notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 
