@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import { analyzeSnapshot } from '@ig-tracker/core';
 import type { Account } from '@ig-tracker/core';
 import { useSnapshotStore } from '@/lib/store';
+import { useAuth } from '@/components/AuthProvider';
 import { AccountList } from '@/components/AccountList';
 import { TriageList } from '@/components/TriageList';
 import { LandingFooter } from '@/components/landing/FinalCTA';
@@ -200,6 +201,7 @@ function RadarPulse({ trigger }: { trigger: boolean }) {
 export default function ResultsPage() {
   const router       = useRouter();
   const snapshot     = useSnapshotStore(s => s.currentSnapshot);
+  const { isPro }    = useAuth();
   const [activeTabId, setActiveTabId] = useState('non-followers');
   const [tutorialDone, setTutorialDone] = useState(false);
 
@@ -352,6 +354,7 @@ export default function ResultsPage() {
               accounts={analysis.nonFollowers}
               snapshotKey={snapshot.exportedAt}
               csvFilename={activeTab.csvFilename}
+              isPro={isPro}
             />
           ) : (
             <AccountList
