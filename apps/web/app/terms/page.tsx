@@ -57,7 +57,7 @@ export default function TermsPage() {
           </Section>
 
           <Section title="9. Contact">
-            If you have any questions about these Terms, please contact us at <a href="mailto:aekilicc@gmail.com" style={{ color: T.tealLight, textDecoration: 'none' }}>aekilicc@gmail.com</a>.
+            If you have any questions about these Terms, please contact us at <a href="mailto:hello@whounfollowed.co" style={{ color: T.tealLight, textDecoration: 'none' }}>hello@whounfollowed.co</a>.
           </Section>
         </div>
 

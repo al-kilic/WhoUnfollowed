@@ -145,8 +145,8 @@ export function FAQSection() {
               <div style={{ width: 7, height: 7, borderRadius: '50%', background: T.tealLight }} />
               <span style={{ fontSize: 12, color: T.tealLight, fontWeight: 600, fontFamily: T.mono }}>Still wondering?</span>
             </div>
-            <a href="mailto:aekilicc@gmail.com" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, color: T.tealLight, fontWeight: 600, textDecoration: 'none' }}>
-              aekilicc@gmail.com
+            <a href="mailto:hello@whounfollowed.co" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, color: T.tealLight, fontWeight: 600, textDecoration: 'none' }}>
+              hello@whounfollowed.co
               <Icon.arrow size={12} color={T.tealLight} />
             </a>
           </div>
@@ -196,8 +196,8 @@ export function FAQSection() {
                 <span style={{ fontSize: 12, color: T.tealLight, fontWeight: 600, fontFamily: T.mono, letterSpacing: '0.04em' }}>Still wondering?</span>
               </div>
               <p style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5, marginBottom: 12 }}>Email us.</p>
-              <a href="mailto:aekilicc@gmail.com" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, color: T.tealLight, fontWeight: 600, textDecoration: 'none' }}>
-                aekilicc@gmail.com
+              <a href="mailto:hello@whounfollowed.co" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, color: T.tealLight, fontWeight: 600, textDecoration: 'none' }}>
+                hello@whounfollowed.co
                 <Icon.arrow size={12} color={T.tealLight} />
               </a>
             </div>
