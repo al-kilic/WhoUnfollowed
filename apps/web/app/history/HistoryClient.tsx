@@ -139,6 +139,30 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
           )}
         </div>
 
+        {/* Pro upsell: compare + multi-snapshot tracking */}
+        {!isPro && (
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap',
+            padding: '18px 20px', borderRadius: 12, marginBottom: 28,
+            background: 'linear-gradient(180deg, rgba(2,136,143,0.10), rgba(2,136,143,0.03))',
+            border: '1px solid rgba(2,136,143,0.25)',
+          }}>
+            <div style={{ flex: 1, minWidth: 240 }}>
+              <div style={{ fontSize: 10, fontFamily: T.mono, letterSpacing: '0.14em', color: T.tealLight, textTransform: 'uppercase', marginBottom: 6 }}>Pro</div>
+              <div style={{ fontFamily: T.serif, fontSize: 19, color: T.ink, marginBottom: 6, letterSpacing: '-0.01em' }}>See who unfollowed you over time</div>
+              <p style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5, margin: 0 }}>
+                Free keeps one snapshot. With Pro you save unlimited exports and <strong style={{ color: T.ink }}>compare any two</strong> to see exactly who unfollowed you between them, plus Radar trends and encrypted cloud backup.
+              </p>
+            </div>
+            <Link href="/pricing" style={{
+              flexShrink: 0, fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none',
+              padding: '11px 20px', borderRadius: 10, background: T.teal, boxShadow: '0 8px 24px rgba(2,136,143,0.3)',
+            }}>
+              Unlock compare
+            </Link>
+          </div>
+        )}
+
         {/* Cloud sync unlock */}
         {showUnlock && !isUnlocked && (
           <div style={{ padding: '16px 20px', borderRadius: 12, background: 'var(--t-surface1)', border: '1px solid var(--t-border1)', marginBottom: 20 }}>
@@ -288,7 +312,7 @@ function SnapshotCard({ record, allSnapshots, compareBaseId, isDeleting, isSynci
               <>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                   <span style={{ fontFamily: T.serif, fontSize: 19, color: T.ink, letterSpacing: '-0.01em' }}>{record.label}</span>
-                  {record.cloudId ? (
+                  {record.cloudId && isPro ? (
                     <span style={{ fontSize: 10, fontFamily: T.mono, letterSpacing: '0.08em', color: T.tealMid, background: 'rgba(2,136,143,0.1)', border: '1px solid rgba(2,136,143,0.25)', borderRadius: 5, padding: '2px 7px' }}>SYNCED</span>
                   ) : (
                     <span style={{ fontSize: 10, fontFamily: T.mono, letterSpacing: '0.08em', color: T.inkMute, background: 'var(--t-surface2)', border: '1px solid var(--t-border2)', borderRadius: 5, padding: '2px 7px' }}>DEVICE</span>
