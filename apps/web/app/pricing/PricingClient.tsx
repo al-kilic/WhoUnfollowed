@@ -111,6 +111,26 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
     }
   }
 
+  // Existing subscribers manage/cancel through the Stripe billing portal instead
+  // of being offered the plan again (which would create a duplicate subscription).
+  async function handleManageBilling() {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/stripe/portal', { method: 'POST' });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+        return;
+      }
+      setError('Something went wrong. Please try again.');
+    } catch {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const monthlyPrice = 4.99;
   const yearlyPrice = 39;
   const yearlyMonthly = (yearlyPrice / 12).toFixed(2);
@@ -304,12 +324,18 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
 
             {error && <p style={{ color: '#ef4444', fontSize: 13, marginBottom: 12 }}>{error}</p>}
 
-            <button onClick={handleSubscribe} disabled={loading} style={{
-              width: '100%', padding: '13px 24px', borderRadius: 12, border: 'none',
-              cursor: loading ? 'not-allowed' : 'pointer', background: T.teal, color: T.cream,
-              fontSize: 15, fontWeight: 600, fontFamily: T.sans, opacity: loading ? 0.7 : 1,
-            }}>
-              {ctaLabel}
+            <button
+              onClick={paymentsEnabled && isPro ? handleManageBilling : handleSubscribe}
+              disabled={loading}
+              style={{
+                width: '100%', padding: '13px 24px', borderRadius: 12, border: 'none',
+                cursor: loading ? 'not-allowed' : 'pointer', background: T.teal, color: T.cream,
+                fontSize: 15, fontWeight: 600, fontFamily: T.sans, opacity: loading ? 0.7 : 1,
+              }}
+            >
+              {paymentsEnabled && isPro
+                ? (loading ? 'Opening...' : 'Manage billing')
+                : ctaLabel}
             </button>
 
             <p style={{ fontSize: 12, color: T.inkMute, textAlign: 'center', marginTop: 10 }}>
