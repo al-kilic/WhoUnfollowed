@@ -6,7 +6,7 @@ import { eq } from 'drizzle-orm';
 import { validateRequest } from '@/lib/auth/session';
 import { db } from '@/lib/db/index';
 import { profiles, syncSettings } from '@/lib/db/schema';
-import { isPaidFeaturesEnabled, isPaidSubscriber } from '@/lib/flags';
+import { isPaidFeaturesEnabled, isPaidSubscriber, isProUser } from '@/lib/flags';
 import { isUserVerified } from '@/lib/auth/verification';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
@@ -51,11 +51,16 @@ export default async function AccountPage() {
   if (!user) redirect('/login');
   if (!(await isUserVerified(user.id))) redirect('/verify-email');
 
-  const [profile, syncRow, isPro] = await Promise.all([
+  // isSubscriber drives the plan card / badge (paying customer). hasProAccess
+  // drives Pro-feature gating (cloud sync etc.) and includes grandfathered/comp
+  // access, which stays open during beta.
+  const [profile, syncRow, isSubscriber, hasProAccess] = await Promise.all([
     db.query.profiles.findFirst({ where: eq(profiles.userId, user.id) }),
     db.query.syncSettings.findFirst({ where: eq(syncSettings.userId, user.id) }),
     isPaidSubscriber(),
+    isProUser(),
   ]);
+  const isPro = isSubscriber;
 
   const paymentsEnabled = isPaidFeaturesEnabled();
   const status = profile?.subscriptionStatus ?? 'active';
@@ -164,7 +169,7 @@ export default async function AccountPage() {
         {/* Cloud sync */}
         <section style={{ marginBottom: 28 }}>
           <div style={sectionLabel}>Cloud sync</div>
-          <SyncSetup hasSyncSetup={hasSyncSetup} passphraseSetAt={syncRow?.passphraseSetAt ?? null} />
+          <SyncSetup hasSyncSetup={hasSyncSetup} passphraseSetAt={syncRow?.passphraseSetAt ?? null} isPro={hasProAccess} />
         </section>
 
         {/* Security */}
