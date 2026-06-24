@@ -58,7 +58,9 @@ export async function signupAction(formData: FormData) {
   const user = result[0];
   if (!user) return { error: 'Failed to create account. Please try again.' };
 
-  await db.insert(profiles).values({ userId: user.id, subscriptionStatus: 'active' });
+  // New accounts start on Free. Pro is granted only by a real Stripe
+  // subscription (via the webhook) or an explicit grandfather/comp update.
+  await db.insert(profiles).values({ userId: user.id, subscriptionStatus: 'none' });
 
   await createSession(user.id);
 

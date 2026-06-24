@@ -17,6 +17,7 @@ export const subscriptionStatusEnum = pgEnum('subscription_status', [
   'active',
   'grace',
   'cancelled',
+  'none',
 ]);
 
 export const users = pgTable('users', {
@@ -65,7 +66,7 @@ export const profiles = pgTable('profiles', {
     .references(() => users.id, { onDelete: 'cascade' }),
   subscriptionStatus: subscriptionStatusEnum('subscription_status')
     .notNull()
-    .default('active'),
+    .default('none'),
   stripeCustomerId: text('stripe_customer_id'),
   stripeSubscriptionId: text('stripe_subscription_id'),
   gracePeriodEndsAt: timestamp('grace_period_ends_at'),
