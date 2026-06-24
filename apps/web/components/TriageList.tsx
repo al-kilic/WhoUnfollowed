@@ -8,6 +8,7 @@ import type { Account } from '@ig-tracker/core';
 import { Button } from '@/components/ui/button';
 import { downloadCsv, buildCsv } from '@/lib/csv';
 import { EmailCaptureModal } from '@/components/EmailCaptureModal';
+import Link from 'next/link';
 import { T } from '@/components/landing/tokens';
 import { useTriage, usePreviousTriage, type TriageState } from '@/hooks/useTriage';
 
@@ -439,9 +440,12 @@ interface TriageListProps {
   accounts: Account[];
   snapshotKey: number;
   csvFilename: string;
+  // Pro gates the cross-snapshot carry-over (importing triage from a previous
+  // export). Single-snapshot triage itself stays free.
+  isPro?: boolean;
 }
 
-export function TriageList({ accounts, snapshotKey, csvFilename }: TriageListProps) {
+export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }: TriageListProps) {
   const { triage, setTriageState, bulkImportTriage } = useTriage(snapshotKey);
 
   const [search, setSearch]           = useState('');
@@ -566,8 +570,28 @@ export function TriageList({ accounts, snapshotKey, csvFilename }: TriageListPro
       {/* Progress bar */}
       <ProgressBar done={triaged} total={totalForProgress} />
 
-      {/* Previous triage import banner */}
-      {!prevLoading && !importDismissed && triage.size === 0 && prevOptions.length > 0 && (() => {
+      {/* Pro teaser: carry-over across exports (shown to free users once they've
+          actually triaged something, so the value lands at the right moment). */}
+      {!isPro && !importDismissed && triage.size > 0 && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
+          padding: '12px 16px', borderRadius: 12, marginBottom: 16,
+          background: 'linear-gradient(180deg, rgba(2,136,143,0.10), rgba(2,136,143,0.03))',
+          border: '1px solid rgba(2,136,143,0.25)',
+        }}>
+          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>Pro</span>
+          <span style={{ flex: 1, minWidth: 200, fontSize: 13, color: T.inkDim, lineHeight: 1.5 }}>
+            Upload a new export later and Pro <strong style={{ color: T.ink }}>carries this triage over</strong>, so you never re-triage the same accounts.
+          </span>
+          <Link href="/pricing" style={{ flexShrink: 0, fontSize: 12, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none', padding: '8px 16px', borderRadius: 9, background: T.teal }}>
+            Upgrade to Pro
+          </Link>
+          <button onClick={() => setImportDismissed(true)} aria-label="Dismiss" style={{ flexShrink: 0, width: 26, height: 26, borderRadius: 7, border: '1px solid var(--t-border2)', background: 'transparent', color: T.inkMute, cursor: 'pointer', fontFamily: T.sans }}>×</button>
+        </div>
+      )}
+
+      {/* Previous triage import banner (Pro: carry triage across snapshots) */}
+      {isPro && !prevLoading && !importDismissed && triage.size === 0 && prevOptions.length > 0 && (() => {
         const IMPORTABLE: { state: TriageState; label: string; description: string }[] = [
           { state: 'let_it_slide', label: 'Whitelist',     description: 'accounts you follow for content' },
           { state: 'check_later',  label: 'Skip for now',  description: 'accounts you were undecided on' },
