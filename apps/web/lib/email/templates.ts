@@ -90,6 +90,32 @@ export function verificationCodeEmail(code: string): {
   return { subject, html: emailLayout({ preview: `Your verification code is ${code}`, contentHtml: content }), text };
 }
 
+export function passwordResetEmail(resetUrl: string): {
+  subject: string;
+  html: string;
+  text: string;
+} {
+  const subject = 'Reset your WhoUnfollowed password';
+  const text = `Reset your WhoUnfollowed password using this link (valid for 1 hour): ${resetUrl}. If you did not request this, you can ignore this email. Note: resetting your password makes any existing encrypted cloud snapshots unreadable.`;
+
+  const content = `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      <tr><td style="padding:30px 30px 0;">
+        <h1 style="margin:0 0 8px;font-size:21px;font-weight:600;color:${C.ink};">Reset your password</h1>
+        <p style="margin:0 0 22px;font-size:14px;line-height:1.6;color:${C.dim};">Click the button below to set a new password. This link is valid for 1 hour.</p>
+      </td></tr>
+      <tr><td style="padding:0 30px;">
+        <a href="${resetUrl}" style="display:inline-block;background:${C.teal};color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 22px;border-radius:10px;">Reset password</a>
+      </td></tr>
+      <tr><td style="padding:22px 30px 30px;">
+        <p style="margin:0 0 12px;font-size:12px;line-height:1.6;color:${C.mute};">If you did not request a password reset, you can safely ignore this email. Your password stays the same.</p>
+        <p style="margin:0;font-size:12px;line-height:1.6;color:${C.mute};"><strong style="color:${C.dim};">Heads up:</strong> for your privacy, cloud snapshots are encrypted with a key derived from your password. Resetting it means any existing cloud snapshots can no longer be decrypted and will be removed.</p>
+      </td></tr>
+    </table>`;
+
+  return { subject, html: emailLayout({ preview: 'Reset your WhoUnfollowed password (link valid 1 hour).', contentHtml: content }), text };
+}
+
 export function exportConfirmationEmail(csvFilename: string): {
   subject: string;
   html: string;

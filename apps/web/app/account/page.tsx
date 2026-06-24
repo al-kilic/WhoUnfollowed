@@ -14,6 +14,7 @@ import { T } from '@/components/landing/tokens';
 import { SyncSetup } from '@/app/settings/SyncSetup';
 import { DeleteAccountButton } from '@/app/settings/DeleteAccountButton';
 import { ManageBillingButton } from './ManageBillingButton';
+import { ChangePassword } from './ChangePassword';
 
 export const metadata: Metadata = {
   title: 'Account — WhoUnfollowed',
@@ -164,6 +165,17 @@ export default async function AccountPage() {
         <section style={{ marginBottom: 28 }}>
           <div style={sectionLabel}>Cloud sync</div>
           <SyncSetup hasSyncSetup={hasSyncSetup} passphraseSetAt={syncRow?.passphraseSetAt ?? null} />
+        </section>
+
+        {/* Security */}
+        <section style={{ marginBottom: 28 }}>
+          <div style={sectionLabel}>Security</div>
+          <div style={card}>
+            <p style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5, marginBottom: 16 }}>
+              Change your password. Any cloud snapshots are re-encrypted under the new password automatically.
+            </p>
+            <ChangePassword />
+          </div>
         </section>
 
         {/* Danger zone */}

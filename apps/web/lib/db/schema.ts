@@ -40,6 +40,17 @@ export const emailVerifications = pgTable('email_verifications', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 
+// One pending password-reset token per user (upserted on re-request). Only the
+// SHA-256 hash of the token is stored; the raw token lives only in the emailed link.
+export const passwordResets = pgTable('password_resets', {
+  userId: uuid('user_id')
+    .primaryKey()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  tokenHash: text('token_hash').notNull().unique(),
+  expiresAt: timestamp('expires_at').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+});
+
 export const sessions = pgTable('sessions', {
   id: text('id').primaryKey(),
   userId: uuid('user_id')
