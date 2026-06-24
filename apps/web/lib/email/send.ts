@@ -19,6 +19,7 @@ export async function sendEmail(opts: {
   subject: string;
   html: string;
   text?: string;
+  from?: string;
 }): Promise<{ ok: true } | { ok: false; error: string }> {
   if (!resend) {
     // Not configured: log so dev can see what would have been sent, don't throw.
@@ -27,7 +28,7 @@ export async function sendEmail(opts: {
   }
   try {
     const { error } = await resend.emails.send({
-      from: FROM,
+      from: opts.from ?? FROM,
       to: opts.to,
       subject: opts.subject,
       html: opts.html,
