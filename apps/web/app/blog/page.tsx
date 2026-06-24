@@ -134,7 +134,7 @@ function BlogCard({ post, index }: { post: typeof POSTS[0]; index: number }) {
 export default function BlogPage() {
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <SiteNav userEmail={null} />
+      <SiteNav />
 
       <main className="px-4 sm:px-8" style={{ maxWidth: 900, margin: '0 auto', paddingTop: 56, paddingBottom: 80 }}>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} style={{ marginBottom: 48 }}>

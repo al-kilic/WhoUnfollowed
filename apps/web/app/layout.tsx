@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import { ThemeProvider } from 'next-themes';
 import { FontLoader } from '@/components/FontLoader';
+import { AuthProvider } from '@/components/AuthProvider';
+import { getAuthState } from '@/lib/auth/getAuthState';
 import './globals.css';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
@@ -76,7 +78,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const auth = await getAuthState();
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -101,8 +104,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <FontLoader />
-          {children}
+          <AuthProvider value={auth}>
+            <FontLoader />
+            {children}
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

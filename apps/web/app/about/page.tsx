@@ -16,7 +16,7 @@ const APPS_COMING = [
 export default function AboutPage() {
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <SiteNav userEmail={null} />
+      <SiteNav />
 
       <main className="px-4 sm:px-8" style={{ maxWidth: 760, margin: '0 auto', paddingTop: 64, paddingBottom: 96 }}>
 

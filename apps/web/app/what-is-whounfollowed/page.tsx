@@ -49,7 +49,7 @@ function FaqItem({ item }: { item: typeof faqItems[0] }) {
 export default function WhatIsWhoUnfollowed() {
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <SiteNav userEmail={null} />
+      <SiteNav />
 
       <main className="px-4 sm:px-8" style={{ maxWidth: 740, margin: '0 auto', paddingTop: 64, paddingBottom: 96 }}>
 
