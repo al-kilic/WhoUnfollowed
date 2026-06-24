@@ -16,6 +16,7 @@ import { T } from '@/components/landing/tokens';
 import { useSnapshotList, useSnapshotsLoaded } from '@/hooks/useSnapshots';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { Tutorial } from '@/components/Tutorial';
+import { ProLockOverlay, lockedContentStyle } from '@/components/ProLockOverlay';
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 
@@ -1084,6 +1085,10 @@ export function DashboardClient({ account }: DashboardClientProps) {
   const [radarModalOpen, setRadarModalOpen] = useState(false);
   const [loading, setLoading] = useState(!storeSnapshot);
 
+  // Free users see the real Radar blurred behind an upgrade overlay (a teaser of
+  // their own data), rather than the full feature.
+  const locked = !account.isPro;
+
   // If no in-memory snapshot, load the most recent one from local storage.
   useEffect(() => {
     if (storeSnapshot) { setLoading(false); return; }
@@ -1154,7 +1159,7 @@ export function DashboardClient({ account }: DashboardClientProps) {
       <SiteNav userEmail={account.userEmail} isPro={account.isPro} />
 
       {radarModalOpen && <RadarModal onClose={() => setRadarModalOpen(false)} />}
-      <Tutorial
+      {!locked && <Tutorial
         storageKey="ig-tracker:tutorial-radar"
         steps={[
           {
@@ -1188,9 +1193,10 @@ export function DashboardClient({ account }: DashboardClientProps) {
             targetSelector: '#tutorial-pending',
           },
         ]}
-      />
+      />}
 
-      <main className="px-4 sm:px-8 py-8 sm:py-12 pb-20" style={{ maxWidth: 1100, margin: '0 auto' }}>
+      <div style={{ position: 'relative' }}>
+      <main className="px-4 sm:px-8 py-8 sm:py-12 pb-20" style={{ maxWidth: 1100, margin: '0 auto', ...(locked ? lockedContentStyle : {}) }}>
         {/* Header */}
         <div style={{ marginBottom: 40 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
@@ -1279,6 +1285,13 @@ export function DashboardClient({ account }: DashboardClientProps) {
           <RecentlyUnfollowedCard accounts={snapshot.recentlyUnfollowed ?? []} />
         </div>
       </main>
+      {locked && (
+        <ProLockOverlay
+          title="Radar is a Pro feature"
+          description="Your account health score, growth over time, audience breakdown, follow-age analysis, and pending requests. Unlock the full picture of your account."
+        />
+      )}
+      </div>
 
       <LandingFooter />
     </div>
