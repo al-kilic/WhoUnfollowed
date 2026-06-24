@@ -60,6 +60,12 @@ export function LoginForm() {
           autoComplete="current-password"
         />
 
+        <div style={{ marginTop: -6, textAlign: 'right' }}>
+          <Link href="/forgot-password" style={{ fontSize: 12, color: T.tealMid, textDecoration: 'none' }}>
+            Forgot password?
+          </Link>
+        </div>
+
         {error && <AuthError>{error}</AuthError>}
 
         <AuthButton pending={pending}>{pending ? 'Logging in...' : 'Log in'}</AuthButton>
