@@ -12,6 +12,7 @@ import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { T } from '@/components/landing/tokens';
 import { Icon } from '@/components/landing/atoms';
+import { trackUpgradeClick } from '@/lib/analytics';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
 interface HistoryClientProps {
@@ -154,7 +155,7 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
                 Free keeps one snapshot. With Pro you save unlimited exports and <strong style={{ color: T.ink }}>compare any two</strong> to see exactly who unfollowed you between them, plus Radar trends and encrypted cloud backup.
               </p>
             </div>
-            <Link href="/pricing" style={{
+            <Link href="/pricing" onClick={() => trackUpgradeClick('history-compare')} style={{
               flexShrink: 0, fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none',
               padding: '11px 20px', borderRadius: 10, background: T.teal, boxShadow: '0 8px 24px rgba(2,136,143,0.3)',
             }}>
@@ -347,7 +348,7 @@ function SnapshotCard({ record, allSnapshots, compareBaseId, isDeleting, isSynci
           </Link>
         )}
         {!record.cloudId && userEmail && !isPro && (
-          <Link href="/pricing" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 8, border: '1px solid rgba(168,75,47,0.3)', background: 'transparent', color: T.terra, fontSize: 12, fontFamily: T.sans, textDecoration: 'none' }}>
+          <Link href="/pricing" onClick={() => trackUpgradeClick('history-sync')} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 8, border: '1px solid rgba(168,75,47,0.3)', background: 'transparent', color: T.terra, fontSize: 12, fontFamily: T.sans, textDecoration: 'none' }}>
             Upgrade to sync
           </Link>
         )}

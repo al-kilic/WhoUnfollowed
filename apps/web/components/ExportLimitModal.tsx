@@ -3,10 +3,13 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { T } from '@/components/landing/tokens';
+import { trackLockedView, trackUpgradeClick } from '@/lib/analytics';
 
 // Shown when a free user tries a second CSV export. Free includes one export;
 // more requires Pro.
 export function ExportLimitModal({ onClose }: { onClose: () => void }) {
+  useEffect(() => { trackLockedView('csv-limit'); }, []);
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     document.addEventListener('keydown', handler);
@@ -47,6 +50,7 @@ export function ExportLimitModal({ onClose }: { onClose: () => void }) {
         </p>
         <Link
           href="/pricing"
+          onClick={() => trackUpgradeClick('csv-limit')}
           style={{ display: 'inline-block', padding: '12px 26px', borderRadius: 11, background: T.teal, color: T.cream, textDecoration: 'none', fontSize: 14, fontWeight: 600, fontFamily: T.sans, boxShadow: '0 8px 24px rgba(2,136,143,0.35)' }}
         >
           Upgrade to Pro

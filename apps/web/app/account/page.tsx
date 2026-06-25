@@ -16,6 +16,7 @@ import { SyncSetup } from '@/app/settings/SyncSetup';
 import { DeleteAccountButton } from '@/app/settings/DeleteAccountButton';
 import { ManageBillingButton } from './ManageBillingButton';
 import { ChangePassword } from './ChangePassword';
+import { UpgradeLink } from './UpgradeLink';
 
 export const metadata: Metadata = {
   title: 'Account — WhoUnfollowed',
@@ -158,9 +159,9 @@ export default async function AccountPage() {
               {canManageBilling ? (
                 <ManageBillingButton />
               ) : !isPro && paymentsEnabled ? (
-                <Link href="/pricing" style={{ fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none', padding: '9px 18px', borderRadius: 10, background: T.teal, whiteSpace: 'nowrap' }}>
+                <UpgradeLink source="account-plan" style={{ fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none', padding: '9px 18px', borderRadius: 10, background: T.teal, whiteSpace: 'nowrap' }}>
                   Upgrade to Pro
-                </Link>
+                </UpgradeLink>
               ) : null}
             </div>
 
@@ -204,9 +205,9 @@ export default async function AccountPage() {
                 <span style={{ fontSize: 13, color: T.inkDim }}>
                   <strong style={{ color: T.ink }}>$4.99/mo</strong> or $39/yr · cancel anytime
                 </span>
-                <Link href="/pricing" style={{ fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none', padding: '10px 20px', borderRadius: 10, background: T.teal }}>
+                <UpgradeLink source="account-features" style={{ fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none', padding: '10px 20px', borderRadius: 10, background: T.teal }}>
                   Upgrade to Pro
-                </Link>
+                </UpgradeLink>
               </div>
             )}
           </div>

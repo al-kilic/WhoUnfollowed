@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { T } from '@/components/landing/tokens';
+import { track, Events } from '@/lib/analytics';
 
 const EMAIL_KEY = 'ig-tracker:captured-email';
 
@@ -41,7 +42,9 @@ export function EmailCaptureModal({ csvFilename, onClose, onDownload }: Props) {
 
   async function handleDownload() {
     setBusy(true);
+    track(Events.csvExport, { mode: 'capture' });
     if (validEmail) {
+      track(Events.emailCaptured, { context: 'csv' });
       saveEmail(email.trim());
       // Only the email + filename are sent (for product updates). The CSV stays
       // in the browser — it is not uploaded or emailed.

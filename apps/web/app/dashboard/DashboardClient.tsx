@@ -1287,6 +1287,7 @@ export function DashboardClient({ account }: DashboardClientProps) {
       </main>
       {locked && (
         <ProLockOverlay
+          feature="radar"
           title="Radar is a Pro feature"
           description="Your account health score, growth over time, audience breakdown, follow-age analysis, and pending requests. Unlock the full picture of your account."
         />

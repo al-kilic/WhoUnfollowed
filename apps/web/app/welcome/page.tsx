@@ -5,6 +5,8 @@ import { useActionState, Suspense } from 'react';
 import Link from 'next/link';
 import { setPasswordAction } from './actions';
 import { AuthShell, AuthField, AuthError, AuthButton } from '@/components/auth/AuthShell';
+import { AnalyticsEvent } from '@/components/AnalyticsEvent';
+import { Events } from '@/lib/analytics';
 import { T } from '@/components/landing/tokens';
 
 function WelcomeForm() {
@@ -31,6 +33,8 @@ function WelcomeForm() {
 
   return (
     <form action={action} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {/* Reached only with a valid checkout session = a completed subscription. */}
+      <AnalyticsEvent event={Events.subscribeComplete} />
       <input type="hidden" name="sessionId" value={sessionId} />
 
       <AuthField
