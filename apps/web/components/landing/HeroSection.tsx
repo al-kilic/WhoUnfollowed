@@ -147,11 +147,9 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
     setPending(null);
   }, [pending, snapshots, commit]);
 
-  const handleUpgrade = useCallback(async () => {
-    if (!pending) return;
-    await commit(pending);
-    setPending(null);
-  }, [pending, commit]);
+  const handleUpgrade = useCallback(() => {
+    router.push('/pricing');
+  }, [router]);
 
   // ── Drag / drop handlers ──────────────────────────────────────────────────
   const onDrop = useCallback((e: React.DragEvent) => {
