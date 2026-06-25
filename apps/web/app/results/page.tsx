@@ -13,7 +13,7 @@ import { TriageList } from '@/components/TriageList';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { T } from '@/components/landing/tokens';
 import { useTriage } from '@/hooks/useTriage';
-import { ThemeToggle } from '@/components/ThemeToggle';
+import { SiteNav } from '@/components/landing/SiteNav';
 import { Tutorial } from '@/components/Tutorial';
 
 // ─── Stat card ───────────────────────────────────────────────────────────────
@@ -281,37 +281,9 @@ export default function ResultsPage() {
           },
         ]}
       />
-      {/* Nav */}
-      <nav
-        className="flex items-center justify-between px-4 sm:px-8 py-4 sticky top-0 z-50"
-        style={{ borderBottom: '1px solid var(--t-border1)', backdropFilter: 'blur(14px)', background: 'var(--t-navBg)' }}
-      >
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-          <img src="/logo.png" alt="WhoUnfollowed Logo" width={26} height={26} style={{ borderRadius: 7, objectFit: 'contain' }} />
-          <span style={{ fontFamily: T.serif, fontSize: 17, color: T.ink }}>WhoUnfollowed</span>
-        </Link>
-        <div className="flex items-center gap-3 sm:gap-6" style={{ fontSize: 13 }}>
-          <Link href="/dashboard" style={{
-            color: T.tealLight, textDecoration: 'none', fontWeight: 600,
-            display: 'inline-flex', alignItems: 'center', gap: 5,
-            padding: '5px 12px', borderRadius: 8,
-            background: 'rgba(2,136,143,0.1)', border: '1px solid rgba(2,136,143,0.25)',
-          }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: T.tealLight, display: 'inline-block' }} />
-            Radar
-          </Link>
-          <Link href="/history" className="hidden sm:inline" style={{ color: T.inkDim, textDecoration: 'none' }}>History</Link>
-          <Link href="/" style={{ color: T.inkDim, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M8 2 H3 A1 1 0 0 0 2 3 V11 A1 1 0 0 0 3 12 H11 A1 1 0 0 0 12 11 V6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-              <path d="M9 2 H12 V5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M7 7 L12 2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-            </svg>
-            <span className="hidden sm:inline">New upload</span>
-          </Link>
-          <ThemeToggle />
-        </div>
-      </nav>
+      {/* Nav — shared site nav for a consistent experience (animated Radar,
+          account menu, dropdowns). RadarPulse below targets [href="/dashboard"]. */}
+      <SiteNav />
 
       <main className="px-4 sm:px-8 py-10 sm:py-12" style={{ maxWidth: 900, margin: '0 auto' }}>
         {/* Header */}
