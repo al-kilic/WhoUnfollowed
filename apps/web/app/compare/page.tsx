@@ -73,7 +73,7 @@ const FEATURES: FeatureGroup[] = [
       { label: 'iOS app',                            values: ['soon', true, true,  true,  true]  },
       { label: 'Android app',                        values: ['soon', true, true,  true,  true]  },
       { label: 'Full list on free plan',             values: [true,  'partial', 'partial', 'partial', false] },
-      { label: 'Monthly price',                      values: ['$4.99', '$2.99', '$3.49', '$1.99', '$4.49'] },
+      { label: 'Monthly price',                      values: ['$4.99 ($3.25/mo yearly)', '$2.99', '$3.49', '$1.99', '$4.49'] },
     ],
   },
 ];
