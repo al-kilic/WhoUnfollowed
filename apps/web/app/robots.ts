@@ -9,7 +9,20 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       // Private app + auth surfaces only. Marketing pages like /compare and /blog
       // are intentionally crawlable.
-      disallow: ['/history', '/results', '/dashboard', '/diff', '/account', '/settings', '/welcome'],
+      disallow: [
+        '/history',
+        '/results',
+        '/dashboard',
+        '/diff',
+        '/account',
+        '/settings',
+        '/welcome',
+        '/login',
+        '/signup',
+        '/verify-email',
+        '/forgot-password',
+        '/reset-password',
+      ],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
   };
