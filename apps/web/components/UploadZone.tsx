@@ -137,12 +137,9 @@ export function UploadZone() {
     setPendingSnapshot(null);
   }, [pendingSnapshot, snapshots, commitSnapshot]);
 
-  const handleUpgrade = useCallback(async () => {
-    // During beta: PAYMENTS_ENABLED=false → save without enforcing limit
-    if (!pendingSnapshot) return;
-    await commitSnapshot(pendingSnapshot);
-    setPendingSnapshot(null);
-  }, [pendingSnapshot, commitSnapshot]);
+  const handleUpgrade = useCallback(() => {
+    router.push('/pricing');
+  }, [router]);
 
   const onDrop = useCallback(
     (e: React.DragEvent) => {
