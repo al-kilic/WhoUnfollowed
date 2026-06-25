@@ -109,7 +109,7 @@ export default async function AccountPage() {
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
       <SiteNav userEmail={user.email} isPro={isPro} />
 
-      <main style={{ maxWidth: 640, margin: '0 auto', padding: '48px 24px 80px' }}>
+      <main style={{ maxWidth: 920, margin: '0 auto', padding: '48px 24px 80px' }}>
         <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(28px, 5vw, 40px)', fontWeight: 400, letterSpacing: '-0.02em', marginBottom: 8, lineHeight: 1.1 }}>
           Account
         </h1>
@@ -212,22 +212,23 @@ export default async function AccountPage() {
           </div>
         </section>
 
-        {/* Cloud sync */}
-        <section style={{ marginBottom: 28 }}>
-          <div style={sectionLabel}>Cloud sync</div>
-          <SyncSetup hasSyncSetup={hasSyncSetup} passphraseSetAt={syncRow?.passphraseSetAt ?? null} isPro={hasProAccess} />
-        </section>
+        {/* Cloud sync + Security side by side on wide screens */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 20, marginBottom: 28, alignItems: 'start' }}>
+          <section>
+            <div style={sectionLabel}>Cloud sync</div>
+            <SyncSetup hasSyncSetup={hasSyncSetup} passphraseSetAt={syncRow?.passphraseSetAt ?? null} isPro={hasProAccess} />
+          </section>
 
-        {/* Security */}
-        <section style={{ marginBottom: 28 }}>
-          <div style={sectionLabel}>Security</div>
-          <div style={card}>
-            <p style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5, marginBottom: 16 }}>
-              Change your password. Any cloud snapshots are re-encrypted under the new password automatically.
-            </p>
-            <ChangePassword />
-          </div>
-        </section>
+          <section>
+            <div style={sectionLabel}>Security</div>
+            <div style={card}>
+              <p style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5, marginBottom: 16 }}>
+                Change your password. Any cloud snapshots are re-encrypted under the new password automatically.
+              </p>
+              <ChangePassword />
+            </div>
+          </section>
+        </div>
 
         {/* Danger zone */}
         <section>
