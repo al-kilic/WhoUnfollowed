@@ -1,192 +1,158 @@
 <div align="center">
 
-
 # WhoUnfollowed
 
-**See exactly who doesn't follow you back — without sharing your password.**
+**See who doesn't follow you back on Instagram. Without ever sharing your password.**
 
-Upload the ZIP from Instagram's official data export. Your browser reads it locally and gives you the full picture in seconds. No server. No login. No risk.
+Upload the data export Instagram already gives you. Your browser reads it locally and shows the full picture in seconds. No server. No login. No risk.
+
+[![Web app license: AGPL-3.0](https://img.shields.io/badge/web-AGPL--3.0-01696F?style=flat-square)](./LICENSE)
+[![Core license: MPL-2.0](https://img.shields.io/badge/core-MPL--2.0-A84B2F?style=flat-square)](./packages/core/LICENSE)
+[![Built with Next.js 15](https://img.shields.io/badge/Next.js-15-000000?style=flat-square&logo=nextdotjs)](https://nextjs.org/)
+[![TypeScript strict](https://img.shields.io/badge/TypeScript-strict-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Self-hosted](https://img.shields.io/badge/hosting-self--hosted-0B2426?style=flat-square)](https://www.hetzner.com/cloud/)
+
+[**whounfollowed.co**](https://whounfollowed.co) · [How it works](#how-it-works) · [Privacy](#privacy) · [Self-hosting](#self-hosting)
 
 </div>
 
-***
+---
 
-## What It Does
+## Why this exists
 
-Most Instagram follower-tracking tools ask for your password. That's a TOS violation and a real security risk. WhoUnfollowed is different.
+Most Instagram follower trackers ask for your password. That breaks Instagram's terms of service, puts your account at risk, and hands your credentials to a stranger.
 
-Instagram's **"Download Your Information"** feature (required under GDPR) gives you a ZIP file containing your full follower and following data. WhoUnfollowed reads that file **entirely in your browser** — no upload, no server, no account needed.
+WhoUnfollowed takes a different path. Instagram's **Download Your Information** feature (mandated by GDPR) gives you a ZIP of your own follower and following data. WhoUnfollowed reads that file **entirely inside your browser**. There is no upload, no server round trip, and no account required on the free plan.
 
-**In one drop:**
-- See every account you follow that doesn't follow you back
-- Get a **Radar health score** with follow ratio and growth timeline
-- **Compare snapshots** over time to see who unfollowed between dates
-- Export results to CSV
-- Zero bytes leave your device (on the Free plan)
+You export data you already own. We just read it.
 
-***
+## What you get
 
-## Demo
+- The complete list of accounts you follow that don't follow you back
+- A **Radar** health score with follow ratio and a growth timeline
+- **Snapshot comparison** to see exactly who unfollowed you between two dates
+- One-click CSV export of any list
+- On the free plan, zero bytes ever leave your device
 
-```
-Drop the ZIP → Browser parses it in ~2s → Full results appear
-```
+## How it works
 
-| Metric | Value |
-|--------|-------|
-| Parse time | ~2 seconds |
-| Data leaves device | 0 bytes (Free plan) |
+1. Request your data from Instagram (Followers and Following, JSON format, all time)
+2. Download the ZIP that Instagram emails you, usually within minutes
+3. Drop it on [whounfollowed.co](https://whounfollowed.co)
+4. The browser parses it in roughly two seconds and renders the full report
+
+| | |
+|---|---|
+| Typical parse time | ~2 seconds |
+| Data sent to a server (free plan) | 0 bytes |
 | Instagram API calls | 0 |
 | Passwords required | 0 |
 
-***
+Step-by-step export guide: [How to export your Instagram data](https://whounfollowed.co/how-to-export).
 
 ## Features
 
-### Free (No Signup)
-- Full non-followers list from a single snapshot
-- CSV export
-- Runs entirely in your browser
+### Free, no signup
 
-### Pro 
+- Full non-followers list from a single export
+- CSV export
+- Runs entirely client-side
+
+### Pro
+
 - Unlimited snapshot history
-- **Radar**: health score, follow age tracking, pending follow detection
-- Snapshot comparison — see exactly who unfollowed between two dates
+- **Radar**: health score, follow-age tracking, pending-follow detection
+- Snapshot comparison across any two dates
 - Follower growth charts
 - Triage workflow
-- Cloud sync *(coming soon)*
+- Encrypted cloud sync *(in progress)*
 
-### Mobile App *(coming soon)*
-- iOS + Android, included with Pro
+### Mobile *(planned)*
+
+- iOS and Android, included with Pro
 - Works offline
 - Share results as an image
 
-***
+## Tech stack
 
-## Tech Stack
-
-This is a **TypeScript monorepo** managed with [Turborepo](https://turbo.build/) and [pnpm workspaces](https://pnpm.io/workspaces).
+A TypeScript monorepo managed with [Turborepo](https://turbo.build/) and [pnpm workspaces](https://pnpm.io/workspaces).
 
 | Layer | Technology |
 |-------|-----------|
 | Framework | [Next.js 15](https://nextjs.org/) (App Router, Turbopack) |
-| Language | TypeScript 5 |
+| Language | TypeScript 5 (strict) |
 | UI | React 19, [Tailwind CSS v4](https://tailwindcss.com/), [Framer Motion](https://www.framer.com/motion/) |
-| Components | [Base UI](https://base-ui.com/), [Lucide React](https://lucide.dev/), [Recharts](https://recharts.org/) |
-| State | [Zustand](https://github.com/pmndrs/zustand) |
-| Local DB | [Dexie (IndexedDB)](https://dexie.org/) |
-| Monorepo | [Turborepo](https://turbo.build/), pnpm workspaces |
-| Linting | ESLint 10, Prettier, Husky + lint-staged |
-| Deployment | Self-hosted on [Hetzner Cloud](https://www.hetzner.com/cloud/) via Docker + Caddy |
+| Components | [Base UI](https://base-ui.com/), [Lucide](https://lucide.dev/), [Recharts](https://recharts.org/) |
+| Client state | [Zustand](https://github.com/pmndrs/zustand) |
+| Local storage | [Dexie](https://dexie.org/) (IndexedDB) |
+| Tooling | [Turborepo](https://turbo.build/), pnpm, ESLint, Prettier, Husky |
+| Infrastructure | [Hetzner Cloud](https://www.hetzner.com/cloud/), Docker, Caddy, PostgreSQL 16 |
 
-**Node ≥ 20 and pnpm ≥ 9 required.**
+Requires Node ≥ 20 and pnpm ≥ 9.
 
-***
-
-## Project Structure
+## Repository layout
 
 ```
 WhoUnfollowed/
 ├── apps/
-│   └── web/              # Next.js 15 app (main frontend)
-├── packages/             # Shared packages (core parser, UI, config)
-│   └── core/             # ZIP parsing logic, follower diff engine
-├── docs/                 # Internal documentation
-├── turbo.json            # Turborepo pipeline config
-├── pnpm-workspace.yaml   # Workspace definition
-└── railway.json          # Railway deployment config
+│   └── web/            # Next.js 15 web app (AGPL-3.0)
+├── packages/
+│   ├── core/           # ZIP parsing and follower-diff engine (MPL-2.0)
+│   └── ui/             # Shared component library
+├── docs/               # Format notes and architecture docs
+├── turbo.json          # Turborepo pipeline
+└── pnpm-workspace.yaml # Workspace definition
 ```
 
-***
-
-## Getting Started
+## Getting started
 
 ### Prerequisites
 
-- **Node.js** ≥ 20
-- **pnpm** ≥ 9 (`npm install -g pnpm`)
+- Node.js ≥ 20
+- pnpm ≥ 9 (`npm install -g pnpm`)
 
-### Installation
+### Install and run
 
 ```bash
-# Clone the repo
 git clone https://github.com/al-kilic/WhoUnfollowed.git
 cd WhoUnfollowed
-
-# Install all workspace dependencies
 pnpm install
-```
 
-### Development
-
-```bash
-# Start all apps in dev mode (with Turbopack)
+# Start every app in dev mode (Turbopack)
 pnpm dev
-
-# The web app will be available at:
-# http://localhost:3000
+# Web app: http://localhost:3000
 ```
 
-### Build
+### Common scripts
 
 ```bash
-# Build all packages and apps
-pnpm build
-
-# Type-check everything
-pnpm typecheck
-
-# Lint
-pnpm lint
+pnpm build       # Build all packages and apps
+pnpm typecheck   # Type-check the workspace
+pnpm lint        # Lint
+pnpm test        # Run the test suite (Vitest)
+pnpm clean       # Remove build artifacts
 ```
-
-### Clean
-
-```bash
-pnpm clean
-```
-
-***
-
-## How to Use the App
-
-> You need an **Instagram data export** — here's how to get one:
-
-1. Open [Instagram Accounts Center](https://accountscenter.instagram.com/) → **Your information and permissions** → **Download your information**
-2. Select **Followers and Following**
-3. Set date range to **All Time**, format to **JSON**
-4. Hit **Request** — Instagram emails you a download link (usually within minutes)
-5. Download the ZIP
-6. **Drop the ZIP** at [http://49.13.115.190](http://49.13.115.190) (domain coming soon)
-
-Full guide: [How to Export Your Instagram Data](https://49.13.115.190/how-to-export)
-
-***
 
 ## Privacy
 
-**This is the entire privacy model:**
+The privacy model is short enough to fit here in full:
 
-- The ZIP file is read by JavaScript inside your browser tab
-- On the **Free plan**: nothing is stored, nothing is sent anywhere
-- On **Pro**: snapshots you explicitly save are stored encrypted in cloud so you can compare across sessions/devices
+- The ZIP is read by JavaScript inside your browser tab.
+- On the **free plan**, nothing is stored and nothing is sent anywhere.
+- On **Pro**, only the snapshots you explicitly save are stored, encrypted, so you can compare them across devices.
 - No Instagram login. No third-party API calls. No credential storage.
 
-The core parser (`packages/core`) is MIT-licensed — you can read exactly what happens to your data. The web app is AGPL-3.0.
+The parsing engine lives in [`packages/core`](./packages/core) under the MPL-2.0 license, so anyone can read exactly what happens to their data.
 
-→ [Full Privacy Policy](https://49.13.115.190/privacy)
+Full policy: [whounfollowed.co/privacy](https://whounfollowed.co/privacy).
 
-***
+## Self-hosting
 
-## Self-Hosting
+The full web app is open source. Clone the repo, copy the variables from `.env.example`, and run `pnpm dev` (or build the Docker image for production).
 
-You can self-host the full open-source app. Clone the repo, set up the env vars from `.env.example`, and run `pnpm dev`.
+**Included out of the box:** the entire free tier, plus Radar, snapshot comparison, the triage workflow, and CSV export, all running locally.
 
-**What self-hosting includes:** everything in the free tier — full non-followers list, snapshot comparison, Radar health score, triage workflow, CSV export.
-
-**What requires the cloud service:** Pro features depend on server infrastructure by design — cross-device snapshot history, email alerts when a new export reveals unfollowers, and historical trend charts across sessions. These features store data server-side and cannot work in a purely local build without you implementing the backend yourself.
-
-***
+**Requires backend infrastructure:** Pro features depend on a server by design. Cross-device snapshot history, email alerts on new unfollowers, and long-term trend charts store data server-side and will not work in a purely local build unless you run the backend yourself.
 
 ## Roadmap
 
@@ -195,38 +161,27 @@ You can self-host the full open-source app. Clone the repo, set up the env vars 
 - [x] Radar health score
 - [x] Snapshot comparison (who unfollowed between dates)
 - [x] Follower growth charts
-- [x] Light / dark theme
-- [x] Full mobile responsive
-- [ ] Cloud sync for Pro snapshots
+- [x] Light and dark themes
+- [x] Mobile-responsive layout
+- [ ] Encrypted cloud sync for Pro snapshots
 - [ ] iOS app
 - [ ] Android app
 
-See the full [Changelog](https://49.13.115.190/changelog).
-
-***
+Release notes: [whounfollowed.co/changelog](https://whounfollowed.co/changelog).
 
 ## Contributing
 
-The project is under active development. Feel free to open issues for bugs or feature requests. PRs are welcome.
-
-***
+The project is under active development. Issues for bugs and feature requests are welcome, and so are pull requests. For anything substantial, please open an issue first so we can align on direction.
 
 ## License
 
-The web app (`apps/web`) is licensed under **[AGPL-3.0](./LICENSE)** — if you run a modified version as a network service, you must publish your source.
+This repository uses an open-core model:
 
-The core parser (`packages/core`) is licensed under **[MIT](./packages/core/LICENSE)** — use it freely in any project.
-
-***
+- **Web app** ([`apps/web`](./apps/web)): [AGPL-3.0](./LICENSE). If you run a modified version as a network service, you must publish your source.
+- **Core engine** ([`packages/core`](./packages/core)): [MPL-2.0](./packages/core/LICENSE). Use it freely in any project. Modifications to the licensed files stay open, the rest of your code does not have to.
 
 ## Contact
 
-Built by [Alan Kılıç](https://github.com/al-kilic) / [aekilicc@gmail.com](mailto:aekilicc@gmail.com) / @alterindoles
+Built by [Alan Kılıç](https://github.com/al-kilic) · [aekilicc@gmail.com](mailto:aekilicc@gmail.com) · [@alterindoles](https://instagram.com/alterindoles)
 
 Not affiliated with Instagram or Meta.
-
-***
-
-<div align="center">
-  <sub>Made with care. Your data stays yours.</sub>
-</div>

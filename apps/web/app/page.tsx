@@ -22,7 +22,7 @@ const jsonLd = {
     'Client-side processing. Data never leaves your browser.',
     'Follower diff and comparison',
     'CSV export',
-    'Open-source parsing core (MIT)',
+    'Open-source parsing core (MPL-2.0)',
   ],
 };
 
