@@ -261,6 +261,13 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
             <>
               <RadarNavLink />
               <Link href="/history" style={{ color: 'inherit', textDecoration: 'none' }}>History</Link>
+              <Link href="/" style={{ color: 'inherit', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                  <path d="M7 9.5V2.5M7 2.5L4.5 5M7 2.5L9.5 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M2.5 9v1.5a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                </svg>
+                Upload
+              </Link>
             </>
           )}
           <WhatIsDropdown />
@@ -314,6 +321,7 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
         >
           <RadarNavLink onClick={() => setMenuOpen(false)} mobile />
           <Link href="/history" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>Snapshot History</Link>
+          <Link href="/" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>New upload</Link>
           <Link href="/what-is-whounfollowed" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>What is WhoUnfollowed?</Link>
           <Link href="/compare" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>Compare</Link>
           <Link href="/blog" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>Blog</Link>

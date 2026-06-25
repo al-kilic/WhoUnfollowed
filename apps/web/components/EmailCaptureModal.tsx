@@ -92,7 +92,7 @@ export function EmailCaptureModal({ csvFilename, onClose, onDownload }: Props) {
             Your CSV is ready.
           </h2>
           <p style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.6 }}>
-            It downloads straight to your device. Want occasional product updates? Add your email (optional). We never upload or email your data.
+            Enter your email to download your CSV. You&apos;ll also get occasional product updates (unsubscribe anytime). The file itself is built in your browser. We never upload or email it.
           </p>
         </div>
 
@@ -100,7 +100,7 @@ export function EmailCaptureModal({ csvFilename, onClose, onDownload }: Props) {
         <div style={{ marginBottom: 16 }}>
           <input
             type="email"
-            placeholder="your@email.com (optional)"
+            placeholder="your@email.com"
             value={email}
             onChange={e => setEmail(e.target.value)}
             autoFocus
@@ -115,15 +115,16 @@ export function EmailCaptureModal({ csvFilename, onClose, onDownload }: Props) {
 
         <button
           onClick={handleDownload}
-          disabled={busy}
+          disabled={busy || !validEmail}
           style={{
             width: '100%', padding: '12px 0', borderRadius: 10,
-            cursor: busy ? 'not-allowed' : 'pointer',
-            background: T.teal, border: 'none', color: T.cream,
-            fontSize: 13, fontWeight: 600, fontFamily: T.sans,
+            cursor: busy || !validEmail ? 'not-allowed' : 'pointer',
+            background: validEmail ? T.teal : 'rgba(2,136,143,0.15)',
+            border: 'none', color: validEmail ? T.cream : T.inkMute,
+            fontSize: 13, fontWeight: 600, fontFamily: T.sans, transition: 'all 0.15s',
           }}
         >
-          {busy ? 'Preparing…' : validEmail ? 'Download CSV & get updates' : 'Download CSV'}
+          {busy ? 'Preparing…' : 'Download CSV'}
         </button>
       </div>
     </div>
