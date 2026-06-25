@@ -133,7 +133,7 @@ Instagram is legally required under GDPR to give you a copy of your own data, in
 
 No app needs your password to read a file you already have.
 
-WhoUnfollowed reads that ZIP file in your browser. The file never leaves your device. The core parsing code is MIT-licensed and public. You can verify the behavior yourself before uploading anything.
+WhoUnfollowed reads that ZIP file in your browser. The file never leaves your device. The core parsing code is MPL-2.0 licensed and public. You can verify the behavior yourself before uploading anything.
 
 ## The Practical Test
 
