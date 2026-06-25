@@ -99,8 +99,9 @@ export default function PrivacyPage() {
           </Section>
 
           <Section title="7. Analytics">
-            We may use self-hosted Plausible Analytics to collect aggregate, anonymised page view statistics. Plausible Analytics does not use cookies, does not collect personal data, and does not track users across websites. No personally identifiable information is collected. Full details are available at{' '}
-            <a href="https://plausible.io/data-policy" target="_blank" rel="noopener noreferrer" style={{ color: T.tealLight, textDecoration: 'none' }}>plausible.io/data-policy</a>.
+            We use Umami, a privacy-friendly analytics tool we host ourselves on our own EU servers. It is cookieless, does not track you across other websites, and the data never leaves our infrastructure. We collect aggregate page views and anonymous product events (for example, which buttons get clicked) to understand how the app is used.
+            <br /><br />
+            We also use Umami&apos;s session recording for aggregate heatmaps and anonymised replays of on-site interactions, which helps us improve the interface. Form inputs such as passwords and email addresses are masked and are never recorded. Your uploaded Instagram data is processed entirely in your browser and is never part of any recording. Everything runs on our own self-hosted infrastructure, with no third parties involved.
           </Section>
 
           <Section title="8. Data retention">
