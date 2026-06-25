@@ -7,7 +7,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/history', '/results', '/compare'],
+      // Private app + auth surfaces only. Marketing pages like /compare and /blog
+      // are intentionally crawlable.
+      disallow: ['/history', '/results', '/dashboard', '/diff', '/account', '/settings', '/welcome'],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
   };
