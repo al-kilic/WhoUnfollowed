@@ -39,7 +39,7 @@ export default function CookiePage() {
           <Section title="Third-Party Cookies">
             We do not load third-party scripts that set cookies (like Facebook Pixel or Google Analytics). 
             <br /><br />
-            We use a self-hosted instance of Plausible Analytics, which is a privacy-friendly tool that <strong style={{ color: T.ink }}>does not use cookies</strong> and does not track you across different websites.
+            We use a self-hosted instance of Umami, a privacy-friendly analytics tool that <strong style={{ color: T.ink }}>does not use cookies</strong> and does not track you across different websites.
           </Section>
 
           <Section title="Managing Your Data">
