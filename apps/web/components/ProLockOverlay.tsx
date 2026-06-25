@@ -1,8 +1,9 @@
 'use client';
 
-import type { CSSProperties } from 'react';
+import { useEffect, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { T } from '@/components/landing/tokens';
+import { trackLockedView, trackUpgradeClick } from '@/lib/analytics';
 
 // Style applied to the underlying content so a Pro feature is teased (visible
 // shape) but unreadable/uninteractive for free users. Pair with <ProLockOverlay>.
@@ -28,12 +29,16 @@ export function ProLockOverlay({
   description,
   cta = 'Upgrade to Pro',
   href = '/pricing',
+  feature = 'unknown',
 }: {
   title: string;
   description: string;
   cta?: string;
   href?: string;
+  // Identifies which Pro surface this lock guards, for analytics.
+  feature?: string;
 }) {
+  useEffect(() => { trackLockedView(feature); }, [feature]);
   return (
     <div
       style={{
@@ -86,6 +91,7 @@ export function ProLockOverlay({
         </p>
         <Link
           href={href}
+          onClick={() => trackUpgradeClick(feature)}
           style={{
             display: 'inline-block',
             padding: '12px 26px',

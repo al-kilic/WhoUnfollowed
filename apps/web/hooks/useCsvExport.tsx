@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from 'react';
 import type { Account } from '@ig-tracker/core';
 import { downloadCsv } from '@/lib/csv';
 import { useAuth } from '@/components/AuthProvider';
+import { track, Events } from '@/lib/analytics';
 import { freeCsvExportUsed, markFreeCsvExportUsed } from '@/lib/exportLimit';
 import { EmailCaptureModal } from '@/components/EmailCaptureModal';
 import { ExportLimitModal } from '@/components/ExportLimitModal';
@@ -21,6 +22,7 @@ export function useCsvExport(csvFilename: string) {
 
   const requestExport = useCallback((accounts: Account[]) => {
     if (isPro) {
+      track(Events.csvExport, { mode: 'pro' });
       downloadCsv(accounts, csvFilename);
       return;
     }
@@ -30,6 +32,7 @@ export function useCsvExport(csvFilename: string) {
     }
     if (userEmail) {
       // Logged-in free user: automatic export, no email prompt.
+      track(Events.csvExport, { mode: 'free' });
       downloadCsv(accounts, csvFilename);
       markFreeCsvExportUsed();
       return;

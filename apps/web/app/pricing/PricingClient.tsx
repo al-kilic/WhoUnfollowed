@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { GridBg, ProfileCard } from '@/components/landing/atoms';
 import { T } from '@/components/landing/tokens';
+import { track, Events } from '@/lib/analytics';
 
 interface Props {
   userEmail: string | null;
@@ -90,6 +91,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
       window.location.href = userEmail ? '/history' : '/signup';
       return;
     }
+    track(Events.checkoutStart, { billing });
     setLoading(true);
     setError(null);
     try {
@@ -114,6 +116,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
   // Existing subscribers manage/cancel through the Stripe billing portal instead
   // of being offered the plan again (which would create a duplicate subscription).
   async function handleManageBilling() {
+    track(Events.manageBilling);
     setLoading(true);
     setError(null);
     try {

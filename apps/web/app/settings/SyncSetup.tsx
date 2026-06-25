@@ -1,8 +1,9 @@
 'use client';
 
-import type { CSSProperties } from 'react';
+import { useEffect, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { T } from '@/components/landing/tokens';
+import { trackLockedView, trackUpgradeClick } from '@/lib/analytics';
 
 interface Props {
   hasSyncSetup: boolean;
@@ -33,6 +34,8 @@ function LockIcon() {
 // Pro users this is an informational status panel. Free users get a locked
 // upgrade card instead.
 export function SyncSetup({ hasSyncSetup, passphraseSetAt, isPro }: Props) {
+  useEffect(() => { if (!isPro) trackLockedView('cloud-sync'); }, [isPro]);
+
   if (!isPro) {
     return (
       <div style={card}>
@@ -49,6 +52,7 @@ export function SyncSetup({ hasSyncSetup, passphraseSetAt, isPro }: Props) {
         </p>
         <Link
           href="/pricing"
+          onClick={() => trackUpgradeClick('cloud-sync')}
           style={{
             display: 'inline-block', padding: '10px 18px', borderRadius: 10,
             background: T.teal, color: T.cream, textDecoration: 'none',

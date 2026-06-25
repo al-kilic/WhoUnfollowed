@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { T } from '@/components/landing/tokens';
+import { track, Events, trackUpgradeClick } from '@/lib/analytics';
 
 interface UpgradeDialogProps {
   oldestLabel: string;
@@ -11,6 +12,8 @@ interface UpgradeDialogProps {
 }
 
 export function UpgradeDialog({ oldestLabel, onDeleteOldest, onUpgrade, onClose }: UpgradeDialogProps) {
+  useEffect(() => { track(Events.snapshotLimitHit); }, []);
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     document.addEventListener('keydown', handler);
@@ -104,7 +107,7 @@ export function UpgradeDialog({ oldestLabel, onDeleteOldest, onUpgrade, onClose 
             </button>
 
             <button
-              onClick={onUpgrade}
+              onClick={() => { trackUpgradeClick('snapshot-limit'); onUpgrade(); }}
               style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderRadius: 12, border: 'none', background: T.teal, color: T.cream, fontSize: 13, fontWeight: 700, cursor: 'pointer', textAlign: 'left', fontFamily: T.sans, boxShadow: `0 8px 24px rgba(2,136,143,0.35)`, transition: 'background 0.15s' }}
               onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = T.tealMid; }}
               onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = T.teal; }}
