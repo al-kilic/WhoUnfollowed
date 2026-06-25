@@ -12,6 +12,9 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 const UMAMI_SRC =
   process.env.NEXT_PUBLIC_UMAMI_SRC ?? 'https://analytics.whounfollowed.co/script.js';
 const UMAMI_WEBSITE_ID = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID ?? '380314e5-fc79-480f-9483-d5ddded7ad59';
+// Session recorder (heatmaps + replays), also self-hosted on our VPS.
+const UMAMI_RECORDER_SRC =
+  process.env.NEXT_PUBLIC_UMAMI_RECORDER_SRC ?? 'https://analytics.whounfollowed.co/recorder.js';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -97,6 +100,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Script
             defer
             src={UMAMI_SRC}
+            data-website-id={UMAMI_WEBSITE_ID}
+            strategy="afterInteractive"
+          />
+        ) : null}
+        {UMAMI_WEBSITE_ID ? (
+          <Script
+            defer
+            src={UMAMI_RECORDER_SRC}
             data-website-id={UMAMI_WEBSITE_ID}
             strategy="afterInteractive"
           />
