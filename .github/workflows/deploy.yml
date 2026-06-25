@@ -57,6 +57,9 @@ jobs:
             cd /srv/ig-tracker
             docker compose pull
             docker compose up -d --remove-orphans
+            # Recreated containers can change the pg-proxy IP, which breaks the
+            # NocoDB->Postgres DNAT route. Re-apply it to the current proxy IP.
+            sudo systemctl restart nocodb-pg-route || true
             docker compose exec -T web node -e "
               const { drizzle } = require('drizzle-orm/postgres-js');
               const { migrate } = require('drizzle-orm/postgres-js/migrator');
