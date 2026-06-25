@@ -7,6 +7,7 @@ import { validateRequest } from '@/lib/auth/session';
 import { db } from '@/lib/db/index';
 import { profiles, syncSettings } from '@/lib/db/schema';
 import { isPaidFeaturesEnabled, isProUser } from '@/lib/flags';
+import { getStripe, isStripeConfigured } from '@/lib/stripe';
 import { isUserVerified } from '@/lib/auth/verification';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
@@ -21,15 +22,16 @@ export const metadata: Metadata = {
   description: 'Manage your plan, billing, and data.',
 };
 
-const PRO_FEATURES = [
-  'Unlimited snapshot history',
-  'Cloud sync (AES-256 encrypted)',
-  'Unfollower tracking over time',
-  'Follower growth charts',
-  'Ghost follower detection',
-  'CSV export',
-  'Multi-device access',
-  'Email alerts (coming soon)',
+// Outcome-framed Pro features (what you get, not just the feature name).
+const PRO_FEATURES: { title: string; desc: string }[] = [
+  { title: 'Unlimited history', desc: 'Keep every export and watch your account evolve over time.' },
+  { title: 'Compare snapshots', desc: 'See exactly who unfollowed you between any two exports.' },
+  { title: 'Encrypted cloud sync', desc: 'Your snapshots backed up and on every device, end-to-end encrypted.' },
+  { title: 'Full Radar', desc: 'Health score, growth charts, follow-age, and audience breakdown.' },
+  { title: 'Triage that carries over', desc: 'Never re-triage the same accounts after a new export.' },
+  { title: 'Ghost-follower radar', desc: 'Surface long-tenure accounts that never engage back.' },
+  { title: 'Unlimited CSV export', desc: 'Pull any list, as often as you like.' },
+  { title: 'Email alerts', desc: 'Get pinged when a new export reveals unfollowers. (soon)' },
 ];
 
 function fmtDate(d: Date | null | undefined): string | null {
@@ -62,19 +64,31 @@ export default async function AccountPage() {
 
   const paymentsEnabled = isPaidFeaturesEnabled();
   const status = profile?.subscriptionStatus ?? 'none';
-  const statusLabel = paymentsEnabled
-    ? status === 'active'
-      ? 'Pro'
-      : status === 'grace'
-        ? 'Cancelled (grace period)'
-        : status === 'cancelled'
-          ? 'Cancelled'
-          : 'Free'
-    : 'Pro (Free during beta)';
   const memberSince = fmtDate(profile?.createdAt);
   const graceEnds = fmtDate(profile?.gracePeriodEndsAt);
   const canManageBilling = paymentsEnabled && !!profile?.stripeCustomerId;
   const hasSyncSetup = !!syncRow;
+
+  // For real subscribers, surface the next renewal / charge from Stripe.
+  let renewal: { label: string; date: string; amount: string } | null = null;
+  if (paymentsEnabled && isStripeConfigured() && profile?.stripeSubscriptionId) {
+    try {
+      const sub = await getStripe().subscriptions.retrieve(profile.stripeSubscriptionId);
+      const item = sub.items.data[0];
+      const periodEnd = item?.current_period_end;
+      const unit = item?.price?.unit_amount ?? null;
+      const interval = item?.price?.recurring?.interval ?? '';
+      if (periodEnd) {
+        renewal = {
+          label: sub.cancel_at_period_end ? 'Cancels' : 'Renews',
+          date: fmtDate(new Date(periodEnd * 1000)) ?? '',
+          amount: unit != null ? `$${(unit / 100).toFixed(2)}/${interval === 'year' ? 'yr' : 'mo'}` : '',
+        };
+      }
+    } catch {
+      // Stripe unavailable — show no renewal line
+    }
+  }
 
   const card: CSSProperties = {
     background: T.surface1,
@@ -114,25 +128,40 @@ export default async function AccountPage() {
         <section style={{ marginBottom: 28 }}>
           <div style={sectionLabel}>Plan &amp; billing</div>
           <div style={card}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <span style={{ fontFamily: T.serif, fontSize: 22, color: T.ink }}>{isPro ? 'Pro' : 'Free'}</span>
-                <span
-                  style={{
-                    fontSize: 11,
-                    fontWeight: 700,
-                    letterSpacing: '0.05em',
-                    padding: '4px 10px',
-                    borderRadius: 100,
-                    color: isPro ? T.cream : T.inkDim,
-                    background: isPro ? T.teal : 'transparent',
-                    border: isPro ? '1px solid rgba(2,136,143,0.5)' : `1px solid ${T.border3}`,
-                  }}
-                >
-                  {isPro ? 'PRO' : 'FREE'}
-                </span>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
+                  <span style={{ fontFamily: T.serif, fontSize: 24, color: T.ink }}>{isPro ? 'Pro' : 'Free'}</span>
+                  <span
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 700,
+                      letterSpacing: '0.05em',
+                      padding: '4px 10px',
+                      borderRadius: 100,
+                      color: isPro ? T.cream : T.inkDim,
+                      background: isPro ? T.teal : 'transparent',
+                      border: isPro ? '1px solid rgba(2,136,143,0.5)' : `1px solid ${T.border3}`,
+                    }}
+                  >
+                    {isPro ? 'PRO' : 'FREE'}
+                  </span>
+                </div>
+                <div style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5 }}>
+                  {renewal
+                    ? `${renewal.label} ${renewal.date}${renewal.amount ? ` · ${renewal.amount}` : ''}`
+                    : isPro
+                      ? 'Complimentary access. Thanks for being here early.'
+                      : 'You are on the free plan.'}
+                </div>
               </div>
-              {canManageBilling && <ManageBillingButton />}
+              {canManageBilling ? (
+                <ManageBillingButton />
+              ) : !isPro && paymentsEnabled ? (
+                <Link href="/pricing" style={{ fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none', padding: '9px 18px', borderRadius: 10, background: T.teal, whiteSpace: 'nowrap' }}>
+                  Upgrade to Pro
+                </Link>
+              ) : null}
             </div>
 
             {!paymentsEnabled && (
@@ -143,26 +172,43 @@ export default async function AccountPage() {
 
             <div style={{ marginTop: 18, fontSize: 13 }}>
               <Row label="Email" value={user.email} />
-              <Row label="Status" value={statusLabel} />
               {memberSince && <Row label="Member since" value={memberSince} />}
             </div>
           </div>
         </section>
 
-        {/* What's included */}
+        {/* What's included / Unlock with Pro */}
         <section style={{ marginBottom: 28 }}>
-          <div style={sectionLabel}>What&apos;s included</div>
+          <div style={sectionLabel}>{isPro ? "What's included" : 'Unlock with Pro'}</div>
           <div style={card}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px 18px' }}>
+            {!isPro && (
+              <p style={{ fontSize: 13.5, color: T.inkDim, lineHeight: 1.55, marginBottom: 18 }}>
+                You&apos;re on Free: one snapshot, the full non-followers list, and one CSV export. Pro turns that one-off check into an ongoing picture of your account.
+              </p>
+            )}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px 24px' }}>
               {PRO_FEATURES.map((f) => (
-                <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 9, fontSize: 13.5, color: T.inkDim }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T.tealMid} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                <div key={f.title} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={T.tealMid} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 2 }}>
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
-                  {f}
+                  <div>
+                    <div style={{ fontSize: 13.5, fontWeight: 600, color: T.ink, marginBottom: 2 }}>{f.title}</div>
+                    <div style={{ fontSize: 12.5, color: T.inkMute, lineHeight: 1.45 }}>{f.desc}</div>
+                  </div>
                 </div>
               ))}
             </div>
+            {!isPro && paymentsEnabled && (
+              <div style={{ marginTop: 22, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', paddingTop: 18, borderTop: `1px solid ${T.border1}` }}>
+                <span style={{ fontSize: 13, color: T.inkDim }}>
+                  <strong style={{ color: T.ink }}>$4.99/mo</strong> or $39/yr · cancel anytime
+                </span>
+                <Link href="/pricing" style={{ fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none', padding: '10px 20px', borderRadius: 10, background: T.teal }}>
+                  Upgrade to Pro
+                </Link>
+              </div>
+            )}
           </div>
         </section>
 
