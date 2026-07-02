@@ -2,17 +2,26 @@
 
 > Privacy-first Instagram follower analysis. Upload the data export Instagram gives you and see who doesn't follow you back, who unfollowed you, and how your audience changes over time. Everything is processed in your browser. No password, no server, no Instagram API.
 
-WhoUnfollowed reads the official "Download Your Information" ZIP that Instagram provides under GDPR Article 20. The parsing engine is open source under MPL-2.0, so anyone can verify what happens to their data. The free tier runs entirely client-side and needs no account. Pro adds encrypted cloud snapshot history, comparison over time, follower charts, and email alerts when a new export reveals unfollowers.
+WhoUnfollowed reads the official "Download Your Information" ZIP that Instagram provides under GDPR Article 20. The parsing engine is open source under MPL-2.0, so anyone can verify what happens to their data. The free tier runs entirely client-side and needs no account. Pro ($4.99/month, or $39/year) adds encrypted cloud snapshot history, comparison over time, follower charts, and email alerts when a new export reveals unfollowers.
+
+Author: Alan Kilic, an independent developer building privacy-first software under the name Alcatraz Studio. See https://whounfollowed.co/author/alan-kilic.
 
 ## Core pages
 - [WhoUnfollowed home](https://whounfollowed.co): What it is and how to start.
 - [What is WhoUnfollowed](https://whounfollowed.co/what-is-whounfollowed): Overview and FAQ.
 - [How to export your Instagram data](https://whounfollowed.co/how-to-export): Step-by-step guide to requesting your ZIP from Instagram.
 - [Pricing](https://whounfollowed.co/pricing): Free and Pro plans.
+- [About](https://whounfollowed.co/about): Who builds WhoUnfollowed and why.
+- [Blog](https://whounfollowed.co/blog): Guides on Instagram followers, unfollowers, and privacy.
 
 ## Guides
 - [How to see who unfollowed you on Instagram](https://whounfollowed.co/blog/how-to-see-who-unfollowed-you-on-instagram): The safe, no-password method.
 - [How to see who doesn't follow you back on Instagram](https://whounfollowed.co/blog/who-doesnt-follow-you-back-on-instagram): Find your non-followers for free.
+- [Why did I lose followers overnight on Instagram](https://whounfollowed.co/blog/why-did-i-lose-followers-overnight-on-instagram): The real reasons follower counts drop overnight.
+- [How to download your Instagram data](https://whounfollowed.co/blog/how-to-download-your-instagram-data): Requesting your official Instagram export.
+- [Is it safe to mass unfollow on Instagram](https://whounfollowed.co/blog/is-it-safe-to-mass-unfollow-on-instagram): Limits, risks, and the safe way to clean up.
+- [Instagram ghost followers: how to find and remove them](https://whounfollowed.co/blog/instagram-ghost-followers-how-to-find-and-remove-them): Spotting inactive and fake followers.
+- [Does Instagram notify when you unfollow someone](https://whounfollowed.co/blog/does-instagram-notify-when-you-unfollow-someone): What Instagram does and doesn't notify.
 - [Your Instagram follow ratio explained](https://whounfollowed.co/blog/instagram-follow-ratio-what-it-means-how-to-improve-it): What it means and how to improve it.
 - [Why follower trackers ask for your password](https://whounfollowed.co/blog/why-instagram-follower-trackers-ask-for-your-password): Why credential-based apps are a risk.
 
@@ -25,4 +34,4 @@ WhoUnfollowed reads the official "Download Your Information" ZIP that Instagram 
 - No Instagram password is ever required. The tool reads a data export the user already owns.
 - The free tier processes data entirely in the browser. Nothing is sent to a server.
 - TOS-compliant: it does not use the Instagram API and does not scrape Instagram.
-- Open core: the parser is public and MPL-2.0 licensed.
+- Open core: the parser is public and MPL-2.0 licensed at https://github.com/al-kilic/WhoUnfollowed.

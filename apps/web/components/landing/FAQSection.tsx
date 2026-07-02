@@ -12,7 +12,7 @@ const CATEGORIES: { id: CategoryId; label: string; count: number }[] = [
   { id: 'billing', label: 'Plans & billing', count: 2 },
 ];
 
-const ITEMS: Record<CategoryId, [string, string][]> = {
+export const ITEMS: Record<CategoryId, [string, string][]> = {
   privacy: [
     ['Do I need to give you my Instagram password?',
      'No. There is no Instagram login on WhoUnfollowed. You upload your own data export, a ZIP file Instagram emails to you on request. Your password is never involved.'],
@@ -30,10 +30,10 @@ const ITEMS: Record<CategoryId, [string, string][]> = {
      "The ZIP file Instagram sends you when you request your data. Just request followers and following, you don't need the whole archive."],
   ],
   billing: [
-    ['Why is Pro free during beta?',
-     "Because we want feedback, not your money yet. When the product is solid, Pro will be $4.99/month. Anyone who joined during beta keeps free Pro for the lifetime of their account."],
+    ['How much does Pro cost?',
+     "Pro is $4.99 per month, or $39 per year. The free plan stays free and needs no account. You get your full non-followers list, mutuals, and fans every time you upload. Pro adds saved snapshot history, growth charts, and alerts when a new export reveals unfollowers."],
     ["What happens if I cancel Pro?",
-     "You can cancel anytime from your account. Your saved snapshots export to CSV anytime, even after cancellation. Free plan remains available with no data loss."],
+     "You can cancel anytime from your account. Your saved snapshots export to CSV whenever you want, even after cancelling. The free plan stays available with no data loss."],
   ],
 };
 

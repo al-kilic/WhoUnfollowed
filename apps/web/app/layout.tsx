@@ -81,11 +81,41 @@ export const metadata: Metadata = {
   },
 };
 
+// Sitewide entity graph. Anchors WhoUnfollowed as a resolvable Organization for
+// Google and AI answer engines, and links the brand to its open-source repo.
+const orgJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${SITE_URL}/#organization`,
+      name: 'WhoUnfollowed',
+      url: SITE_URL,
+      logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png` },
+      description:
+        'Privacy-first Instagram follower analysis. No password required, processed in your browser.',
+      sameAs: ['https://github.com/al-kilic/WhoUnfollowed'],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${SITE_URL}/#website`,
+      name: 'WhoUnfollowed',
+      url: SITE_URL,
+      publisher: { '@id': `${SITE_URL}/#organization` },
+      inLanguage: 'en',
+    },
+  ],
+};
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const auth = await getAuthState();
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+        />
         {/* Google Fonts - landing page design system */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

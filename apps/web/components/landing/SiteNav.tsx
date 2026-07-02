@@ -267,7 +267,7 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
           <HowItWorksDropdown />
           <a href="/privacy" style={{ cursor: 'pointer', color: 'inherit', textDecoration: 'none' }}>Privacy</a>
           <a
-            href="https://github.com/al-kilic/IG-Tracker"
+            href="https://github.com/al-kilic/WhoUnfollowed"
             target="_blank"
             rel="noopener noreferrer"
             style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: T.ink, padding: '7px 14px', border: `1px solid ${T.border3}`, borderRadius: 9, textDecoration: 'none' }}
@@ -324,7 +324,7 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
           </a>
           <a href="/privacy" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>Privacy</a>
           <a
-            href="https://github.com/al-kilic/IG-Tracker"
+            href="https://github.com/al-kilic/WhoUnfollowed"
             target="_blank"
             rel="noopener noreferrer"
             style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 16, color: T.ink, textDecoration: 'none' }}

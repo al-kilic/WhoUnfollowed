@@ -41,7 +41,9 @@ const faqItems = [
   },
 ];
 
-const jsonLd = {
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
+
+const faqJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
   mainEntity: faqItems.map(item => ({
@@ -54,12 +56,36 @@ const jsonLd = {
   })),
 };
 
+// HowTo mirrors the visible "Download to device" step flow so search and AI
+// engines can surface the export steps directly.
+const howToJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to export your Instagram followers and following data',
+  description:
+    'Download your Instagram followers and following list as a ZIP using Instagram\'s official data export. No third-party app and no password needed.',
+  totalTime: 'PT5M',
+  tool: [{ '@type': 'HowToTool', name: 'Instagram Accounts Center' }],
+  step: [
+    { '@type': 'HowToStep', name: 'Go to Instagram Accounts Center', text: 'Open accountscenter.instagram.com, or navigate from your profile to Settings and privacy, then Accounts Center.', url: `${SITE_URL}/how-to-export#step1` },
+    { '@type': 'HowToStep', name: 'Open Your information and permissions', text: 'Inside Accounts Center, tap Your information and permissions.', url: `${SITE_URL}/how-to-export#step2` },
+    { '@type': 'HowToStep', name: 'Go to Export your information', text: 'Tap Export your information, then choose Export to device.', url: `${SITE_URL}/how-to-export#step3` },
+    { '@type': 'HowToStep', name: 'Select only Followers and Following', text: 'Under Customize information, deselect everything and check only Followers and Following. Set the date range to All time.', url: `${SITE_URL}/how-to-export#step4` },
+    { '@type': 'HowToStep', name: 'Choose JSON format and start the export', text: 'Choose JSON, not HTML, then tap Start export. JSON includes follow timestamps.', url: `${SITE_URL}/how-to-export#step5` },
+    { '@type': 'HowToStep', name: 'Download the ZIP from your email', text: 'Within a few minutes Instagram emails a download link. Download the ZIP to your device. The link expires in 4 days.', url: `${SITE_URL}/how-to-export#step6` },
+  ],
+};
+
 export default function HowToExportPage() {
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
       />
       <HowToExportContent />
     </>
