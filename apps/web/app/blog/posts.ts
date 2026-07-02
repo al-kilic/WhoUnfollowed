@@ -12,12 +12,222 @@ export interface BlogPost {
   primaryKeyword: string;
   /** Abstract-geometric cover illustration shown on cards and the article hero. */
   art: ArtVariant;
-  /** Accessible/SEO alt text for the cover illustration. */
+  /**
+   * Optional real cover photo (self-hosted under /public/blog). When set, it is
+   * shown on the card and article hero instead of the abstract `art`. `art` is
+   * kept as a fallback. Photos are free-licensed from Unsplash (no attribution
+   * required); source slugs are noted next to each post below.
+   */
+  image?: string;
+  /** Accessible/SEO alt text for the cover illustration or photo. */
   imageAlt: string;
   body: string;
 }
 
 export const BLOG_POSTS: BlogPost[] = [
+  {
+    slug: 'why-did-i-lose-followers-overnight-on-instagram',
+    title: 'Why Did I Lose Followers Overnight on Instagram?',
+    metaTitle: 'Why Did I Lose Followers Overnight on Instagram?',
+    metaDescription: 'Woke up with fewer followers? Here are the real reasons Instagram follower counts drop overnight, from bot purges to deactivations, and how to see exactly who left.',
+    excerpt: 'You went to bed at 8,200 followers and woke up at 8,050. Nobody sent you a note explaining it. Here are the actual reasons counts drop overnight, and how to find out exactly who dropped off.',
+    date: 'July 2, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'why did I lose followers overnight on Instagram',
+    art: 'ratio',
+    // Unsplash: JKUTrJ4vK00 (analytics graphs on a laptop screen)
+    image: '/blog/lost-followers-overnight.jpg',
+    imageAlt: 'A laptop screen showing analytics dashboards and graphs, representing tracking an overnight drop in Instagram followers',
+    body: `You didn't post anything controversial. You didn't change your username. But the number went down while you slept, and Instagram offers no explanation. A follower count that drops overnight feels personal, but most of the time it isn't about you at all.
+
+Here are the real reasons the number moves, in rough order of how often they're the cause.
+
+## 1. Instagram purged fake and bot accounts
+
+This is the most common reason for a sudden, larger drop. Instagram periodically sweeps its platform and removes accounts it identifies as fake, spam, or bot-operated. When it does, every real account those bots were "following" loses them all at once. If you lost a chunk of followers overnight across many accounts at scale, a platform purge is the likely explanation, and there is nothing wrong with your content.
+
+The upside: these were never real people. They inflated your count and dragged down your engagement rate. Losing them is a cleaner audience, even if the number stings for a day. This is closely related to the [ghost followers problem](/blog/instagram-ghost-followers-how-to-find-and-remove-them).
+
+## 2. Real people unfollowed you
+
+The ordinary one. People reassess who they follow, clear out their feed, or simply lose interest. A handful of unfollows a day is normal for any active account. Instagram never tells the person you unfollowed, and it never tells you either, which is why this feels invisible until you check the number. We covered exactly what is and isn't notified in [does Instagram notify when you unfollow someone](/blog/does-instagram-notify-when-you-unfollow-someone).
+
+## 3. Accounts were deactivated or deleted
+
+When someone deactivates their account (temporarily or permanently), they disappear from your followers list until they come back. A wave of deactivations, common after platform controversies or at the start of a new year, shows up on your end as followers vanishing for no reason you can see.
+
+## 4. You got blocked, or you blocked someone
+
+Blocking is mutual. If someone blocks you, they drop off your followers. If you block or remove a follower, same result. None of it generates a notification, so it lands as a silent decrement.
+
+## 5. A viral post attracted follows that didn't stick
+
+If a reel popped off recently, it may have pulled in follows from people who liked one video but had no real interest in your account. Those follows often reverse within a few days once the post stops circulating. A brief spike followed by a dip is usually this, not a penalty.
+
+## The problem: the number tells you nothing
+
+Here's the frustrating part. Instagram shows you a count, but it never shows you the delta. You can see that you lost 150 followers. You cannot see which 150. And you cannot tell a bot purge (good) from a real person you care about unfollowing (worth knowing) just by staring at a smaller number.
+
+To actually understand a drop, you need to compare who followed you before against who follows you now.
+
+## How to see exactly who left
+
+Instagram is required under GDPR to give you a copy of your own follower data. You can request it any time, and it includes your complete followers list. Take one export today and another in a couple of weeks, and the difference between them is your precise list of who unfollowed.
+
+### Step 1: Export your data
+
+In Instagram, go to Settings, then "Your activity," then "Download your information." Choose "Followers and following," set the format to JSON, and submit. The link usually arrives by email within a few hours. (Full walkthrough: [how to download your Instagram data](/blog/how-to-download-your-instagram-data).)
+
+### Step 2: Compare two exports over time
+
+Drop your first export into [WhoUnfollowed](/). It reads the file inside your browser, so nothing is uploaded. When you add a second export later, it shows you exactly who dropped off between the two dates, by name. That's how you tell a bot purge from a real unfollow: a purge is a pile of dead-looking accounts, a real unfollow is someone you recognize.
+
+No app needs your Instagram password to do this. If one asks for it, [close the tab](/blog/why-instagram-follower-trackers-ask-for-your-password).
+
+## The honest takeaway
+
+An overnight drop is almost always one of the five reasons above, and most of them are harmless or even good for your account's health. The number alone will drive you a little crazy because it hides the one thing you actually want to know: who. Keep your own record, compare it over time, and the mystery goes away.`,
+  },
+  {
+    slug: 'how-to-download-your-instagram-data',
+    title: 'How to Download Your Instagram Data (Step by Step)',
+    metaTitle: 'How to Download Your Instagram Data (Step by Step)',
+    metaDescription: 'A plain walkthrough for requesting your Instagram data export: where the setting is, JSON vs HTML, how long it takes, and what is actually inside the ZIP file.',
+    excerpt: 'Instagram lets you download a full copy of your own data, including your complete followers and following lists. Here is exactly where the setting is, which format to pick, and what you get.',
+    date: 'July 2, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'how to download your Instagram data',
+    art: 'search',
+    // Unsplash: hdQGAz1pQ_M (a person holding a phone showing an Instagram profile)
+    image: '/blog/download-instagram-data.jpg',
+    imageAlt: 'A person holding a phone showing an Instagram profile, representing requesting your Instagram data export',
+    body: `Instagram buries this feature, but it is one of the most useful things you can do with your account. Under GDPR Article 20, the platform has to give you a portable copy of your own data on request, and that includes your full followers and following lists, your posts, your messages, and more.
+
+You do not need anyone's app or your password shared with a third party to get it. Here is the whole process.
+
+## Where to find the setting
+
+The menu wording shifts slightly between app versions, but the path is stable:
+
+- **On the mobile app:** Profile, then the menu (☰) in the top right, then Settings and activity. Scroll to "Your activity," then tap "Download your information."
+- **On desktop:** Go to your profile, open Settings, then find "Your activity" and "Download your information." You can also go straight to the Accounts Center download page from your browser.
+
+Instagram may ask you to confirm your password (its own login prompt, not a third party) before it starts the request.
+
+## The one setting that matters: JSON, not HTML
+
+When you request the export, Instagram asks for a format. You get two choices, and the difference matters if you plan to actually analyze the data.
+
+- **JSON** is structured data. It is the format tools can read cleanly and compare over time. Pick this one.
+- **HTML** is a set of web pages meant for casual human browsing. It is harder for tools to parse reliably.
+
+Choose **JSON**. If you already requested HTML, it can still work with a good parser, but JSON is the clean path.
+
+[[art:search]]
+
+## Narrow the request so it comes back fast
+
+By default Instagram tries to export everything, which for an old account can be gigabytes and can take days. You don't need all of it to see your followers.
+
+When you set up the request, choose to customize the information instead of "all available information," and select just **"Followers and following."** Set the date range to "All time." A narrow request like this usually comes back within a few hours instead of days.
+
+## How long it takes
+
+For a focused followers-and-following request, expect a few hours, sometimes faster. For a full account export, Instagram warns it can take up to 14 days, though it is often quicker. You will get an email from Instagram with a download link when it is ready. The link expires after a few days, so grab it when it lands.
+
+## What is actually inside the ZIP
+
+You will download a ZIP archive. If you open it, the files that matter for follower analysis live in one folder:
+
+- \`connections/followers_and_following/followers_1.json\` is your followers list. Very large accounts get this split across \`followers_2.json\`, \`followers_3.json\`, and so on.
+- \`connections/followers_and_following/following.json\` is the list of accounts you follow.
+
+Each entry holds a username, a profile link, and a timestamp for when the connection was made. You do not have to open or understand any of this yourself. A tool reads it for you.
+
+## What to do with it
+
+The export is just data until you compare the two lists. The moment you diff your followers against your following, you get the answers Instagram hides:
+
+- Who you follow that [doesn't follow you back](/blog/who-doesnt-follow-you-back-on-instagram)
+- Who [unfollowed you](/blog/how-to-see-who-unfollowed-you-on-instagram) since your last export
+- Which followers are likely [inactive or ghosts](/blog/instagram-ghost-followers-how-to-find-and-remove-them)
+
+Drop the ZIP into [WhoUnfollowed](/) and it reads the file entirely in your browser. Nothing is uploaded to a server. You can switch off your wifi before you drop the file in, and it still works, which is the simplest proof that your data never leaves your device.
+
+## A note on safety
+
+The reason to get comfortable with the official export is that it removes any excuse to hand your password to a follower-tracking app. Those apps log in as you and pull data through Instagram's private API, which breaks Instagram's Terms of Use and is a common reason accounts get restricted. The export Instagram gives you is already yours. A good tool just reads it, no password required.`,
+  },
+  {
+    slug: 'is-it-safe-to-mass-unfollow-on-instagram',
+    title: 'Is It Safe to Mass Unfollow on Instagram?',
+    metaTitle: 'Is It Safe to Mass Unfollow on Instagram?',
+    metaDescription: 'Thinking of unfollowing a lot of accounts at once? Here is how Instagram action limits work, what actually triggers a block, and a safer way to clean up your following list.',
+    excerpt: 'Cleaning up who you follow is healthy. Doing it too fast, or with the wrong app, is how accounts get temporarily blocked. Here is where the line actually is.',
+    date: 'July 2, 2026',
+    readTime: '5 min',
+    tag: 'Growth',
+    primaryKeyword: 'is it safe to mass unfollow on Instagram',
+    art: 'split',
+    // Unsplash: z3kBG5xIhjo (a smartphone showing the Instagram icon)
+    image: '/blog/mass-unfollow-safe.jpg',
+    imageAlt: 'A smartphone displaying the Instagram logo on a plain background, representing unfollowing accounts on Instagram',
+    body: `Unfollowing accounts that don't follow you back is one of the fastest ways to tidy up your presence and improve your [follow ratio](/blog/instagram-follow-ratio-what-it-means-how-to-improve-it). The instinct to blast through the whole list in one sitting is understandable. It is also how people get their account temporarily blocked.
+
+The short version: unfollowing is safe. Mass unfollowing, done fast or through a sketchy app, is not. Here is why, and where the line sits.
+
+## Instagram has action limits (it just won't tell you the number)
+
+Instagram enforces rate limits on repeated actions, including follows and unfollows, to fight spam and automation. It deliberately does not publish the exact thresholds, because a published number is a number bots would tune against. What is well established from years of user reports:
+
+- Rapid, repetitive unfollowing in a short window is the pattern that trips the system.
+- Newer accounts and accounts with little history get less rope than established ones.
+- The usual penalty is an "Action Blocked" message that temporarily stops you from following or unfollowing, typically for a few hours up to a couple of days. Repeat offenses stretch the block.
+
+A rough, conservative rule people use is to keep unfollows spaced out, in the range of a few dozen per hour rather than hundreds, with pauses. The goal is to look like a person, not a script.
+
+## What actually triggers a block
+
+It isn't the total number so much as the speed and the pattern. Instagram's systems watch for:
+
+- **Bursts.** Two hundred unfollows in ten minutes reads as automation.
+- **Machine rhythm.** Perfectly even timing between actions is a giveaway. Humans are irregular.
+- **Third-party automation.** Apps that unfollow on your behalf are the biggest red flag of all.
+
+[[art:split]]
+
+## The real danger is the "mass unfollow app," not the unfollowing
+
+Search for a way to unfollow everyone at once and the results fill with apps that promise to do it automatically. This is where accounts actually get hurt, for two separate reasons.
+
+First, these apps require your Instagram username and password so they can act as you. That breaks Instagram's Terms of Use on its own, and it means an automated tool is now hammering the action limits from your account. When the block comes, it lands on you, not the app.
+
+Second, you have handed your credentials to a third party whose business is unclear. That is the exact pattern we broke down in [why follower trackers ask for your password](/blog/why-instagram-follower-trackers-ask-for-your-password). A password is worth something to these apps, and a breach of their servers puts your login in a dump.
+
+There is no version of a bulk auto-unfollow app that is both effective and safe. The more effective it is at speed, the faster it trips Instagram's limits.
+
+## The safer way to clean up your following list
+
+You don't need to unfollow everyone. You need to unfollow the right accounts, deliberately, at a human pace. That starts with knowing who they are.
+
+### Step 1: Get your list of non-followers
+
+Instagram won't show you who you follow that doesn't follow back. Your data export will. Request it (here's [how to download your Instagram data](/blog/how-to-download-your-instagram-data)), then drop the ZIP into [WhoUnfollowed](/). It reads the file in your browser and hands you every account you follow that doesn't follow you back, on one screen. Nothing is uploaded, and no password is involved.
+
+### Step 2: Triage, don't blast
+
+Not every non-follower should go. Brands and creators you follow for content are fine to keep. The accounts worth removing are the ones you followed hoping for a follow back that never came. WhoUnfollowed sorts them so you can make real decisions instead of guessing.
+
+### Step 3: Unfollow manually, in sittings
+
+Do the unfollowing yourself, inside the Instagram app, a batch at a time. It is slower than a magic button, but it never gets you blocked, and it keeps a human in the loop deciding who stays. Spread a large cleanup across a few days rather than one marathon.
+
+## The bottom line
+
+Is it safe to mass unfollow on Instagram? Unfollowing thoughtfully, at a human pace, is completely safe. Unfollowing hundreds of accounts in minutes, especially through an app that wants your password, is how you earn an action block or worse. Get the exact list of who's worth removing, then trim it by hand. Slower is the whole point.`,
+  },
   {
     slug: 'how-to-see-who-unfollowed-you-on-instagram',
     title: 'How to See Who Unfollowed You on Instagram (Without Getting Banned)',

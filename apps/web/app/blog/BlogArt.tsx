@@ -85,7 +85,7 @@ export function BlogArt({
   variant: ArtVariant;
   alt: string;
   rounded?: number;
-  style?: React.CSSProperties;
+  style?: React.CSSProperties | undefined;
 }) {
   const accent = ACCENTS[variant];
   const uid = React.useId().replace(/:/g, '');
@@ -171,4 +171,34 @@ export function BlogArt({
       </g>
     </svg>
   );
+}
+
+// Cover for a post: a real photo when `image` is set (self-hosted in /public/blog),
+// otherwise the abstract SVG art. Lets us mix photo-led and illustrated posts
+// without touching every render site.
+export function BlogCover({
+  image,
+  art,
+  alt,
+  rounded = 0,
+  style,
+}: {
+  image?: string | undefined;
+  art: ArtVariant;
+  alt: string;
+  rounded?: number;
+  style?: React.CSSProperties;
+}) {
+  if (image) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={image}
+        alt={alt}
+        loading="lazy"
+        style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover', ...style }}
+      />
+    );
+  }
+  return <BlogArt variant={art} alt={alt} rounded={rounded} style={style} />;
 }

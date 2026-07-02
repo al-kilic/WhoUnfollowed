@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { T } from '@/components/landing/tokens';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
-import { BlogArt, type ArtVariant } from './BlogArt';
+import { BlogArt, BlogCover, type ArtVariant } from './BlogArt';
 import type { BlogPost } from './posts';
 
 const TAG_COLORS: Record<string, { color: string; bg: string }> = {
@@ -110,9 +110,9 @@ export function BlogArticle({ post, otherPosts }: { post: BlogPost; otherPosts: 
           <p style={{ fontSize: 16, color: T.inkDim, lineHeight: 1.65 }}>{post.excerpt}</p>
         </div>
 
-        {/* Hero illustration */}
+        {/* Hero cover */}
         <div style={{ borderRadius: 18, overflow: 'hidden', border: `1px solid ${T.border1}`, aspectRatio: '5 / 2', marginBottom: 8 }}>
-          <BlogArt variant={post.art} alt={post.imageAlt} rounded={0} />
+          <BlogCover image={post.image} art={post.art} alt={post.imageAlt} rounded={0} />
         </div>
 
         {/* Body */}
@@ -139,7 +139,7 @@ export function BlogArticle({ post, otherPosts }: { post: BlogPost; otherPosts: 
               {otherPosts.map((p) => (
                 <Link key={p.slug} href={`/blog/${p.slug}`} style={{ textDecoration: 'none', padding: '14px 16px', borderRadius: 12, background: T.surface1, border: `1px solid ${T.border1}`, display: 'flex', alignItems: 'center', gap: 14 }}>
                   <div style={{ width: 84, height: 54, borderRadius: 8, overflow: 'hidden', flexShrink: 0, border: `1px solid ${T.border1}` }}>
-                    <BlogArt variant={p.art} alt="" rounded={0} />
+                    <BlogCover image={p.image} art={p.art} alt="" rounded={0} />
                   </div>
                   <div>
                     <div style={{ fontFamily: T.serif, fontSize: 16, color: T.ink, marginBottom: 4, lineHeight: 1.25 }}>{p.title}</div>

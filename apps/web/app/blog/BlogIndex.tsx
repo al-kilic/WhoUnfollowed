@@ -7,7 +7,7 @@ import { BookOpen, Clock } from 'lucide-react';
 import { T } from '@/components/landing/tokens';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
-import { BlogArt } from './BlogArt';
+import { BlogCover } from './BlogArt';
 import { BLOG_POSTS, type BlogPost } from './posts';
 
 const TAG_COLORS: Record<string, { color: string }> = {
@@ -42,7 +42,7 @@ function BlogCard({ post, index }: { post: BlogPost; index: number }) {
         >
           {/* Cover illustration */}
           <div style={{ position: 'relative', height: 168, overflow: 'hidden' }}>
-            <BlogArt variant={post.art} alt={post.imageAlt} rounded={0} style={{ height: '100%' }} />
+            <BlogCover image={post.image} art={post.art} alt={post.imageAlt} rounded={0} style={{ height: '100%' }} />
             {/* Tag badge */}
             <div style={{ position: 'absolute', top: 14, left: 14 }}>
               <span style={{ fontSize: 10, fontFamily: T.mono, padding: '4px 10px', borderRadius: 20, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: tag.color, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', border: `1px solid ${tag.color}40` }}>
