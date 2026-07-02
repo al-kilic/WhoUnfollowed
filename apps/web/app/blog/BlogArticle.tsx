@@ -34,7 +34,7 @@ function renderBody(body: string) {
     if (artMatch) {
       const variant = artMatch[1] as ArtVariant;
       return (
-        <figure key={i} style={{ margin: '28px 0', borderRadius: 16, overflow: 'hidden', border: `1px solid ${T.border1}`, aspectRatio: '5 / 2' }}>
+        <figure key={i} style={{ margin: '40px 0', borderRadius: 16, overflow: 'hidden', border: `1px solid ${T.border1}`, aspectRatio: '5 / 2' }}>
           <BlogArt variant={variant} alt="" rounded={0} />
         </figure>
       );
@@ -44,7 +44,7 @@ function renderBody(body: string) {
     const imgMatch = para.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
     if (imgMatch) {
       return (
-        <figure key={i} style={{ margin: '28px 0' }}>
+        <figure key={i} style={{ margin: '40px 0' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={imgMatch[2]} alt={imgMatch[1]} loading="lazy" style={{ width: '100%', borderRadius: 16, border: `1px solid ${T.border1}`, display: 'block' }} />
         </figure>
@@ -53,14 +53,14 @@ function renderBody(body: string) {
 
     if (para.startsWith('### ')) {
       return (
-        <h3 key={i} style={{ fontFamily: T.serif, fontSize: 'clamp(17px, 3vw, 20px)', fontWeight: 500, color: T.ink, letterSpacing: '-0.01em', marginTop: 28, marginBottom: 8 }}>
+        <h3 key={i} style={{ fontFamily: T.serif, fontSize: 'clamp(19px, 3vw, 23px)', fontWeight: 500, color: T.ink, letterSpacing: '-0.01em', marginTop: 40, marginBottom: 10 }}>
           {para.replace('### ', '')}
         </h3>
       );
     }
     if (para.startsWith('## ')) {
       return (
-        <h2 key={i} style={{ fontFamily: T.serif, fontSize: 'clamp(20px, 3.5vw, 26px)', fontWeight: 400, color: T.ink, letterSpacing: '-0.02em', marginTop: 40, marginBottom: 12 }}>
+        <h2 key={i} style={{ fontFamily: T.serif, fontSize: 'clamp(23px, 4vw, 32px)', fontWeight: 400, color: T.ink, letterSpacing: '-0.02em', marginTop: 52, marginBottom: 16 }}>
           {para.replace('## ', '')}
         </h2>
       );
@@ -68,10 +68,10 @@ function renderBody(body: string) {
     if (para.startsWith('- ')) {
       const items = para.split('\n').filter((l) => l.trim().startsWith('- '));
       return (
-        <ul key={i} style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
+        <ul key={i} style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 28 }}>
           {items.map((item, j) => (
-            <li key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 15, color: T.inkDim, lineHeight: 1.6 }}>
-              <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.tealMid, flexShrink: 0, marginTop: 8 }} />
+            <li key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, fontSize: 18, color: T.inkDim, lineHeight: 1.75 }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: T.tealMid, flexShrink: 0, marginTop: 11 }} />
               <span dangerouslySetInnerHTML={{ __html: inline(item.replace(/^-\s/, '')) }} />
             </li>
           ))}
@@ -79,7 +79,7 @@ function renderBody(body: string) {
       );
     }
     return (
-      <p key={i} style={{ fontSize: 15, color: T.inkDim, lineHeight: 1.75, marginBottom: 20 }} dangerouslySetInnerHTML={{ __html: inline(para) }} />
+      <p key={i} style={{ fontSize: 18, color: T.inkDim, lineHeight: 1.85, marginBottom: 28 }} dangerouslySetInnerHTML={{ __html: inline(para) }} />
     );
   });
 }
@@ -91,7 +91,7 @@ export function BlogArticle({ post, otherPosts }: { post: BlogPost; otherPosts: 
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
       <SiteNav />
 
-      <main className="px-4 sm:px-8" style={{ maxWidth: 680, margin: '0 auto', paddingTop: 56, paddingBottom: 80 }}>
+      <main className="px-4 sm:px-8" style={{ maxWidth: 760, margin: '0 auto', paddingTop: 56, paddingBottom: 80 }}>
         {/* Header */}
         <div style={{ marginBottom: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18 }}>
@@ -107,7 +107,7 @@ export function BlogArticle({ post, otherPosts }: { post: BlogPost; otherPosts: 
           <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(30px, 5vw, 52px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', color: T.ink, marginBottom: 18 }}>
             {post.title}
           </h1>
-          <p style={{ fontSize: 16, color: T.inkDim, lineHeight: 1.65 }}>{post.excerpt}</p>
+          <p style={{ fontSize: 20, color: T.inkDim, lineHeight: 1.6, fontWeight: 400 }}>{post.excerpt}</p>
         </div>
 
         {/* Hero cover */}
@@ -116,7 +116,7 @@ export function BlogArticle({ post, otherPosts }: { post: BlogPost; otherPosts: 
         </div>
 
         {/* Body */}
-        <article style={{ borderTop: `1px solid ${T.border1}`, paddingTop: 32, marginTop: 24 }}>
+        <article style={{ borderTop: `1px solid ${T.border1}`, paddingTop: 40, marginTop: 28 }}>
           {renderBody(post.body)}
         </article>
 

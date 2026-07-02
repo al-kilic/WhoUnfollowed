@@ -71,6 +71,8 @@ Here's the frustrating part. Instagram shows you a count, but it never shows you
 
 To actually understand a drop, you need to compare who followed you before against who follows you now.
 
+![Instagram and other social media app icons on a phone home screen](/blog/lost-followers-overnight-2.jpg)
+
 ## How to see exactly who left
 
 Instagram is required under GDPR to give you a copy of your own follower data. You can request it any time, and it includes your complete followers list. Take one export today and another in a couple of weeks, and the difference between them is your precise list of who unfollowed.
@@ -125,7 +127,7 @@ When you request the export, Instagram asks for a format. You get two choices, a
 
 Choose **JSON**. If you already requested HTML, it can still work with a good parser, but JSON is the clean path.
 
-[[art:search]]
+![A person at a desk using a laptop to review data on screen](/blog/download-instagram-data-2.jpg)
 
 ## Narrow the request so it comes back fast
 
@@ -196,7 +198,7 @@ It isn't the total number so much as the speed and the pattern. Instagram's syst
 - **Machine rhythm.** Perfectly even timing between actions is a giveaway. Humans are irregular.
 - **Third-party automation.** Apps that unfollow on your behalf are the biggest red flag of all.
 
-[[art:split]]
+![A hand holding a phone open to the Instagram login screen](/blog/mass-unfollow-safe-2.jpg)
 
 ## The real danger is the "mass unfollow app," not the unfollowing
 
@@ -239,14 +241,16 @@ Is it safe to mass unfollow on Instagram? Unfollowing thoughtfully, at a human p
     tag: 'Guide',
     primaryKeyword: 'how to see who unfollowed you on Instagram',
     art: 'search',
-    imageAlt: 'Abstract radar illustration representing scanning your Instagram export for unfollowers',
+    // Unsplash: Ebb8fe-NZtM (hand holding a phone showing Instagram Insights)
+    image: '/blog/who-unfollowed-hero.jpg',
+    imageAlt: 'A hand holding a phone showing Instagram Insights with reach and account activity stats',
     body: `Most follower trackers work fine, right until your account gets flagged, restricted, or permanently disabled.
 
 The reason is straightforward. These tools ask for your Instagram password so they can log in as you, call Instagram's private API, and pull your follower data. Instagram explicitly bans this in its Terms of Use. When their systems detect unusual API activity (and they do), the account that gets punished is yours, not the app's.
 
 There is a safer way. Instagram is legally required to give you a copy of your own data under GDPR Article 20. That includes your full followers and following lists. You request the file directly from Instagram's settings, download it, and hand it to a tool that reads it locally in your browser. No password. No API. No risk.
 
-[[art:lock]]
+![A hand holding a phone beside a laptop, entering a numeric code to unlock an account](/blog/who-unfollowed-inline.jpg)
 
 ## Step 1: Request Your Data Export from Instagram
 
@@ -288,7 +292,9 @@ If a tool asks for your Instagram password, close the tab.`,
     tag: 'Growth',
     primaryKeyword: 'Instagram follow ratio',
     art: 'ratio',
-    imageAlt: 'Abstract bar-chart illustration representing a healthy Instagram follow ratio',
+    // Unsplash: bMWHu8wU1Vk (analytics dashboard on a screen)
+    image: '/blog/follow-ratio-hero.jpg',
+    imageAlt: 'An analytics dashboard on a screen showing user metrics, top countries, and charts',
     body: `Your follow ratio is simple arithmetic: divide your follower count by the number of accounts you follow.
 
 An account with 4,000 followers that follows 400 people has a ratio of 10:1. An account with 4,000 followers following 3,800 people has a ratio just above 1:1. Both have the same follower count. The algorithm does not treat them the same.
@@ -301,7 +307,7 @@ For creators with 1,000 to 50,000 followers, a ratio somewhere between 3:1 and 1
 
 ## The One Lever You Can Actually Pull
 
-[[art:split]]
+![A hand holding a phone with the Instagram logo on the screen](/blog/follow-ratio-inline.jpg)
 
 Growing followers takes time. Cleaning up your following list can happen this week.
 
@@ -332,7 +338,9 @@ Clean your list thoughtfully. The ratio will follow.`,
     tag: 'Privacy',
     primaryKeyword: 'Instagram follower tracker password',
     art: 'lock',
-    imageAlt: 'Abstract padlock illustration representing Instagram account security and privacy',
+    // Unsplash: _t-gqsF8du4 (Instagram login screen beside a phone)
+    image: '/blog/trackers-password-hero.jpg',
+    imageAlt: 'An Instagram login screen asking for a username and password',
     body: `Open any "who unfollowed me on Instagram" app and read their onboarding flow. Within two screens, they'll ask you to log in with your Instagram credentials.
 
 The framing is always the same: it's for convenience, it's secure, thousands of people use it. What they don't explain is why they need your password to show you a list of your own followers, or what they're doing with it once you hand it over.
@@ -355,7 +363,7 @@ An app with access to millions of Instagram login pairs has built something valu
 
 ## There Is a Safe Alternative
 
-[[art:search]]
+![A sign-in screen offering Continue with Google and Sign in with Apple](/blog/trackers-password-inline.jpg)
 
 Instagram is legally required under GDPR to give you a copy of your own data, including your complete followers and following lists, in a portable format. You request it directly from Instagram's settings. They email you a download link. You get a ZIP file with your data.
 
@@ -382,7 +390,9 @@ If no, if it works with a data export you control, then the incentive structure 
     tag: 'Guide',
     primaryKeyword: 'who doesn\'t follow you back on Instagram',
     art: 'split',
-    imageAlt: 'Abstract illustration of two follower nodes with a broken connection, representing non-followers',
+    // Unsplash: rncny1536Xs (hand holding a phone open to an Instagram profile grid)
+    image: '/blog/no-follow-back-hero.jpg',
+    imageAlt: 'A hand holding a phone open to an Instagram profile grid',
     body: `Instagram makes this deliberately hard. There is no button that shows you the people you follow who don't follow you back. You can open your following list and check profiles one at a time, but on an account with a few hundred follows that is an evening you will not get back.
 
 The accounts you are looking for have a name: non-followers. These are people you follow who don't follow you in return. They are not the same as unfollowers, who are accounts that used to follow you and stopped (finding those takes two exports compared over time). Non-followers you can find right now, from a single file, in about two minutes.
@@ -397,7 +407,7 @@ You do not need any of that to read a list of your own follows.
 
 ## Use the data Instagram already owes you
 
-[[art:search]]
+![A phone on a marble desk beside a laptop, showing an Instagram profile feed](/blog/no-follow-back-inline.jpg)
 
 Under GDPR Article 20, Instagram has to give you a copy of your own data, including your full followers and following lists. You request it from inside the app, Instagram emails you a download link, and you get a ZIP file. That file is everything you need.
 
@@ -438,7 +448,9 @@ If a tool asks for your Instagram login to do this, close the tab. The file Inst
     tag: 'Growth',
     primaryKeyword: 'Instagram ghost followers',
     art: 'ghost',
-    imageAlt: 'Abstract illustration of faded follower nodes representing inactive Instagram ghost followers',
+    // Unsplash: 15r9RAOy38Q (glowing 3D social media logos on a dark background)
+    image: '/blog/ghost-followers-hero.jpg',
+    imageAlt: 'Glowing 3D social media app logos including Instagram on a dark background',
     body: `Your follower count says 8,000. Your posts get 90 likes. Something doesn't add up, and the gap usually has a name: ghost followers.
 
 Ghost followers are accounts that follow you but never engage. Some are abandoned profiles. Some are bots from a long-forgotten follow-for-follow phase. Some are fakes you never bought but inherited when a giveaway or a shoutout sent a wave of junk accounts your way. They inflate the number at the top of your profile and quietly poison the metric that actually matters.
@@ -447,7 +459,7 @@ Ghost followers are accounts that follow you but never engage. Some are abandone
 
 Instagram does not rank you by follower count. It ranks individual posts by how the people who see them react, mostly in the first hour. That is your engagement rate: interactions divided by reach.
 
-[[art:ratio]]
+![A dark analytics dashboard showing engagement metrics like click-through rate and quality score](/blog/ghost-followers-inline1.jpg)
 
 Ghost followers sit in the denominator and never touch the numerator. Every dead account that follows you makes your engagement rate look worse to the algorithm, which then shows your post to fewer people, which lowers engagement further. A bloated follower count with a thin engagement rate also reads as bought to brands, which is the opposite of what you want if you ever pitch a partnership.
 
@@ -469,7 +481,7 @@ In Instagram, go to Settings, then "Your activity," then "Download your informat
 
 Drop the ZIP into [WhoUnfollowed](/). It reads the file in your browser and maps your followers against your following, including how long each relationship has existed. Nothing is uploaded.
 
-[[art:search]]
+![A laptop on a desk showing an analytics dashboard with user-activity charts](/blog/ghost-followers-inline2.jpg)
 
 ## Step 3: Review the approximations, don't bulk-blast
 
@@ -499,12 +511,14 @@ Clearing ghosts will probably shrink your follower number. That feels bad for a 
     tag: 'Guide',
     primaryKeyword: 'does Instagram notify when you unfollow someone',
     art: 'bell',
-    imageAlt: 'Abstract notification-bell illustration representing Instagram unfollow notifications',
+    // Unsplash: mw6Onwg4frY (two hands typing on a phone)
+    image: '/blog/notify-unfollow-hero.jpg',
+    imageAlt: 'Two hands typing a message on a phone keyboard',
     body: `The short answer is no. Instagram does not send a notification when you unfollow someone. The person won't get an alert, a banner, or a message. The only way they can tell is by noticing your follower relationship changed, either by remembering you followed them or by checking a list.
 
 That said, "unfollow" is one of several actions people mix up, and Instagram treats each of them differently. Here is the complete picture.
 
-[[art:bell]]
+![A phone lock screen showing push notifications from messaging and social apps](/blog/notify-unfollow-inline1.jpg)
 
 ## What Instagram does NOT notify
 
@@ -529,7 +543,7 @@ They would have to track it deliberately. Without help, a person can only notice
 
 You can't get a notification for it, so you reconstruct it by comparing two snapshots of your data over time.
 
-[[art:search]]
+![A hand holding a smartphone](/blog/notify-unfollow-inline2.jpg)
 
 Instagram gives you your follower list on demand under GDPR. Export it now, export it again in a few weeks, and the difference between the two is your list of unfollowers.
 
