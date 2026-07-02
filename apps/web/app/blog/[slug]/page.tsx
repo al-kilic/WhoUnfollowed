@@ -16,6 +16,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   const url = `${SITE_URL}/blog/${post.slug}`;
   const published = new Date(post.date);
+  // Prefer the post's real cover photo; fall back to the generated site OG image.
+  const ogImage = post.image ? `${SITE_URL}${post.image}` : `${SITE_URL}/opengraph-image`;
 
   return {
     title: post.metaTitle,
@@ -30,13 +32,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       siteName: 'WhoUnfollowed',
       publishedTime: Number.isNaN(published.getTime()) ? undefined : published.toISOString(),
       authors: ['Alan Kilic'],
-      images: [{ url: `${SITE_URL}/opengraph-image`, width: 1200, height: 630, alt: post.imageAlt }],
+      images: [{ url: ogImage, width: 1200, height: 630, alt: post.imageAlt }],
     },
     twitter: {
       card: 'summary_large_image',
       title: post.metaTitle,
       description: post.metaDescription,
-      images: [`${SITE_URL}/opengraph-image`],
+      images: [ogImage],
     },
   };
 }
@@ -48,26 +50,43 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   const otherPosts = BLOG_POSTS.filter((p) => p.slug !== post.slug).slice(0, 2);
   const published = new Date(post.date);
+  const publishedISO = Number.isNaN(published.getTime()) ? undefined : published.toISOString();
+  const ogImage = post.image ? `${SITE_URL}${post.image}` : `${SITE_URL}/opengraph-image`;
+  // Approximate word count from the raw body for richer Article metadata.
+  const wordCount = post.body.split(/\s+/).filter(Boolean).length;
 
-  const jsonLd = {
+  const articleJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: post.title,
     description: post.metaDescription,
-    datePublished: Number.isNaN(published.getTime()) ? undefined : published.toISOString(),
-    author: { '@type': 'Person', name: 'Alan Kilic' },
+    datePublished: publishedISO,
+    dateModified: publishedISO,
+    wordCount,
+    author: { '@type': 'Person', '@id': `${SITE_URL}/author/alan-kilic#person`, name: 'Alan Kilic', url: `${SITE_URL}/author/alan-kilic` },
     publisher: {
       '@type': 'Organization',
       name: 'WhoUnfollowed',
       logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png` },
     },
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/blog/${post.slug}` },
-    image: `${SITE_URL}/opengraph-image`,
+    image: ogImage,
+  };
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE_URL}/blog` },
+      { '@type': 'ListItem', position: 3, name: post.title, item: `${SITE_URL}/blog/${post.slug}` },
+    ],
   };
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <BlogArticle post={post} otherPosts={otherPosts} />
     </>
   );
