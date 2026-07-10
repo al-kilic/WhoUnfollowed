@@ -17,7 +17,7 @@ export function MarqueeBand() {
         <div style={{
           display: 'flex', gap: 56, width: 'max-content',
           animation: 'scroll-x 32s linear infinite',
-          fontFamily: T.serif, fontSize: 56, lineHeight: 1, letterSpacing: '-0.02em',
+          fontFamily: T.serif, fontSize: 56, lineHeight: 1.25, letterSpacing: '-0.02em',
           color: T.inkDim,
         }}>
           {[0, 1].map((dup) => (
