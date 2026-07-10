@@ -236,7 +236,7 @@ export default async function AccountPage() {
           <div style={{ ...sectionLabel, color: T.terra }}>Danger zone</div>
           <div style={{ ...card, border: '1px solid rgba(168,75,47,0.3)' }}>
             <p style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5, marginBottom: 14 }}>
-              Deleting your account removes all your data permanently, including cloud snapshots. This cannot be undone.
+              Deleting your account removes all your data permanently, including cloud snapshots. If you have an active Pro subscription, it is cancelled immediately so you are not charged again. This cannot be undone.
             </p>
             <DeleteAccountButton />
           </div>
