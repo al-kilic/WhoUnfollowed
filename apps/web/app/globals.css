@@ -394,6 +394,103 @@ body.tutorial-active #tutorial-triage-buttons {
   50%      { transform: scale(1.06); box-shadow: 0 0 14px 2px rgba(168,75,47,0.4); }
 }
 
+/* ── Glass button (liquid-glass CTA style) ──────────────────────────────────
+   Frosted, translucent pill with a soft top highlight and a blurred shadow
+   sitting beneath it, layered via ::before/::after so the button element
+   itself stays a plain <button all: unset> (see components/ui/glass-button). */
+.glass-button-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.glass-button {
+  all: unset;
+  cursor: pointer;
+  position: relative;
+  isolation: isolate;
+  display: inline-block;
+  border-radius: 9999px;
+  overflow: hidden;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: transform 0.18s cubic-bezier(0.16,1,0.3,1), box-shadow 0.18s ease;
+}
+
+.glass-button::before {
+  /* Top highlight: the "light catching the glass" streak */
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.04) 45%, transparent 60%);
+  pointer-events: none;
+}
+
+.glass-button:hover {
+  transform: translateY(-1px);
+}
+
+.glass-button:active {
+  transform: translateY(0);
+}
+
+.glass-button-primary {
+  background: linear-gradient(160deg, rgba(2,136,143,0.55) 0%, rgba(1,105,111,0.45) 100%);
+  border: 1px solid rgba(95,196,200,0.4);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    inset 0 -8px 16px rgba(0,0,0,0.15),
+    0 6px 20px rgba(2,136,143,0.3);
+}
+
+.glass-button-primary:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.25),
+    inset 0 -8px 16px rgba(0,0,0,0.15),
+    0 10px 28px rgba(2,136,143,0.4);
+}
+
+.glass-button-secondary {
+  background: linear-gradient(160deg, rgba(244,240,232,0.08) 0%, rgba(244,240,232,0.02) 100%);
+  border: 1px solid rgba(244,240,232,0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    inset 0 -8px 16px rgba(0,0,0,0.1),
+    0 4px 14px rgba(0,0,0,0.2);
+}
+
+.glass-button-secondary:hover {
+  border-color: rgba(244,240,232,0.24);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 -8px 16px rgba(0,0,0,0.1),
+    0 6px 18px rgba(0,0,0,0.25);
+}
+
+.glass-button-text {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-sans);
+}
+
+.glass-button-primary .glass-button-text {
+  color: #f4f0e8;
+}
+
+.glass-button-secondary .glass-button-text {
+  color: rgba(244,240,232,0.75);
+}
+
+.glass-button-shadow {
+  position: absolute;
+  inset: 4px 8px -6px 8px;
+  border-radius: 9999px;
+  background: rgba(0,0,0,0.35);
+  filter: blur(10px);
+  z-index: -1;
+  opacity: 0.5;
+}
+
 /* ── Reduced motion ────────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up,
