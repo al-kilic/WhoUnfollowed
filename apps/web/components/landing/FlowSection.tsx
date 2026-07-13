@@ -99,8 +99,8 @@ function SettingsList({ items }: { items: string[] }) {
   return (
     <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
       {items.map((item) => (
-        <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-          <span style={{ color: T.tealMid, flexShrink: 0, marginTop: 2 }}>·</span>
+        <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+          <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.tealMid, flexShrink: 0, marginTop: 8 }} />
           <span>{item}</span>
         </li>
       ))}

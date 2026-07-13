@@ -12,7 +12,7 @@ import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { T } from '@/components/landing/tokens';
 import { Icon } from '@/components/landing/atoms';
-import { trackUpgradeClick } from '@/lib/analytics';
+import { trackUpgradeClick, trackFunnel } from '@/lib/analytics';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
 interface HistoryClientProps {
@@ -61,7 +61,10 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
     }
     setSyncingId(record.id);
     const cloudId = await syncSnapshot(record.label, record.exportedAt, record.data);
-    if (cloudId) await setSnapshotCloudId(record.id, cloudId);
+    if (cloudId) {
+      await setSnapshotCloudId(record.id, cloudId);
+      trackFunnel('Snapshot Saved', { storage: 'cloud' });
+    }
     setSyncingId(null);
   }
 

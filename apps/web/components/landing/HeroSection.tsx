@@ -14,10 +14,11 @@ import { detectDeltaExport, type DeltaReason } from '@ig-tracker/core';
 import { useSnapshotStore } from '@/lib/store';
 import { useSnapshotList, saveSnapshot, deleteSnapshot, FREE_SNAPSHOT_LIMIT } from '@/hooks/useSnapshots';
 import { db } from '@/lib/db';
-import { track, Events } from '@/lib/analytics';
+import { track, trackFunnel } from '@/lib/analytics';
 import { recordParse as recordParseAction } from '@/app/actions/stats';
 import { DeltaWarning } from '@/components/DeltaWarning';
 import { UpgradeDialog } from '@/components/UpgradeDialog';
+import { GlassButton } from '@/components/ui/glass-button';
 import { createPortal } from 'react-dom';
 import { T } from './tokens';
 import { Icon, CountUp, GridBg, MagneticCTA } from './atoms';
@@ -29,20 +30,23 @@ type UploadPhase = 'idle' | 'dragging' | 'parsing' | 'error' | 'success';
 
 // Allowlisted, fixed error categories for analytics. Never the raw error
 // message (which could theoretically include a filename from the user's ZIP).
-type ErrorKind = 'missing_files' | 'invalid_zip' | 'mixed_format' | 'schema_validation' | 'unsupported_file_type' | 'unknown';
+// 'html_export' has no real code path today (HTML exports parse successfully,
+// see the results-page notice instead) but stays in the union since Analysis
+// Failed's allowlist is fixed by the analytics contract, not by this mapper.
+type ErrorKind = 'missing_data' | 'invalid_zip' | 'unsupported_format' | 'html_export' | 'unknown';
 
 function classifyError(err: unknown): { message: string; kind: ErrorKind; showGuideCta: boolean } {
   if (err instanceof MissingFilesError) {
     return {
       message: 'This ZIP does not include the Followers and following data we need.',
-      kind: 'missing_files',
+      kind: 'missing_data',
       showGuideCta: true,
     };
   }
   if (err instanceof MixedFormatError) {
     return {
       message: 'This export mixes JSON and HTML files. Please request the JSON version from Instagram, then upload the ZIP again.',
-      kind: 'mixed_format',
+      kind: 'unsupported_format',
       showGuideCta: true,
     };
   }
@@ -56,7 +60,7 @@ function classifyError(err: unknown): { message: string; kind: ErrorKind; showGu
   if (err instanceof SchemaValidationError) {
     return {
       message: 'Instagram may have changed their export format, so we could not read part of this file. Try requesting a fresh export.',
-      kind: 'schema_validation',
+      kind: 'unknown',
       showGuideCta: false,
     };
   }
@@ -113,10 +117,13 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
     // Navigate immediately — results page reads from Zustand, not IndexedDB
     setSnapshot(snap);
     track('zip-upload');
-    track(Events.analysisCompleted, { analysis_type: 'non_followers' });
+    trackFunnel('Analysis Completed', { analysis_type: 'non_followers' });
     router.push('/results');
-    // Save to IndexedDB in background (non-blocking)
-    void saveSnapshot(snap);
+    // Save to IndexedDB in background (non-blocking). Track only on actual
+    // success — a rejected save should never report a false "Snapshot Saved".
+    saveSnapshot(snap)
+      .then(() => trackFunnel('Snapshot Saved', { storage: 'local' }))
+      .catch(() => {});
   }, [router, setSnapshot]);
 
   // ── Process a dropped / selected file ────────────────────────────────────
@@ -124,13 +131,13 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
     if (!file.name.toLowerCase().endsWith('.zip') &&
         file.type !== 'application/zip' &&
         file.type !== 'application/x-zip-compressed') {
-      setErrInfo({ message: 'Please upload the original ZIP file Instagram provided.', kind: 'unsupported_file_type', showGuideCta: false });
+      setErrInfo({ message: 'Please upload the original ZIP file Instagram provided.', kind: 'unsupported_format', showGuideCta: false });
       setPhase('error');
-      track(Events.analysisFailed, { error_type: 'unsupported_file_type' });
+      trackFunnel('Analysis Failed', { error_type: 'unsupported_format' });
       return;
     }
 
-    track(Events.uploadStarted);
+    trackFunnel('Upload Started');
 
     setPhase('parsing');
     setProgress(0);
@@ -172,7 +179,7 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
       const info = classifyError(err);
       setErrInfo(info);
       setPhase('error');
-      track(Events.analysisFailed, { error_type: info.kind });
+      trackFunnel('Analysis Failed', { error_type: info.kind });
     }
   };
 
@@ -315,9 +322,9 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
       {/* Headline */}
       <h1 style={{
         fontFamily: T.serif, fontWeight: 400,
-        fontSize: 'clamp(32px, 4vw, 56px)',
-        lineHeight: 1.06, letterSpacing: '-0.03em',
-        textAlign: 'center', marginTop: 12, position: 'relative', zIndex: 5,
+        fontSize: 'clamp(28px, 3.4vw, 46px)',
+        lineHeight: 1.1, letterSpacing: '-0.03em',
+        textAlign: 'center', marginTop: 8, position: 'relative', zIndex: 5,
         animation: 'fade-up 0.7s 0.1s cubic-bezier(0.16,1,0.3,1) both',
         color: T.ink,
       }}>
@@ -330,7 +337,8 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
             WebkitTextFillColor: 'transparent', color: 'transparent',
             animation: 'shimmer-text 9s linear infinite',
             fontStyle: 'italic', display: 'inline-block', paddingBottom: '0.1em',
-          }}>{"doesn't follow you back"}</span>{' '}
+          }}>{"doesn't follow you back"}</span>
+          <br />
           on Instagram.
         </div>
         <div>
@@ -344,7 +352,7 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
       {/* Subhead */}
       <p style={{
         textAlign: 'center', fontSize: 14, color: T.inkDim,
-        maxWidth: 480, margin: '10px auto 0', lineHeight: 1.5,
+        maxWidth: 480, margin: '8px auto 0', lineHeight: 1.5,
         position: 'relative', zIndex: 5,
         animation: 'fade-up 0.7s 0.25s cubic-bezier(0.16,1,0.3,1) both',
       }}>
@@ -355,37 +363,35 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
       {/* Primary/secondary CTA paths, above the drop zone */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: 10,
-        maxWidth: 560, margin: '18px auto 0', position: 'relative', zIndex: 5,
+        maxWidth: 560, margin: '14px auto 0', position: 'relative', zIndex: 5,
         animation: 'fade-up 0.7s 0.32s cubic-bezier(0.16,1,0.3,1) both',
       }}>
-        <button
+        <GlassButton
           type="button"
+          variant="primary"
+          size="sm"
           onClick={() => {
-            track(Events.heroCtaClicked, { path: 'have_zip' });
+            trackFunnel('Hero CTA Clicked', { path: 'have_zip' });
             dropRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
             inputRef.current?.focus();
           }}
-          style={{
-            padding: '11px 20px', borderRadius: 11, border: 'none',
-            background: T.teal, color: T.cream, fontSize: 13.5, fontWeight: 700,
-            fontFamily: T.sans, cursor: 'pointer', boxShadow: `0 6px 20px ${T.tealGlow}`,
-          }}
         >
           I have my Instagram ZIP
-        </button>
+        </GlassButton>
         <a
           href="/how-to-export"
           onClick={() => {
-            track(Events.heroCtaClicked, { path: 'get_export' });
-            track(Events.exportGuideOpened, { entry: 'hero' });
+            trackFunnel('Hero CTA Clicked', { path: 'get_export' });
+            trackFunnel('Export Guide Opened', { entry: 'hero' });
           }}
-          style={{
-            padding: '11px 20px', borderRadius: 11, border: `1px solid var(--t-border3)`,
-            background: 'transparent', color: T.inkDim, fontSize: 13.5, fontWeight: 600,
-            fontFamily: T.sans, textDecoration: 'none',
-          }}
+          className="glass-button-wrap"
         >
-          How do I get my Instagram export?
+          <span className="glass-button glass-button-secondary" style={{ display: 'inline-block' }}>
+            <span className="glass-button-text" style={{ display: 'block', padding: '11px 20px', fontSize: 13.5, fontWeight: 600 }}>
+              How do I get my Instagram export?
+            </span>
+          </span>
+          <span className="glass-button-shadow" />
         </a>
       </div>
 
@@ -414,7 +420,7 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
           }}
         >
           <div style={{
-            borderRadius: 22, background: T.bgCard, padding: '20px 28px',
+            borderRadius: 22, background: T.bgCard, padding: '16px 28px',
             position: 'relative', overflow: 'hidden',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
@@ -437,7 +443,7 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
 
             {/* ── IDLE ── */}
             {(phase === 'idle' || phase === 'dragging') && (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, position: 'relative', zIndex: 2 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, position: 'relative', zIndex: 2 }}>
                 <div style={{
                   width: 60, height: 60, borderRadius: 17,
                   background: phase === 'dragging'
@@ -469,7 +475,7 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
                     </div>
                     <a
                       href="/how-to-export"
-                      onClick={(e) => { e.stopPropagation(); track(Events.exportGuideOpened, { entry: 'hero' }); }}
+                      onClick={(e) => { e.stopPropagation(); trackFunnel('Export Guide Opened', { entry: 'hero' }); }}
                       style={{ fontSize: 12, color: T.tealLight, textDecoration: 'none', borderBottom: `1px solid rgba(2,136,143,0.3)`, paddingBottom: 1 }}
                     >
                       Don&apos;t have it yet? See how to request your export →
@@ -531,10 +537,10 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
                   {errInfo?.showGuideCta && (
                     <a
                       href="/how-to-export"
-                      onClick={(e) => { e.stopPropagation(); track(Events.exportGuideOpened, { entry: 'upload_error' }); }}
+                      onClick={(e) => { e.stopPropagation(); trackFunnel('Export Guide Opened', { entry: 'upload_error' }); }}
                       style={{ padding: '11px 22px', borderRadius: 10, border: `1px solid rgba(2,136,143,0.4)`, background: 'rgba(2,136,143,0.08)', color: T.tealLight, fontSize: 13, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans }}
                     >
-                      {errInfo.kind === 'missing_files' ? 'Show me what to select in Instagram' : 'Show me the correct export settings'}
+                      {errInfo.kind === 'missing_data' ? 'Show me what to select in Instagram' : 'Show me the correct export settings'}
                     </a>
                   )}
                 </div>

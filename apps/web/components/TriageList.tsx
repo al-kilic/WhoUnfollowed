@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 import type { Account } from '@ig-tracker/core';
 import { Button } from '@/components/ui/button';
 import { useCsvExport } from '@/hooks/useCsvExport';
-import { trackUpgradeClick } from '@/lib/analytics';
+import { trackUpgradeClick, trackFunnel } from '@/lib/analytics';
 import Link from 'next/link';
 import { T } from '@/components/landing/tokens';
 import { useTriage, usePreviousTriage, type TriageState } from '@/hooks/useTriage';
@@ -583,7 +583,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
           <span style={{ flex: 1, minWidth: 200, fontSize: 13, color: T.inkDim, lineHeight: 1.5 }}>
             Upload a new export later and Pro <strong style={{ color: T.ink }}>carries this triage over</strong>, so you never re-triage the same accounts.
           </span>
-          <Link href="/pricing" onClick={() => trackUpgradeClick('triage-carryover')} style={{ flexShrink: 0, fontSize: 12, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none', padding: '8px 16px', borderRadius: 9, background: T.teal }}>
+          <Link href="/pricing" onClick={() => { trackUpgradeClick('triage-carryover'); trackFunnel('Upgrade CTA Clicked', { placement: 'results' }); }} style={{ flexShrink: 0, fontSize: 12, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none', padding: '8px 16px', borderRadius: 9, background: T.teal }}>
             Upgrade to Pro
           </Link>
           <button onClick={() => setImportDismissed(true)} aria-label="Dismiss" style={{ flexShrink: 0, width: 26, height: 26, borderRadius: 7, border: '1px solid var(--t-border2)', background: 'transparent', color: T.inkMute, cursor: 'pointer', fontFamily: T.sans }}>×</button>

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { GridBg, ProfileCard } from '@/components/landing/atoms';
 import { T } from '@/components/landing/tokens';
-import { track, Events } from '@/lib/analytics';
+import { track, Events, trackFunnel } from '@/lib/analytics';
 
 interface Props {
   userEmail: string | null;
@@ -87,6 +87,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
   const [error, setError] = useState<string | null>(null);
 
   async function handleSubscribe() {
+    trackFunnel('Upgrade CTA Clicked', { placement: 'pricing' });
     if (!paymentsEnabled) {
       window.location.href = userEmail ? '/history' : '/signup';
       return;

@@ -4,7 +4,7 @@ import { T } from './tokens';
 export function MarqueeBand() {
   return (
     <section style={{
-      marginTop: 100, padding: '32px 0',
+      marginTop: 48, padding: '32px 0',
       borderTop: `1px solid rgba(244,240,232,0.05)`,
       borderBottom: `1px solid rgba(244,240,232,0.05)`,
       background: 'rgba(244,240,232,0.015)', overflow: 'hidden',

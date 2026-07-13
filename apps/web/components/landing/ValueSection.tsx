@@ -227,14 +227,14 @@ function PanelLabel({ children, description }: { children: React.ReactNode; desc
       <div style={{
         display: 'inline-flex', alignItems: 'center', gap: 6,
         marginBottom: 12, padding: '4px 10px', borderRadius: 20,
-        background: hovered ? 'rgba(2,136,143,0.22)' : 'rgba(2,136,143,0.08)',
-        border: `1px solid ${hovered ? 'rgba(2,136,143,0.55)' : 'rgba(2,136,143,0.2)'}`,
+        background: hovered ? 'rgba(168,75,47,0.22)' : 'rgba(2,136,143,0.08)',
+        border: `1px solid ${hovered ? 'rgba(168,75,47,0.6)' : 'rgba(2,136,143,0.2)'}`,
         fontSize: 10, fontFamily: T.mono, letterSpacing: '0.1em', textTransform: 'uppercase',
-        color: hovered ? T.tealLight : T.tealMid,
+        color: hovered ? T.terra : T.tealMid,
         transition: 'background 0.15s, border-color 0.15s, color 0.15s',
         cursor: description ? 'default' : undefined,
       }}>
-        <span style={{ width: 5, height: 5, borderRadius: '50%', background: hovered ? T.tealLight : T.tealMid }} />
+        <span style={{ width: 5, height: 5, borderRadius: '50%', background: hovered ? T.terra : T.tealMid }} />
         {children}
       </div>
       {description && showTip && (
