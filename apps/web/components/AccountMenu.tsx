@@ -122,18 +122,50 @@ function GoProButton() {
       {open && (
         <div style={{ position: 'absolute', top: '100%', right: 0, paddingTop: 8, zIndex: 200 }}>
           <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 6,
             whiteSpace: 'nowrap',
             background: T.overlay,
             border: `1px solid ${T.overlayBorder}`,
-            borderRadius: 8,
-            padding: '8px 14px',
-            fontSize: 12,
-            color: T.inkDim,
+            borderRadius: 10,
+            padding: 8,
             boxShadow: '0 8px 24px rgba(0,0,0,0.18)',
           }}>
-            Already a member?{' '}
-            <Link href="/login" style={{ color: T.tealMid, fontWeight: 600, textDecoration: 'none' }}>
-              Log in
+            <Link
+              href="/signup"
+              style={{
+                display: 'block',
+                textAlign: 'center',
+                padding: '8px 16px',
+                borderRadius: 8,
+                background: T.teal,
+                color: T.cream,
+                fontSize: 13,
+                fontWeight: 700,
+                fontFamily: T.sans,
+                textDecoration: 'none',
+              }}
+            >
+              Get started free
+            </Link>
+            <Link
+              href="/login"
+              style={{
+                display: 'block',
+                textAlign: 'center',
+                padding: '7px 16px',
+                borderRadius: 8,
+                background: 'transparent',
+                border: `1px solid ${T.overlayBorder}`,
+                color: T.inkDim,
+                fontSize: 13,
+                fontWeight: 500,
+                fontFamily: T.sans,
+                textDecoration: 'none',
+              }}
+            >
+              Login
             </Link>
           </div>
         </div>

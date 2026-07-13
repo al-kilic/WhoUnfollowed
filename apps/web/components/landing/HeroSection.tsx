@@ -464,7 +464,7 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
           }}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
               <Icon.shield size={12} color={T.tealMid} />
-              <span>no login,</span>
+              <span>no Instagram login,</span>
               <span style={{ color: T.ink, fontWeight: 600 }}>no risk</span>
             </span>
             <span style={{ width: 3, height: 3, borderRadius: '50%', background: T.inkMute, flexShrink: 0 }} />
