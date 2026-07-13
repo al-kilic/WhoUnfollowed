@@ -50,7 +50,22 @@ export function SignupForm() {
     >
       <div style={{ marginBottom: 20, padding: '14px 16px', borderRadius: 12, background: T.surface1, border: `1px solid ${T.border1}` }}>
         <p style={{ fontSize: 12, color: T.inkMute, marginBottom: 10 }}>
-          The free tool above works with no account at all. This one's for when you want more:
+          The free tool above works with no account. A free account adds, right away:
+        </p>
+        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {[
+            'Unlimited CSV exports of every list, non-followers, fans, and mutuals',
+          ].map((line) => (
+            <li key={line} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 13, color: T.ink, fontWeight: 500, lineHeight: 1.45 }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T.tealLight} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 2 }}>
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              {line}
+            </li>
+          ))}
+        </ul>
+        <p style={{ fontSize: 12, color: T.inkMute, marginTop: 14, marginBottom: 10 }}>
+          When you want more, Pro adds:
         </p>
         <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
           {[
@@ -67,7 +82,7 @@ export function SignupForm() {
           ))}
         </ul>
         <p style={{ fontSize: 12, color: T.inkMute, marginTop: 10, marginBottom: 0 }}>
-          Those are Pro features. Your account sets them up now, so upgrading later takes one click, nothing to re-enter.
+          Your account sets Pro up now, so upgrading later takes one click, nothing to re-enter.
         </p>
       </div>
 

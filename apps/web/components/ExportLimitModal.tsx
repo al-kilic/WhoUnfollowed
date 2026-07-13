@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { T } from '@/components/landing/tokens';
 import { trackLockedView, trackUpgradeClick } from '@/lib/analytics';
 
-// Shown when a free user tries a second CSV export. Free includes one export;
-// more requires Pro.
+// Shown when an anonymous user tries a second CSV export. Anonymous includes one
+// free export; a free account lifts the limit entirely (Pro adds the rest).
 export function ExportLimitModal({ onClose }: { onClose: () => void }) {
   useEffect(() => { trackLockedView('csv-limit'); }, []);
 
@@ -41,20 +41,28 @@ export function ExportLimitModal({ onClose }: { onClose: () => void }) {
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 2 L10 10 M10 2 L2 10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
         </button>
-        <div style={{ fontSize: 10, color: T.tealLight, fontFamily: T.mono, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 10 }}>Pro</div>
+        <div style={{ fontSize: 10, color: T.tealLight, fontFamily: T.mono, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 10 }}>Free account</div>
         <h2 style={{ fontFamily: T.serif, fontSize: 24, fontWeight: 400, letterSpacing: '-0.02em', color: T.ink, marginBottom: 10 }}>
           You&apos;ve used your free export
         </h2>
         <p style={{ fontSize: 13.5, color: T.inkDim, lineHeight: 1.55, marginBottom: 22 }}>
-          Free includes one CSV export. Upgrade to Pro to export any list, as often as you like.
+          Create a free account and export any list, as often as you like. No credit card.
         </p>
         <Link
-          href="/pricing"
-          onClick={() => trackUpgradeClick('csv-limit')}
+          href="/signup"
           style={{ display: 'inline-block', padding: '12px 26px', borderRadius: 11, background: T.teal, color: T.cream, textDecoration: 'none', fontSize: 14, fontWeight: 600, fontFamily: T.sans, boxShadow: '0 8px 24px rgba(2,136,143,0.35)' }}
         >
-          Upgrade to Pro
+          Create a free account
         </Link>
+        <div style={{ marginTop: 14 }}>
+          <Link
+            href="/pricing"
+            onClick={() => trackUpgradeClick('csv-limit')}
+            style={{ fontSize: 12.5, color: T.inkMute, textDecoration: 'none', fontFamily: T.sans }}
+          >
+            Want history, alerts, and cloud sync too? See Pro →
+          </Link>
+        </div>
       </div>
     </div>
   );
