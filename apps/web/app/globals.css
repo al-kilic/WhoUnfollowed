@@ -470,7 +470,9 @@ body.tutorial-active #tutorial-triage-buttons {
 .glass-button-text {
   position: relative;
   z-index: 1;
-  font-family: var(--font-sans);
+  /* Match the landing page's actual brand font (T.sans / DM Sans), not
+     --font-sans (Satoshi), which is the separate shadcn/app-UI system. */
+  font-family: 'DM Sans', system-ui, sans-serif;
 }
 
 .glass-button-primary .glass-button-text {
