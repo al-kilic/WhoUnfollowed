@@ -38,7 +38,7 @@ export function SignupForm() {
   return (
     <AuthShell
       title="Create your account"
-      subtitle="Free during beta. No credit card required."
+      subtitle="Takes 10 seconds. No credit card, ever, unless you choose Pro."
       footer={
         <>
           Already have an account?{' '}
@@ -48,6 +48,29 @@ export function SignupForm() {
         </>
       }
     >
+      <div style={{ marginBottom: 20, padding: '14px 16px', borderRadius: 12, background: T.surface1, border: `1px solid ${T.border1}` }}>
+        <p style={{ fontSize: 12, color: T.inkMute, marginBottom: 10 }}>
+          The free tool above works with no account at all. This one's for when you want more:
+        </p>
+        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {[
+            'See exactly who unfollowed you, and when, not just that your count dropped',
+            'Get an alert the moment someone leaves, instead of finding out weeks later',
+            'Keep your history forever instead of just your latest upload',
+          ].map((line) => (
+            <li key={line} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 13, color: T.inkDim, lineHeight: 1.45 }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={T.tealMid} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 2 }}>
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              {line}
+            </li>
+          ))}
+        </ul>
+        <p style={{ fontSize: 12, color: T.inkMute, marginTop: 10, marginBottom: 0 }}>
+          Those are Pro features. Your account sets them up now, so upgrading later takes one click, nothing to re-enter.
+        </p>
+      </div>
+
       <form action={action} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <AuthField label="Email" id="email" name="email" type="email" required autoComplete="email" />
         <AuthField
