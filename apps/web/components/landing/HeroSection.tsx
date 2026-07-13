@@ -18,7 +18,6 @@ import { track, trackFunnel } from '@/lib/analytics';
 import { recordParse as recordParseAction } from '@/app/actions/stats';
 import { DeltaWarning } from '@/components/DeltaWarning';
 import { UpgradeDialog } from '@/components/UpgradeDialog';
-import { GlassButton } from '@/components/ui/glass-button';
 import { createPortal } from 'react-dom';
 import { T } from './tokens';
 import { Icon, CountUp, GridBg, MagneticCTA } from './atoms';
@@ -359,37 +358,6 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
         Upload your official Instagram data export. It is read only in your browser, so your
         password and account data never leave your device.
       </p>
-
-      {/* Primary/secondary CTA paths, above the drop zone */}
-      <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: 10,
-        maxWidth: 560, margin: '14px auto 0', position: 'relative', zIndex: 5,
-        animation: 'fade-up 0.7s 0.32s cubic-bezier(0.16,1,0.3,1) both',
-      }}>
-        <GlassButton
-          type="button"
-          variant="primary"
-          size="sm"
-          onClick={() => {
-            trackFunnel('Hero CTA Clicked', { path: 'have_zip' });
-            dropRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            inputRef.current?.focus();
-          }}
-        >
-          I have my Instagram ZIP
-        </GlassButton>
-        <GlassButton
-          href="/how-to-export"
-          variant="secondary"
-          size="sm"
-          onClick={() => {
-            trackFunnel('Hero CTA Clicked', { path: 'get_export' });
-            trackFunnel('Export Guide Opened', { entry: 'hero' });
-          }}
-        >
-          How do I get my Instagram export?
-        </GlassButton>
-      </div>
 
       {/* ── Drop zone ──────────────────────────────────────────────────────── */}
       <div style={{
