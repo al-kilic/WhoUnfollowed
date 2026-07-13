@@ -6,69 +6,81 @@ import { cn } from '@/lib/utils';
 // Liquid-glass button: frosted, translucent, with a soft top highlight and a
 // blurred drop shadow beneath. The `.glass-button*` classes live in
 // globals.css (this component only wires structure + variants).
+//
+// Polymorphic: pass `href` to render an <a> instead of a <button>. Both share
+// the exact same markup + classes so a primary button and a secondary link
+// render pixel-identical dimensions side by side.
 const glassButtonVariants = cva(
-  'relative isolate cursor-pointer rounded-full transition-all',
+  'glass-button relative isolate inline-block cursor-pointer rounded-full transition-all',
   {
     variants: {
       variant: {
         primary: 'glass-button-primary',
         secondary: 'glass-button-secondary',
       },
-      size: {
-        default: 'text-base font-medium',
-        sm: 'text-sm font-medium',
-        lg: 'text-lg font-medium',
-        icon: 'h-10 w-10',
-      },
     },
     defaultVariants: {
       variant: 'primary',
-      size: 'default',
     },
   },
 );
 
 const glassButtonTextVariants = cva(
-  'glass-button-text relative block select-none tracking-tight',
+  'glass-button-text block select-none',
   {
     variants: {
       size: {
-        default: 'px-6 py-3.5',
-        sm: 'px-4 py-2',
-        lg: 'px-8 py-4',
-        icon: 'flex h-10 w-10 items-center justify-center',
+        sm: 'px-4 py-1.5 text-[13px] font-semibold',
+        default: 'px-5 py-2.5 text-sm font-semibold',
+        lg: 'px-7 py-3.5 text-base font-semibold',
       },
     },
     defaultVariants: {
-      size: 'default',
+      size: 'sm',
     },
   },
 );
 
 export interface GlassButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof glassButtonVariants> {
+  extends React.HTMLAttributes<HTMLElement>,
+    VariantProps<typeof glassButtonVariants>,
+    VariantProps<typeof glassButtonTextVariants> {
+  /** When set, renders an <a href> instead of a <button>. */
+  href?: string;
+  /** Only used when rendering as a <button>. */
+  type?: 'button' | 'submit' | 'reset';
   contentClassName?: string;
 }
 
-const GlassButton = React.forwardRef<HTMLButtonElement, GlassButtonProps>(
-  ({ className, children, variant, size, contentClassName, ...props }, ref) => {
-    return (
-      <div className={cn('glass-button-wrap cursor-pointer rounded-full', className)}>
-        <button
-          className={cn('glass-button', glassButtonVariants({ variant, size }))}
-          ref={ref}
-          {...props}
-        >
-          <span className={cn(glassButtonTextVariants({ size }), contentClassName)}>
-            {children}
-          </span>
+function GlassButton({
+  className,
+  children,
+  variant,
+  size,
+  href,
+  type,
+  contentClassName,
+  ...props
+}: GlassButtonProps) {
+  const glassClass = cn(glassButtonVariants({ variant }));
+  const inner = (
+    <span className={cn(glassButtonTextVariants({ size }), contentClassName)}>{children}</span>
+  );
+
+  return (
+    <div className={cn('glass-button-wrap', className)}>
+      {href !== undefined ? (
+        <a href={href} className={glassClass} {...props}>
+          {inner}
+        </a>
+      ) : (
+        <button type={type ?? 'button'} className={glassClass} {...props}>
+          {inner}
         </button>
-        <div className="glass-button-shadow rounded-full" />
-      </div>
-    );
-  },
-);
-GlassButton.displayName = 'GlassButton';
+      )}
+      <div className="glass-button-shadow" />
+    </div>
+  );
+}
 
 export { GlassButton, glassButtonVariants };

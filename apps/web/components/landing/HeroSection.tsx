@@ -378,21 +378,17 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
         >
           I have my Instagram ZIP
         </GlassButton>
-        <a
+        <GlassButton
           href="/how-to-export"
+          variant="secondary"
+          size="sm"
           onClick={() => {
             trackFunnel('Hero CTA Clicked', { path: 'get_export' });
             trackFunnel('Export Guide Opened', { entry: 'hero' });
           }}
-          className="glass-button-wrap"
         >
-          <span className="glass-button glass-button-secondary text-sm font-medium" style={{ display: 'inline-block' }}>
-            <span className="glass-button-text block select-none tracking-tight px-4 py-2">
-              How do I get my Instagram export?
-            </span>
-          </span>
-          <span className="glass-button-shadow" />
-        </a>
+          How do I get my Instagram export?
+        </GlassButton>
       </div>
 
       {/* ── Drop zone ──────────────────────────────────────────────────────── */}
