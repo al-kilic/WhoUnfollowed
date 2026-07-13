@@ -288,7 +288,7 @@ export function ValueSection() {
   }, []);
 
   return (
-    <section style={{ padding: '120px 48px', position: 'relative' }}>
+    <section style={{ paddingTop: 40, paddingBottom: 120, paddingLeft: 48, paddingRight: 48, position: 'relative' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 14 }}>
           <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>RESULTS</span>

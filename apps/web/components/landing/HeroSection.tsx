@@ -386,8 +386,8 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
           }}
           className="glass-button-wrap"
         >
-          <span className="glass-button glass-button-secondary" style={{ display: 'inline-block' }}>
-            <span className="glass-button-text" style={{ display: 'block', padding: '11px 20px', fontSize: 13.5, fontWeight: 600 }}>
+          <span className="glass-button glass-button-secondary text-sm font-medium" style={{ display: 'inline-block' }}>
+            <span className="glass-button-text block select-none tracking-tight px-4 py-2">
               How do I get my Instagram export?
             </span>
           </span>

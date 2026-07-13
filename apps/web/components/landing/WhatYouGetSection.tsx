@@ -33,8 +33,8 @@ function GetCard({
 
 export function WhatYouGetSection() {
   return (
-    <section className="px-4 sm:px-12 pb-16 sm:pb-20">
-      <div style={{ maxWidth: 900, margin: '0 auto' }}>
+    <section className="px-4 sm:px-12 pb-10 sm:pb-14">
+      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 20 }}>
           <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>WHAT YOU GET</span>
           <div style={{ flex: 1, height: 1, background: 'var(--t-border2)' }} />
