@@ -76,17 +76,20 @@ export function CompareSection() {
     <section id="privacy" className="px-4 sm:px-12 pb-24 sm:pb-32">
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 14 }}>
-          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.terra, letterSpacing: '0.18em' }}>04 / WHY US</span>
+          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.terra, letterSpacing: '0.18em' }}>PRIVACY</span>
           <div style={{ flex: 1, height: 1, background: 'var(--t-border2)' }} />
         </div>
-        <h2 style={{ fontFamily: T.serif, fontSize: 'clamp(40px, 6vw, 72px)', fontWeight: 400, lineHeight: 1.0, letterSpacing: '-0.03em', marginBottom: 18, color: T.ink }}>
+        <h2 style={{ fontFamily: T.serif, fontSize: 'clamp(40px, 6vw, 72px)', fontWeight: 400, lineHeight: 1.0, letterSpacing: '-0.03em', marginBottom: 14, color: T.ink }}>
           Every other tool<br/>
           <span style={{ position: 'relative' }}>
             <s style={{ textDecorationColor: T.terra, textDecorationThickness: '5px' }}>asks for your password.</s>
           </span>
         </h2>
+        <p style={{ fontFamily: T.serif, fontStyle: 'italic', fontSize: 20, color: T.tealLight, marginBottom: 18 }}>
+          You should not need to hand over your password.
+        </p>
         <p style={{ fontSize: 16, color: T.inkDim, maxWidth: 600, marginBottom: 56, lineHeight: 1.55 }}>
-          Handing over your Instagram password to a third-party app isn&apos;t just risky. It violates Instagram&apos;s own Terms of Service and puts your account at permanent risk of suspension. Dozens of these tools have already been caught storing or selling those credentials. Your account, your audience, your income, handed to a stranger for a follower list.
+          Most follower-tracking services require you to connect an Instagram account. WhoUnfollowed works differently: you upload the data export Instagram provides to you, and it is processed locally in your browser.
         </p>
         <CompareGrid />
       </div>

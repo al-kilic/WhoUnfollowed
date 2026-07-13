@@ -47,6 +47,10 @@ declare const parsedSnapshotSchema: z.ZodObject<{
         href: z.ZodString;
         followedAt: z.ZodNullable<z.ZodNumber>;
     }, z.core.$strip>>>;
+    format: z.ZodOptional<z.ZodEnum<{
+        json: "json";
+        html: "html";
+    }>>;
 }, z.core.$strip>;
 type FollowersFile = z.infer<typeof followersFileSchema>;
 type FollowingFile = z.infer<typeof followingFileSchema>;

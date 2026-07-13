@@ -68,7 +68,7 @@ function PricingMobileTabs({ billing, mobileEmail, setMobileEmail, mobileStatus,
           </div>
           <div style={{ fontSize: 12, color: T.inkMute, marginBottom: 16 }}>{billing === 'monthly' ? 'billed monthly' : 'billed annually · save 35%'}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
-            {['Everything in Free','Unlimited snapshot history','Radar: follow age, health score','Compare snapshots','Follower growth charts','Triage workflow','Cloud sync (coming soon)'].map(f => (
+            {['Everything in Free','Unlimited snapshot history','Radar: an account health score plus how long each follower has stuck around','Compare any two snapshots to see exactly who unfollowed','Follower growth charts','Triage: mark non-followers to drop, whitelist, or skip for now','Cloud sync across your devices'].map(f => (
               <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: T.ink }}>
                 <Icon.check color={T.tealLight} size={13} />{f}
               </div>
@@ -214,7 +214,7 @@ function PricingBig() {
               {billing === 'monthly' ? 'billed monthly · cancel anytime' : 'billed annually · save 35%'}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20, flex: 1 }}>
-              {['Everything in Free','Unlimited snapshot history','Radar: health score, follow age, pending','Compare snapshots, see who unfollowed','Follower growth charts','Triage workflow','Cloud sync (coming soon)'].map(f => (
+              {['Everything in Free','Unlimited snapshot history','Radar: an account health score plus how long each follower has stuck around','Compare any two snapshots to see exactly who unfollowed','Follower growth charts','Triage: mark non-followers to drop, whitelist, or skip for now','Cloud sync across your devices'].map(f => (
                 <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: T.ink }}>
                   <Icon.check color={T.tealLight} size={13} />{f}
                 </div>
@@ -310,7 +310,7 @@ export function PricingSection() {
     <section id="pricing" className="px-4 sm:px-12 pb-24 sm:pb-32 relative">
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 14 }}>
-          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>05 / PRICING</span>
+          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>PRICING</span>
           <div style={{ flex: 1, height: 1, background: T.border2 }} />
         </div>
         <h2 style={{ fontFamily: T.serif, fontSize: 'clamp(36px, 6vw, 72px)', fontWeight: 400, lineHeight: 1.0, letterSpacing: '-0.03em', marginBottom: 40, color: T.ink }}>

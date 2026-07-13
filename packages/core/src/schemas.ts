@@ -52,6 +52,12 @@ export const parsedSnapshotSchema = z.object({
   following: z.array(accountSchema),
   pendingRequests: z.array(accountSchema).optional(),
   recentlyUnfollowed: z.array(accountSchema).optional(),
+  // Which export format this snapshot was parsed from. HTML exports don't
+  // include follow timestamps, so the UI can use this to explain why some
+  // data (follow age, growth trends) may be missing. Optional so older
+  // snapshots already saved in a user's IndexedDB (from before this field
+  // existed) still validate.
+  format: z.enum(['json', 'html']).optional(),
 });
 
 export type StringListItem = z.infer<typeof stringListItemSchema>;

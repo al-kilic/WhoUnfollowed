@@ -120,7 +120,13 @@ var parsedSnapshotSchema = import_zod.z.object({
   followers: import_zod.z.array(accountSchema),
   following: import_zod.z.array(accountSchema),
   pendingRequests: import_zod.z.array(accountSchema).optional(),
-  recentlyUnfollowed: import_zod.z.array(accountSchema).optional()
+  recentlyUnfollowed: import_zod.z.array(accountSchema).optional(),
+  // Which export format this snapshot was parsed from. HTML exports don't
+  // include follow timestamps, so the UI can use this to explain why some
+  // data (follow age, growth trends) may be missing. Optional so older
+  // snapshots already saved in a user's IndexedDB (from before this field
+  // existed) still validate.
+  format: import_zod.z.enum(["json", "html"]).optional()
 });
 
 // src/parser.ts
@@ -268,7 +274,8 @@ async function parseInstagramZip(zipFile) {
     followers,
     following,
     ...pendingRequests ? { pendingRequests } : {},
-    ...recentlyUnfollowed ? { recentlyUnfollowed } : {}
+    ...recentlyUnfollowed ? { recentlyUnfollowed } : {},
+    format
   };
 }
 async function parseOptionalRelationships(zip, fileNames, pattern, parse) {

@@ -14,7 +14,7 @@ import { detectDeltaExport, type DeltaReason } from '@ig-tracker/core';
 import { useSnapshotStore } from '@/lib/store';
 import { useSnapshotList, saveSnapshot, deleteSnapshot, FREE_SNAPSHOT_LIMIT } from '@/hooks/useSnapshots';
 import { db } from '@/lib/db';
-import { track } from '@/lib/analytics';
+import { track, Events } from '@/lib/analytics';
 import { recordParse as recordParseAction } from '@/app/actions/stats';
 import { DeltaWarning } from '@/components/DeltaWarning';
 import { UpgradeDialog } from '@/components/UpgradeDialog';
@@ -27,12 +27,44 @@ import { ProfileCard } from './atoms';
 
 type UploadPhase = 'idle' | 'dragging' | 'parsing' | 'error' | 'success';
 
-function errorMessage(err: unknown): string {
-  if (err instanceof MissingFilesError || err instanceof InvalidZipError ||
-      err instanceof SchemaValidationError || err instanceof MixedFormatError)
-    return (err as Error).message;
-  if (err instanceof Error) return err.message;
-  return 'Something went wrong. Make sure you uploaded the correct Instagram ZIP.';
+// Allowlisted, fixed error categories for analytics. Never the raw error
+// message (which could theoretically include a filename from the user's ZIP).
+type ErrorKind = 'missing_files' | 'invalid_zip' | 'mixed_format' | 'schema_validation' | 'unsupported_file_type' | 'unknown';
+
+function classifyError(err: unknown): { message: string; kind: ErrorKind; showGuideCta: boolean } {
+  if (err instanceof MissingFilesError) {
+    return {
+      message: 'This ZIP does not include the Followers and following data we need.',
+      kind: 'missing_files',
+      showGuideCta: true,
+    };
+  }
+  if (err instanceof MixedFormatError) {
+    return {
+      message: 'This export mixes JSON and HTML files. Please request the JSON version from Instagram, then upload the ZIP again.',
+      kind: 'mixed_format',
+      showGuideCta: true,
+    };
+  }
+  if (err instanceof InvalidZipError) {
+    return {
+      message: 'We could not read this ZIP. Download the original file from Instagram again and upload it without unzipping it.',
+      kind: 'invalid_zip',
+      showGuideCta: false,
+    };
+  }
+  if (err instanceof SchemaValidationError) {
+    return {
+      message: 'Instagram may have changed their export format, so we could not read part of this file. Try requesting a fresh export.',
+      kind: 'schema_validation',
+      showGuideCta: false,
+    };
+  }
+  return {
+    message: 'Something went wrong. Make sure you uploaded the correct Instagram ZIP.',
+    kind: 'unknown',
+    showGuideCta: false,
+  };
 }
 
 // ─── HeroSection ────────────────────────────────────────────────────────────
@@ -44,7 +76,7 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
 
   const [phase,   setPhase]   = useState<UploadPhase>('idle');
   const [progress, setProgress] = useState(0);
-  const [errMsg,  setErrMsg]  = useState('');
+  const [errInfo, setErrInfo] = useState<{ message: string; kind: ErrorKind; showGuideCta: boolean } | null>(null);
   const [pending, setPending] = useState<ParsedSnapshot | null>(null);
   const [mounted, setMounted] = useState(false);
   const [deltaWarning, setDeltaWarning] = useState<{ snapshot: ParsedSnapshot; reasons: DeltaReason[] } | null>(null);
@@ -81,6 +113,7 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
     // Navigate immediately — results page reads from Zustand, not IndexedDB
     setSnapshot(snap);
     track('zip-upload');
+    track(Events.analysisCompleted, { analysis_type: 'non_followers' });
     router.push('/results');
     // Save to IndexedDB in background (non-blocking)
     void saveSnapshot(snap);
@@ -91,10 +124,13 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
     if (!file.name.toLowerCase().endsWith('.zip') &&
         file.type !== 'application/zip' &&
         file.type !== 'application/x-zip-compressed') {
-      setErrMsg('Please upload a .zip file. That is the one Instagram emailed you.');
+      setErrInfo({ message: 'Please upload the original ZIP file Instagram provided.', kind: 'unsupported_file_type', showGuideCta: false });
       setPhase('error');
+      track(Events.analysisFailed, { error_type: 'unsupported_file_type' });
       return;
     }
+
+    track(Events.uploadStarted);
 
     setPhase('parsing');
     setProgress(0);
@@ -133,8 +169,10 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
       }
     } catch (err) {
       clearInterval(iv);
-      setErrMsg(errorMessage(err));
+      const info = classifyError(err);
+      setErrInfo(info);
       setPhase('error');
+      track(Events.analysisFailed, { error_type: info.kind });
     }
   };
 
@@ -283,8 +321,8 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
         animation: 'fade-up 0.7s 0.1s cubic-bezier(0.16,1,0.3,1) both',
         color: T.ink,
       }}>
-        <div style={{ marginBottom: 4 }}>See exactly who</div>
         <div style={{ marginBottom: 4 }}>
+          See who{' '}
           <span style={{
             background: `linear-gradient(110deg, var(--t-tealLight) 0%, var(--t-shimmer-hi) 30%, var(--t-tealLight) 50%, var(--t-shimmer-hi) 70%, var(--t-tealLight) 100%)`,
             backgroundSize: '200% 100%',
@@ -292,7 +330,8 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
             WebkitTextFillColor: 'transparent', color: 'transparent',
             animation: 'shimmer-text 9s linear infinite',
             fontStyle: 'italic', display: 'inline-block', paddingBottom: '0.1em',
-          }}>{"doesn't follow you back."}</span>
+          }}>{"doesn't follow you back"}</span>{' '}
+          on Instagram.
         </div>
         <div>
           Without sharing{' '}
@@ -309,9 +348,46 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
         position: 'relative', zIndex: 5,
         animation: 'fade-up 0.7s 0.25s cubic-bezier(0.16,1,0.3,1) both',
       }}>
-        Upload the data export Instagram already gave you. We read it on your device and show you
-        every account you follow that doesn&apos;t follow you back.
+        Upload your official Instagram data export. It is read only in your browser, so your
+        password and account data never leave your device.
       </p>
+
+      {/* Primary/secondary CTA paths, above the drop zone */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: 10,
+        maxWidth: 560, margin: '18px auto 0', position: 'relative', zIndex: 5,
+        animation: 'fade-up 0.7s 0.32s cubic-bezier(0.16,1,0.3,1) both',
+      }}>
+        <button
+          type="button"
+          onClick={() => {
+            track(Events.heroCtaClicked, { path: 'have_zip' });
+            dropRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            inputRef.current?.focus();
+          }}
+          style={{
+            padding: '11px 20px', borderRadius: 11, border: 'none',
+            background: T.teal, color: T.cream, fontSize: 13.5, fontWeight: 700,
+            fontFamily: T.sans, cursor: 'pointer', boxShadow: `0 6px 20px ${T.tealGlow}`,
+          }}
+        >
+          I have my Instagram ZIP
+        </button>
+        <a
+          href="/how-to-export"
+          onClick={() => {
+            track(Events.heroCtaClicked, { path: 'get_export' });
+            track(Events.exportGuideOpened, { entry: 'hero' });
+          }}
+          style={{
+            padding: '11px 20px', borderRadius: 11, border: `1px solid var(--t-border3)`,
+            background: 'transparent', color: T.inkDim, fontSize: 13.5, fontWeight: 600,
+            fontFamily: T.sans, textDecoration: 'none',
+          }}
+        >
+          How do I get my Instagram export?
+        </a>
+      </div>
 
       {/* ── Drop zone ──────────────────────────────────────────────────────── */}
       <div style={{
@@ -377,10 +453,10 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
                 </div>
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontFamily: T.serif, fontSize: 28, lineHeight: 1.1, letterSpacing: '-0.02em', marginBottom: 6, color: T.ink }}>
-                    {phase === 'dragging' ? 'Drop it here.' : 'Drop your Instagram export here.'}
+                    {phase === 'dragging' ? 'Drop it here.' : 'Have your Instagram ZIP? Upload it here.'}
                   </div>
                   <div style={{ fontSize: 13, color: T.inkDim, fontFamily: T.sans, maxWidth: 360, lineHeight: 1.5 }}>
-                    The ZIP file Instagram sends you when you request your data.
+                    Upload the ZIP file Instagram sends after you request your data. Do not unzip it.
                   </div>
                 </div>
                 {phase !== 'dragging' && (
@@ -391,9 +467,16 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
                       </div>
                       <span style={{ fontSize: 12, color: T.inkMute }}>or drop anywhere</span>
                     </div>
-                    <a href="/history" style={{ fontSize: 12, color: T.terra, textDecoration: 'none', borderBottom: `1px solid rgba(168,75,47,0.3)`, paddingBottom: 1 }}
+                    <a
+                      href="/how-to-export"
+                      onClick={(e) => { e.stopPropagation(); track(Events.exportGuideOpened, { entry: 'hero' }); }}
+                      style={{ fontSize: 12, color: T.tealLight, textDecoration: 'none', borderBottom: `1px solid rgba(2,136,143,0.3)`, paddingBottom: 1 }}
+                    >
+                      Don&apos;t have it yet? See how to request your export →
+                    </a>
+                    <a href="/history" style={{ fontSize: 11, color: T.inkMute, textDecoration: 'none' }}
                       onClick={e => e.stopPropagation()}>
-                      Already have snapshots? View your history →
+                      Already using WhoUnfollowed? View snapshot history →
                     </a>
                   </div>
                 )}
@@ -436,14 +519,25 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
                 </div>
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontFamily: T.serif, fontSize: 28, lineHeight: 1.1, color: T.ink, marginBottom: 8 }}>Something went wrong.</div>
-                  <div style={{ fontSize: 13, color: T.inkDim, maxWidth: 380, lineHeight: 1.5 }}>{errMsg}</div>
+                  <div style={{ fontSize: 13, color: T.inkDim, maxWidth: 380, lineHeight: 1.5 }}>{errInfo?.message}</div>
                 </div>
-                <button
-                  onClick={(e) => { e.stopPropagation(); setPhase('idle'); setErrMsg(''); }}
-                  style={{ padding: '11px 22px', borderRadius: 10, border: `1px solid var(--t-border3)`, background: 'transparent', color: T.ink, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: T.sans }}
-                >
-                  Try again
-                </button>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setPhase('idle'); setErrInfo(null); }}
+                    style={{ padding: '11px 22px', borderRadius: 10, border: `1px solid var(--t-border3)`, background: 'transparent', color: T.ink, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: T.sans }}
+                  >
+                    Try again
+                  </button>
+                  {errInfo?.showGuideCta && (
+                    <a
+                      href="/how-to-export"
+                      onClick={(e) => { e.stopPropagation(); track(Events.exportGuideOpened, { entry: 'upload_error' }); }}
+                      style={{ padding: '11px 22px', borderRadius: 10, border: `1px solid rgba(2,136,143,0.4)`, background: 'rgba(2,136,143,0.08)', color: T.tealLight, fontSize: 13, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans }}
+                    >
+                      {errInfo.kind === 'missing_files' ? 'Show me what to select in Instagram' : 'Show me the correct export settings'}
+                    </a>
+                  )}
+                </div>
               </div>
             )}
           </div>

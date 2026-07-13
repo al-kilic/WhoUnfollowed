@@ -201,16 +201,55 @@ function ProductMock({
 
 // ─── Panel label chip ────────────────────────────────────────────────────────
 
-function PanelLabel({ children }: { children: React.ReactNode }) {
+function PanelLabel({ children, description }: { children: React.ReactNode; description?: string }) {
+  const [hovered, setHovered] = React.useState(false);
+  const [showTip, setShowTip] = React.useState(false);
+  const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function handleEnter() {
+    setHovered(true);
+    if (description) {
+      timerRef.current = setTimeout(() => setShowTip(true), 450);
+    }
+  }
+  function handleLeave() {
+    setHovered(false);
+    setShowTip(false);
+    if (timerRef.current) clearTimeout(timerRef.current);
+  }
+
   return (
-    <div style={{
-      display: 'inline-flex', alignItems: 'center', gap: 6,
-      marginBottom: 12, padding: '4px 10px', borderRadius: 20,
-      background: 'rgba(2,136,143,0.08)', border: '1px solid rgba(2,136,143,0.2)',
-      fontSize: 10, fontFamily: T.mono, color: T.tealMid, letterSpacing: '0.1em', textTransform: 'uppercase',
-    }}>
-      <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.tealMid }} />
-      {children}
+    <div
+      style={{ position: 'relative', display: 'inline-block' }}
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+    >
+      <div style={{
+        display: 'inline-flex', alignItems: 'center', gap: 6,
+        marginBottom: 12, padding: '4px 10px', borderRadius: 20,
+        background: hovered ? 'rgba(2,136,143,0.22)' : 'rgba(2,136,143,0.08)',
+        border: `1px solid ${hovered ? 'rgba(2,136,143,0.55)' : 'rgba(2,136,143,0.2)'}`,
+        fontSize: 10, fontFamily: T.mono, letterSpacing: '0.1em', textTransform: 'uppercase',
+        color: hovered ? T.tealLight : T.tealMid,
+        transition: 'background 0.15s, border-color 0.15s, color 0.15s',
+        cursor: description ? 'default' : undefined,
+      }}>
+        <span style={{ width: 5, height: 5, borderRadius: '50%', background: hovered ? T.tealLight : T.tealMid }} />
+        {children}
+      </div>
+      {description && showTip && (
+        <div style={{
+          position: 'absolute', top: '100%', left: 0, marginTop: 6, zIndex: 20,
+          width: 220, padding: '10px 12px', borderRadius: 10,
+          background: T.overlay, border: `1px solid ${T.overlayBorder}`,
+          boxShadow: '0 12px 32px rgba(0,0,0,0.3)',
+          fontSize: 12, fontFamily: T.sans, color: T.inkDim, lineHeight: 1.45,
+          textTransform: 'none', letterSpacing: 'normal',
+          animation: 'fade-in 0.15s ease both',
+        }}>
+          {description}
+        </div>
+      )}
     </div>
   );
 }
@@ -252,7 +291,7 @@ export function ValueSection() {
     <section style={{ padding: '120px 48px', position: 'relative' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 14 }}>
-          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>02 / OUTPUT</span>
+          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>RESULTS</span>
           <div style={{ flex: 1, height: 1, background: 'var(--t-border2)' }} />
         </div>
         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 32, marginBottom: 64, flexWrap: 'wrap' }}>
@@ -285,7 +324,7 @@ export function ValueSection() {
 
           {/* Left */}
           <div ref={leftRef} style={{ position: 'absolute', top: 60, left: '2%', width: '46%', zIndex: 1, transform: 'rotate(-2deg) translate(0px,0px)', transition: 'transform 0.15s ease-out' }}>
-            <PanelLabel>Radar · Account Health</PanelLabel>
+            <PanelLabel description="Radar is your account health score: how many followers are sticking around, how long they've followed you, and how your growth is trending.">Radar · Account Health</PanelLabel>
             <ProductMock title="Radar · Account Health" variant="csv" style={{ opacity: 0.92 }} />
           </div>
 
@@ -298,7 +337,7 @@ export function ValueSection() {
           {/* Right */}
           <div ref={rightRef} style={{ position: 'absolute', top: 60, left: '60%', width: '40%', zIndex: 4, transform: 'rotate(2deg) translate(0px,0px)', transition: 'transform 0.18s ease-out' }}>
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <PanelLabel>Radar · Compare</PanelLabel>
+              <PanelLabel description="Compare shows the difference between two snapshots: exactly who unfollowed you and who's new, between the export you uploaded before and this one.">Radar · Compare</PanelLabel>
             </div>
             <ProductMock title="Radar · Compare snapshots" variant="diff" style={{ opacity: 0.92 }} />
           </div>
