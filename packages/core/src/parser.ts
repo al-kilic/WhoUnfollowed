@@ -211,6 +211,7 @@ export async function parseInstagramZip(
     following,
     ...(pendingRequests ? { pendingRequests } : {}),
     ...(recentlyUnfollowed ? { recentlyUnfollowed } : {}),
+    format,
   };
 }
 

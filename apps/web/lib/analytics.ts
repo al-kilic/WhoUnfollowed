@@ -37,6 +37,11 @@ export const Events = {
   csvExport: 'csv-export',            // { mode: pro | free | capture | limit }
   emailCaptured: 'email-captured',    // { context }
   snapshotLimitHit: 'snapshot-limit-hit',
+  heroCtaClicked: 'hero-cta-clicked',       // { path: 'have_zip' | 'get_export' }
+  exportGuideOpened: 'export-guide-opened', // { entry: 'hero' | 'upload_error' }
+  uploadStarted: 'upload-started',
+  analysisCompleted: 'analysis-completed',  // { analysis_type: 'non_followers' | 'comparison' }
+  analysisFailed: 'analysis-failed',        // { error_type: allowlisted fixed value only }
 } as const;
 
 // The most important conversion signal: which surface drove an upgrade intent.

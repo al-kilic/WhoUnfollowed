@@ -72,7 +72,7 @@ function FlowStep({
 }: {
   n: string;
   title: string;
-  body: string;
+  body: React.ReactNode;
   illustration: React.ReactNode;
   eta: string;
   highlight?: boolean;
@@ -90,8 +90,21 @@ function FlowStep({
       </div>
       <div style={{ marginBottom: 16, marginLeft: -10, marginRight: -10 }}>{illustration}</div>
       <h3 style={{ fontFamily: T.serif, fontSize: 22, fontWeight: 400, lineHeight: 1.2, marginBottom: 10, letterSpacing: '-0.01em', color: T.ink }}>{title}</h3>
-      <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.7, margin: 0 }}>{body}</p>
+      <div style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.7 }}>{body}</div>
     </div>
+  );
+}
+
+function SettingsList({ items }: { items: string[] }) {
+  return (
+    <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
+      {items.map((item) => (
+        <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+          <span style={{ color: T.tealMid, flexShrink: 0, marginTop: 2 }}>·</span>
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -102,7 +115,7 @@ export function FlowSection() {
     <section id="flow" className="px-4 sm:px-12 pb-24 sm:pb-32 relative">
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 14 }}>
-          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>03 / FLOW</span>
+          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>HOW IT WORKS</span>
           <div style={{ flex: 1, height: 1, background: 'var(--t-border2)' }} />
         </div>
         <h2 style={{ fontFamily: T.serif, fontSize: 'clamp(40px, 6vw, 72px)', fontWeight: 400, lineHeight: 1.0, letterSpacing: '-0.03em', marginBottom: 56, color: T.ink }}>
@@ -111,24 +124,40 @@ export function FlowSection() {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 18, marginBottom: 24 }}>
           <FlowStep
-            n="01" title="Request your data in 30 seconds"
-            body="Go to Instagram Accounts Center, choose Export Your Information, select Followers and Following, set the date range to All Time, and hit request. Works on any browser. No app needed."
+            n="01" title="Request your export"
+            body="In Instagram: Accounts Center → Your information and permissions → Export your information → Create export."
             illustration={<IllRequest />} eta="~30 sec"
           />
           <FlowStep
-            n="02" title="Instagram does the work. You just wait."
-            body="Instagram prepares your file and sends you a download link by email, usually within minutes. Download the ZIP. No passwords. No third-party access. Instagram hands it to you directly."
+            n="02" title="Choose these settings"
+            body={
+              <SettingsList items={[
+                'Select your Instagram account',
+                'Choose Followers and following',
+                'Set date range to All time',
+                'Choose JSON format (recommended, keeps follow timestamps)',
+                'Choose Export to device',
+              ]} />
+            }
             illustration={<IllEmail />} eta="few min"
           />
           <FlowStep
-            n="03" title="Drop the ZIP. See everything instantly."
-            body="Drag the ZIP here. Your browser reads it locally and shows you the full picture in seconds. Nothing leaves your device. No account needed. Zero risk to your Instagram."
+            n="03" title="Download and upload the ZIP"
+            body="Instagram sends a download link by email. Download the ZIP and upload it here without unzipping it."
             illustration={<IllDrop />} eta="~2 sec" highlight
           />
         </div>
+        <div style={{ maxWidth: 600, margin: '0 auto 32px', padding: '14px 18px', borderRadius: 12, background: 'rgba(2,136,143,0.06)', border: '1px solid rgba(2,136,143,0.2)', textAlign: 'center' }}>
+          <p style={{ fontSize: 13, color: T.inkDim, margin: 0, lineHeight: 1.5 }}>
+            Instagram may take a few minutes to prepare the download. Once it arrives, come back and upload the ZIP.
+          </p>
+        </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
           <p style={{ fontSize: 13, color: T.terra, margin: 0, fontFamily: T.mono, letterSpacing: '0.04em' }}>Not sure how to get your Instagram export?</p>
-          <Link href="/how-to-export" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, fontWeight: 600, color: T.cream, textDecoration: 'none', padding: '13px 24px', borderRadius: 12, background: T.teal, boxShadow: `0 4px 20px ${T.tealGlow}` }}>
+          <Link
+            href="/how-to-export"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, fontWeight: 600, color: T.cream, textDecoration: 'none', padding: '13px 24px', borderRadius: 12, background: T.teal, boxShadow: `0 4px 20px ${T.tealGlow}` }}
+          >
             Step-by-step export guide
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7 H11 M11 7 L8 4 M11 7 L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </Link>

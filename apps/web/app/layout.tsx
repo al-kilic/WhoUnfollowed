@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     template: '%s | WhoUnfollowed',
   },
   description:
-    "Upload your Instagram data export and see who unfollowed you, who doesn't follow back, and track changes over time. Nothing leaves your browser.",
+    'Upload your official Instagram data export to see who doesn\'t follow you back. Save snapshots over time to identify new followers and unfollows. No password or login required.',
   keywords: [
     'instagram unfollow tracker',
     'instagram followers',
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     siteName: 'WhoUnfollowed',
     title: 'WhoUnfollowed - See who unfollowed you',
     description:
-      "Upload your Instagram export. See who unfollowed you, who doesn't follow back, and track changes over time. Nothing leaves your browser.",
+      'Upload your official Instagram data export to see who doesn\'t follow you back. Save snapshots over time to identify new followers and unfollows. No password or login required.',
     images: [
       {
         url: '/opengraph-image',
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'WhoUnfollowed - See who unfollowed you',
     description:
-      'Upload your Instagram export. See who unfollowed you. Nothing leaves your browser.',
+      'Upload your official Instagram data export to see who doesn\'t follow you back. Save snapshots over time to see who unfollowed. No password or login required.',
     images: ['/opengraph-image'],
   },
   robots: {

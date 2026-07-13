@@ -299,6 +299,16 @@ export default function ResultsPage() {
           <p style={{ fontSize: 15, color: T.inkDim, marginTop: 10 }}>
             Out of {analysis.totalFollowing.toLocaleString()} accounts you follow.
           </p>
+          {snapshot.format === 'html' && (
+            <div style={{ marginTop: 16, padding: '12px 16px', borderRadius: 12, background: 'rgba(2,136,143,0.06)', border: '1px solid rgba(2,136,143,0.2)', display: 'flex', alignItems: 'flex-start', gap: 10, maxWidth: 560 }}>
+              <span style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5 }}>
+                This export was in HTML format, so follow dates aren&apos;t available. JSON exports include those timestamps, which power follow age and growth trends in Radar.{' '}
+                <Link href="/how-to-export" style={{ color: T.tealLight, fontWeight: 600, textDecoration: 'none' }}>
+                  See how to request a JSON export →
+                </Link>
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Stats grid */}

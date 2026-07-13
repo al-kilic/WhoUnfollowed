@@ -25,7 +25,7 @@ const jsonLd = {
   operatingSystem: 'Web',
   url: 'https://whounfollowed.co',
   description:
-    "Privacy-first Instagram follower analysis. Upload your data export, see who unfollowed you, who doesn't follow back, and track changes over time. Nothing leaves your browser.",
+    'Privacy-first Instagram follower analysis. Upload your official data export to see who doesn\'t follow you back. Save snapshots over time to see who unfollowed. No password or login required.',
   offers: [
     { '@type': 'Offer', name: 'Free', price: '0',    priceCurrency: 'USD' },
     { '@type': 'Offer', name: 'Pro',  price: '4.99', priceCurrency: 'USD', billingIncrement: 'P1M' },

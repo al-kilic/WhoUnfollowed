@@ -5,6 +5,7 @@ import { T } from './tokens';
 import { SiteNav }       from './SiteNav';
 import { HeroSection }   from './HeroSection';
 import { MarqueeBand }   from './MarqueeBand';
+import { WhatYouGetSection } from './WhatYouGetSection';
 import { ValueSection }  from './ValueSection';
 import { FlowSection }   from './FlowSection';
 import { CompareSection } from './CompareSection';
@@ -23,11 +24,12 @@ export function LandingPage({ userEmail, isPro = false, initialStats }: { userEm
       <main>
         <HeroSection isPro={isPro} initialStats={initialStats} />
         <MarqueeBand />
+        <WhatYouGetSection />
         <ValueSection />
         <FlowSection />
         <CompareSection />
-        <PricingSection />
         <FAQSection />
+        <PricingSection />
         <FinalCTA />
       </main>
       <LandingFooter />

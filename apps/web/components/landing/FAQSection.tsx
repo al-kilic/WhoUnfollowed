@@ -121,7 +121,7 @@ export function FAQSection() {
     <section className="px-4 sm:px-12 pb-24 sm:pb-32">
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 14 }}>
-          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>06 / QUESTIONS</span>
+          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>QUESTIONS</span>
           <div style={{ flex: 1, height: 1, background: 'var(--t-border2)' }} />
         </div>
 

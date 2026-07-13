@@ -174,7 +174,7 @@ export function FinalCTA() {
               transition: 'opacity 0.5s 0.1s ease, transform 0.5s 0.1s ease',
             }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#5fc4c8', animation: 'glow-soft 2s ease-in-out infinite' }} />
-              <span style={{ fontSize: 11, color: '#5fc4c8', fontFamily: T.mono, fontWeight: 600, letterSpacing: '0.1em' }}>FREE · NO SIGNUP · NO PASSWORD</span>
+              <span style={{ fontSize: 11, color: '#5fc4c8', fontFamily: T.mono, fontWeight: 600, letterSpacing: '0.1em' }}>FREE · NO INSTAGRAM PASSWORD · NO INSTAGRAM LOGIN</span>
             </div>
 
             {/* Headline */}
@@ -200,7 +200,7 @@ export function FinalCTA() {
               transform: visible ? 'translateY(0)' : 'translateY(12px)',
               transition: 'opacity 0.5s 0.28s ease, transform 0.5s 0.28s ease',
             }}>
-              Drop the ZIP Instagram already sent you. Your browser reads it locally and shows you the complete list in under 2 seconds. No server. No login. No risk.
+              Upload your Instagram ZIP to get your current non-followers list in seconds. Save snapshots over time to see who unfollows you later.
             </p>
 
             {/* CTAs */}
