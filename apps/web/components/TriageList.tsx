@@ -246,6 +246,12 @@ function TriageRow({ account, triageState, isVisited, isFocused, onTriage, onVis
   const isSlide       = triageState === 'let_it_slide';
   const isDeactivated = triageState === 'deactivated';
 
+  // Actions are revealed on hover (desktop) or focus (tap, on mobile). Hiding
+  // them with display:none rather than opacity is deliberate: opacity still
+  // reserves the buttons' full width, which on mobile (no hover) permanently
+  // squeezes the username to nothing and pushes the link off-screen.
+  const showActions = hovered || isFocused || !!triageState;
+
   return (
     <div
       style={{
@@ -271,6 +277,7 @@ function TriageRow({ account, triageState, isVisited, isFocused, onTriage, onVis
       }}
       onMouseEnter={() => { setHovered(true); onFocus(); }}
       onMouseLeave={() => setHovered(false)}
+      onClick={onFocus}
     >
       {/* Avatar */}
       <div style={{
@@ -300,11 +307,13 @@ function TriageRow({ account, triageState, isVisited, isFocused, onTriage, onVis
         )}
       </div>
 
-      {/* Triage buttons - show on hover/focus or when already triaged */}
+      {/* Triage buttons - show on hover/focus (tap on mobile) or when triaged.
+          display:none when hidden so they reserve no width (see showActions).
+          When shown on a narrow screen they shrink and scroll internally so the
+          Instagram link stays put and every action stays reachable. */}
       <div id="tutorial-triage-buttons" style={{
-        display: 'flex', alignItems: 'center', gap: 6,
-        opacity: hovered || isFocused || triageState ? 1 : 0,
-        transition: 'opacity 0.15s',
+        display: showActions ? 'flex' : 'none',
+        alignItems: 'center', gap: 6, minWidth: 0, overflowX: 'auto',
       }}>
         {triageState ? (
           // Show current state badge + witty line + clear button
@@ -844,7 +853,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
         <div
           ref={parentRef}
           style={{
-            height: listHeight, overflowY: 'auto',
+            height: listHeight, overflowY: 'auto', overflowX: 'hidden',
             borderRadius: 16, border: '1px solid var(--t-border1)',
             background: 'rgba(244,240,232,0.01)',
           }}
