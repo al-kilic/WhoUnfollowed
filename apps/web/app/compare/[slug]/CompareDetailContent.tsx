@@ -65,6 +65,14 @@ export function CompareDetailContent({ c }: { c: Comparison }) {
           <p style={{ fontSize: 15, color: T.ink, lineHeight: 1.65, margin: 0 }}>{c.verdict}</p>
         </div>
 
+        {/* Related guide */}
+        <div style={{ marginBottom: 40, padding: '18px 20px', borderRadius: 14, background: T.surface1, border: `1px solid ${T.border1}` }}>
+          <div style={{ fontSize: 10, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 8 }}>Related reading</div>
+          <Link href="/blog/why-instagram-follower-trackers-ask-for-your-password" style={{ fontFamily: T.serif, fontSize: 18, color: T.tealLight, textDecoration: 'none', lineHeight: 1.3 }}>
+            Why Instagram follower trackers ask for your password →
+          </Link>
+        </div>
+
         {/* CTA */}
         <div style={{ padding: '24px', borderRadius: 16, background: 'rgba(2,136,143,0.06)', border: '1px solid rgba(2,136,143,0.2)', textAlign: 'center', marginBottom: 48 }}>
           <p style={{ fontSize: 14, color: T.inkDim, marginBottom: 16 }}>{c.cta}</p>

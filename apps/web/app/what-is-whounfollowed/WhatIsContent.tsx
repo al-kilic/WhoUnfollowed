@@ -203,6 +203,14 @@ export function WhatIsContent() {
           </div>
         </section>
 
+        {/* Related guide */}
+        <div style={{ marginBottom: 40, padding: '18px 20px', borderRadius: 14, background: T.surface1, border: `1px solid ${T.border1}` }}>
+          <div style={{ fontSize: 10, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 8 }}>Related guide</div>
+          <Link href="/blog/how-to-see-who-unfollowed-you-on-instagram" style={{ fontFamily: T.serif, fontSize: 18, color: T.tealLight, textDecoration: 'none', lineHeight: 1.3 }}>
+            How to see who unfollowed you on Instagram (without getting banned) →
+          </Link>
+        </div>
+
         {/* CTA */}
         <div style={{ padding: '32px', borderRadius: 18, background: T.bgCard, border: `1px solid ${T.border1}`, textAlign: 'center' }}>
           <p style={{ fontFamily: T.serif, fontSize: 18, fontStyle: 'italic', color: T.inkDim, marginBottom: 6 }}>You already have the data. Instagram gave it to you.</p>
