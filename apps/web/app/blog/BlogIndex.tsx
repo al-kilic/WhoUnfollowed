@@ -10,6 +10,13 @@ import { LandingFooter } from '@/components/landing/FinalCTA';
 import { BlogCover } from './BlogArt';
 import { BLOG_POSTS, type BlogPost } from './posts';
 
+// BLOG_POSTS is in whatever order posts were added to the source file, not
+// publish-date order. Sort newest first for the index, without mutating the
+// shared export (other consumers, e.g. cluster linking, don't care about order).
+const SORTED_POSTS = [...BLOG_POSTS].sort(
+  (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+);
+
 const TAG_COLORS: Record<string, { color: string }> = {
   Guide: { color: '#5fc4c8' },
   Growth: { color: '#c8a96e' },
@@ -111,7 +118,7 @@ export function BlogIndex() {
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" style={{ gap: 20 }}>
-          {BLOG_POSTS.map((post, i) => <BlogCard key={post.slug} post={post} index={i} />)}
+          {SORTED_POSTS.map((post, i) => <BlogCard key={post.slug} post={post} index={i} />)}
         </div>
 
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} style={{ marginTop: 48, paddingTop: 28, borderTop: `1px solid ${T.border1}` }}>

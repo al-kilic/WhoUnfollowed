@@ -579,7 +579,9 @@ Unfollowing, removing, blocking, and muting are all silent. Instagram keeps your
     tag: 'Privacy',
     primaryKeyword: 'can you get banned for using a follower tracker on instagram',
     art: 'lock',
-    imageAlt: 'A padlock over an Instagram-style grid, representing account ban risk from follower tracker apps',
+    // Unsplash: sLevDCcgmUI (a risk gauge cube reading low/medium/high on a keyboard)
+    image: '/blog/banned-tracker-hero.jpg',
+    imageAlt: 'A cube showing a low-to-high risk gauge sitting on a keyboard, representing ban risk from follower tracker apps',
     body: `The short answer: yes, but only with a certain kind of tracker. Any app that asks you to log in with your Instagram username and password can get your account flagged, checkpointed, or permanently banned, because it violates Instagram's terms of service. A tool that reads the data export Instagram gives you carries no ban risk at all, because it never touches your account.
 
 That distinction is the whole story. Let's break it down.
@@ -632,7 +634,9 @@ You can get banned for using a follower tracker, but only if it asks for your lo
     tag: 'Privacy',
     primaryKeyword: 'are instagram follower trackers safe',
     art: 'lock',
-    imageAlt: 'A shield over a phone showing follower stats, representing the safety of Instagram follower tracker apps',
+    // Unsplash: FnA5pAzqhMM (a gold padlock and credit cards on a keyboard)
+    image: '/blog/trackers-safe-hero.jpg',
+    imageAlt: 'A padlock and credit cards resting on a keyboard, representing the safety risk of handing over Instagram credentials',
     body: `Most Instagram follower trackers are not safe. The majority ask for your Instagram username and password, store your credentials on their servers, and send your data off your device. That combination puts both your account and your privacy at risk. A small number are safe by design, because they never ask for your login at all. Here is how to tell them apart.
 
 ## What makes a follower tracker unsafe
@@ -676,7 +680,9 @@ As a category, no. As a specific choice, it depends entirely on one thing: wheth
     tag: 'Guide',
     primaryKeyword: 'how long does an instagram data request take',
     art: 'search',
-    imageAlt: 'A clock beside a download icon, representing the wait time for an Instagram data export',
+    // Unsplash: ft0-Xu4nTvA (a flip clock showing the time)
+    image: '/blog/data-request-time-hero.jpg',
+    imageAlt: 'A flip clock displaying the time, representing the wait time for an Instagram data export',
     body: `A small, focused Instagram data request usually arrives within a few minutes. If you select only your Followers and Following in JSON format, most people get the email in under five minutes. A full account archive, with photos, videos, and messages, is a much larger job and can take anywhere from a few hours up to 48 hours.
 
 The size of what you ask for is the single biggest factor. Here is the full picture.
@@ -719,7 +725,9 @@ The moment you have the ZIP, the slow part is over. Reading it is instant. Drop 
     tag: 'Guide',
     primaryKeyword: 'instagram data export json vs html',
     art: 'split',
-    imageAlt: 'Two file icons labeled JSON and HTML side by side, representing the Instagram data export format choice',
+    // Unsplash: ieic5Tq8YMk (a laptop screen showing lines of code)
+    image: '/blog/json-vs-html-hero.jpg',
+    imageAlt: 'A computer screen filled with code, representing the structured JSON format of an Instagram data export',
     body: `When Instagram asks whether you want your data export as JSON or HTML, choose JSON. It contains the follow timestamps that HTML strips out, and it is the structured format that analysis tools can actually read. HTML is only useful for scrolling through your data by eye in a browser. If you plan to do anything with the file, JSON is the answer.
 
 Here is what actually separates them.
@@ -760,7 +768,9 @@ Drop the JSON export into [WhoUnfollowed](/). It reads the file in your browser,
     tag: 'Guide',
     primaryKeyword: 'can you see who unfollowed you on instagram',
     art: 'search',
-    imageAlt: 'A magnifying glass over a follower list with one entry missing, representing finding who unfollowed you',
+    // Unsplash: 9OeW6Thad0Q (the Instagram logo displayed on an iPhone)
+    image: '/blog/see-who-unfollowed-hero.jpg',
+    imageAlt: 'The Instagram logo displayed on a phone screen, representing checking your own account for who unfollowed you',
     body: `Not from inside the app. Instagram does not show you who unfollowed you, and it never sends a notification when someone does. The follower count drops, but the app will not tell you which account left. You can, however, work it out yourself by comparing two copies of your own follower list over time. That method is completely safe and needs no password.
 
 Here is why the app hides it, and how to see it anyway.
@@ -802,7 +812,9 @@ You cannot see who unfollowed you directly, and no app can do it safely by loggi
     tag: 'Growth',
     primaryKeyword: 'good follower to following ratio on instagram',
     art: 'ratio',
-    imageAlt: 'A balance scale weighing follower count against following count, representing the Instagram follow ratio',
+    // Unsplash: j06gLuKK0GM (a small gold balance scale)
+    image: '/blog/follow-ratio-good-hero.jpg',
+    imageAlt: 'A small brass balance scale with two pans, representing the Instagram follower-to-following ratio',
     body: `As a rough guide, a follower-to-following ratio above 1.0 looks healthy, meaning you have more followers than accounts you follow. Above 2.0 starts to signal genuine influence, and established creators often sit well beyond that. But the ratio is a vanity metric with real limits, and chasing it blindly leads to bad decisions. Here is what the number actually tells you.
 
 ## How the ratio is calculated
@@ -850,7 +862,9 @@ To do the trimming cleanly, you need to see who does not follow you back. [WhoUn
     tag: 'Guide',
     primaryKeyword: "what's inside instagram data download",
     art: 'split',
-    imageAlt: 'An open folder icon showing several small JSON files, representing the contents of an Instagram data export ZIP',
+    // Unsplash: XN4T2PVUUgk (a stack of thick white folders)
+    image: '/blog/whats-inside-download-hero.jpg',
+    imageAlt: 'A stack of white binders and folders, representing the small set of files inside an Instagram data export ZIP',
     body: `Your Instagram data download is not the sprawling archive people expect. If you requested just Followers and Following (as [the export guide](/blog/how-to-download-your-instagram-data) recommends), the ZIP holds a handful of small JSON files, usually well under 1MB combined. Here is exactly what is in it.
 
 ## The core files
@@ -896,7 +910,9 @@ Because the whole file is just a few small, plain JSON documents, a tool like [W
     tag: 'Growth',
     primaryKeyword: 'clean up who you follow on instagram',
     art: 'ratio',
-    imageAlt: 'A checklist with some items checked and some crossed out, representing sorting an Instagram following list',
+    // Unsplash: KWZa42a1kds (a hand holding a phone showing the Instagram sign-up screen)
+    image: '/blog/clean-up-follow-hero.jpg',
+    imageAlt: 'A hand holding a phone open to the Instagram app, representing reviewing and trimming a following list',
     body: `Cleaning up who you follow on Instagram safely means going through your list deliberately and unfollowing at a measured pace, not mass-unfollowing everyone who does not follow back in one sitting. The list itself is the easy part. The discipline is in how you act on it.
 
 ## Start with the actual list, not guesswork
@@ -947,7 +963,9 @@ See the full list first, sort it deliberately, unfollow in small paced batches, 
     tag: 'Privacy',
     primaryKeyword: 'instagram follower tracker without login',
     art: 'lock',
-    imageAlt: 'A padlock with a line through it next to an Instagram icon, representing a follower tracker that needs no login',
+    // Unsplash: DeD4qZmVFdM (a 3D render of the Instagram icon)
+    image: '/blog/no-login-tracker-hero.jpg',
+    imageAlt: 'A stylized 3D render of the Instagram app icon, representing a follower tracker that needs no Instagram login',
     body: `Yes, genuine no-login Instagram follower trackers exist, but the phrase gets abused. Plenty of apps advertise "no login required" while still asking you to authenticate with Instagram somewhere in the actual flow, just worded to sound safer than it is. Here is how to tell a real one from a relabeled one.
 
 ## The trick some trackers use
