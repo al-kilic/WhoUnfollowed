@@ -71,3 +71,22 @@ jobs:
                 .catch(e => { console.error(e); process.exit(1); });
             " || true
             docker image prune -f
+
+      - name: Ping IndexNow
+        run: |
+          sleep 10
+          urls=$(curl -s https://whounfollowed.co/sitemap.xml | grep -o '<loc>[^<]*</loc>' | sed 's/<loc>//;s#</loc>##')
+          if [ -z "$urls" ]; then
+            echo "sitemap.xml returned no URLs, skipping IndexNow ping"
+            exit 0
+          fi
+          url_list=$(printf '%s\n' "$urls" | jq -R . | jq -s .)
+          curl -s -X POST https://api.indexnow.org/indexnow \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n \
+              --arg host "whounfollowed.co" \
+              --arg key "7b4b57fafe80eba273936b8272e98d16" \
+              --arg keyLocation "https://whounfollowed.co/7b4b57fafe80eba273936b8272e98d16.txt" \
+              --argjson urlList "$url_list" \
+              '{host: $host, key: $key, keyLocation: $keyLocation, urlList: $urlList}')" \
+            -o /dev/null -w "IndexNow response: %{http_code}\n"
