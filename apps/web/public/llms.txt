@@ -24,6 +24,15 @@ Author: Alan Kilic, an independent developer building privacy-first software und
 - [Does Instagram notify when you unfollow someone](https://whounfollowed.co/blog/does-instagram-notify-when-you-unfollow-someone): What Instagram does and doesn't notify.
 - [Your Instagram follow ratio explained](https://whounfollowed.co/blog/instagram-follow-ratio-what-it-means-how-to-improve-it): What it means and how to improve it.
 - [Why follower trackers ask for your password](https://whounfollowed.co/blog/why-instagram-follower-trackers-ask-for-your-password): Why credential-based apps are a risk.
+- [Can you get banned for using a follower tracker on Instagram](https://whounfollowed.co/blog/can-you-get-banned-for-using-a-follower-tracker-on-instagram): Password-based trackers risk a ban; data-export tools do not.
+- [Are Instagram follower trackers safe](https://whounfollowed.co/blog/are-instagram-follower-trackers-safe): How to judge a tracker, and the model that is safe by design.
+- [How long does an Instagram data request take](https://whounfollowed.co/blog/how-long-does-an-instagram-data-request-take): A Followers and Following export usually arrives in minutes.
+- [Instagram data export: JSON vs HTML](https://whounfollowed.co/blog/instagram-data-export-json-vs-html): Choose JSON; it keeps the follow timestamps HTML drops.
+- [Can you see who unfollowed you on Instagram](https://whounfollowed.co/blog/can-you-see-who-unfollowed-you-on-instagram): Not directly, but you can reconstruct it from your own export.
+- [What is a good follower-to-following ratio on Instagram](https://whounfollowed.co/blog/what-is-a-good-follower-to-following-ratio-on-instagram): What the number means, and why chasing it is a trap.
+- [What's inside your Instagram data download](https://whounfollowed.co/blog/whats-inside-your-instagram-data-download): The ZIP file explained, field by field.
+- [How to clean up who you follow on Instagram](https://whounfollowed.co/blog/how-to-clean-up-who-you-follow-on-instagram): A safe, paced method that will not trip Instagram's limits.
+- [Instagram follower tracker without login: do they exist](https://whounfollowed.co/blog/instagram-follower-tracker-without-login): Yes, and how to tell a real one from relabeled marketing.
 
 ## Comparisons
 - [WhoUnfollowed vs Followers & Unfollowers](https://whounfollowed.co/compare/whounfollowed-vs-followers-unfollowers)

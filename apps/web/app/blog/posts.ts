@@ -1,7 +1,12 @@
 import type { ArtVariant } from './BlogArt';
 
+/** Topic clusters for the pillar-and-cluster internal-linking structure. */
+export type ClusterId = 'unfollowers' | 'data-export' | 'privacy-safety' | 'account-health';
+
 export interface BlogPost {
   slug: string;
+  /** Topic cluster this post belongs to (pillar-and-cluster SEO structure). */
+  cluster: ClusterId;
   title: string;
   metaTitle: string;
   metaDescription: string;
@@ -27,6 +32,7 @@ export interface BlogPost {
 export const BLOG_POSTS: BlogPost[] = [
   {
     slug: 'why-did-i-lose-followers-overnight-on-instagram',
+    cluster: 'unfollowers',
     title: 'Why Did I Lose Followers Overnight on Instagram?',
     metaTitle: 'Why Did I Lose Followers Overnight on Instagram?',
     metaDescription: 'Woke up with fewer followers? Here are the real reasons Instagram follower counts drop overnight, from bot purges to deactivations, and how to see exactly who left.',
@@ -93,6 +99,7 @@ An overnight drop is almost always one of the five reasons above, and most of th
   },
   {
     slug: 'how-to-download-your-instagram-data',
+    cluster: 'data-export',
     title: 'How to Download Your Instagram Data (Step by Step)',
     metaTitle: 'How to Download Your Instagram Data (Step by Step)',
     metaDescription: 'A plain walkthrough for requesting your Instagram data export: where the setting is, JSON vs HTML, how long it takes, and what is actually inside the ZIP file.',
@@ -164,6 +171,7 @@ The reason to get comfortable with the official export is that it removes any ex
   },
   {
     slug: 'is-it-safe-to-mass-unfollow-on-instagram',
+    cluster: 'privacy-safety',
     title: 'Is It Safe to Mass Unfollow on Instagram?',
     metaTitle: 'Is It Safe to Mass Unfollow on Instagram?',
     metaDescription: 'Thinking of unfollowing a lot of accounts at once? Here is how Instagram action limits work, what actually triggers a block, and a safer way to clean up your following list.',
@@ -232,6 +240,7 @@ Is it safe to mass unfollow on Instagram? Unfollowing thoughtfully, at a human p
   },
   {
     slug: 'how-to-see-who-unfollowed-you-on-instagram',
+    cluster: 'unfollowers',
     title: 'How to See Who Unfollowed You on Instagram (Without Getting Banned)',
     metaTitle: 'See Who Unfollowed You on Instagram Safely',
     metaDescription: 'Most follower trackers put your account at risk. Here\'s how to see who unfollowed you using Instagram\'s own data export, no password required.',
@@ -283,6 +292,7 @@ If a tool asks for your Instagram password, close the tab.`,
   },
   {
     slug: 'instagram-follow-ratio-what-it-means-how-to-improve-it',
+    cluster: 'account-health',
     title: 'Your Instagram Follow Ratio: What It Means and How to Actually Improve It',
     metaTitle: 'Instagram Follow Ratio: What It Means & How to Fix It',
     metaDescription: 'Your follow ratio affects how Instagram\'s algorithm treats your account. Here\'s what a healthy ratio looks like and the one lever you can pull to improve it.',
@@ -329,6 +339,7 @@ Clean your list thoughtfully. The ratio will follow.`,
   },
   {
     slug: 'why-instagram-follower-trackers-ask-for-your-password',
+    cluster: 'privacy-safety',
     title: 'Why Instagram Follower Trackers Ask for Your Password (It\'s Not an Accident)',
     metaTitle: 'Why Follower Trackers Want Your Instagram Password',
     metaDescription: 'Instagram follower tracking apps ask for your password because credentials are the product. Here\'s what\'s actually happening and what to use instead.',
@@ -381,6 +392,7 @@ If no, if it works with a data export you control, then the incentive structure 
   },
   {
     slug: 'who-doesnt-follow-you-back-on-instagram',
+    cluster: 'unfollowers',
     title: 'How to See Who Doesn\'t Follow You Back on Instagram (Free, No App)',
     metaTitle: 'See Who Doesn\'t Follow You Back on Instagram',
     metaDescription: 'Find every account you follow that doesn\'t follow you back. Free, no app, no password. Read your own Instagram data export right in your browser.',
@@ -439,6 +451,7 @@ If a tool asks for your Instagram login to do this, close the tab. The file Inst
   },
   {
     slug: 'instagram-ghost-followers-how-to-find-and-remove-them',
+    cluster: 'account-health',
     title: 'Instagram Ghost Followers: How to Find and Remove Them',
     metaTitle: 'Instagram Ghost Followers: Find & Remove Them',
     metaDescription: 'Ghost followers quietly drag down your engagement rate. Here\'s what they are, how to spot them from your own Instagram data, and how to clean them out safely.',
@@ -502,6 +515,7 @@ Clearing ghosts will probably shrink your follower number. That feels bad for a 
   },
   {
     slug: 'does-instagram-notify-when-you-unfollow-someone',
+    cluster: 'unfollowers',
     title: 'Does Instagram Notify Someone When You Unfollow Them?',
     metaTitle: 'Does Instagram Notify When You Unfollow Someone?',
     metaDescription: 'Wondering if Instagram tells people when you unfollow, block, or remove them? Here is exactly what is and is not notified, and how to find out who unfollowed you.',
@@ -553,8 +567,433 @@ Instagram gives you your follower list on demand under GDPR. Export it now, expo
 
 Unfollowing, removing, blocking, and muting are all silent. Instagram keeps your social moves private, which is good for you and inconvenient when you are on the receiving end. The only reliable way to see who unfollowed you is to keep your own record and compare it over time.`,
   },
+  {
+    slug: 'can-you-get-banned-for-using-a-follower-tracker-on-instagram',
+    cluster: 'privacy-safety',
+    title: 'Can You Get Banned for Using a Follower Tracker on Instagram?',
+    metaTitle: 'Can You Get Banned for Using an Instagram Follower Tracker?',
+    metaDescription: 'Yes, follower trackers that ask for your Instagram login can get your account flagged or banned. Here is why, and the no-password method that carries zero ban risk.',
+    excerpt: 'Short answer: the ones that ask for your Instagram login can get your account flagged, checkpointed, or banned. The ones that read your own data export cannot. Here is the difference.',
+    date: 'July 3, 2026',
+    readTime: '5 min',
+    tag: 'Privacy',
+    primaryKeyword: 'can you get banned for using a follower tracker on instagram',
+    art: 'lock',
+    imageAlt: 'A padlock over an Instagram-style grid, representing account ban risk from follower tracker apps',
+    body: `The short answer: yes, but only with a certain kind of tracker. Any app that asks you to log in with your Instagram username and password can get your account flagged, checkpointed, or permanently banned, because it violates Instagram's terms of service. A tool that reads the data export Instagram gives you carries no ban risk at all, because it never touches your account.
+
+That distinction is the whole story. Let's break it down.
+
+## Why password-based trackers get accounts banned
+
+When you hand your login to a follower tracker, the app logs into Instagram as you, usually from a data center server. Instagram's Platform Policy explicitly prohibits third-party services from storing your password or accessing your account on your behalf. It is not a gray area.
+
+Instagram detects this the way you would expect: a login from an unfamiliar server IP, automated request patterns, activity that does not match a human tapping through the app. When the system flags it, the consequences escalate:
+
+- A checkpoint challenge that forces you to reset your password
+- A temporary lock on your account
+- Shadow-limiting, where your reach quietly drops
+- In repeat cases, a permanent ban
+
+You might use one of these apps for months with no problem. Or you might lose an account you spent years building. The risk is real, it is documented across creator forums, and you cannot predict when it lands. We covered the mechanics in [why Instagram follower trackers ask for your password](/blog/why-instagram-follower-trackers-ask-for-your-password).
+
+## The kind of tracker that cannot get you banned
+
+There is a second category most people do not know exists. Instead of logging into your account, it reads a file you already own.
+
+Under GDPR Article 20, Instagram is legally required to give you a copy of your own data on request. That includes your full followers and following lists. You request the export from Instagram's settings, they email you a ZIP file, and a tracker reads that file to show you who does not follow you back and who unfollowed you.
+
+Nothing logs into your account. Nothing hits Instagram's servers. There is no automated access for Instagram to detect, because there is no access at all. This is exactly how [WhoUnfollowed](/) works, and it is why it carries zero ban risk.
+
+## How to tell which kind you are using
+
+One question settles it: does the tool ask for your Instagram password?
+
+- If yes, it is accessing your account directly, and your account is exposed.
+- If no, and it asks you to upload a data export instead, it never touches your account.
+
+## Is it safe to unfollow people after you find your non-followers?
+
+Finding your non-followers is completely safe, because reading a data export is passive. Acting on the list is a separate question. Unfollowing hundreds of accounts in a burst can trip Instagram's spam limits regardless of what tool showed you the list. We covered the safe pace in [is it safe to mass unfollow on Instagram](/blog/is-it-safe-to-mass-unfollow-on-instagram).
+
+## The takeaway
+
+You can get banned for using a follower tracker, but only if it asks for your login. Choose a tool that reads your own Instagram export instead, and the ban question disappears entirely. Same answers, none of the exposure.`,
+  },
+  {
+    slug: 'are-instagram-follower-trackers-safe',
+    cluster: 'privacy-safety',
+    title: 'Are Instagram Follower Trackers Safe?',
+    metaTitle: 'Are Instagram Follower Trackers Safe? What to Check First',
+    metaDescription: 'Most Instagram follower trackers are not safe: they store your password and send data to their servers. Here is how to check one before you use it, and the safe alternative.',
+    excerpt: 'Most are not. The ones that ask for your Instagram login put your account and your data at risk. Here is the checklist to judge any tracker, and the one model that is safe by design.',
+    date: 'July 3, 2026',
+    readTime: '5 min',
+    tag: 'Privacy',
+    primaryKeyword: 'are instagram follower trackers safe',
+    art: 'lock',
+    imageAlt: 'A shield over a phone showing follower stats, representing the safety of Instagram follower tracker apps',
+    body: `Most Instagram follower trackers are not safe. The majority ask for your Instagram username and password, store your credentials on their servers, and send your data off your device. That combination puts both your account and your privacy at risk. A small number are safe by design, because they never ask for your login at all. Here is how to tell them apart.
+
+## What makes a follower tracker unsafe
+
+Three things, usually all at once:
+
+- **It asks for your Instagram password.** Handing your login to a third party breaks Instagram's terms and can get your account flagged or banned. See [can you get banned for using a follower tracker](/blog/can-you-get-banned-for-using-a-follower-tracker-on-instagram).
+- **It sends your data to a server.** Once your follower list leaves your device, you have no control over how it is stored, who can see it, or whether it is sold. Several tracker apps have been caught harvesting and reselling user data.
+- **It is a black box.** If you cannot see what the code does, you are trusting a privacy policy instead of verifying behavior.
+
+## The checklist: judge any tracker in 30 seconds
+
+Before you use one, ask:
+
+- Does it ask for my Instagram login? If yes, stop.
+- Does my data get uploaded to their server, or is it processed on my device?
+- Can I see the source code, or at least a clear explanation of what happens to my data?
+- Does it need an account and personal details just to show me a list?
+
+A safe tool answers those cleanly: no login, processed locally, open and auditable, no account required.
+
+## The model that is safe by design
+
+Instagram already gives you your own data. Under GDPR Article 20 you can request a full export of your followers and following lists, and Instagram emails you a ZIP file. A safe tracker reads that file and nothing else.
+
+[WhoUnfollowed](/) is built this way on purpose. You upload the export Instagram sent you, your browser reads it locally, and the result appears in about two seconds. No password, no server upload, no account. The parsing code is open source, so anyone can verify exactly what it does with your data. If you want to see who left, start with [how to see who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram).
+
+## So are they safe or not?
+
+As a category, no. As a specific choice, it depends entirely on one thing: whether the tool touches your account. If it reads a data export you already own, it is safe. If it asks for your password, it is not. Pick accordingly.`,
+  },
+  {
+    slug: 'how-long-does-an-instagram-data-request-take',
+    cluster: 'data-export',
+    title: 'How Long Does an Instagram Data Request Take?',
+    metaTitle: 'How Long Does an Instagram Data Request Take?',
+    metaDescription: 'A Followers and Following export from Instagram usually arrives in a few minutes. A full archive can take up to 48 hours. Here is what affects the wait and how to speed it up.',
+    excerpt: 'A focused Followers and Following export usually lands in a few minutes. A full archive can take up to 48 hours. Here is exactly what determines the wait.',
+    date: 'July 3, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'how long does an instagram data request take',
+    art: 'search',
+    imageAlt: 'A clock beside a download icon, representing the wait time for an Instagram data export',
+    body: `A small, focused Instagram data request usually arrives within a few minutes. If you select only your Followers and Following in JSON format, most people get the email in under five minutes. A full account archive, with photos, videos, and messages, is a much larger job and can take anywhere from a few hours up to 48 hours.
+
+The size of what you ask for is the single biggest factor. Here is the full picture.
+
+## What determines the wait
+
+- **How much you request.** Followers and Following is tiny, often under 1MB, so Instagram builds it fast. Your entire archive can be several gigabytes and takes far longer.
+- **Format.** JSON exports are quick to generate, and JSON is the format you want anyway because it includes follow timestamps. See [JSON vs HTML](/blog/instagram-data-export-json-vs-html).
+- **Platform load.** During high-traffic periods Instagram queues these jobs, so the same request can be instant one day and slow the next.
+- **Account size.** A very large account with millions of followers naturally takes longer to package.
+
+## How to get your export as fast as possible
+
+Request only what you need. You do not need your whole archive to see who unfollowed you. In Instagram's export flow, deselect everything except Followers and Following, choose JSON, and set the date range to All time. That keeps the file small and the wait short. The full walkthrough is in [how to download your Instagram data](/blog/how-to-download-your-instagram-data).
+
+## What if it has not arrived?
+
+If nothing shows up after 15 minutes:
+
+- Check your spam or promotions folder. The email comes from security-noreply@instagram.com.
+- Confirm the request actually submitted. Sometimes the first attempt silently fails, so try again.
+- Remember Instagram throttles requests to roughly one every 14 days per account.
+- On rare occasions, even a small export can take up to 48 hours during busy periods.
+
+Once the email arrives, the download link stays valid for four days. Grab the ZIP promptly.
+
+## After the download
+
+The moment you have the ZIP, the slow part is over. Reading it is instant. Drop the file into [WhoUnfollowed](/) and it shows who does not follow you back in about two seconds, all in your browser, with nothing sent to a server. If you upload a second export later, you also see exactly [who unfollowed you](/blog/how-to-see-who-unfollowed-you-on-instagram) in between.`,
+  },
+  {
+    slug: 'instagram-data-export-json-vs-html',
+    cluster: 'data-export',
+    title: 'Instagram Data Export: JSON vs HTML (Which to Pick and Why)',
+    metaTitle: 'Instagram Data Export: JSON vs HTML (Which to Choose)',
+    metaDescription: 'Choose JSON for your Instagram data export. It includes the follow timestamps that HTML leaves out, and tools can read it. Here is the difference in plain terms.',
+    excerpt: 'Pick JSON. It includes the follow timestamps HTML leaves out, and it is the format analysis tools actually read. HTML is only for eyeballing in a browser. Here is why it matters.',
+    date: 'July 3, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'instagram data export json vs html',
+    art: 'split',
+    imageAlt: 'Two file icons labeled JSON and HTML side by side, representing the Instagram data export format choice',
+    body: `When Instagram asks whether you want your data export as JSON or HTML, choose JSON. It contains the follow timestamps that HTML strips out, and it is the structured format that analysis tools can actually read. HTML is only useful for scrolling through your data by eye in a browser. If you plan to do anything with the file, JSON is the answer.
+
+Here is what actually separates them.
+
+## What JSON gives you that HTML does not
+
+Both formats contain your followers and following lists. The difference is what surrounds each name.
+
+- **Timestamps.** JSON records the moment each follow happened. That is how a tool can tell a long-tenure follower from a recent one, and how [ghost follower](/blog/instagram-ghost-followers-how-to-find-and-remove-them) approximation works. HTML usually drops this.
+- **Structure.** JSON is machine-readable by design. A parser can load it directly. HTML is a web page meant for human eyes, so tools have to fight the markup to extract anything.
+- **Size and speed.** JSON is lean. HTML wraps every entry in layout code, making the file bigger and slower to process.
+
+## When HTML is fine
+
+Exactly one case: you only want to open the file yourself and read it in a browser, with no tool involved, and you do not care when anyone followed you. For anything beyond casual reading, it falls short.
+
+## What the JSON actually holds
+
+You never have to read it yourself, but here is the shape. Each entry is a small block holding the username, a link to the profile, and a timestamp marking when the follow happened. That timestamp is the useful part. It is a Unix time value, and it is what lets a tool sort your followers by how long they have been with you.
+
+## Picking JSON in the export flow
+
+When you request your data, Instagram shows a format toggle. Set it to JSON, select only Followers and Following, and choose the All time date range. Step-by-step screenshots are in [how to download your Instagram data](/blog/how-to-download-your-instagram-data).
+
+## Then what?
+
+Drop the JSON export into [WhoUnfollowed](/). It reads the file in your browser, matches your followers against your following, and shows who does not follow you back in about two seconds. Nothing is uploaded, no password is involved, and because you picked JSON, the follow timestamps come through for the deeper analysis.`,
+  },
+  {
+    slug: 'can-you-see-who-unfollowed-you-on-instagram',
+    cluster: 'unfollowers',
+    title: 'Can You See Who Unfollowed You on Instagram?',
+    metaTitle: 'Can You See Who Unfollowed You on Instagram?',
+    metaDescription: 'Instagram does not show you who unfollowed you, and it sends no notification. But you can reconstruct it from your own data export. Here is how, with no password required.',
+    excerpt: 'Not directly. Instagram never tells you who unfollowed you and sends no notification. But you can reconstruct it from your own data export by comparing two snapshots. Here is how.',
+    date: 'July 3, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'can you see who unfollowed you on instagram',
+    art: 'search',
+    imageAlt: 'A magnifying glass over a follower list with one entry missing, representing finding who unfollowed you',
+    body: `Not from inside the app. Instagram does not show you who unfollowed you, and it never sends a notification when someone does. The follower count drops, but the app will not tell you which account left. You can, however, work it out yourself by comparing two copies of your own follower list over time. That method is completely safe and needs no password.
+
+Here is why the app hides it, and how to see it anyway.
+
+## Why Instagram will not tell you
+
+Instagram deliberately keeps unfollowing quiet. The person you unfollow is never notified, and neither are you when someone unfollows you. This is a privacy choice on their end, and it applies both ways. We broke down exactly what is and is not notified in [does Instagram notify someone when you unfollow them](/blog/does-instagram-notify-when-you-unfollow-someone).
+
+The result is a frustrating gap: you can see that you lost 40 followers, but not which 40. Staring at a smaller number tells you nothing about who actually left, and it cannot separate a [bot purge](/blog/why-did-i-lose-followers-overnight-on-instagram) from a real person you cared about.
+
+## The method that actually works
+
+Since Instagram will not hand you the list, you reconstruct it from your own data:
+
+- Request a data export from Instagram. Under GDPR you have the right to your followers and following lists, and Instagram emails you a ZIP.
+- Save that as your baseline snapshot.
+- A few weeks later, request a second export.
+- Compare the two. Anyone in the first list but missing from the second unfollowed you in between.
+
+That comparison is the only reliable way to see unfollowers, because it works from a record you control rather than a live view Instagram refuses to give you.
+
+## Doing it without the manual work
+
+You do not have to compare two files by hand. [WhoUnfollowed](/) does it for you. You upload the export Instagram sent you, it reads the file in your browser, and when you add a later export it shows exactly who dropped off between the two dates. No password, no server, nothing that touches your account. The full walkthrough is the pillar guide, [how to see who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram).
+
+## The short version
+
+You cannot see who unfollowed you directly, and no app can do it safely by logging into your account. But your own Instagram export, compared over time, gives you the exact list. That is the honest answer, and it is the only one that does not put your account at risk.`,
+  },
+  {
+    slug: 'what-is-a-good-follower-to-following-ratio-on-instagram',
+    cluster: 'account-health',
+    title: 'What Is a Good Follower-to-Following Ratio on Instagram?',
+    metaTitle: 'What Is a Good Follower-to-Following Ratio on Instagram?',
+    metaDescription: 'A follower-to-following ratio above 1.0 looks healthy on Instagram, and above 2.0 signals real influence. Here is what the number means, and why chasing it is a trap.',
+    excerpt: 'Above 1.0 reads as healthy, and above 2.0 signals genuine pull. But the ratio is a vanity metric with real limits. Here is what a good number looks like, and when to ignore it.',
+    date: 'July 3, 2026',
+    readTime: '5 min',
+    tag: 'Growth',
+    primaryKeyword: 'good follower to following ratio on instagram',
+    art: 'ratio',
+    imageAlt: 'A balance scale weighing follower count against following count, representing the Instagram follow ratio',
+    body: `As a rough guide, a follower-to-following ratio above 1.0 looks healthy, meaning you have more followers than accounts you follow. Above 2.0 starts to signal genuine influence, and established creators often sit well beyond that. But the ratio is a vanity metric with real limits, and chasing it blindly leads to bad decisions. Here is what the number actually tells you.
+
+## How the ratio is calculated
+
+It is simple: divide your follower count by the number of accounts you follow.
+
+- 1,000 followers and 500 following gives a ratio of 2.0
+- 1,000 followers and 2,000 following gives a ratio of 0.5
+
+A ratio under 1.0 means you follow more people than follow you back. That is normal for a new or growing account, and nothing to panic about.
+
+## What counts as a good ratio
+
+There is no single right number, but rough bands help:
+
+- **Below 1.0:** common for new accounts and heavy engagers. Fine early on.
+- **1.0 to 2.0:** balanced and healthy for most personal and small creator accounts.
+- **Above 2.0:** signals that people seek you out more than you seek them. Typical of creators with real pull.
+
+Context matters more than the raw figure. A niche expert with 3,000 engaged followers is in better shape than someone with a 5.0 ratio built on bought followers. The deeper mechanics are in the pillar guide, [your Instagram follow ratio and how to improve it](/blog/instagram-follow-ratio-what-it-means-how-to-improve-it).
+
+## Why chasing the ratio is a trap
+
+The fastest way to improve your ratio is to mass-unfollow everyone who does not follow you back. That can help, but done carelessly it backfires:
+
+- Aggressive unfollowing can trip Instagram's spam limits. Pace it, as covered in [is it safe to mass unfollow](/blog/is-it-safe-to-mass-unfollow-on-instagram).
+- Cutting people purely for the number can cost you real connections and mutuals.
+- A high ratio inflated by [ghost followers](/blog/instagram-ghost-followers-how-to-find-and-remove-them) is a worse position than a lower ratio of engaged, real people.
+
+## The healthier way to improve it
+
+Improve the ratio as a byproduct, not a goal. Trim accounts you follow that add nothing and do not follow you back, keep the mutuals and the people you genuinely want in your feed, and let real followers accumulate through good posts.
+
+To do the trimming cleanly, you need to see who does not follow you back. [WhoUnfollowed](/) shows that list from your own Instagram export, with no password and nothing sent to a server. You decide who to keep and who to drop, and your ratio moves on its own.`,
+  },
+  {
+    slug: 'whats-inside-your-instagram-data-download',
+    cluster: 'data-export',
+    title: "What's Actually Inside Your Instagram Data Download",
+    metaTitle: "What's Inside Your Instagram Data Download (The ZIP Explained)",
+    metaDescription: 'Your Instagram data download is a ZIP with a few small JSON files: followers, following, pending requests, and recently unfollowed. Here is exactly what each one contains.',
+    excerpt: "The ZIP Instagram sends you is smaller and simpler than it sounds. Here is exactly what is inside it, file by file, and why the timestamps matter more than anything else in there.",
+    date: 'July 15, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: "what's inside instagram data download",
+    art: 'split',
+    imageAlt: 'An open folder icon showing several small JSON files, representing the contents of an Instagram data export ZIP',
+    body: `Your Instagram data download is not the sprawling archive people expect. If you requested just Followers and Following (as [the export guide](/blog/how-to-download-your-instagram-data) recommends), the ZIP holds a handful of small JSON files, usually well under 1MB combined. Here is exactly what is in it.
+
+## The core files
+
+- **followers_1.json** (or followers_2.json, followers_3.json for larger accounts): every account that follows you
+- **following.json**: every account you follow
+- **pending_follow_requests.json**: accounts you have asked to follow who have not accepted yet, if any
+- **recently_unfollowed_profiles.json**: a short, Instagram-maintained list of accounts you recently unfollowed
+
+That last one is worth pausing on. Instagram keeps a small rolling log of your own recent unfollows, but it is short and temporary, not a substitute for tracking [who unfollowed you](/blog/how-to-see-who-unfollowed-you-on-instagram) over time yourself.
+
+## What each entry actually looks like
+
+Every account in these files is a small JSON object, not just a username. Each one carries the same three fields:
+
+- **value**: the username
+- **href**: a direct link to their profile, like https://www.instagram.com/username
+- **timestamp**: a Unix time value marking when the follow relationship was recorded
+
+Three fields, every time: the username, a direct link to their profile, and a timestamp.
+
+## Why the timestamp is the important part
+
+The username and link are easy to guess. The timestamp is not, and it is the one field that actually unlocks anything. It is what lets a tool calculate how long someone has followed you, tell a brand-new follower from a two-year one, and build a growth timeline instead of a flat list. This only shows up reliably if you chose JSON format. HTML exports carry the same relationships but usually drop the timestamp entirely, which is exactly why [JSON is the recommended format](/blog/instagram-data-export-json-vs-html).
+
+## What is not in there
+
+No password, no private messages, no photos, nothing beyond the connections themselves if you selected only Followers and Following. Instagram's full archive (which nobody needs for this) can include posts, stories, and message history, several gigabytes of data you do not have to touch. The focused export is small on purpose.
+
+## Why this matters for a privacy-first tool
+
+Because the whole file is just a few small, plain JSON documents, a tool like [WhoUnfollowed](/) can read it entirely inside your browser in about two seconds. There is no server involved because there does not need to be. The parser that reads these exact files is open source (MPL-2.0), so anyone can check that this description of the file matches the code that touches it.`,
+  },
+  {
+    slug: 'how-to-clean-up-who-you-follow-on-instagram',
+    cluster: 'account-health',
+    title: 'How to Clean Up Who You Follow on Instagram (The Safe Way)',
+    metaTitle: 'How to Clean Up Who You Follow on Instagram Safely',
+    metaDescription: 'Cleaning up who you follow on Instagram safely means pacing your unfollows and deciding deliberately, not mass-unfollowing everyone who does not follow back. Here is a safe method.',
+    excerpt: "A clean following list beats a big one. Here is how to trim it deliberately, without tripping Instagram's spam limits or losing accounts you actually wanted to keep.",
+    date: 'July 15, 2026',
+    readTime: '5 min',
+    tag: 'Growth',
+    primaryKeyword: 'clean up who you follow on instagram',
+    art: 'ratio',
+    imageAlt: 'A checklist with some items checked and some crossed out, representing sorting an Instagram following list',
+    body: `Cleaning up who you follow on Instagram safely means going through your list deliberately and unfollowing at a measured pace, not mass-unfollowing everyone who does not follow back in one sitting. The list itself is the easy part. The discipline is in how you act on it.
+
+## Start with the actual list, not guesswork
+
+You cannot clean up what you cannot see. Most people only have a vague sense of who they follow, built up over years of taps. The first real step is getting the full, current list of everyone you follow that does not follow you back, which is exactly what [WhoUnfollowed](/) shows from your own Instagram export, free, with no login.
+
+## Sort before you touch anything
+
+Once you have the list, resist the urge to start unfollowing immediately. Go through it once and sort each account into a category:
+
+- **Drop**: no reason to keep following, inactive, irrelevant, or you do not recognize them
+- **Keep anyway**: brands, public figures, or accounts you follow for content, not reciprocity
+- **Not sure yet**: needs a second look later
+
+This sorting pass, sometimes called triage, is the actual clean-up work. The unfollowing itself is just execution once you have decided.
+
+## Unfollow in small batches, not all at once
+
+Instagram rate-limits bulk actions, and unfollowing dozens of accounts back to back in a short window can trigger a temporary action block on your account. The safe approach:
+
+- Unfollow in batches of 20 to 30 at a time
+- Space batches out over a few hours or days rather than one long session
+- Stop immediately if Instagram shows any warning or blocks an action
+
+The full mechanics and safe limits are covered in [is it safe to mass unfollow on Instagram](/blog/is-it-safe-to-mass-unfollow-on-instagram). If you are cleaning up hundreds of accounts, plan for days, not minutes.
+
+## Do not confuse a clean list with a good ratio
+
+Cleaning up who you follow will naturally improve your [follow ratio](/blog/instagram-follow-ratio-what-it-means-how-to-improve-it), but that should be a side effect, not the goal. Cutting accounts purely to move a number can cost you real mutuals and people whose content you actually wanted. Judge each account on its own, not just on whether it follows back.
+
+## Watch for ghost followers on the other side
+
+While you are cleaning up who you follow, it is worth checking the other direction too: dormant accounts that follow you but never engage, sometimes called [ghost followers](/blog/instagram-ghost-followers-how-to-find-and-remove-them). They do not need action the way non-follow-backs do, but they explain a lot about why your engagement rate looks lower than your follower count suggests.
+
+## The safe version, summarized
+
+See the full list first, sort it deliberately, unfollow in small paced batches, and never touch your password or a third-party login to do it. That is the entire safe method, and it starts with a free upload, no account required.`,
+  },
+  {
+    slug: 'instagram-follower-tracker-without-login',
+    cluster: 'privacy-safety',
+    title: 'Instagram Follower Tracker Without Login: Do They Exist?',
+    metaTitle: 'Instagram Follower Tracker Without Login: Do They Exist?',
+    metaDescription: 'Yes, a genuine no-login Instagram follower tracker exists: one that reads the data export Instagram already gives you instead of asking for your password. Here is how to tell the real ones apart.',
+    excerpt: "Yes, but you have to know what to actually look for. Plenty of trackers claim to need 'no login' while still asking for your Instagram password somewhere in the flow. Here is the real distinction.",
+    date: 'July 15, 2026',
+    readTime: '4 min',
+    tag: 'Privacy',
+    primaryKeyword: 'instagram follower tracker without login',
+    art: 'lock',
+    imageAlt: 'A padlock with a line through it next to an Instagram icon, representing a follower tracker that needs no login',
+    body: `Yes, genuine no-login Instagram follower trackers exist, but the phrase gets abused. Plenty of apps advertise "no login required" while still asking you to authenticate with Instagram somewhere in the actual flow, just worded to sound safer than it is. Here is how to tell a real one from a relabeled one.
+
+## The trick some trackers use
+
+"No login" can technically mean a few different things, and only one of them is actually safe:
+
+- **No separate signup for our app, but connect your Instagram**: this still means handing over your Instagram credentials or an OAuth token tied to your account. The tracker's own signup is skipped, but Instagram access is not.
+- **No password typed into our app directly**: some tools redirect you to an Instagram-branded login page first, then capture a session token afterward. You never type your password into their form, but your account is still connected to a third party.
+- **No Instagram interaction at all**: the tool never touches Instagram in any way. This is the only version that is actually risk-free, and it works by reading a file you already have instead of connecting to your account.
+
+The first two are marketing language stretched to imply the third. Only the third one is genuinely true to what "no login" should mean.
+
+## Why the real version needs your data export instead
+
+A tracker that touches Instagram in any form, even briefly, is doing something Instagram's own Platform Policy prohibits for third parties. That is the whole reason [these tools carry ban risk](/blog/can-you-get-banned-for-using-a-follower-tracker-on-instagram): the risk comes from the connection itself, not from typing a password into a specific box.
+
+The only way to genuinely skip that connection and still get real answers is to work from data you already own. Instagram is required under GDPR Article 20 to give you your own followers and following lists on request. [Requesting that export](/blog/how-to-download-your-instagram-data) takes a few minutes, and once you have it, a tracker can read it locally without ever reaching Instagram's servers.
+
+## How to check if a tracker is the real thing
+
+Before using any Instagram follower tracker, ask one direct question: does it, at any point, ask you to log into Instagram or authorize an app connection? If the answer is yes in any form, it is not a true no-login tool, regardless of what its landing page says. If the answer is genuinely no, and it instead asks you to upload a file, that is the real version.
+
+[WhoUnfollowed](/) works this second way. You upload the ZIP Instagram emails you, your browser reads it, and the app never sends a single request to Instagram. There is no account connection to misuse because none exists, which is also why the parsing code is [published open source](/blog/why-instagram-follower-trackers-ask-for-your-password) rather than something you have to take on faith.
+
+## The short answer
+
+A real no-login Instagram follower tracker exists and works by reading your own official data export, not by connecting to your account under a friendlier name. If a tool asks for Instagram access at any point, it is not what "no login" is supposed to mean.`,
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
   return BLOG_POSTS.find(p => p.slug === slug);
 }
+
+export interface Cluster {
+  id: ClusterId;
+  /** Human label for the topic series, shown in the article cluster block. */
+  label: string;
+  /** Slug of the pillar post that anchors the cluster. */
+  pillarSlug: string;
+}
+
+export const CLUSTERS: Record<ClusterId, Cluster> = {
+  'unfollowers':    { id: 'unfollowers',    label: 'Seeing who unfollowed you',       pillarSlug: 'how-to-see-who-unfollowed-you-on-instagram' },
+  'data-export':    { id: 'data-export',    label: 'Exporting your Instagram data',   pillarSlug: 'how-to-download-your-instagram-data' },
+  'privacy-safety': { id: 'privacy-safety', label: 'Tracker privacy and safety',      pillarSlug: 'why-instagram-follower-trackers-ask-for-your-password' },
+  'account-health': { id: 'account-health', label: 'Account health and follow ratio', pillarSlug: 'instagram-follow-ratio-what-it-means-how-to-improve-it' },
+};
+
