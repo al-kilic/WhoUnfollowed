@@ -167,7 +167,30 @@ Drop the ZIP into [WhoUnfollowed](/) and it reads the file entirely in your brow
 
 ## A note on safety
 
-The reason to get comfortable with the official export is that it removes any excuse to hand your password to a follower-tracking app. Those apps log in as you and pull data through Instagram's private API, which breaks Instagram's Terms of Use and is a common reason accounts get restricted. The export Instagram gives you is already yours. A good tool just reads it, no password required.`,
+The reason to get comfortable with the official export is that it removes any excuse to hand your password to a follower-tracking app. Those apps log in as you and pull data through Instagram's private API, which breaks Instagram's Terms of Use and is a common reason accounts get restricted. The export Instagram gives you is already yours. A good tool just reads it, no password required.
+
+## Why the Wait Exists
+
+A "Followers and following" request usually comes back in a few hours, but a full account archive can take up to 14 days, and it's worth knowing why. Instagram doesn't generate your export on demand the instant you click the button. The request goes into a batch processing queue that compiles data across multiple internal systems: your profile, your posts, your messages, your connections, each stored differently and pulled together only when someone asks for a copy. A narrow request touches one of those systems. A full archive touches all of them, which is the entire reason narrowing the request to just your connections data is worth doing even if you eventually want the rest.
+
+## Narrow Request vs Full Archive, Side by Side
+
+- **Followers and following only:** typically a few hours, a file usually under a few megabytes, contains just your connections data with timestamps.
+- **Full "all available information":** up to 14 days, can run into gigabytes for an active account, includes posts, stories, messages, comments, ad interests, and login history alongside your connections data.
+
+If your goal is follower analysis, the narrow request gets you everything you need without the wait or the file size.
+
+## If the Export Never Arrives
+
+A download link that doesn't show up within the expected window usually has one of a few explanations. Check your spam or promotions folder first. Instagram's export emails sometimes land there, especially on the first request from a given account. If it's genuinely been longer than the estimate (a few hours for a narrow request, 14 days for a full archive), submit a fresh request rather than waiting indefinitely. Also worth knowing: the download link Instagram sends expires after a few days. If you requested the export a while back and only just found the email, the link may already be dead, in which case a new request is the only fix.
+
+## Mobile vs Desktop: What Actually Differs
+
+The setting lives in the same place conceptually on both, but the path to it looks different enough to trip people up. On mobile, it's nested under your profile menu and "Settings and activity." On desktop, Instagram increasingly routes this through the shared Accounts Center rather than a page unique to Instagram, since Accounts Center is shared across Instagram, Facebook, and Threads for anyone with linked accounts. If you manage multiple Meta accounts, double check you're requesting the export for the right one. Accounts Center makes it easy to be logged into several at once.
+
+## What to Do With the File Afterward
+
+Once you've uploaded the ZIP somewhere that reads it locally, like WhoUnfollowed, there's no ongoing reason to keep the file in your Downloads folder indefinitely, though keeping the last one or two exports is genuinely useful. Having a prior export on hand is what lets you compare against a newer one later and see exactly who unfollowed you in between. Store a couple of recent exports somewhere you'll remember, delete the rest, and treat the file the same way you'd treat any personal data export: useful to keep briefly, not something to leave scattered across every device you own.`,
   },
   {
     slug: 'is-it-safe-to-mass-unfollow-on-instagram',
@@ -263,9 +286,9 @@ There is a safer way. Instagram is legally required to give you a copy of your o
 
 ## Step 1: Request Your Data Export from Instagram
 
-Open Instagram on mobile or desktop. Go to Settings, then "Your activity," then "Download your information." Select JSON format (not HTML). Choose "Followers and following" from the data categories. Submit the request.
+Open Instagram on mobile or desktop. Go to Settings, then "Your activity," then "Download your information." Select [JSON format, not HTML](/blog/instagram-data-export-json-vs-html). Choose "Followers and following" from the data categories. Submit the request.
 
-Instagram typically delivers the export within a few hours, though it can take up to 14 days for larger accounts. You'll get an email with a download link.
+Instagram typically delivers the export within a few hours, though [it can take longer for larger accounts](/blog/how-long-does-an-instagram-data-request-take). You'll get an email with a download link.
 
 ## Step 2: Download the ZIP File
 
@@ -279,7 +302,7 @@ If you want to see who specifically unfollowed you between two points in time, u
 
 ## What You'll See
 
-- People you follow who don't follow you back
+- [People you follow who don't follow you back](/blog/who-doesnt-follow-you-back-on-instagram)
 - New followers since your last export
 - Mutual followers
 - Unfollowers (when comparing two exports)
@@ -287,6 +310,47 @@ If you want to see who specifically unfollowed you between two points in time, u
 ## Why This Approach Is Different
 
 Every other tracker in this space needs your credentials to function. That's not an oversight in their product design. Credential access is often how they build their data business. WhoUnfollowed was built specifically to not need it. The ZIP your Instagram account generates is already yours. We just read it.
+
+## Why Instagram Doesn't Just Show You This Directly
+
+It's a fair question. Instagram already has both lists internally, follower and following, so a "who unfollowed me" screen is well within its technical reach. It doesn't build one, and the likely reason is behavioral, not technical. Surfacing every unfollow would turn a quiet, low-friction action into a visible, socially charged one. People would think twice before unfollowing an ex, an old coworker, or a brand they got tired of, and that friction cuts against Instagram's interest in people following and unfollowing freely. The gap between what the platform could show and what it does show is exactly the space that data-export tools fill.
+
+## Non-Followers, Unfollowers, and Ghosts: Know the Difference
+
+These three terms get used interchangeably, but they describe different things and knowing which one you actually want to see saves time.
+
+- **Non-followers** are accounts you currently follow that have never followed you back. You can find this from a single export. No history needed.
+- **Unfollowers** are accounts that followed you at some point and stopped. Finding these requires two exports taken at different times, so the tool can diff them and show you who dropped off the list.
+- **Ghost followers** are accounts that still follow you but show no sign of being an active, engaged person: no posts, no profile photo, or a long-dormant history. They're a subset of your followers, not your following, and they matter for engagement rate more than for the unfollower question. See [our full breakdown of ghost followers](/blog/instagram-ghost-followers-how-to-find-and-remove-them) if that's what you're actually trying to solve.
+
+If your goal is specifically "who stopped following me," you want the unfollowers workflow, which means keeping at least two exports on hand.
+
+## How Often You Should Actually Check
+
+There's no need to export weekly. For most accounts under 10,000 followers, natural churn is small day to day, and checking too often just means comparing snapshots that barely differ. A monthly export is enough to catch meaningful movement without turning it into a habit you obsess over. The exception is right after something notable: a viral post, a public controversy, or a big content pivot. Those are the moments worth a fresh export on both sides, since that's when unfollows cluster.
+
+## Mistakes That Waste the Effort
+
+A few habits undercut the whole point of doing this safely:
+
+- **Requesting HTML instead of JSON.** HTML is fine to skim by eye but strips the timestamps that make comparison reliable. Pick JSON every time, covered in more depth in [our JSON vs HTML breakdown](/blog/instagram-data-export-json-vs-html).
+- **Only ever taking one export.** A single snapshot tells you who doesn't follow you back right now. It cannot tell you who unfollowed you, because there's nothing to compare it against.
+- **Deleting the old export after checking it once.** Keep your last few exports somewhere safe. They're small JSON files, and having them on hand is what makes the next comparison possible.
+- **Falling back to a password-based app out of impatience.** The official export can take a few hours. That wait is the entire reason the safe method has zero ban risk. Skipping it defeats the purpose.
+
+## Quick Answers
+
+**Can I see who unfollowed me today, right now, with no prior export?** No. Without a previous snapshot to compare against, there's nothing to diff. The earliest you can start tracking unfollowers is from your very next export forward.
+
+**Does this work for private accounts?** Yes. Your data export includes your own followers and following lists regardless of whether your account is public or private, since it's your data either way.
+
+**Will the person know I checked?** No. Reading your own export is entirely local to your device and involves no interaction with the other account at all. It's the same privacy profile as looking at your own following list, just organized usefully.
+
+**Is there a limit to how often I can request an export?** Instagram doesn't publish a hard cap, but requesting one every day is unnecessary and slow to process anyway. Monthly is a reasonable cadence for most accounts.
+
+**What if I only have one export and want to check right now?** You can still see everything except unfollowers: your current non-followers, your mutuals, and your full following list broken out clearly. That's genuinely useful on its own. The unfollower-specific view is the only piece that has to wait for a second export.
+
+**Does this method work on accounts with hundreds of thousands of followers?** Yes, though the export itself gets paginated into multiple files (\`followers_1.json\`, \`followers_2.json\`, and so on) rather than one giant file. A tool built to read the export format handles the merge automatically, so it makes no practical difference to how you use it.
 
 If a tool asks for your Instagram password, close the tab.`,
   },
@@ -323,17 +387,53 @@ Growing followers takes time. Cleaning up your following list can happen this we
 
 After running an Instagram follower analysis, most accounts discover a meaningful percentage of people they follow who never followed back. Some of these accounts posted once in 2021 and never again. Some are brands that ran follow-for-follow campaigns and then unfollowed everyone. They're still on your following list, dragging your ratio down, offering no reciprocal value.
 
-Triaging these accounts (deciding which non-followers to unfollow) is the fastest way to move your ratio without waiting for organic growth.
+[Triaging these accounts](/blog/how-to-clean-up-who-you-follow-on-instagram) (deciding which non-followers to unfollow) is the fastest way to move your ratio without waiting for organic growth. Just pace yourself: [mass-unfollowing too fast carries its own risk](/blog/is-it-safe-to-mass-unfollow-on-instagram).
 
 WhoUnfollowed's triage list shows you every account you follow that doesn't follow you back, sorted by how long you've followed them. You can work through them account by account and make deliberate decisions rather than guessing from memory.
 
 ## How to Check Your Current Ratio
 
-You can calculate it manually from your profile page. Or upload your Instagram data export to WhoUnfollowed and the Radar dashboard surfaces your ratio alongside your full follower breakdown: non-followers, mutual follows, recent unfollowers, in one view.
+You can calculate it manually from your profile page. Or [export your Instagram data](/blog/how-to-download-your-instagram-data) and upload it to WhoUnfollowed, and the Radar dashboard surfaces your ratio alongside your full follower breakdown: non-followers, mutual follows, recent unfollowers, in one view.
 
 ## One Caveat Worth Naming
 
 Chasing a high ratio by mass-unfollowing is a different problem. Instagram's systems flag accounts that unfollow large numbers of people rapidly, the same way they flag accounts that follow too aggressively. The goal isn't the number itself. It's a following list that actually reflects who you're interested in. The ratio is a signal, not a score to game.
+
+## What a Good Ratio Looks Like by Account Type
+
+A single "good" number doesn't apply evenly across account types, because the follow behavior expected of each is different.
+
+- **Personal accounts** naturally sit closer to 1:1. You follow friends, they follow you back, and there's no reason to expect a lopsided ratio. A personal account with a 10:1 ratio usually means it's being used more like a creator account.
+- **Creator and influencer accounts** are expected to have a higher ratio, since the whole model is an audience following one person who doesn't need to follow thousands back. Anywhere from 3:1 up to 20:1 or higher reads as normal for an established creator.
+- **Brand accounts** sit somewhere in between. Brands typically follow a small, deliberate list (partners, employees, a handful of customers) against a much larger follower base, so ratios in the 5:1 to 50:1 range are common and expected.
+
+Context matters more than the raw number. A photographer with 2,000 followers and a 4:1 ratio is in a completely healthy spot. The same ratio on a brand account with 200,000 followers would actually look low for that category.
+
+## What a Bad Ratio Actually Costs You
+
+The ratio itself isn't a ranking factor Instagram publishes, but it correlates with two things that do matter. First, a low ratio (following far more than you're followed by) is a pattern shared with follow-for-follow spam accounts, and Instagram's spam-detection systems are tuned to recognize that shape of behavior, even if your account isn't actually spam. Second, and more practically, a low ratio hurts you with humans, not just algorithms. Anyone who visits your profile before deciding whether to follow you sees that ratio instantly, and a account following 4,000 people to get 4,200 followers reads as someone chasing numbers rather than building something people actually want to be part of. That perception costs you real follows you'd otherwise get.
+
+## Building Ratio the Slow, Real Way
+
+Trimming non-followers moves the ratio fast, but it's a one-time fix. The number keeps climbing only if new followers keep arriving, and that part has no shortcut: it comes from content people actually want to see and share. The realistic approach combines both. Clean up the following side once, so the ratio isn't artificially dragged down by dead weight, then let the follower side grow through consistent posting. Treat the cleanup as clearing the deck, not as the growth strategy itself.
+
+## Tracking Ratio Over Time
+
+A ratio is a snapshot, and one number in isolation doesn't tell you whether you're trending up or down. The more useful view is a ratio measured at two points, a month apart, so you can see the direction, not just the current state. WhoUnfollowed's history feature keeps successive exports so you can watch your ratio move over time instead of eyeballing it from memory.
+
+## Quick Answers
+
+**Is a 1:1 ratio bad?** Not inherently. For a personal account used mainly to keep up with friends, 1:1 is completely normal. It only becomes a signal worth acting on for creator or brand accounts, where audiences and algorithms expect a wider gap.
+
+**Does unfollowing inactive accounts hurt my reach?** No. Accounts that never engaged with your content weren't contributing to your reach in the first place. Removing them only affects the ratio, not the actual people seeing your posts.
+
+**How fast should I unfollow non-followers?** Slowly. A handful to a few dozen per day is safe. Unfollowing hundreds in a single session is the exact pattern Instagram's automation detection is built to catch, covered in more detail in [is it safe to mass unfollow](/blog/is-it-safe-to-mass-unfollow-on-instagram).
+
+**Should I follow back everyone who follows me, to keep the ratio close to 1:1?** No. Following back indiscriminately defeats the purpose. The ratio is a proxy for genuine interest, not a number to force into a shape. Follow accounts you're actually interested in, and let the ratio reflect that.
+
+**Does the ratio matter for a brand-new account with under 100 followers?** Barely. At that scale, the ratio swings wildly with every single follow or unfollow and carries almost no signal. It becomes meaningful once an account has enough followers that the number stabilizes, generally somewhere past a few hundred.
+
+**Is there a single ideal ratio to aim for?** No, and treating it that way is the trap this whole piece is about. A creator at 10:1 and a personal account at 1:1 can both be perfectly healthy for what they are. Judge your ratio against accounts genuinely similar to yours in size and category, not a universal target pulled from a growth blog that never specifies who it's actually talking about.
 
 Clean your list thoughtfully. The ratio will follow.`,
   },
@@ -362,7 +462,7 @@ Instagram has a public API, but it doesn't expose follower/following data freely
 
 This is explicitly against Meta's Terms of Use. Section 3 of Meta's terms prohibits accessing data through automated means without permission. The Instagram Platform Policy goes further, banning apps from collecting user credentials to impersonate users on their platform.
 
-When Instagram's systems detect this behavior (and they do, at scale), the account flagged is yours. The app continues running. Bans and restrictions from third-party follower trackers are common enough that Instagram's own Help Center addresses them directly.
+When Instagram's systems detect this behavior (and they do, at scale), the account flagged is yours. The app continues running. [Bans and restrictions from third-party follower trackers](/blog/can-you-get-banned-for-using-a-follower-tracker-on-instagram) are common enough that Instagram's own Help Center addresses them directly.
 
 ## Why They Ask Anyway
 
@@ -384,11 +484,40 @@ WhoUnfollowed reads that ZIP file in your browser. The file never leaves your de
 
 ## The Practical Test
 
-Before using any Instagram tool, ask one question: does it need my password to function?
+Before using any Instagram tool, [ask one question](/blog/are-instagram-follower-trackers-safe): does it need my password to function?
 
 If yes, it is accessing Instagram's systems by impersonating you. Your account assumes all the risk. The app assumes none.
 
-If no, if it works with a data export you control, then the incentive structure is different. The tool only stays useful if you keep using it voluntarily. That's a better alignment than one where your credentials are the product.`,
+If no, if it works with a data export you control, then the incentive structure is different. The tool only stays useful if you keep using it voluntarily. That's a better alignment than one where your credentials are the product.
+
+## How These Apps Work Under the Hood
+
+Understanding the mechanism makes the risk concrete instead of abstract. When you enter your username and password into a third-party tracker, the app doesn't get some special sanctioned access. It uses your credentials to log in exactly as if you had typed them into Instagram yourself, then holds onto the resulting session so it can keep calling Instagram's private, internal API endpoints on your behalf, the same endpoints the official app uses. Instagram's systems don't see "a tracking app checking follower counts." They see your account logging in from an unfamiliar client and hitting endpoints at a rate and pattern no human scrolling the app would produce. That mismatch is exactly what automated abuse detection is built to catch.
+
+## Why "Free" Trackers Need a Business Model
+
+A follower-tracking app with no subscription fee and no ads still costs money to run: servers, development, support. If a free app isn't charging you directly, something else is paying for it, and the most common answer is your data. An app holding working Instagram logins for a large user base has something to sell or lease: a dataset of active accounts, a pool of sessions to route automated engagement through, or the follower-graph data itself packaged for marketers. None of this requires malicious intent from day one. It's simply what "free" has to mean when the product has real infrastructure costs and no other revenue.
+
+## What Actually Happens When It Goes Wrong
+
+The failure modes aren't hypothetical. Instagram's own Help Center documents account restrictions tied to third-party access, and the pattern is consistent: a burst of automated-looking activity from a login the account doesn't recognize triggers a checkpoint, a temporary action block, or in repeat cases a permanent suspension. None of this requires the app itself to have bad intentions. Even a tracker built in good faith that authenticates too aggressively, or gets flagged as a client Instagram doesn't allowlist, produces the same result for the person whose password it's holding. The account absorbing the consequence is always yours, never the app's.
+
+## How to Spot a Risky Tracker Before You Install One
+
+A short checklist catches most of them before you hand anything over:
+
+- **It asks for your Instagram username and password within the first couple of screens.** This is the single biggest tell. A tool built around the data-export model never needs this.
+- **It promises features Instagram's own app doesn't offer**, like "see who viewed your profile." Nothing legitimate can deliver this, because Instagram doesn't expose profile-view data to anyone, including itself in most cases.
+- **Permissions or onboarding mention "connecting your account" rather than "uploading a file."** Connecting implies ongoing API access. Uploading implies a one-time file read.
+- **There's no way to verify what it does with your data.** A tool with public, auditable source for its data-handling logic (open core) gives you something to check. A closed app asking for your password gives you nothing but a privacy policy to trust.
+
+## If You've Already Given a Tracker Your Password
+
+Damage control is straightforward, and worth doing even if nothing looks wrong yet. Go to Instagram's Settings, then "Security," then "Login activity" to see every device and session currently logged into your account, and log out anything unfamiliar. Change your Instagram password, and if you reused that password anywhere else (email, banking, other social accounts), change it there too, since credential-stuffing attacks rely on exactly that kind of reuse. Finally, revoke the tracker's access explicitly under "Apps and websites" in settings if it shows up there. None of this undoes any damage already done, but it closes the door on further access going forward.
+
+## Is There Ever a Legitimate Reason to Share Credentials?
+
+Occasionally. Instagram's own official "Meta Business Suite" and verified partner integrations, the kind a large brand or agency might use for scheduling posts, go through Meta's actual OAuth authorization flow rather than a raw username and password field. That flow shows you exactly what permissions you're granting and lets you revoke them from inside Instagram's own settings at any time, and it never has your literal password pass through the third party's servers at all. The distinction that matters isn't "did I authenticate with something," it's whether the authorization happened through Meta's own system, where you stay in control, or through a plain login form owned by the app itself, where you don't.`,
   },
   {
     slug: 'who-doesnt-follow-you-back-on-instagram',
@@ -407,7 +536,7 @@ If no, if it works with a data export you control, then the incentive structure 
     imageAlt: 'A hand holding a phone open to an Instagram profile grid',
     body: `Instagram makes this deliberately hard. There is no button that shows you the people you follow who don't follow you back. You can open your following list and check profiles one at a time, but on an account with a few hundred follows that is an evening you will not get back.
 
-The accounts you are looking for have a name: non-followers. These are people you follow who don't follow you in return. They are not the same as unfollowers, who are accounts that used to follow you and stopped (finding those takes two exports compared over time). Non-followers you can find right now, from a single file, in about two minutes.
+The accounts you are looking for have a name: non-followers. These are people you follow who don't follow you in return. They are not the same as [unfollowers](/blog/how-to-see-who-unfollowed-you-on-instagram), who are accounts that used to follow you and stopped (finding those takes two exports compared over time). Non-followers you can find right now, from a single file, in about two minutes.
 
 Here is how, without an app and without ever typing your Instagram password.
 
@@ -425,7 +554,7 @@ Under GDPR Article 20, Instagram has to give you a copy of your own data, includ
 
 ### Step 1: Request your export
 
-Open Instagram. Go to Settings, then "Your activity," then "Download your information." Choose "Followers and following," set the format to JSON (not HTML), and submit. Instagram usually emails the link within a few hours.
+Open Instagram. Go to Settings, then "Your activity," then "Download your information." Choose "Followers and following," [set the format to JSON, not HTML](/blog/instagram-data-export-json-vs-html), and submit. Instagram usually emails the link within a few hours.
 
 ### Step 2: Download the ZIP
 
@@ -440,7 +569,7 @@ Go to [whounfollowed.co](/) and drop the ZIP onto the page. It reads the file in
 Seeing the names is the start. The goal is a cleaner, more mutual account.
 
 - **Separate the ones that matter.** Brands and creators you follow for content are fine to keep. The accounts worth reviewing are the people you followed expecting a follow back.
-- **Watch your ratio.** Following far more people than follow you reads as low-effort to both the algorithm and to anyone who lands on your profile. Trimming non-followers moves the number in the right direction.
+- **Watch your ratio.** Following far more people than follow you reads as low-effort to both the algorithm and to anyone who lands on your profile. [Trimming non-followers](/blog/instagram-follow-ratio-what-it-means-how-to-improve-it) moves the number in the right direction.
 - **Work in one pass.** WhoUnfollowed hands you the full list at once and opens profiles in new tabs, so you can triage in a single sitting instead of hunting one by one.
 
 ## The honest version
@@ -470,7 +599,7 @@ Ghost followers are accounts that follow you but never engage. Some are abandone
 
 ## Why ghost followers hurt more than they help
 
-Instagram does not rank you by follower count. It ranks individual posts by how the people who see them react, mostly in the first hour. That is your engagement rate: interactions divided by reach.
+Instagram does not rank you by follower count. It ranks individual posts by how the people who see them react, mostly in the first hour. That is your engagement rate, and it is closely tied to [your follow ratio](/blog/instagram-follow-ratio-what-it-means-how-to-improve-it): interactions divided by reach.
 
 ![A dark analytics dashboard showing engagement metrics like click-through rate and quality score](/blog/ghost-followers-inline1.jpg)
 
@@ -488,7 +617,7 @@ You don't need to log in anywhere or pay for a scanner. Instagram is required un
 
 ## Step 1: Export your data
 
-In Instagram, go to Settings, then "Your activity," then "Download your information." Choose "Followers and following," pick JSON, and submit. The download link arrives by email, usually within a few hours.
+In Instagram, go to Settings, then "Your activity," then "Download your information." Choose "Followers and following," [pick JSON](/blog/instagram-data-export-json-vs-html), and submit. The download link arrives by email, usually within a few hours.
 
 ## Step 2: Read it locally
 
@@ -507,7 +636,7 @@ Two safe ways to clear a ghost follower:
 - **Remove the follower.** Open their profile, tap the menu, and choose "Remove follower." They drop off your count without being notified or blocked.
 - **Block then unblock.** This force-removes stubborn bot accounts. Use it sparingly.
 
-Whatever you do, go slowly. Instagram's systems flag accounts that remove or block in rapid bursts, the same way they flag aggressive following. A handful of removals across a session is fine. Hundreds in ten minutes is a way to get yourself restricted.
+Whatever you do, [go slowly](/blog/is-it-safe-to-mass-unfollow-on-instagram). Instagram's systems flag accounts that remove or block in rapid bursts, the same way they flag aggressive following. A handful of removals across a session is fine. Hundreds in ten minutes is a way to get yourself restricted.
 
 ## The realistic outcome
 
@@ -551,7 +680,7 @@ That said, "unfollow" is one of several actions people mix up, and Instagram tre
 
 ## So how would anyone know you unfollowed them?
 
-They would have to track it deliberately. Without help, a person can only notice you unfollowed by remembering the prior state, which is unreliable past a handful of accounts. This is exactly the gap that follower tracking exists to fill, and it works both ways: if you want to know who unfollowed you, you face the same problem.
+They would have to track it deliberately. Without help, a person can only notice you unfollowed by remembering the prior state, which is unreliable past a handful of accounts. This is exactly the gap that [follower tracking](/blog/how-to-see-who-unfollowed-you-on-instagram) exists to fill, and it works both ways: if you want to know who unfollowed you, you face the same problem.
 
 ## How to actually find out who unfollowed you
 
@@ -559,7 +688,7 @@ You can't get a notification for it, so you reconstruct it by comparing two snap
 
 ![A hand holding a smartphone](/blog/notify-unfollow-inline2.jpg)
 
-Instagram gives you your follower list on demand under GDPR. Export it now, export it again in a few weeks, and the difference between the two is your list of unfollowers.
+Instagram gives you [your follower list on demand under GDPR](/blog/how-to-download-your-instagram-data). Export it now, export it again in a few weeks, and the difference between the two is your list of unfollowers.
 
 [WhoUnfollowed](/) does that comparison for you. You upload the data export Instagram emails you, it reads the file in your browser, and when you add a second export later it shows exactly who dropped off between the two dates. No password, no notification to anyone, nothing sent to a server.
 

@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getPost, BLOG_POSTS } from '../posts';
+import { getPost, BLOG_POSTS, CLUSTERS } from '../posts';
 import { BlogArticle } from '../BlogArticle';
+import { GLOSSARY_TERMS } from '../glossary';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
@@ -83,10 +84,30 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     ],
   };
 
+  // Pillar posts carry a DefinedTermSet so AI answer engines can cite our
+  // definitions of core terms (non-follower, unfollower, ghost follower, etc.)
+  const isPillar = post.slug === CLUSTERS[post.cluster].pillarSlug;
+  const glossaryJsonLd = isPillar
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'DefinedTermSet',
+        name: 'WhoUnfollowed Instagram Follower Terms',
+        url: `${SITE_URL}/blog/${post.slug}`,
+        hasDefinedTerm: GLOSSARY_TERMS.map((g) => ({
+          '@type': 'DefinedTerm',
+          name: g.term,
+          description: g.definition,
+        })),
+      }
+    : null;
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      {glossaryJsonLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(glossaryJsonLd) }} />
+      )}
       <BlogArticle post={post} otherPosts={otherPosts} />
     </>
   );

@@ -8,6 +8,7 @@ import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { BlogArt, BlogCover, type ArtVariant } from './BlogArt';
 import { BLOG_POSTS, CLUSTERS, type BlogPost } from './posts';
+import { GLOSSARY_TERMS } from './glossary';
 
 const TAG_COLORS: Record<string, { color: string; bg: string }> = {
   Guide: { color: T.tealMid, bg: 'rgba(2,136,143,0.1)' },
@@ -173,6 +174,21 @@ export function BlogArticle({ post, otherPosts }: { post: BlogPost; otherPosts: 
             </div>
           )}
         </div>
+        )}
+
+        {/* Glossary: shown only on pillar posts, for readers and for AI-answer-engine citation */}
+        {isPillar && (
+          <div style={{ marginTop: 40 }}>
+            <div style={{ fontSize: 10, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 16 }}>Glossary</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '22px 24px', borderRadius: 16, background: T.surface1, border: `1px solid ${T.border1}` }}>
+              {GLOSSARY_TERMS.map((g) => (
+                <div key={g.term}>
+                  <div style={{ fontFamily: T.serif, fontSize: 16, color: T.ink, marginBottom: 4 }}>{g.term}</div>
+                  <div style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.6 }}>{g.definition}</div>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
 
         {/* More posts */}
