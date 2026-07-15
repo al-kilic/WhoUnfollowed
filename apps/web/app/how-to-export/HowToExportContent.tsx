@@ -341,6 +341,14 @@ export function HowToExportContent() {
           </div>
         </div>
 
+        {/* Related guide */}
+        <div style={{ marginTop: 40, padding: '18px 20px', borderRadius: 14, background: 'var(--t-surface1)', border: '1px solid var(--t-border1)' }}>
+          <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 8 }}>RELATED GUIDE</div>
+          <Link href="/blog/how-to-download-your-instagram-data" style={{ fontFamily: T.serif, fontSize: 18, color: T.tealLight, textDecoration: 'none', lineHeight: 1.3 }}>
+            How to download your Instagram data (step by step) →
+          </Link>
+        </div>
+
         {/* Second CTA */}
         <ZipCTA />
 

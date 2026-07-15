@@ -1,12 +1,13 @@
-'use client';
-
+// Server component on purpose: it renders static article content and imports
+// the full BLOG_POSTS array for cluster linking, which must stay out of the
+// client bundle. Interactive children (SiteNav, footer) are client islands.
 import React from 'react';
 import Link from 'next/link';
 import { T } from '@/components/landing/tokens';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { BlogArt, BlogCover, type ArtVariant } from './BlogArt';
-import type { BlogPost } from './posts';
+import { BLOG_POSTS, CLUSTERS, type BlogPost } from './posts';
 
 const TAG_COLORS: Record<string, { color: string; bg: string }> = {
   Guide: { color: T.tealMid, bg: 'rgba(2,136,143,0.1)' },
@@ -87,6 +88,15 @@ function renderBody(body: string) {
 export function BlogArticle({ post, otherPosts }: { post: BlogPost; otherPosts: BlogPost[] }) {
   const tag = TAG_COLORS[post.tag] ?? TAG_COLORS['Guide']!;
 
+  // Pillar-and-cluster linking: supporting posts link up to their pillar,
+  // pillars link down to every supporting post in the cluster.
+  const cluster = CLUSTERS[post.cluster];
+  const isPillar = post.slug === cluster.pillarSlug;
+  const clusterPosts = BLOG_POSTS.filter((p) => p.cluster === post.cluster);
+  const pillar = clusterPosts.find((p) => p.slug === cluster.pillarSlug);
+  const supporting = clusterPosts.filter((p) => p.slug !== cluster.pillarSlug);
+  const seriesList = isPillar ? supporting : supporting.filter((p) => p.slug !== post.slug);
+
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
       <SiteNav />
@@ -130,6 +140,40 @@ export function BlogArticle({ post, otherPosts }: { post: BlogPost; otherPosts: 
             <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M11 7L8 4M11 7L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </Link>
         </div>
+
+        {/* Topic cluster: pillar + series linking. Hidden on a pillar that has
+            no supporting posts yet, so it never renders an empty series. */}
+        {(!isPillar || seriesList.length > 0) && (
+        <div style={{ marginTop: 40, padding: '22px 24px', borderRadius: 16, background: 'rgba(2,136,143,0.045)', border: '1px solid rgba(2,136,143,0.16)' }}>
+          <div style={{ fontSize: 10, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 10 }}>
+            {isPillar ? `Guide · ${cluster.label}` : 'Part of a guide'}
+          </div>
+
+          {!isPillar && pillar && (
+            <Link href={`/blog/${pillar.slug}`} style={{ display: 'block', textDecoration: 'none', marginBottom: seriesList.length > 0 ? 16 : 0 }}>
+              <div style={{ fontSize: 13, color: T.inkDim, marginBottom: 3 }}>Read the full guide</div>
+              <div style={{ fontFamily: T.serif, fontSize: 19, color: T.tealLight, lineHeight: 1.25, letterSpacing: '-0.01em' }}>{pillar.title} →</div>
+            </Link>
+          )}
+
+          {isPillar && (
+            <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.6, marginBottom: seriesList.length > 0 ? 16 : 0 }}>
+              This is the main guide on {cluster.label.toLowerCase()}. Keep going with the rest of the series.
+            </p>
+          )}
+
+          {seriesList.length > 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, borderTop: '1px solid rgba(2,136,143,0.14)', paddingTop: 14 }}>
+              {seriesList.map((p) => (
+                <Link key={p.slug} href={`/blog/${p.slug}`} style={{ display: 'flex', alignItems: 'flex-start', gap: 9, fontSize: 15, color: T.inkDim, textDecoration: 'none', lineHeight: 1.4 }}>
+                  <span style={{ color: T.tealMid, flexShrink: 0 }}>→</span>
+                  <span>{p.title}</span>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+        )}
 
         {/* More posts */}
         {otherPosts.length > 0 && (
