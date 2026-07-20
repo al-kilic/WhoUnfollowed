@@ -1123,6 +1123,82 @@ Before using any Instagram follower tracker, ask one direct question: does it, a
 
 A real no-login Instagram follower tracker exists and works by reading your own official data export, not by connecting to your account under a friendlier name. If a tool asks for Instagram access at any point, it is not what "no login" is supposed to mean.`,
   },
+  {
+    slug: 'deactivated-or-blocked-on-instagram-how-to-tell',
+    cluster: 'unfollowers',
+    title: 'Deactivated, Deleted, or Blocked? How to Tell What Happened on Instagram',
+    metaTitle: 'Deactivated or Blocked on Instagram? How to Tell',
+    metaDescription: 'Someone vanished from your followers list. Here is how to tell if they deactivated, deleted their account, or blocked you, no app or password needed.',
+    excerpt: "They're gone from your list and Instagram won't say why. Deactivated, deleted, and blocked leave three different fingerprints. Here's how to read them without logging into anyone's account but your own.",
+    date: 'July 21, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'how to tell if someone deactivated or blocked you on Instagram',
+    art: 'search',
+    // Unsplash: 0I21xHfgw0E (a hand holding a phone showing a folder of social media apps including Instagram)
+    image: '/blog/deactivated-or-blocked-hero.jpg',
+    imageAlt: 'A hand holding a phone showing a folder of social media apps including Instagram, representing checking why someone disappeared from a followers list',
+    body: `Someone you used to see in your followers or following list is gone, and Instagram gives you nothing. No banner, no note, no explanation. It could be four completely different things: they deactivated, they deleted their account, they blocked you, or they just quietly unfollowed. Each one leaves a slightly different trail. Here is how to read it.
+
+## The quick answer
+
+If their profile shows "Sorry, this page isn't available" for you but a mutual friend can still see it, you were blocked. If it is unavailable for everyone, including you logged into a different account, they deactivated or deleted. If their profile looks completely normal and you simply do not see them in your followers or following list anymore, they unfollowed you.
+
+## Deactivated: temporary, and it looks the same to everyone
+
+Deactivating an Instagram account hides it from the entire platform, not just you. According to [Instagram's own Help Center](https://help.instagram.com/139886812848894), a deactivated profile disappears from search, posts stop showing, and the account owner is the only one who can bring it back, simply by logging in again. There is no time limit. Someone can leave their account deactivated for a day or a year.
+
+Signs you are looking at a deactivation, not a block:
+- Their profile shows as unavailable to you **and** to people who were never connected to them.
+- In a shared group chat, their display name may flip to "Instagram User" and their profile photo disappears, since deactivation pulls their identity from every surface at once.
+- Old comments and tags they left on posts often still show their username, just with a dead link behind it.
+
+## Deleted: the same look, with a 30-day window
+
+Deletion is deactivation's permanent sibling, and for the first month it is genuinely indistinguishable from the outside. When someone requests deletion, Instagram hides the account immediately and starts a 30-day grace period. If they log back in during that window, the deletion cancels and everything returns exactly as it was. If they never log back in, the account and its data are erased for good once the 30 days pass.
+
+There is no outward signal that separates "deactivated" from "deleted, still inside the 30-day window." Both look identical to you: profile unavailable, no explanation. The only real test is time. If the profile is still gone after a month or two with no sign of returning, deletion is the more likely explanation, though there is no way to confirm it from outside the account.
+
+## Blocked: visible to everyone except you
+
+A block is the one case where the profile is not actually gone, it is just gone for you specifically. Per [Instagram's Help Center on blocking](https://help.instagram.com/447613741984126), a block removes the mutual follow relationship, hides your profile and Stories from them, and hides their profile from you. Nobody is notified when a block happens.
+
+The tell is asymmetry. A blocked profile:
+- Shows "Sorry, this page isn't available" only to you, while other accounts (including a friend's, or a logged-out browser) can still open it normally.
+- Stops appearing in your search results entirely, even by exact username.
+- Freezes any DM thread you had. Old messages stay visible, but nothing sends or delivers.
+- Leaves old likes and comments they made on your posts removed, since blocking retroactively strips their interactions too.
+
+If a mutual friend can pull up the profile and you cannot, that is a block, not a deactivation.
+
+## Unfollowed: the invisible one
+
+The fourth option is the one people miss most often, because it produces zero symptoms on the profile itself. If someone simply unfollowed you, their account looks completely untouched: full profile, normal posts, searchable, DMs work fine. The only change is that they no longer appear in your followers list. [Instagram never sends a notification for this](/blog/does-instagram-notify-when-you-unfollow-someone) in either direction, which is exactly why it is so easy to miss and so hard to confirm just by looking.
+
+## Why this happens overnight, in batches
+
+If several accounts vanish from your followers count at once, it is rarely one dramatic event. It is usually a mix of the four things above landing in the same week, sometimes alongside a [platform-wide bot purge](/blog/why-did-i-lose-followers-overnight-on-instagram) that has nothing to do with any single person's decision. Trying to diagnose a multi-account drop by checking profiles one at a time gets slow fast, which is the real reason to keep records instead of guessing.
+
+## The one method that does not rely on guessing
+
+Checking profiles by hand works for one person you are curious about. It does not scale to "who exactly disappeared this month." For that, you need a record of who followed you before, compared against who follows you now.
+
+Instagram is required under GDPR to hand you a full copy of your own followers and following lists on request. [Export your data](/blog/how-to-download-your-instagram-data), keep the file, and request a fresh one a few weeks later. The difference between the two is your exact list of who left, regardless of whether they deactivated, deleted, blocked you, or unfollowed.
+
+[WhoUnfollowed](/) reads both exports in your browser and shows you exactly who dropped off between them. Nothing is uploaded, and no password is involved, since the whole comparison runs locally on the files Instagram already gave you. For the full walkthrough, see [how to see who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram).
+
+## Quick Answers
+
+**Can a deactivated account still see my profile?** No. Deactivation logs them out of Instagram entirely until they choose to reactivate. While deactivated, they cannot browse, view, or interact with anything, including your profile.
+
+**If I'm blocked, do I disappear from their followers list too?** Yes. Blocking is mutual in effect: it removes the follow relationship in both directions, even though only one person initiated the block.
+
+**Does unblocking bring back the follow relationship?** No. Unblocking only restores visibility. Whatever follow relationship existed before the block does not come back automatically. Either person would need to follow again.
+
+**Is there any official way to check whether I'm blocked?** Not directly. Instagram does not expose a "you are blocked" flag anywhere in the app. The asymmetry test (a mutual's view versus yours) is the most reliable signal available.
+
+**Why does a deactivated account sometimes still show old comments?** Comments and tags are stored on the post they were made under, not fully tied to live profile data. The username often persists even though the profile behind it is temporarily unreachable.`,
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
