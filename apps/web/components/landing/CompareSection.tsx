@@ -6,7 +6,7 @@ const US_ITEMS = [
   'You upload your own data export, never your password',
   'ZIP is parsed in your browser tab',
   'No account, no email, no signup',
-  'Parser source code is public · MPL-2.0 licensed',
+  'Entire app is open source · AGPL-3.0 web app, MPL-2.0 parser',
   'Built on a feature Instagram offers under GDPR',
 ];
 

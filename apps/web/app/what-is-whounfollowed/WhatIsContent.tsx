@@ -21,7 +21,7 @@ const COMPARE_ROWS = [
   { feature: 'Zero risk of account ban',     us: true,  them: false },
   { feature: 'Credentials never stored',     us: true,  them: false },
   { feature: 'No signup required',           us: true,  them: false },
-  { feature: 'Open source parser',           us: true,  them: false },
+  { feature: 'Open source (AGPL-3.0 + MPL-2.0)', us: true,  them: false },
   { feature: 'Works offline in browser',     us: true,  them: false },
   { feature: 'Free tier available',          us: true,  them: true  },
 ];
@@ -60,10 +60,10 @@ export function WhatIsContent() {
           </div>
           <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(34px, 6vw, 58px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', color: T.ink, marginBottom: 20 }}>
             See who doesn&apos;t follow you back on Instagram.
-            <span style={{ fontStyle: 'italic', color: T.tealLight }}> Without giving anyone your password.</span>
+            <span style={{ fontStyle: 'italic', color: T.tealLight }}> Open source, so you don&apos;t have to take our word for it.</span>
           </h1>
           <p style={{ fontSize: 16, color: T.inkDim, lineHeight: 1.7, marginBottom: 28, maxWidth: 580 }}>
-            You upload the data file Instagram already gave you. WhoUnfollowed reads it locally in your browser and shows the full list in under 2 seconds. No server. No login. No risk.
+            You upload the data file Instagram already gave you. WhoUnfollowed reads it locally in your browser and shows the full list in under 2 seconds. No password, no server, no login. Every line of code that touches your data is public, so you can check that for yourself instead of trusting a privacy policy.
           </p>
           <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 15, fontWeight: 600, color: T.tealLight, textDecoration: 'none' }}>
             See your list now
@@ -76,7 +76,7 @@ export function WhatIsContent() {
           {[
             { value: '2s', label: 'to see your results' },
             { value: '0', label: 'files sent to us' },
-            { value: '0', label: 'passwords needed' },
+            { value: '2', label: 'open-source licenses' },
           ].map(s => (
             <div key={s.label} style={{ padding: '18px 14px', borderRadius: 14, background: T.surface1, border: `1px solid ${T.border1}`, textAlign: 'center' }}>
               <div style={{ fontFamily: T.serif, fontSize: 32, color: T.tealLight, letterSpacing: '-0.03em', lineHeight: 1 }}>{s.value}</div>
@@ -96,6 +96,7 @@ export function WhatIsContent() {
               { icon: '🚫', text: 'Violates Instagram\'s Terms of Service' },
               { icon: '⚠', text: 'Thousands of accounts have been permanently banned this way' },
               { icon: '💾', text: 'Several apps were caught storing and selling credentials' },
+              { icon: '🔒', text: 'Closed source, so you have no way to check what they actually do with your data' },
             ].map(item => (
               <div key={item.text} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 16px', borderRadius: 10, background: 'rgba(168,75,47,0.05)', border: '1px solid rgba(168,75,47,0.12)' }}>
                 <span style={{ fontSize: 16 }}>{item.icon}</span>
@@ -103,7 +104,7 @@ export function WhatIsContent() {
               </div>
             ))}
           </div>
-          <p style={{ fontSize: 15, color: T.ink, fontWeight: 500 }}>WhoUnfollowed solves the same problem without any of that risk.</p>
+          <p style={{ fontSize: 15, color: T.ink, fontWeight: 500 }}>WhoUnfollowed solves the same problem without any of that risk, and the code that proves it is public.</p>
         </section>
 
         {/* How it works */}
