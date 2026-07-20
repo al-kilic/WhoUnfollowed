@@ -22,6 +22,11 @@ PRO.md
 ROADMAP.md
 TODO.md
 AI_OPS_ROOM.md
+COPY_PHILOSOPHY.md
+MOBILE.md
+
+# Subagent memory — internal business/strategy notes, local only
+.claude/agent-memory/
 
 # OS
 .DS_Store
