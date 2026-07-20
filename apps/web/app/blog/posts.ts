@@ -278,6 +278,8 @@ Is it safe to mass unfollow on Instagram? Unfollowing thoughtfully, at a human p
     imageAlt: 'A hand holding a phone showing Instagram Insights with reach and account activity stats',
     body: `The short answer: Instagram will not tell you who unfollowed you, but you can see it yourself by comparing two exports of your own data over time. No password or third-party app required.
 
+If you typed "who unfollowed me instagram" into Google hoping for a direct answer, you're not alone. It's one of the most common searches around this problem, and Instagram simply doesn't have a built-in screen for it. The method below is the closest thing to that answer that actually exists.
+
 Most follower trackers work fine, right until your account gets flagged, restricted, or permanently disabled.
 
 The reason is straightforward. These tools ask for your Instagram password so they can log in as you, call Instagram's private API, and pull your follower data. Instagram explicitly bans this in its Terms of Use. When their systems detect unusual API activity (and they do), the account that gets punished is yours, not the app's.
@@ -311,7 +313,11 @@ If you want to see who specifically unfollowed you between two points in time, u
 
 ## Why This Approach Is Different
 
-Every other tracker in this space needs your credentials to function. That's not an oversight in their product design. Credential access is often how they build their data business. WhoUnfollowed was built specifically to not need it. The ZIP your Instagram account generates is already yours. We just read it.
+Search "instagram unfollow tracker" and almost every result asks for your login before showing you anything. That's not an oversight in their product design. Credential access is often how they build their data business. WhoUnfollowed was built specifically to not need it. The ZIP your Instagram account generates is already yours. We just read it, entirely on your device, with no login step anywhere in the process.
+
+### Is there an app to see who unfollowed you on Instagram?
+
+Yes. WhoUnfollowed is exactly that: an app, not an Instagram feature, built for the sole purpose of showing you who unfollowed you. Some people search for this as an "unfollow checker," others call it a tracker, but it's the same job either way: comparing two exports and showing you the difference. The difference from most of the results you'll find searching for one is what it asks of you first. Password-based apps want your Instagram login before they show you anything. This one only asks for the ZIP file Instagram already emailed you, and it reads that file in your browser rather than sending it anywhere.
 
 ## Why Instagram Doesn't Just Show You This Directly
 
@@ -482,7 +488,7 @@ Instagram is legally required under GDPR to give you a copy of your own data, in
 
 No app needs your password to read a file you already have.
 
-WhoUnfollowed reads that ZIP file in your browser. The file never leaves your device. The core parsing code is MPL-2.0 licensed and public. You can verify the behavior yourself before uploading anything.
+WhoUnfollowed reads that ZIP file in your browser. The file never leaves your device. The core parsing code is open source under the MPL-2.0 license and public on GitHub. You can verify the behavior yourself before uploading anything.
 
 ## The Practical Test
 
@@ -564,7 +570,7 @@ Open the email, download the file, and keep it somewhere you can find it. The li
 
 ### Step 3: Drop it into WhoUnfollowed
 
-Go to [whounfollowed.co](/) and drop the ZIP onto the page. It reads the file inside your browser tab and shows you, on one screen, every account you follow that doesn't follow you back. Nothing is uploaded. You can turn off your wifi before you drop the file in and it still works, which is the simplest way to prove the data never leaves your device.
+Go to [whounfollowed.co](/) and drop the ZIP onto the page. It reads the file inside your browser tab and shows you, on one screen, every account you follow that doesn't follow you back. No login, nothing uploaded. You can turn off your wifi before you drop the file in and it still works, which is the simplest way to prove the data never leaves your device.
 
 ## What to do with the list
 
@@ -736,7 +742,7 @@ There is a second category most people do not know exists. Instead of logging in
 
 Under GDPR Article 20, Instagram is legally required to give you a copy of your own data on request. That includes your full followers and following lists. You request the export from Instagram's settings, they email you a ZIP file, and a tracker reads that file to show you who does not follow you back and who unfollowed you.
 
-Nothing logs into your account. Nothing hits Instagram's servers. There is no automated access for Instagram to detect, because there is no access at all. This is exactly how [WhoUnfollowed](/) works, and it is why it carries zero ban risk.
+Nothing logs into your account. Nothing hits Instagram's servers. There is no automated access for Instagram to detect, because there is no access at all. This is exactly how [WhoUnfollowed](/) works, with no login step anywhere in the flow, and it is why it carries zero ban risk. The parsing code is open source, so that's not a claim you have to take on trust.
 
 ## How to tell which kind you are using
 
@@ -768,7 +774,7 @@ You can get banned for using a follower tracker, but only if it asks for your lo
     // Unsplash: FnA5pAzqhMM (a gold padlock and credit cards on a keyboard)
     image: '/blog/trackers-safe-hero.jpg',
     imageAlt: 'A padlock and credit cards resting on a keyboard, representing the safety risk of handing over Instagram credentials',
-    body: `Most Instagram follower trackers are not safe. The majority ask for your Instagram username and password, store your credentials on their servers, and send your data off your device. That combination puts both your account and your privacy at risk. A small number are safe by design, because they never ask for your login at all. Here is how to tell them apart.
+    body: `Most Instagram follower trackers are not safe. The majority ask for your Instagram username and password, store your credentials on their servers, and send your data off your device. That combination puts both your account and your privacy at risk. A small number are safe by design, because they never ask for your login at all. Whether you call them trackers or unfollow checkers, the safety question is the same. Here is how to tell them apart.
 
 ## What makes a follower tracker unsafe
 
@@ -793,7 +799,7 @@ A safe tool answers those cleanly: no login, processed locally, open and auditab
 
 Instagram already gives you your own data. Under GDPR Article 20 you can request a full export of your followers and following lists, and Instagram emails you a ZIP file. A safe tracker reads that file and nothing else.
 
-[WhoUnfollowed](/) is built this way on purpose. You upload the export Instagram sent you, your browser reads it locally, and the result appears in about two seconds. No password, no server upload, no account. The parsing code is open source, so anyone can verify exactly what it does with your data. If you want to see who left, start with [how to see who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram).
+[WhoUnfollowed](/) is built this way on purpose. You upload the export Instagram sent you, your browser reads it locally, and the result appears in about two seconds. No password, no server upload, no account. The parsing code is open source, so anyone can verify exactly what it does with your data. It's sitting on GitHub right now if you want to check it yourself instead of trusting a claim on a landing page. If you want to see who left, start with [how to see who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram).
 
 ## So are they safe or not?
 
@@ -1097,7 +1103,7 @@ See the full list first, sort it deliberately, unfollow in small paced batches, 
     // Unsplash: DeD4qZmVFdM (a 3D render of the Instagram icon)
     image: '/blog/no-login-tracker-hero.jpg',
     imageAlt: 'A stylized 3D render of the Instagram app icon, representing a follower tracker that needs no Instagram login',
-    body: `Yes, genuine no-login Instagram follower trackers exist, but the phrase gets abused. Plenty of apps advertise "no login required" while still asking you to authenticate with Instagram somewhere in the actual flow, just worded to sound safer than it is. Here is how to tell a real one from a relabeled one.
+    body: `Yes, genuine no-login Instagram follower trackers exist, but the phrase gets abused. Search "instagram unfollow tracker" and you'll find dozens of apps making that promise, and most of them still authenticate with Instagram somewhere in the actual flow, just worded to sound safer than it is. Here is how to tell a real one from a relabeled one.
 
 ## The trick some trackers use
 

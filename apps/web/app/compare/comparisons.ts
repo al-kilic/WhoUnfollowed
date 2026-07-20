@@ -80,6 +80,29 @@ WhoUnfollowed was built specifically because this tradeoff is a bad one. Instagr
     verdict: 'Unfollowers for Instagram delivers real results through a method that carries real account risk. WhoUnfollowed delivers the same results through a method Instagram explicitly supports, with no credential exposure and no ongoing account access.',
     cta: 'Upload your Instagram ZIP now. See your unfollowers instantly, nothing sent to any server.',
   },
+  {
+    slug: 'whounfollowed-vs-followbuddy',
+    title: 'WhoUnfollowed vs FollowBuddy',
+    competitorName: 'FollowBuddy',
+    metaTitle: 'WhoUnfollowed vs FollowBuddy for Instagram',
+    metaDescription: 'FollowBuddy also skips your Instagram password, but it locks results behind a subscription and closed-source code. See how it compares to WhoUnfollowed.',
+    excerpt: 'FollowBuddy and WhoUnfollowed both read your official Instagram data export instead of asking for your password. The real differences show up after that.',
+    rows: [
+      { feature: 'Requires Instagram password',      us: false, them: false },
+      { feature: 'Free to see who unfollowed you',    us: true,  them: false },
+      { feature: 'Open source, code is auditable',    us: true,  them: false },
+      { feature: 'Works in your browser, no app install', us: true, them: false },
+    ],
+    body: `FollowBuddy is not one of the password-harvesting apps we usually write about here. To its credit, it uses the same starting point WhoUnfollowed does: Instagram's own "Download Your Information" export. You request your data from Instagram directly, Instagram sends you a ZIP file, and you upload that file to the app instead of typing in your username and password. On that specific point, FollowBuddy gets it right, and it deserves credit for not following the industry's worst habit.
+
+Where the two tools diverge is what happens next. FollowBuddy is a mobile app, iOS and Android only, and viewing your actual list of unfollowers requires an active paid subscription. You upload your data first, then hit a paywall to see the results. WhoUnfollowed runs in any browser, no download, no app store, and shows you the full non-follower and unfollower breakdown for free.
+
+The bigger difference is verifiability. FollowBuddy's own marketing says your data stays off their servers, but the app is closed source, so that claim rests on trust alone. There is no code for anyone to read and confirm it. WhoUnfollowed's parsing logic is open source under a public license. The ZIP you upload is processed entirely in your browser tab, and anyone technical enough to check can go look at exactly what the code does with your file, line by line.
+
+Neither tool is going to get your Instagram account banned. That much is genuinely true of both. The question is whether you want to pay a subscription to see your own data, install an app to get it, and take a company's word for how your file is handled, or get the same answer for free, in a browser tab, with the code sitting in the open.`,
+    verdict: 'FollowBuddy avoids the password trap, which puts it a step ahead of most of the competition. It still charges a subscription to unlock your own results and asks you to trust a closed codebase. WhoUnfollowed gives you the same unfollower and non-follower breakdown for free, in your browser, with nothing to install and nothing hidden.',
+    cta: 'Upload your Instagram ZIP and see your unfollowers free, right in your browser. Nothing to install, nothing to subscribe to.',
+  },
 ];
 
 export function getComparison(slug: string): Comparison | undefined {
