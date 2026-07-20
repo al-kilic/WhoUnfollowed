@@ -26,6 +26,22 @@ function inline(text: string): string {
     .replace(/\*\*([^*]+)\*\*/g, (_, b) => `<strong style="color:${T.ink};font-weight:600">${b}</strong>`);
 }
 
+// `post.body` is NOT full markdown, it's a small hand-rolled subset. Only the
+// syntax explicitly handled below actually renders correctly; anything else
+// (blockquotes, code fences, nested/indented lists, single-asterisk italics,
+// setext headers, etc.) silently falls through to a plain <p> and prints as
+// literal text. Supported block-level syntax (each must be its own
+// \n\n-separated paragraph):
+//   [[art:variant]]         inline abstract cover art (see ArtVariant)
+//   ![alt](src)              image, src usually /blog/<file>.jpg
+//   ### text                 h3
+//   ## text                  h2
+//   - item                   bullet list (every line in the block must start with "- ")
+//   1. item                  numbered list (every line must start with "N. ")
+//   | a | b |\n|---|---|\n...  pipe table (header row + separator + body rows)
+// Supported inline syntax (works inside paragraphs, list items, table cells):
+//   **bold**, [text](url)
+// If you're generating a new post body, only use the syntax above.
 function renderBody(body: string) {
   const blocks = body.split('\n\n');
   return blocks.map((raw, i) => {
@@ -67,6 +83,64 @@ function renderBody(body: string) {
         </h2>
       );
     }
+    // Markdown pipe table: header row, |---|---| separator, body rows.
+    if (para.startsWith('|')) {
+      const rows = para.split('\n').map((r) => r.trim()).filter(Boolean);
+      const toCells = (r: string) => r.replace(/^\|/, '').replace(/\|$/, '').split('|').map((c) => c.trim());
+      const isSeparator = (r: string) => /^[|\-:\s]+$/.test(r) && r.includes('-');
+      const headerRow = rows[0];
+      const separatorRow = rows[1];
+      if (headerRow && separatorRow && rows.length >= 2 && isSeparator(separatorRow)) {
+        const header = toCells(headerRow);
+        const body = rows.slice(2).map(toCells);
+        return (
+          <div key={i} style={{ overflowX: 'auto', marginBottom: 28, borderRadius: 12, border: `1px solid ${T.border1}` }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 16 }}>
+              <thead>
+                <tr>
+                  {header.map((h, hi) => (
+                    <th key={hi} style={{ textAlign: 'left', padding: '12px 16px', background: T.surface1, color: T.ink, fontWeight: 600, borderBottom: `1px solid ${T.border1}`, whiteSpace: 'nowrap' }}>
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {body.map((row, ri) => (
+                  <tr key={ri}>
+                    {row.map((c, ci) => (
+                      <td
+                        key={ci}
+                        style={{ padding: '12px 16px', color: T.inkDim, borderBottom: ri < body.length - 1 ? `1px solid ${T.border1}` : 'none' }}
+                        dangerouslySetInnerHTML={{ __html: inline(c) }}
+                      />
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      }
+    }
+
+    // Numbered list: "1. text" lines, rendered with real numbering.
+    if (/^\d+\.\s/.test(para)) {
+      const items = para.split('\n').filter((l) => /^\d+\.\s/.test(l.trim()));
+      return (
+        <ol key={i} style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 28 }}>
+          {items.map((item, j) => (
+            <li key={j} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, fontSize: 18, color: T.inkDim, lineHeight: 1.75 }}>
+              <span style={{ flexShrink: 0, minWidth: 24, fontFamily: T.mono, fontSize: 14, color: T.tealMid, fontWeight: 600, marginTop: 2 }}>
+                {item.trim().match(/^\d+/)?.[0]}.
+              </span>
+              <span dangerouslySetInnerHTML={{ __html: inline(item.replace(/^\s*\d+\.\s/, '')) }} />
+            </li>
+          ))}
+        </ol>
+      );
+    }
+
     if (para.startsWith('- ')) {
       const items = para.split('\n').filter((l) => l.trim().startsWith('- '));
       return (
