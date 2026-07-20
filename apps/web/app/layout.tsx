@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     template: '%s | WhoUnfollowed',
   },
   description:
-    'Upload your official Instagram data export to see who doesn\'t follow you back. Save snapshots over time to identify new followers and unfollows. No password or login required.',
+    'See who doesn\'t follow you back on Instagram by uploading your official data export. Open-source, processed entirely in your browser. No password, no login.',
   keywords: [
     'instagram unfollow tracker',
     'instagram followers',
@@ -41,6 +41,7 @@ export const metadata: Metadata = {
     'instagram data export',
     'privacy instagram tool',
     'local-first instagram analytics',
+    'open source instagram tracker',
   ],
   authors: [{ name: 'WhoUnfollowed' }],
   creator: 'WhoUnfollowed',
@@ -51,7 +52,7 @@ export const metadata: Metadata = {
     siteName: 'WhoUnfollowed',
     title: 'WhoUnfollowed - See who unfollowed you',
     description:
-      'Upload your official Instagram data export to see who doesn\'t follow you back. Save snapshots over time to identify new followers and unfollows. No password or login required.',
+      'See who doesn\'t follow you back on Instagram by uploading your official data export. Open-source, processed entirely in your browser. No password, no login.',
     images: [
       {
         url: '/opengraph-image',
@@ -65,7 +66,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'WhoUnfollowed - See who unfollowed you',
     description:
-      'Upload your official Instagram data export to see who doesn\'t follow you back. Save snapshots over time to see who unfollowed. No password or login required.',
+      'See who doesn\'t follow you back on Instagram by uploading your official data export. Open-source, processed entirely in your browser. No password, no login.',
     images: ['/opengraph-image'],
   },
   robots: {
@@ -93,7 +94,7 @@ const orgJsonLd = {
       url: SITE_URL,
       logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png` },
       description:
-        'Privacy-first Instagram follower analysis. No password required, processed in your browser.',
+        'Privacy-first, open-source Instagram follower analysis. AGPL-3.0 web app, MPL-2.0 parser, no password required, processed in your browser.',
       sameAs: ['https://github.com/al-kilic/WhoUnfollowed'],
     },
     {

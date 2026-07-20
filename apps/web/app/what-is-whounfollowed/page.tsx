@@ -6,13 +6,13 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 export const metadata: Metadata = {
   title: 'What Is WhoUnfollowed? See Who Unfollowed You Without a Password',
   description:
-    "WhoUnfollowed reads the data export Instagram already gives you and shows who doesn't follow you back, in your browser, in 2 seconds. No password, no server, no ban risk.",
+    "WhoUnfollowed is open-source and reads the data export Instagram already gives you, showing who doesn't follow you back in your browser in 2 seconds. No password, no server.",
   alternates: { canonical: `${SITE_URL}/what-is-whounfollowed` },
   openGraph: {
     type: 'website',
     title: 'What Is WhoUnfollowed? See Who Unfollowed You Without a Password',
     description:
-      "WhoUnfollowed reads the data export Instagram already gives you and shows who doesn't follow you back, in your browser, in 2 seconds. No password, no server.",
+      "WhoUnfollowed is open-source and reads the data export Instagram already gives you, showing who doesn't follow you back in your browser in 2 seconds. No password, no server.",
     url: `${SITE_URL}/what-is-whounfollowed`,
     siteName: 'WhoUnfollowed',
   },

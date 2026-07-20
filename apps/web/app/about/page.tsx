@@ -6,13 +6,13 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 export const metadata: Metadata = {
   title: 'About WhoUnfollowed and Alan Kilic',
   description:
-    'WhoUnfollowed is an independent, privacy-first product built by Alan Kilic under Alcatraz Studio. No VC funding, no team of twenty, no app that asks for your Instagram password.',
+    'WhoUnfollowed is an independent, open-source product built by Alan Kilic under Alcatraz Studio. No VC funding, no team of twenty, no app that asks for your Instagram password.',
   alternates: { canonical: `${SITE_URL}/about` },
   openGraph: {
     type: 'profile',
     title: 'About WhoUnfollowed and Alan Kilic',
     description:
-      'An independent, privacy-first product built by Alan Kilic under Alcatraz Studio. Every app ships open, asks for the least access it needs, and never wants your password.',
+      'An independent product built by Alan Kilic under Alcatraz Studio. Every app ships open-source (AGPL-3.0), asks for the least access it needs, and never wants your password.',
     url: `${SITE_URL}/about`,
     siteName: 'WhoUnfollowed',
   },

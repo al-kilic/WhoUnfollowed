@@ -1,8 +1,8 @@
 # WhoUnfollowed
 
-> Privacy-first Instagram follower analysis. Upload the data export Instagram gives you and see who doesn't follow you back, who unfollowed you, and how your audience changes over time. Everything is processed in your browser. No password, no server, no Instagram API.
+> Privacy-first, open-source Instagram follower analysis. Upload the data export Instagram gives you and see who doesn't follow you back, who unfollowed you, and how your audience changes over time. Everything is processed in your browser. No password, no server, no Instagram API.
 
-WhoUnfollowed reads the official "Download Your Information" ZIP that Instagram provides under GDPR Article 20. The parsing engine is open source under MPL-2.0, so anyone can verify what happens to their data. The free tier runs entirely client-side and needs no account. Pro ($4.99/month, or $39/year) adds encrypted cloud snapshot history, comparison over time, follower charts, and email alerts when a new export reveals unfollowers.
+WhoUnfollowed reads the official "Download Your Information" ZIP that Instagram provides under GDPR Article 20. Unlike closed-source unfollower trackers, the entire web app is open source under AGPL-3.0 and the parsing engine specifically is MPL-2.0, so anyone can read the code and verify exactly what happens to their data instead of taking a privacy claim on faith. The free tier runs entirely client-side and needs no account. Pro ($4.99/month, or $39/year) adds encrypted cloud snapshot history, comparison over time, follower charts, and email alerts when a new export reveals unfollowers.
 
 Author: Alan Kilic, an independent developer building privacy-first software under the name Alcatraz Studio. See https://whounfollowed.co/author/alan-kilic.
 
@@ -40,7 +40,7 @@ Author: Alan Kilic, an independent developer building privacy-first software und
 - [WhoUnfollowed vs Unfollowers for Instagram](https://whounfollowed.co/compare/whounfollowed-vs-unfollowers-instagram)
 
 ## Key facts
+- Fully open source: the web app is AGPL-3.0 and the parser is MPL-2.0, both public at https://github.com/al-kilic/WhoUnfollowed. Anyone can audit exactly how data is processed.
 - No Instagram password is ever required. The tool reads a data export the user already owns.
 - The free tier processes data entirely in the browser. Nothing is sent to a server.
 - TOS-compliant: it does not use the Instagram API and does not scrape Instagram.
-- Open core: the parser is public and MPL-2.0 licensed at https://github.com/al-kilic/WhoUnfollowed.
