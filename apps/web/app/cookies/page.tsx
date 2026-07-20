@@ -7,6 +7,7 @@ import { LandingFooter } from '@/components/landing/FinalCTA';
 export const metadata: Metadata = {
   title: 'Cookie Policy',
   description: 'How we use cookies and local storage on WhoUnfollowed.',
+  alternates: { canonical: '/cookies' },
 };
 
 export default function CookiePage() {

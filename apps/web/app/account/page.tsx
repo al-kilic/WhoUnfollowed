@@ -19,7 +19,7 @@ import { ChangePassword } from './ChangePassword';
 import { UpgradeLink } from './UpgradeLink';
 
 export const metadata: Metadata = {
-  title: 'Account — WhoUnfollowed',
+  title: 'Account',
   description: 'Manage your plan, billing, and data.',
 };
 

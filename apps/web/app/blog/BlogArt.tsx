@@ -182,12 +182,16 @@ export function BlogCover({
   alt,
   rounded = 0,
   style,
+  priority = false,
 }: {
   image?: string | undefined;
   art: ArtVariant;
   alt: string;
   rounded?: number;
   style?: React.CSSProperties;
+  // Set on the above-the-fold hero cover so the LCP image loads eagerly.
+  // Thumbnails and below-the-fold covers leave this false to lazy-load.
+  priority?: boolean;
 }) {
   if (image) {
     return (
@@ -195,7 +199,10 @@ export function BlogCover({
       <img
         src={image}
         alt={alt}
-        loading="lazy"
+        width={1200}
+        height={480}
+        loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={priority ? 'high' : 'auto'}
         style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover', ...style }}
       />
     );

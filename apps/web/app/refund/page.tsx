@@ -7,6 +7,7 @@ import { LandingFooter } from '@/components/landing/FinalCTA';
 export const metadata: Metadata = {
   title: 'Refund Policy',
   description: 'Our policy on refunds for WhoUnfollowed Pro.',
+  alternates: { canonical: '/refund' },
 };
 
 export default function RefundPage() {

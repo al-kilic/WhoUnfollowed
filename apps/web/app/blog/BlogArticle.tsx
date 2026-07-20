@@ -123,7 +123,7 @@ export function BlogArticle({ post, otherPosts }: { post: BlogPost; otherPosts: 
 
         {/* Hero cover */}
         <div style={{ borderRadius: 18, overflow: 'hidden', border: `1px solid ${T.border1}`, aspectRatio: '5 / 2', marginBottom: 8 }}>
-          <BlogCover image={post.image} art={post.art} alt={post.imageAlt} rounded={0} />
+          <BlogCover image={post.image} art={post.art} alt={post.imageAlt} rounded={0} priority />
         </div>
 
         {/* Body */}
