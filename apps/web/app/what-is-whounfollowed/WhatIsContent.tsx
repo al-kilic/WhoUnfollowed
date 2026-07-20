@@ -104,7 +104,7 @@ export function WhatIsContent() {
               </div>
             ))}
           </div>
-          <p style={{ fontSize: 15, color: T.ink, fontWeight: 500 }}>WhoUnfollowed solves the same problem without any of that risk, and the code that proves it is public.</p>
+          <p style={{ fontSize: 15, color: T.ink, fontWeight: 500 }}>WhoUnfollowed solves the same problem without any of that risk, and the code that proves it is public on GitHub, so you can verify it yourself instead of taking our word for it.</p>
         </section>
 
         {/* How it works */}
