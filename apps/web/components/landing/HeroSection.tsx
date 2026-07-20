@@ -289,24 +289,24 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
         pointerEvents: 'none', filter: 'blur(40px)',
       }} />
 
-      {/* Floating profile cards - hidden on mobile */}
-      <div className="hidden lg:block" style={{ position: 'absolute', left: 60, top: 140, animation: 'drift-1 6s ease-in-out infinite', zIndex: 2 }}>
+      {/* Floating profile cards - hidden on mobile - decorative demo data, not real content */}
+      <div aria-hidden="true" className="hidden lg:block" style={{ position: 'absolute', left: 60, top: 140, animation: 'drift-1 6s ease-in-out infinite', zIndex: 2 }}>
         <ProfileCard handle="@alex.studio" status="not_following_back" />
       </div>
-      <div className="hidden lg:block" style={{ position: 'absolute', left: 28, top: 360, animation: 'drift-2 7.5s ease-in-out infinite', zIndex: 2 }}>
+      <div aria-hidden="true" className="hidden lg:block" style={{ position: 'absolute', left: 28, top: 360, animation: 'drift-2 7.5s ease-in-out infinite', zIndex: 2 }}>
         <ProfileCard handle="@nova.frames" status="mutual" small />
       </div>
-      <div className="hidden lg:block" style={{ position: 'absolute', right: 60, top: 130, animation: 'drift-3 6.5s ease-in-out infinite', zIndex: 2 }}>
+      <div aria-hidden="true" className="hidden lg:block" style={{ position: 'absolute', right: 60, top: 130, animation: 'drift-3 6.5s ease-in-out infinite', zIndex: 2 }}>
         <ProfileCard handle="@marco.visuals" status="not_following_back" />
       </div>
-      <div className="hidden lg:block" style={{ position: 'absolute', right: 32, top: 380, animation: 'drift-4 8s ease-in-out infinite', zIndex: 2 }}>
+      <div aria-hidden="true" className="hidden lg:block" style={{ position: 'absolute', right: 32, top: 380, animation: 'drift-4 8s ease-in-out infinite', zIndex: 2 }}>
         <ProfileCard handle="@sarah_creates" status="fan" small />
       </div>
-      <div className="hidden lg:block" style={{ position: 'absolute', left: 200, top: 490, animation: 'drift-5 7s ease-in-out infinite', zIndex: 2, opacity: 0.75 }}>
+      <div aria-hidden="true" className="hidden lg:block" style={{ position: 'absolute', left: 200, top: 490, animation: 'drift-5 7s ease-in-out infinite', zIndex: 2, opacity: 0.75 }}>
         <ProfileCard handle="@wave.theory" status="not_following_back" small />
       </div>
-      {/* Mobile floating cards - subtle, edge-clipped */}
-      <div className="lg:hidden" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2, overflow: 'hidden' }}>
+      {/* Mobile floating cards - subtle, edge-clipped - decorative demo data, not real content */}
+      <div aria-hidden="true" className="lg:hidden" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2, overflow: 'hidden' }}>
         <div style={{ position: 'absolute', left: -24, top: 160, animation: 'drift-1 6s ease-in-out infinite', opacity: 0.25 }}>
           <ProfileCard handle="@alex.studio" status="not_following_back" small />
         </div>
