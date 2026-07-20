@@ -2,9 +2,9 @@
 
 # WhoUnfollowed
 
-**See who doesn't follow you back on Instagram. Without ever sharing your password.**
+**See who doesn't follow you back on Instagram. Open source, so you can check that for yourself.**
 
-Upload the data export Instagram already gives you. Your browser reads it locally and shows the full picture in seconds. No server. No login. No risk.
+Upload the data export Instagram already gives you. Your browser reads it locally and shows the full picture in seconds. No password, no server, no login.
 
 [![Web app license: AGPL-3.0](https://img.shields.io/badge/web-AGPL--3.0-01696F?style=flat-square)](./LICENSE)
 [![Core license: MPL-2.0](https://img.shields.io/badge/core-MPL--2.0-A84B2F?style=flat-square)](./packages/core/LICENSE)
@@ -24,7 +24,7 @@ Most Instagram follower trackers ask for your password. That breaks Instagram's 
 
 WhoUnfollowed takes a different path. Instagram's **Download Your Information** feature (mandated by GDPR) gives you a ZIP of your own follower and following data. WhoUnfollowed reads that file **entirely inside your browser**. There is no upload, no server round trip, and no account required on the free plan.
 
-You export data you already own. We just read it.
+You export data you already own. We just read it. And unlike every closed-source tracker in this space, you don't have to take that claim on faith: the web app is AGPL-3.0 and the parser that touches your data is MPL-2.0, both public in this repository. Read the code instead of trusting a privacy policy.
 
 ## What you get
 

@@ -27,8 +27,11 @@ export function AboutContent() {
             Built by one person.<br/>
             <span style={{ fontStyle: 'italic', color: T.tealLight }}>For everyone tired of the alternative.</span>
           </h1>
-          <p style={{ fontSize: 16, color: T.inkDim, lineHeight: 1.7, maxWidth: 580 }}>
+          <p style={{ fontSize: 16, color: T.inkDim, lineHeight: 1.7, maxWidth: 580, marginBottom: 12 }}>
             WhoUnfollowed is an independent product. No VC funding. No team of twenty. Just a developer who got tired of every Instagram tool asking for a password it had no business asking for.
+          </p>
+          <p style={{ fontSize: 16, color: T.inkDim, lineHeight: 1.7, maxWidth: 580 }}>
+            So the whole thing is open source: the web app under AGPL-3.0, the parser that touches your data under MPL-2.0. If you don&apos;t want to trust a privacy policy, don&apos;t. Read the code on <a href="https://github.com/al-kilic/WhoUnfollowed" target="_blank" rel="noopener noreferrer" style={{ color: T.tealLight, textDecoration: 'none', borderBottom: '1px solid rgba(2,136,143,0.3)' }}>GitHub</a> instead.
           </p>
         </div>
 
@@ -91,7 +94,7 @@ export function AboutContent() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {[
               { title: 'Minimum access', body: 'Every app I build asks for the least access necessary to do its job. If an app can work without touching your credentials, it works without your credentials.' },
-              { title: 'Auditable code', body: 'The parts of my apps that touch your data are open source. You should be able to verify what happens to your information, not just trust a privacy policy.' },
+              { title: 'Auditable code', body: 'WhoUnfollowed ships fully open source, the web app under AGPL-3.0 and the parser under MPL-2.0. You should be able to verify what happens to your information, not just trust a privacy policy.' },
               { title: 'No dark patterns', body: "No misleading defaults. No 'agree to share your data' buried in onboarding. If something is optional, it's off by default." },
             ].map(item => (
               <div key={item.title} style={{ display: 'flex', gap: 16, padding: '20px', borderRadius: 14, background: T.surface1, border: `1px solid ${T.border1}` }}>
