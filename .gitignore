@@ -8,6 +8,11 @@ out/
 # Build outputs
 dist/
 .turbo/
+*.tsbuildinfo
+
+# Claude Code tooling (agents, skills, local config) — not app source
+.claude/
+.agents/
 
 # Environment variables — never commit these
 .env
