@@ -7,6 +7,7 @@ import { LandingFooter } from '@/components/landing/FinalCTA';
 export const metadata: Metadata = {
   title: 'Terms of Service',
   description: 'The terms and conditions for using WhoUnfollowed.',
+  alternates: { canonical: '/terms' },
 };
 
 export default function TermsPage() {

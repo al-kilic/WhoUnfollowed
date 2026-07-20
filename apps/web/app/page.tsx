@@ -1,8 +1,15 @@
+import type { Metadata } from 'next';
 import { LandingPage } from '@/components/landing/LandingPage';
 import { ITEMS as FAQ_ITEMS } from '@/components/landing/FAQSection';
 import { validateRequest } from '@/lib/auth/session';
 import { isProUser } from '@/lib/flags';
 import { getStats } from '@/lib/stats';
+
+// Self-referencing canonical for the homepage. Title and description are
+// inherited from the root layout default.
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+};
 
 // FAQPage schema mirrors the visible homepage FAQ (kept in sync via FAQSection).
 const faqJsonLd = {

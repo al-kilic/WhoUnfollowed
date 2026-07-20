@@ -6,8 +6,9 @@ import { LandingFooter } from '@/components/landing/FinalCTA';
 import type React from 'react';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy - WhoUnfollowed',
+  title: 'Privacy Policy',
   description: 'Privacy Policy for WhoUnfollowed. How we handle your data and our relationship with Instagram and Meta.',
+  alternates: { canonical: '/privacy' },
 };
 
 export default function PrivacyPage() {

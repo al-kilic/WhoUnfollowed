@@ -7,8 +7,9 @@ import { validateRequest } from '@/lib/auth/session';
 import { isProUser } from '@/lib/flags';
 
 export const metadata: Metadata = {
-  title: 'Changelog - WhoUnfollowed',
+  title: 'Changelog',
   description: 'What\'s new in WhoUnfollowed. Updates, fixes, and improvements.',
+  alternates: { canonical: '/changelog' },
 };
 
 const entries: { version: string; date: string; tag: 'launch' | 'fix' | 'improvement' | 'feature'; items: string[] }[] = [
