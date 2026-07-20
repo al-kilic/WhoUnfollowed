@@ -355,8 +355,8 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
         position: 'relative', zIndex: 5,
         animation: 'fade-up 0.7s 0.25s cubic-bezier(0.16,1,0.3,1) both',
       }}>
-        Upload your official Instagram data export. It is read only in your browser, so your
-        password and account data never leave your device.
+        The free tool reads your official Instagram data export entirely in your browser, so
+        your password and account data never leave your device.
       </p>
 
       {/* ── Drop zone ──────────────────────────────────────────────────────── */}
