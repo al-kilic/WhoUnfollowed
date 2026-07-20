@@ -269,8 +269,8 @@ export function FinalCTA() {
             </div>
           </div>
 
-          {/* Right - preview card */}
-          <div style={{
+          {/* Right - preview card - decorative demo data, not real content */}
+          <div aria-hidden="true" style={{
             opacity: visible ? 1 : 0,
             transform: visible ? 'translateY(0)' : 'translateY(24px)',
             transition: 'opacity 0.65s 0.3s ease, transform 0.65s 0.3s ease',

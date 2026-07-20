@@ -178,7 +178,7 @@ function ProductMock({
   style?: React.CSSProperties;
 }) {
   return (
-    <div style={{
+    <div aria-hidden="true" style={{
       background: T.bgCard, borderRadius: 14, overflow: 'hidden',
       border: `1px solid ${featured ? 'rgba(2,136,143,0.3)' : 'var(--t-border2)'}`,
       boxShadow: featured
