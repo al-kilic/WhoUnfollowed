@@ -164,13 +164,13 @@ export default function OgImage() {
         <div
           style={{
             display: 'flex',
+            alignSelf: 'flex-start',
             alignItems: 'center',
             gap: 10,
             background: 'rgba(1,105,111,0.15)',
             border: '1px solid rgba(1,105,111,0.3)',
             borderRadius: 999,
             padding: '10px 20px',
-            width: 'fit-content',
           }}
         >
           <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#01696f' }} />
