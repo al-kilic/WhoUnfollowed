@@ -7,8 +7,8 @@ import { Icon } from './atoms';
 type CategoryId = 'privacy' | 'product' | 'billing';
 
 const CATEGORIES: { id: CategoryId; label: string; count: number }[] = [
-  { id: 'privacy', label: 'Privacy & data',  count: 3 },
-  { id: 'product', label: 'How it works',    count: 3 },
+  { id: 'privacy', label: 'Privacy & data',  count: 4 },
+  { id: 'product', label: 'How it works',    count: 4 },
   { id: 'billing', label: 'Plans & billing', count: 2 },
 ];
 
@@ -20,6 +20,8 @@ export const ITEMS: Record<CategoryId, [string, string][]> = {
      "On the Free plan, nowhere. The ZIP is read by JavaScript inside your browser tab and discarded when you close the page. On Pro, snapshots you choose to save are stored encrypted in our cloud so you can compare them across devices."],
     ['Will Instagram ban me for using this?',
      "No. The data export is a feature Instagram offers to comply with GDPR. You're using their official tool, not scraping their API or violating any terms."],
+    ['If I unfollow someone, will they know?',
+     "No notification is sent either way. Instagram doesn't tell someone they've been unfollowed, and it doesn't tell you when someone unfollows you. The only way to actually know is to compare your follower list before and after, which is what this tool is for."],
   ],
   product: [
     ['How accurate are the results?',
@@ -28,6 +30,8 @@ export const ITEMS: Record<CategoryId, [string, string][]> = {
      "Yes, on Pro. Each upload becomes a snapshot. You can compare any two snapshots to see who started following, who unfollowed, and who quietly came back."],
     ['What file format do you need?',
      "The ZIP file Instagram sends you when you request your data. Just request followers and following, you don't need the whole archive."],
+    ['Is the code open source?',
+     "Yes. The web app is AGPL-3.0 licensed and the parser is MPL-2.0, both public on GitHub. You don't have to take a privacy claim on faith, you can read exactly what the code does with your data."],
   ],
   billing: [
     ['How much does Pro cost?',
