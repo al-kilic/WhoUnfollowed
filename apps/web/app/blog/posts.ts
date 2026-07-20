@@ -659,7 +659,7 @@ Clearing ghosts will probably shrink your follower number. That feels bad for a 
     // Unsplash: mw6Onwg4frY (two hands typing on a phone)
     image: '/blog/notify-unfollow-hero.jpg',
     imageAlt: 'Two hands typing a message on a phone keyboard',
-    body: `The short answer is no. Instagram does not send a notification when you unfollow someone. The person won't get an alert, a banner, or a message. The only way they can tell is by noticing your follower relationship changed, either by remembering you followed them or by checking a list.
+    body: `The short answer is no. Instagram does not send a notification when you unfollow someone. The person won't get an alert, a banner, or a message. So if you're wondering whether they'll know the moment it happens, they won't, at least not through anything Instagram tells them. The only way they can tell is by noticing your follower relationship changed, either by remembering you followed them or by checking a list.
 
 That said, "unfollow" is one of several actions people mix up, and Instagram treats each of them differently. Here is the complete picture.
 
@@ -667,7 +667,7 @@ That said, "unfollow" is one of several actions people mix up, and Instagram tre
 
 ## What Instagram does NOT notify
 
-- **Unfollowing.** No notification. The account silently leaves their followers list.
+- **Unfollowing.** No notification. The account silently leaves their followers list. Do people get notified when you unfollow them on Instagram? No, not even a hint.
 - **Removing a follower.** If you remove someone who follows you (Profile, menu, "Remove follower"), they are not told. They simply stop following you.
 - **Blocking.** Instagram never announces a block. The other person is not notified, though they may infer it later because your profile stops being visible to them.
 - **Muting.** Completely invisible. Muting someone's posts or stories is never shared with them.
@@ -682,7 +682,7 @@ That said, "unfollow" is one of several actions people mix up, and Instagram tre
 
 ## So how would anyone know you unfollowed them?
 
-They would have to track it deliberately. Without help, a person can only notice you unfollowed by remembering the prior state, which is unreliable past a handful of accounts. This is exactly the gap that [follower tracking](/blog/how-to-see-who-unfollowed-you-on-instagram) exists to fill, and it works both ways: if you want to know who unfollowed you, you face the same problem.
+They would have to track it deliberately. Without help, a person can only notice you unfollowed by remembering the prior state, which is unreliable past a handful of accounts. Can someone tell if you unfollow them on Instagram just by opening the app? Only if they happen to check your profile or their own followers list at the right moment and remember what it looked like before. This is exactly the gap that [follower tracking](/blog/how-to-see-who-unfollowed-you-on-instagram) exists to fill, and it works both ways: if you want to know who unfollowed you, you face the same problem.
 
 ## How to actually find out who unfollowed you
 
@@ -696,7 +696,7 @@ Instagram gives you [your follower list on demand under GDPR](/blog/how-to-downl
 
 ## The takeaway
 
-Unfollowing, removing, blocking, and muting are all silent. Instagram keeps your social moves private, which is good for you and inconvenient when you are on the receiving end. The only reliable way to see who unfollowed you is to keep your own record and compare it over time.`,
+When you unfollow someone on Instagram, are they notified? No. Unfollowing, removing, blocking, and muting are all silent. Instagram keeps your social moves private, which is good for you and inconvenient when you are on the receiving end. The only reliable way to see who unfollowed you is to keep your own record and compare it over time.`,
   },
   {
     slug: 'can-you-get-banned-for-using-a-follower-tracker-on-instagram',
@@ -1200,6 +1200,89 @@ Instagram is required under GDPR to hand you a full copy of your own followers a
 **Is there any official way to check whether I'm blocked?** Not directly. Instagram does not expose a "you are blocked" flag anywhere in the app. The asymmetry test (a mutual's view versus yours) is the most reliable signal available.
 
 **Why does a deactivated account sometimes still show old comments?** Comments and tags are stored on the post they were made under, not fully tied to live profile data. The username often persists even though the profile behind it is temporarily unreachable.`,
+  },
+  {
+    slug: 'how-to-unfollow-everyone-on-instagram-at-once',
+    cluster: 'account-health',
+    title: 'How to Unfollow Everyone on Instagram at Once (the Fastest Safe Way)',
+    metaTitle: 'How to Unfollow Everyone on Instagram at Once',
+    metaDescription: 'Want to unfollow everyone on Instagram fast? Here is the real pacing that avoids an action block, why bulk-unfollow apps backfire, and a realistic timeline.',
+    excerpt: "There's no button that unfollows everyone at once. Here is the actual pacing that clears a large list as fast as Instagram allows without tripping a block.",
+    date: 'July 21, 2026',
+    readTime: '6 min',
+    tag: 'Guide',
+    primaryKeyword: 'how to unfollow everyone on instagram at once',
+    art: 'split',
+    // Unsplash: 5nmf-0oW2Mg (a hand scrolling on a phone showing social media apps)
+    image: '/blog/how-to-unfollow-everyone-on-instagram-at-once-hero.jpg',
+    imageAlt: 'A hand scrolling through a phone showing social media apps, representing unfollowing accounts on Instagram',
+    body: `There is no button that unfollows everyone on Instagram at once. Instagram's app only lets you unfollow one account at a time, and it caps how many unfollows it will accept in a given stretch before flashing "Action Blocked." The fastest way to clear a large following list is not a shortcut around that cap, it is working right up against it: steady batches, spaced out, done by hand. Here is exactly how to do that as quickly as Instagram allows.
+
+This is a companion to [is it safe to mass unfollow on Instagram](/blog/is-it-safe-to-mass-unfollow-on-instagram), which covers why the block happens. This post is the playbook: the actual pacing, the actual timeline, and what to do instead of downloading a bulk-unfollow app.
+
+## Why "at once" isn't really possible
+
+Instagram doesn't publish its rate limits, but years of user reports and the same pattern showing up across the app point to a consistent shape:
+
+- **Unfollows are capped per hour and per day.** Established accounts have more room than new ones, but everyone hits a ceiling.
+- **The block is temporary, not permanent.** You'll see "Try Again Later" or "Action Blocked," and following/unfollowing gets locked for anywhere from a few hours to a couple of days.
+- **Repeat triggers extend the lockout.** Hit the limit twice in a week and the next block tends to be longer.
+
+None of this is about total volume alone. Unfollowing 800 accounts over two weeks is fine. Unfollowing 800 accounts in twenty minutes is not, even though the number is identical. Speed is what gets flagged, not size.
+
+## The pacing that actually clears a list fast
+
+Think in sessions, not one long push. A conservative, widely used pace that keeps you under the radar:
+
+1. **20 to 30 unfollows per session.** Do this manually inside the Instagram app, tapping "Following" on each profile.
+2. **A short gap between sessions.** An hour or two between batches on the same day is enough for most established accounts. Newer or smaller accounts should stretch that further.
+3. **A hard daily ceiling.** Keep total daily unfollows in the low hundreds at most. Above that, you're pushing into the range where blocks start showing up in user reports regardless of pacing.
+4. **Stop the moment you see a warning.** If Instagram throws any kind of error or block, stop for the day. Pushing through it is what turns a few-hour lockout into a multi-day one.
+
+This isn't a rule Instagram publishes anywhere, it's the pattern that keeps people out of trouble. Push faster than this and you're gambling on when, not if, the block lands.
+
+## Get the list first, so you're not guessing mid-session
+
+The slowest part of any cleanup isn't the tapping, it's figuring out who to tap on. Instagram doesn't show you a clean list of accounts that don't follow you back inside the app. Your own data export does.
+
+Request your [Instagram data download](/blog/how-to-download-your-instagram-data), then run the ZIP through [WhoUnfollowed](/). It reads the file in your browser, no login and no password, and hands you every account you follow that doesn't follow you back on one screen. Having that list ready before you open the app means every session is pure execution, not searching.
+
+If you want help deciding who actually stays on the list before you start unfollowing, [how to clean up who you follow on Instagram](/blog/how-to-clean-up-who-you-follow-on-instagram) walks through sorting it. This post assumes you've already decided who goes and just need the mechanics of getting through the list.
+
+## Should you use a bulk-unfollow app to go faster?
+
+It's tempting. These apps promise to clear hundreds or thousands of accounts automatically, no manual tapping required. They don't work the way they're pitched, for two concrete reasons.
+
+First, automating unfollows doesn't raise Instagram's limits, it just hits them faster and more consistently, which is exactly the pattern Instagram's spam detection is built to catch. Machine-even timing between actions is one of the clearest automation signals there is. You'll trip the block sooner than doing it by hand, not later.
+
+Second, and this is the bigger issue, every one of these apps needs your Instagram username and password to act on your behalf. That's a direct violation of Instagram's Terms of Use, and it hands your login to a third party whose security practices you have no way to verify. If their servers get breached, your credentials go with everyone else's. This is the same trade-off covered in [why follower trackers ask for your password](/blog/why-instagram-follower-trackers-ask-for-your-password), and it applies just as much to a tool that unfollows for you as one that tracks for you.
+
+There is no version of a bulk-unfollow app that is both fast and safe. The faster it claims to work, the harder it's hammering the exact limit that gets accounts blocked.
+
+## A realistic timeline
+
+Here's what the paced, manual approach actually looks like for different list sizes, at roughly 150 to 200 unfollows a day split across a few sessions:
+
+| Accounts to unfollow | Rough timeline |
+|---|---|
+| Under 100 | Same day, in 3 to 4 sessions |
+| 300 to 500 | 2 to 3 days |
+| 1,000 | About a week |
+| 3,000+ | Two to three weeks |
+
+Slower than a single tap, yes. But it's the version that finishes without a five-day lockout resetting your progress halfway through.
+
+## Quick answers
+
+**Can I select multiple accounts and unfollow them all at once on Instagram?** No. The app only supports unfollowing one profile at a time. That's a soft safety measure Instagram built into its own interface, and any tool claiming true multi-select bulk unfollow is operating outside the official app.
+
+**Does the time of day matter?** Not meaningfully. What matters is total volume in a given window and the gaps between sessions, not whether you're doing it at 9am or 9pm.
+
+**What happens if I get blocked anyway?** Stop unfollowing entirely until the block clears, usually a few hours to a couple of days. Trying again immediately, or switching to an automation app to "push through it," is how a short block turns into a long one.
+
+## The bottom line
+
+The fastest real way to unfollow everyone on Instagram is manual, paced batches against a list you already have, not an automated shortcut. Get your exact non-follower list from your own data export, work through it in sessions of 20 to 30, leave gaps between them, and skip anything that asks for your password. It takes days instead of minutes for a large list, but it's the version that actually finishes.`,
   },
 ];
 
