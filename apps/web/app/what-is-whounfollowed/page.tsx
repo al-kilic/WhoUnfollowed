@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { WhatIsContent, faqItems } from './WhatIsContent';
+import { WhatIsContent } from './WhatIsContent';
+import { faqItems } from './faqData';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
