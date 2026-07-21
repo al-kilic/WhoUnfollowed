@@ -54,3 +54,22 @@ export async function redateSnapshot(id: number, oldExportedAt: number, newExpor
 export async function setSnapshotCloudId(id: number, cloudId: string): Promise<void> {
   await db.snapshots.update(id, { cloudId });
 }
+
+// Pulls a snapshot that exists in cloud storage but not in this browser's local
+// IndexedDB (e.g. same account opened in a different browser, or local storage
+// was cleared) back into the local store. Sets cloudId immediately so it isn't
+// offered for restore again and won't get re-uploaded as a duplicate.
+export async function restoreSnapshot(
+  data: ParsedSnapshot,
+  label: string,
+  exportedAt: number,
+  cloudId: string,
+): Promise<number> {
+  return db.snapshots.add({
+    label,
+    exportedAt,
+    savedAt: Math.floor(Date.now() / 1000),
+    data,
+    cloudId,
+  });
+}

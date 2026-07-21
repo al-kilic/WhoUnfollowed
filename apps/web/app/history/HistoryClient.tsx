@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { useSnapshotStore } from '@/lib/store';
-import { useSnapshotList, deleteSnapshot, updateSnapshotLabel, redateSnapshot, setSnapshotCloudId, FREE_SNAPSHOT_LIMIT, type SnapshotRecord } from '@/hooks/useSnapshots';
+import { useSnapshotList, deleteSnapshot, updateSnapshotLabel, redateSnapshot, setSnapshotCloudId, restoreSnapshot, FREE_SNAPSHOT_LIMIT, type SnapshotRecord } from '@/hooks/useSnapshots';
 import { useCloudSync } from '@/hooks/useCloudSync';
+import type { CloudSnapshotMeta } from '@/app/api/sync/actions';
 import { UnlockSyncForm } from '@/components/sync/UnlockSyncForm';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
@@ -30,7 +31,23 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
   const [compareBaseId, setCompareBase] = useState<number | null>(null);
   const [syncingId, setSyncingId]       = useState<number | null>(null);
   const [showUnlock, setShowUnlock]     = useState(false);
-  const { isUnlocked, unlockWithPassword, syncSnapshot, error: syncError, state: syncState } = useCloudSync();
+  const [cloudList, setCloudList]       = useState<CloudSnapshotMeta[]>([]);
+  const [restoringId, setRestoringId]   = useState<string | null>(null);
+  const [restoreError, setRestoreError] = useState<string | null>(null);
+  const { isUnlocked, unlockWithPassword, syncSnapshot, fetchSnapshot, listSnapshots, error: syncError, state: syncState } = useCloudSync();
+
+  // Cloud snapshot metadata (label, date) isn't encrypted, so this can load
+  // before sync is unlocked — only the actual restore needs the key.
+  useEffect(() => {
+    if (!userEmail || !isPro) return;
+    listSnapshots().then(setCloudList);
+  }, [userEmail, isPro, listSnapshots]);
+
+  // Snapshots that exist in the cloud but not in this browser's local history
+  // yet (a different browser/device uploaded them, or local storage was
+  // cleared here). This is what makes "sync" actually sync both ways.
+  const localCloudIds = new Set(snapshots.map(s => s.cloudId).filter(Boolean));
+  const cloudOnly = cloudList.filter(c => !localCloudIds.has(c.id));
 
   function handleView(record: SnapshotRecord) {
     setSnapshot(record.data);
@@ -70,6 +87,23 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
 
   async function handleUnlock(password: string) {
     return unlockWithPassword(password);
+  }
+
+  async function handleRestore(meta: CloudSnapshotMeta) {
+    setRestoreError(null);
+    if (!isUnlocked) {
+      setShowUnlock(true);
+      return;
+    }
+    setRestoringId(meta.id);
+    const data = await fetchSnapshot(meta.id);
+    if (data) {
+      await restoreSnapshot(data, meta.label, meta.exportedAt, meta.id);
+      trackFunnel('Snapshot Saved', { storage: 'cloud' });
+    } else {
+      setRestoreError(`Could not restore "${meta.label}". Try unlocking sync again.`);
+    }
+    setRestoringId(null);
   }
 
   const slotsUsed = snapshots.length;
@@ -182,6 +216,38 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
               <path d="M12 7 V13 M12 16 V16.5" stroke={T.terra} strokeWidth="1.8" strokeLinecap="round" />
             </svg>
             <span style={{ fontSize: 13, color: T.terra }}>Cloud sync failed: {syncError}</span>
+          </div>
+        )}
+
+        {/* Cloud-only snapshots: exist in cloud storage but not in this browser yet */}
+        {cloudOnly.length > 0 && (
+          <div style={{ padding: '18px 20px', borderRadius: 14, background: 'rgba(2,136,143,0.05)', border: '1px solid rgba(2,136,143,0.2)', marginBottom: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+              <Icon.shield size={14} color={T.tealMid} />
+              <span style={{ fontSize: 13, fontWeight: 600, color: T.ink }}>
+                {cloudOnly.length} snapshot{cloudOnly.length === 1 ? '' : 's'} in the cloud, not in this browser yet
+              </span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {cloudOnly.map(meta => (
+                <div key={meta.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '10px 14px', borderRadius: 10, background: 'var(--t-surface1)', border: '1px solid var(--t-border1)' }}>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: 14, color: T.ink, marginBottom: 2 }}>{meta.label}</div>
+                    <div style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono }}>export {format(new Date(meta.exportedAt), 'MMM d, yyyy')}</div>
+                  </div>
+                  <button
+                    onClick={() => handleRestore(meta)}
+                    disabled={restoringId === meta.id}
+                    style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 8, border: '1px solid rgba(2,136,143,0.35)', background: 'rgba(2,136,143,0.1)', color: T.tealMid, fontSize: 12, fontWeight: 600, cursor: restoringId === meta.id ? 'not-allowed' : 'pointer', fontFamily: T.sans, opacity: restoringId === meta.id ? 0.6 : 1 }}
+                  >
+                    {restoringId === meta.id ? 'Restoring...' : 'Restore'}
+                  </button>
+                </div>
+              ))}
+            </div>
+            {restoreError && (
+              <div style={{ marginTop: 10, fontSize: 12, color: T.terra }}>{restoreError}</div>
+            )}
           </div>
         )}
 
