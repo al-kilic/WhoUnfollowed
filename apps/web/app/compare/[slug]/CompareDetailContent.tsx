@@ -8,6 +8,21 @@ import { LandingFooter } from '@/components/landing/FinalCTA';
 import { type Comparison, COMPARISONS } from '../comparisons';
 import { Icon } from '@/components/landing/atoms';
 
+// Maps a comparison row's feature text to a representative icon. Deliberately
+// generic/abstract (lock, shield, server...), never a competitor's actual
+// brand mark, so this works for any competitor without any trademark or
+// copyright exposure.
+function featureIcon(feature: string): keyof typeof Icon {
+  const f = feature.toLowerCase();
+  if (f.includes('password')) return 'lock';
+  if (f.includes('ban')) return 'shield';
+  if (f.includes('server')) return 'server';
+  if (f.includes('open source')) return 'code';
+  if (f.includes('signup') || f.includes('account')) return 'lock';
+  if (f.includes('free') || f.includes('offline') || f.includes('browser') || f.includes('install')) return 'bolt';
+  return 'shield';
+}
+
 export function CompareDetailContent({ c }: { c: Comparison }) {
   const others = COMPARISONS.filter(x => x.slug !== c.slug);
 
@@ -23,6 +38,18 @@ export function CompareDetailContent({ c }: { c: Comparison }) {
             <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M11 7 H3 M3 7 L6 4 M3 7 L6 10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
             All comparisons
           </Link>
+
+          {/* Abstract "vs" badge: neutral shapes only, never a competitor's actual logo */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 22 }}>
+            <div style={{ width: 52, height: 52, borderRadius: 16, background: 'rgba(2,136,143,0.1)', border: `1px solid rgba(2,136,143,0.3)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <Icon.shield size={22} color={T.tealMid} />
+            </div>
+            <span style={{ fontFamily: T.mono, fontSize: 11, color: T.inkMute, letterSpacing: '0.1em', flexShrink: 0 }}>VS</span>
+            <div style={{ width: 52, height: 52, borderRadius: 16, background: 'rgba(168,75,47,0.08)', border: `1px solid rgba(168,75,47,0.25)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <Icon.lock size={22} color={T.terra} />
+            </div>
+          </div>
+
           <p style={{ fontSize: 11, fontFamily: T.mono, color: T.tealMid, letterSpacing: '0.16em', textTransform: 'uppercase', margin: '0 0 8px' }}>WhoUnfollowed vs</p>
           <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(30px, 5vw, 52px)', fontWeight: 400, letterSpacing: '-0.03em', color: T.ink, lineHeight: 1.05, marginBottom: 16 }}>
             {c.competitorName}
@@ -37,19 +64,25 @@ export function CompareDetailContent({ c }: { c: Comparison }) {
             <div style={{ padding: '12px 16px', fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.08em', textAlign: 'center', borderLeft: `1px solid ${T.border1}` }}>WhoUnfollowed</div>
             <div style={{ padding: '12px 16px', fontSize: 11, color: T.terra, fontFamily: T.mono, letterSpacing: '0.08em', textAlign: 'center', borderLeft: `1px solid ${T.border1}` }}>{c.competitorName}</div>
           </div>
-          {c.rows.map((row, i) => (
-            <div key={row.feature} className="grid grid-cols-3" style={{ borderBottom: i < c.rows.length - 1 ? `1px solid ${T.border1}` : 'none' }}>
-              <div style={{ padding: '12px 16px', fontSize: 13, color: T.inkDim }}>{row.feature}</div>
-              {[row.us, row.them].map((val, ci) => (
-                <div key={ci} style={{ padding: '12px 16px', display: 'flex', justifyContent: 'center', alignItems: 'center', borderLeft: `1px solid ${T.border1}` }}>
-                  {val
-                    ? <span style={{ width: 22, height: 22, borderRadius: '50%', background: 'rgba(2,136,143,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon.check size={13} color={T.tealMid} /></span>
-                    : <span style={{ width: 22, height: 22, borderRadius: '50%', background: 'rgba(168,75,47,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon.x size={11} color={T.terra} /></span>
-                  }
+          {c.rows.map((row, i) => {
+            const RowIcon = Icon[featureIcon(row.feature)];
+            return (
+              <div key={row.feature} className="grid grid-cols-3" style={{ borderBottom: i < c.rows.length - 1 ? `1px solid ${T.border1}` : 'none' }}>
+                <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: T.inkDim }}>
+                  <span style={{ flexShrink: 0, opacity: 0.6, display: 'flex' }}><RowIcon size={14} color={T.inkMute} /></span>
+                  {row.feature}
                 </div>
-              ))}
-            </div>
-          ))}
+                {[row.us, row.them].map((val, ci) => (
+                  <div key={ci} style={{ padding: '12px 16px', display: 'flex', justifyContent: 'center', alignItems: 'center', borderLeft: `1px solid ${T.border1}` }}>
+                    {val
+                      ? <span style={{ width: 22, height: 22, borderRadius: '50%', background: 'rgba(2,136,143,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon.check size={13} color={T.tealMid} /></span>
+                      : <span style={{ width: 22, height: 22, borderRadius: '50%', background: 'rgba(168,75,47,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon.x size={11} color={T.terra} /></span>
+                    }
+                  </div>
+                ))}
+              </div>
+            );
+          })}
         </div>
 
         {/* Body */}

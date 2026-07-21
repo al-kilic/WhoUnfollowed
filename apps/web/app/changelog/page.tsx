@@ -14,6 +14,41 @@ export const metadata: Metadata = {
 
 const entries: { version: string; date: string; tag: 'launch' | 'fix' | 'improvement' | 'feature'; items: string[] }[] = [
   {
+    version: '1.2',
+    date: 'July 22, 2026',
+    tag: 'improvement',
+    items: [
+      'The web app is AGPL-3.0 and the parser is MPL-2.0, both public on GitHub. Said clearly across the site now instead of buried in a footer badge.',
+      'How to Export guide redesigned. Each step now shows just the taps you need, with the "why" tucked into a small note instead of a paragraph you have to read while also finding the button on your phone.',
+      'Several new blog guides added: telling deactivated, deleted, and blocked apart, unfollowing everyone at once safely, and more.',
+      'Fixed: a table and a numbered list in one blog guide were rendering as run-on text instead of an actual table and list.',
+    ],
+  },
+  {
+    version: '1.1',
+    date: 'July 14, 2026',
+    tag: 'improvement',
+    items: [
+      'CSV export is unlimited on the free tier now. No email required, no cap.',
+      'Fixed: the non-followers list was unusable on mobile, empty names and no way to scroll sideways to read them.',
+      'Homepage rebuilt: new hero, upload flow, and copy.',
+      'Signup and login copy cleaned up, several confusing dead ends fixed.',
+    ],
+  },
+  {
+    version: '1.0',
+    date: 'June 25, 2026',
+    tag: 'feature',
+    items: [
+      'Pro is live. Real payments via Stripe, $4.99/mo or $39/yr. Beta auto-Pro access has ended.',
+      'Email verification on signup, plus forgot-password and change-password.',
+      'Account page redesigned: plan, billing, cloud sync, and security all in one place.',
+      'Cloud Sync, the Radar dashboard, and cross-snapshot history are now Pro features, with a clear upgrade prompt where they used to be open to everyone.',
+      'CSV export: free accounts got one export with email verification at this point (later removed entirely, see 1.1).',
+      'Animated Radar nav icon.',
+    ],
+  },
+  {
     version: '0.8',
     date: 'June 22, 2026',
     tag: 'improvement',
