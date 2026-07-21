@@ -66,34 +66,25 @@ export function HowToExportContent() {
 
             <div style={{ marginTop: 40, display: 'flex', flexDirection: 'column', gap: 40 }}>
               <Step n={1} title="Go to Instagram Accounts Center">
-                <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.65 }}>
-                  You can do this on any device - phone, tablet, or desktop browser. The quickest way is to go directly to{' '}
-                  <a href="https://accountscenter.instagram.com/info_and_permissions/dyi/" target="_blank" rel="noopener noreferrer" style={{ color: T.tealLight, textDecoration: 'none', fontWeight: 600 }}>
-                    accountscenter.instagram.com
-                  </a>
-                  . Or navigate there manually: open Instagram, go to your <Kbd>Profile</Kbd>, then <Kbd>Settings and privacy</Kbd>, then <Kbd>Accounts Center</Kbd>.
-                </p>
                 <a href="https://accountscenter.instagram.com/info_and_permissions/dyi/" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 18px', borderRadius: 10, background: 'rgba(2,136,143,0.1)', border: '1px solid rgba(2,136,143,0.3)', color: T.tealLight, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
                   Open Instagram Accounts Center
                   <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M11 7L8 4M11 7L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </a>
                 <NavPath steps={['Profile', 'Settings and privacy', 'Accounts Center']} />
+                <Hint>Or navigate manually from your Profile. Works the same on phone, tablet, or desktop.</Hint>
               </Step>
 
               <Step n={2} title="Open Your Information and Permissions">
-                <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.65 }}>Inside Accounts Center, tap or click <Kbd>Your information and permissions</Kbd>.</p>
                 <NavPath steps={['Accounts Center', 'Your information and permissions']} />
               </Step>
 
               <Step n={3} title="Go to Export Your Information">
-                <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.65 }}>Tap <Kbd>Export your information</Kbd>. You&apos;ll see two options. Choose <Kbd>Export to device</Kbd> (not &quot;Transfer to destination&quot;).</p>
                 <NavPath steps={['Your information and permissions', 'Export your information', 'Export to device']} />
+                <Hint>Two options appear here. Pick <Kbd>Export to device</Kbd>, not &quot;Transfer to destination&quot;.</Hint>
               </Step>
 
               <Step n={4} title="Select only Followers and Following">
-                <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.65 }}>
-                  Tap <Kbd>Create export</Kbd>. Select your Instagram account, choose &quot;Download to device&quot;, then under <Kbd>Customize information</Kbd> deselect everything and check only <strong style={{ color: T.ink }}>Followers and Following</strong>. When asked for a date range, select <strong style={{ color: T.ink }}>All time</strong> - any shorter range will only export recent followers, not your full list.
-                </p>
+                <NavPath steps={['Create export', 'Choose account', 'Download to device', 'Customize information']} />
                 <div style={{ borderRadius: 14, border: '1px solid var(--t-border2)', background: 'var(--t-surface1)', overflow: 'hidden' }}>
                   <div style={{ padding: '10px 14px', borderBottom: '1px solid var(--t-border1)', fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.1em' }}>CUSTOMIZE INFORMATION - SELECT ONLY:</div>
                   {[{ label: 'Followers and Following', checked: true },{ label: 'Posts', checked: false },{ label: 'Stories', checked: false },{ label: 'Messages', checked: false },{ label: 'Comments', checked: false }].map((item, i) => (
@@ -106,10 +97,10 @@ export function HowToExportContent() {
                     </div>
                   ))}
                 </div>
+                <Hint>Date range: choose <strong style={{ color: T.inkDim }}>All time</strong>. A shorter range only exports recent followers, not your full list.</Hint>
               </Step>
 
               <Step n={5} title='Choose JSON format, then tap "Start export"'>
-                <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.65 }}>Instagram will ask for a format. Choose <strong style={{ color: T.ink }}>JSON</strong>, not HTML. JSON includes timestamps and our parser handles it fully.</p>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                   <div style={{ padding: '14px 16px', borderRadius: 12, border: `2px solid ${T.tealMid}`, background: 'rgba(2,136,143,0.08)' }}>
                     <div style={{ fontSize: 14, fontWeight: 700, color: T.tealLight, marginBottom: 4 }}>JSON</div>
@@ -120,11 +111,10 @@ export function HowToExportContent() {
                     <div style={{ fontSize: 12, color: T.inkMute }}>No timestamps</div>
                   </div>
                 </div>
-                <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.65 }}>Then tap <Kbd>Start export</Kbd>. Instagram will process your request in the background.</p>
+                <Hint>Then tap <Kbd>Start export</Kbd>. Instagram processes it in the background.</Hint>
               </Step>
 
               <Step n={6} title="Download the ZIP from your email">
-                <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.65 }}>Within <strong style={{ color: T.ink }}>a few minutes</strong>, Instagram sends an email with a download link. Tap the link and download the ZIP to your device.</p>
                 <div style={{ padding: '16px', borderRadius: 14, border: '1px solid var(--t-border2)', background: 'var(--t-surface1)', display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                   <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(2,136,143,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke={T.tealMid} strokeWidth="1.5"/><path d="M3 8 L12 13 L21 8" stroke={T.tealMid} strokeWidth="1.5" strokeLinecap="round"/></svg>
@@ -138,6 +128,7 @@ export function HowToExportContent() {
                     </div>
                   </div>
                 </div>
+                <Hint>Usually arrives within a few minutes.</Hint>
               </Step>
             </div>
 
@@ -157,23 +148,21 @@ export function HowToExportContent() {
 
             <div style={{ marginTop: 40, display: 'flex', flexDirection: 'column', gap: 40 }}>
               <Step n={1} title="Go to Instagram Accounts Center">
-                <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.65 }}>Works on any browser or device. Go directly to{' '}<a href="https://accountscenter.instagram.com/info_and_permissions/dyi/" target="_blank" rel="noopener noreferrer" style={{ color: T.tealLight, textDecoration: 'none', fontWeight: 600 }}>accountscenter.instagram.com</a>, or navigate via your profile to <Kbd>Settings and privacy</Kbd>, then <Kbd>Accounts Center</Kbd>.</p>
                 <a href="https://accountscenter.instagram.com/info_and_permissions/dyi/" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 18px', borderRadius: 10, background: 'rgba(2,136,143,0.1)', border: '1px solid rgba(2,136,143,0.3)', color: T.tealLight, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
                   Open Instagram Accounts Center
                   <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M11 7L8 4M11 7L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </a>
                 <NavPath steps={['Profile', 'Settings and privacy', 'Accounts Center']} />
+                <Hint>Works the same on phone, tablet, or desktop.</Hint>
               </Step>
               <Step n={2} title="Open Your Information and Permissions">
-                <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.65 }}>Inside Accounts Center, tap or click <Kbd>Your information and permissions</Kbd>.</p>
                 <NavPath steps={['Accounts Center', 'Your information and permissions']} />
               </Step>
               <Step n={3} title='Choose "Transfer to destination"'>
-                <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.65 }}>Tap <Kbd>Export your information</Kbd>. This time, choose <Kbd>Transfer to destination</Kbd> instead of &quot;Export to device&quot;.</p>
                 <NavPath steps={['Your information and permissions', 'Export your information', 'Transfer to destination']} />
+                <Hint>Not &quot;Export to device&quot;, that&apos;s the other tab.</Hint>
               </Step>
               <Step n={4} title="Connect your storage platform">
-                <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.65 }}>Instagram will ask you to connect a destination. Choose your platform and follow the login steps to authorise access.</p>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                   {[{ name: 'Google Drive', note: 'Recommended' },{ name: 'Dropbox', note: 'Supported' },{ name: 'OneDrive', note: 'Supported' },{ name: 'Box', note: 'Supported' }].map((p) => (
                     <div key={p.name} style={{ padding: '12px 14px', borderRadius: 10, border: '1px solid var(--t-border2)', background: 'var(--t-surface1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -182,13 +171,14 @@ export function HowToExportContent() {
                     </div>
                   ))}
                 </div>
+                <Hint>Follow the login steps to authorise access to your chosen platform.</Hint>
               </Step>
               <Step n={5} title="Select Followers and Following, set date range to All time">
-                <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.65 }}>Under <Kbd>Customize information</Kbd>, select only <strong style={{ color: T.ink }}>Followers and Following</strong>. Set the date range to <strong style={{ color: T.ink }}>All time</strong> to get your complete list.</p>
+                <NavPath steps={['Customize information', 'Followers and Following', 'All time']} />
+                <Hint>A shorter date range only exports recent followers, not your full list.</Hint>
               </Step>
               <Step n={6} title="Start the transfer">
-                <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.65 }}>Tap <Kbd>Start transfer</Kbd>. Instagram will send your data to the connected platform. You&apos;ll get a notification when it&apos;s ready - usually within a few minutes.</p>
-                <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.65 }}>Once the ZIP appears in your cloud storage, download it and upload it here just like the device method.</p>
+                <Hint>Arrives in your cloud storage within a few minutes. Download it from there and upload it here, same as the device method.</Hint>
               </Step>
             </div>
 
@@ -405,6 +395,16 @@ function NavPath({ steps }: { steps: string[] }) {
 
 function Kbd({ children }: { children: React.ReactNode }) {
   return <strong style={{ color: T.ink, fontWeight: 600 }}>{children}</strong>;
+}
+
+// Small, muted secondary text: the "why" or edge case, subordinate to the
+// primary tap sequence (NavPath) or visual mock above it in a Step.
+function Hint({ children }: { children: React.ReactNode }) {
+  return (
+    <p style={{ fontSize: 12.5, color: T.inkMute, lineHeight: 1.6, margin: 0 }}>
+      {children}
+    </p>
+  );
 }
 
 function Callout({ variant, children }: { variant: 'warning' | 'tip'; children: React.ReactNode }) {

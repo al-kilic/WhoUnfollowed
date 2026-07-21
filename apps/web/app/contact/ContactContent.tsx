@@ -46,6 +46,13 @@ export function ContactContent() {
           <p style={{ fontSize: 15, color: T.inkDim, lineHeight: 1.65 }}>
             One person reads every email. Response time is usually within 24 hours.
           </p>
+          <p style={{ fontSize: 13, color: T.inkMute, marginTop: 10 }}>
+            Quick question about exporting your data? The{' '}
+            <Link href="/how-to-export" style={{ color: T.tealLight, textDecoration: 'none', borderBottom: `1px solid ${T.tealLight}` }}>export guide</Link>
+            {' '}or{' '}
+            <Link href="/what-is-whounfollowed" style={{ color: T.tealLight, textDecoration: 'none', borderBottom: `1px solid ${T.tealLight}` }}>FAQ</Link>
+            {' '}might already have it.
+          </p>
         </div>
 
         {/* Topic selector */}
@@ -83,32 +90,32 @@ export function ContactContent() {
           <div style={{ padding: '20px 22px 16px' }}>
             <div style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>Email</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-              <span style={{ fontFamily: T.mono, fontSize: 15, color: T.ink }}>{EMAIL}</span>
+              <span style={{ fontFamily: T.mono, fontSize: 16, color: T.ink }}>{EMAIL}</span>
               <button
                 onClick={copyEmail}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 12px', borderRadius: 8, border: `1px solid ${T.border2}`, background: T.surface1, color: copied ? T.tealLight : T.inkMute, fontSize: 12, fontFamily: T.mono, cursor: 'pointer', transition: 'all 0.15s' }}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 7,
+                  padding: '9px 16px', borderRadius: 10,
+                  background: copied ? 'rgba(2,136,143,0.12)' : T.teal, color: copied ? T.tealLight : T.cream,
+                  border: 'none', fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
+                  boxShadow: copied ? 'none' : `0 4px 16px ${T.tealGlow}`, transition: 'all 0.15s',
+                }}
               >
-                {copied ? '✓ Copied' : 'Copy'}
+                {copied ? '✓ Copied' : 'Copy email address'}
               </button>
             </div>
           </div>
-          <div style={{ padding: '14px 22px', borderTop: `1px solid ${T.border1}`, background: T.surface1 }}>
+          <div style={{ padding: '14px 22px', borderTop: `1px solid ${T.border1}`, background: T.surface1, display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
             <a
               href={`mailto:${EMAIL}?subject=${encodeURIComponent(subject)}`}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 8,
-                padding: '10px 20px', borderRadius: 10,
-                background: T.teal, color: T.cream, textDecoration: 'none',
-                fontSize: 13, fontWeight: 600, fontFamily: T.sans,
-                boxShadow: `0 4px 16px ${T.tealGlow}`,
-              }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: T.inkDim, textDecoration: 'none', fontSize: 12, fontFamily: T.mono, borderBottom: `1px solid ${T.border2}` }}
             >
-              Open in mail app
-              <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M11 7L8 4M11 7L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              or open in mail app
+              <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M11 7L8 4M11 7L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </a>
             {selectedTopic && (
-              <span style={{ fontSize: 12, color: T.inkMute, marginLeft: 12, fontFamily: T.mono }}>
-                Subject pre-filled
+              <span style={{ fontSize: 12, color: T.inkMute, fontFamily: T.mono }}>
+                (subject pre-filled)
               </span>
             )}
           </div>

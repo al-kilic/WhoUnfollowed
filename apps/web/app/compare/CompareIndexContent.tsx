@@ -3,7 +3,7 @@
 import React, { useRef } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Check, X, Minus } from 'lucide-react';
+import { Check, X, Minus, ShieldCheck, Sparkles, BarChart3, Tag } from 'lucide-react';
 import { T } from '@/components/landing/tokens';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
@@ -77,6 +77,13 @@ const FEATURES: FeatureGroup[] = [
     ],
   },
 ];
+
+const CATEGORY_ICON: Record<string, React.ComponentType<{ size?: number; color?: string; strokeWidth?: number }>> = {
+  'Privacy & Safety':     ShieldCheck,
+  'Core Features':        Sparkles,
+  'Advanced Analytics':   BarChart3,
+  'Platform & Pricing':   Tag,
+};
 
 // ── Cell renderer ─────────────────────────────────────────────────────────────
 
@@ -153,7 +160,9 @@ export function CompareIndexContent() {
           <div style={{ minWidth: 1040, padding: '0 24px' }}>
 
             {/* Feature groups */}
-            {FEATURES.map((group, _gi) => (
+            {FEATURES.map((group, _gi) => {
+              const CategoryIcon = CATEGORY_ICON[group.category];
+              return (
               <div key={group.category}>
                 {/* Category header */}
                 <div style={{
@@ -162,7 +171,8 @@ export function CompareIndexContent() {
                   borderTop: `2px solid ${T.border2}`,
                   borderBottom: `1px solid ${T.border2}`,
                 }}>
-                  <div style={{ padding: '8px 16px', fontSize: 10, fontWeight: 700, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', textTransform: 'uppercase', borderRight: `1px solid ${T.border1}` }}>
+                  <div style={{ padding: '8px 16px', display: 'flex', alignItems: 'center', gap: 8, fontSize: 10, fontWeight: 700, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', textTransform: 'uppercase', borderRight: `1px solid ${T.border1}` }}>
+                    {CategoryIcon && <CategoryIcon size={13} color={T.tealMid} strokeWidth={2} />}
                     {group.category}
                   </div>
                   {COMPETITORS.map(c => (
@@ -192,7 +202,8 @@ export function CompareIndexContent() {
                   </div>
                 ))}
               </div>
-            ))}
+              );
+            })}
 
             {/* CTA row */}
             <div style={{ display: 'grid', gridTemplateColumns: COL, borderTop: `2px solid ${T.border2}`, background: T.surface1 }}>

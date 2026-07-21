@@ -117,6 +117,20 @@ export const Icon = {
       <path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49v-1.7c-2.78.62-3.37-1.36-3.37-1.36-.46-1.18-1.11-1.5-1.11-1.5-.91-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.55 2.34 1.1 2.91.84.09-.66.35-1.1.63-1.36-2.22-.26-4.55-1.14-4.55-5.07 0-1.12.39-2.04 1.03-2.76-.1-.26-.45-1.3.1-2.7 0 0 .84-.27 2.75 1.05A9.36 9.36 0 0 1 12 7.07a9.36 9.36 0 0 1 2.5.34c1.91-1.32 2.75-1.05 2.75-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.64 1.03 2.76 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9v2.81c0 .27.18.6.69.49A10.04 10.04 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/>
     </svg>
   ),
+  lock: ({ size = 18, color = T.teal }: { size?: number; color?: string }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <rect x="5" y="11" width="14" height="10" rx="2.5" stroke={color} strokeWidth="1.5"/>
+      <path d="M8 11 V7 A4 4 0 0 1 16 7 V11" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  ),
+  server: ({ size = 18, color = T.teal }: { size?: number; color?: string }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <rect x="4" y="4" width="16" height="6.5" rx="1.5" stroke={color} strokeWidth="1.5"/>
+      <rect x="4" y="13.5" width="16" height="6.5" rx="1.5" stroke={color} strokeWidth="1.5"/>
+      <circle cx="7.3" cy="7.25" r="0.9" fill={color}/>
+      <circle cx="7.3" cy="16.75" r="0.9" fill={color}/>
+    </svg>
+  ),
 };
 
 // ─── CountUp ──────────────────────────────────────────────────────────────────
