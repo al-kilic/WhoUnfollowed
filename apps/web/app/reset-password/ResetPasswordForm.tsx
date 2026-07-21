@@ -84,10 +84,17 @@ export function ResetPasswordForm({ token }: { token: string }) {
           autoComplete="new-password"
         />
 
-        <p style={{ fontSize: 12, color: T.inkMute, lineHeight: 1.5 }}>
-          Note: cloud snapshots are encrypted with a key based on your password. Resetting it removes
-          any existing cloud snapshots, your local snapshots on this device are not affected.
-        </p>
+        <div style={{ display: 'flex', gap: 10, padding: '12px 14px', borderRadius: 10, background: 'rgba(168,75,47,0.08)', border: '1px solid rgba(168,75,47,0.3)' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0, marginTop: 1 }}>
+            <path d="M12 4 L21 20 H3 Z" stroke={T.terra} strokeWidth="1.5" strokeLinejoin="round" />
+            <path d="M12 10 V14 M12 17 V17.5" stroke={T.terra} strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+          <p style={{ fontSize: 13, color: T.terra, lineHeight: 1.5, margin: 0 }}>
+            <strong>This permanently deletes your cloud-synced snapshots.</strong> They're encrypted with
+            a key based on your current password, and resetting it makes that key unrecoverable. Your
+            local snapshots on this device are not affected.
+          </p>
+        </div>
 
         {error && <AuthError>{error}</AuthError>}
 
