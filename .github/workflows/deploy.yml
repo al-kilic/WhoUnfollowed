@@ -39,9 +39,143 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           no-cache: true
 
-  deploy:
+  smoke-test:
+    # Runs the exact image build-and-push just pushed against a real,
+    # migrated Postgres, then hits every route. Added 2026-07-22 after
+    # /what-is-whounfollowed 500'd in production from a bug that only
+    # manifested in a production build (dev mode never caught it, and the
+    # image itself built and pushed successfully since it was a runtime bug,
+    # not a build error). This is the gate that would have caught it.
+    #
+    # Caveat: this project's own schema drift note applies here too, prod
+    # DDL is sometimes applied manually rather than via migration files (see
+    # CLAUDE.md), so this ephemeral DB may not perfectly match prod's actual
+    # schema. Still catches the class of bug that caused this job to be
+    # added (RSC client/server boundary issues, other prod-only crashes)
+    # regardless of schema drift.
     runs-on: ubuntu-latest
     needs: build-and-push
+    permissions:
+      packages: read
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: igtracker
+          POSTGRES_PASSWORD: smoketest
+          POSTGRES_DB: igtracker
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.2
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install deps (only needed to run migrations from source)
+        run: pnpm install --frozen-lockfile
+
+      - name: Apply schema to the smoke-test database
+        env:
+          DATABASE_URL: postgresql://igtracker:smoketest@localhost:5432/igtracker
+        run: |
+          node -e "
+            const { drizzle } = require('drizzle-orm/postgres-js');
+            const { migrate } = require('drizzle-orm/postgres-js/migrator');
+            const postgres = require('postgres');
+            const sql = postgres(process.env.DATABASE_URL);
+            const db = drizzle(sql);
+            migrate(db, { migrationsFolder: 'apps/web/lib/db/migrations' })
+              .then(() => { console.log('migrations applied'); process.exit(0); })
+              .catch(e => { console.error(e); process.exit(1); });
+          "
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run the just-built image
+        run: |
+          docker run -d --name smoke --network host \
+            -e DATABASE_URL=postgresql://igtracker:smoketest@localhost:5432/igtracker \
+            -e NEXT_PUBLIC_SITE_URL=http://localhost:3000 \
+            -e NEXT_PUBLIC_PAYMENTS_ENABLED=true \
+            -e PORT=3000 \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: Wait for the server to come up
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000/ -o /dev/null; then
+              echo "server is up after ${i}s"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "server never became ready"
+          docker logs smoke
+          exit 1
+
+      - name: Crawl every route, fail on any server error
+        run: |
+          set -uo pipefail
+          FAIL=0
+
+          check() {
+            code=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:3000$1")
+            # 200 = ok, 307/308 = expected auth redirect for logged-out users
+            if [[ "$code" == "200" || "$code" == "307" || "$code" == "308" ]]; then
+              echo "OK   $code  $1"
+            else
+              echo "FAIL $code  $1"
+              FAIL=1
+            fi
+          }
+
+          for r in / /about /account /author/alan-kilic /blog /changelog /compare /contact \
+                   /cookies /dashboard /diff /forgot-password /history /how-to-export /login \
+                   /pricing /privacy /refund /reset-password /results /settings /signup /terms \
+                   /verify-email /welcome /what-is-whounfollowed /robots.txt /sitemap.xml; do
+            check "$r"
+          done
+
+          while IFS= read -r slug; do
+            check "/blog/$slug"
+          done < <(grep -o "slug: '[^']*'" apps/web/app/blog/posts.ts | sed "s/slug: '//;s/'\$//")
+
+          while IFS= read -r slug; do
+            check "/compare/$slug"
+          done < <(grep -o "slug: '[^']*'" apps/web/app/compare/comparisons.ts | sed "s/slug: '//;s/'\$//")
+
+          if [ "$FAIL" = "1" ]; then
+            echo ""
+            echo "=== server logs ==="
+            docker logs smoke
+            exit 1
+          fi
+
+      - name: Tear down
+        if: always()
+        run: docker rm -f smoke || true
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build-and-push, smoke-test]
 
     steps:
       - uses: actions/checkout@v5
