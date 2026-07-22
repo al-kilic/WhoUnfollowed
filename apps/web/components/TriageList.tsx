@@ -11,6 +11,7 @@ import { trackUpgradeClick, trackFunnel } from '@/lib/analytics';
 import Link from 'next/link';
 import { T } from '@/components/landing/tokens';
 import { useTriage, usePreviousTriage, type TriageState } from '@/hooks/useTriage';
+import { useAuth } from '@/components/AuthProvider';
 
 const ROW_HEIGHT = 64;
 
@@ -455,6 +456,7 @@ interface TriageListProps {
 }
 
 export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }: TriageListProps) {
+  const { userId } = useAuth();
   const { triage, setTriageState, bulkImportTriage } = useTriage(snapshotKey);
 
   const [search, setSearch]           = useState('');
@@ -476,7 +478,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
   const {
     options: prevOptions, selectedKey: prevSelectedKey, setSelectedKey: setPrevSelectedKey,
     matches: prevMatches, loading: prevLoading, loadingMatches: prevLoadingMatches,
-  } = usePreviousTriage(snapshotKey, usernameSet);
+  } = usePreviousTriage(snapshotKey, usernameSet, userId);
 
   useEffect(() => { setVisited(loadVisited(snapshotKey)); }, [snapshotKey]);
 

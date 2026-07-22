@@ -6,7 +6,9 @@ import Link from 'next/link';
 import { format } from 'date-fns';
 import { compareSnapshots } from '@ig-tracker/core';
 import type { Account, SnapshotComparison } from '@ig-tracker/core';
-import { db, type SnapshotRecord } from '@/lib/db';
+import type { SnapshotRecord } from '@/lib/db';
+import { getSnapshot } from '@/hooks/useSnapshots';
+import { useAuth } from '@/components/AuthProvider';
 import { T } from '@/components/landing/tokens';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { AccountList } from '@/components/AccountList';
@@ -101,6 +103,7 @@ function StatChip({ label, value, positive }: { label: string; value: number; po
 
 function DiffPageInner() {
   const searchParams = useSearchParams();
+  const { userId } = useAuth();
 
   const oldId     = Number(searchParams.get('old'));
   const currentId = Number(searchParams.get('current'));
@@ -113,13 +116,16 @@ function DiffPageInner() {
   useEffect(() => {
     if (!oldId || !currentId) { setError('Missing snapshot IDs.'); return; }
 
-    Promise.all([db.snapshots.get(oldId), db.snapshots.get(currentId)]).then(([o, c]) => {
+    // getSnapshot verifies ownership, not just existence — a guessed or
+    // reused id belonging to someone else on this browser returns undefined
+    // rather than their data.
+    Promise.all([getSnapshot(oldId, userId), getSnapshot(currentId, userId)]).then(([o, c]) => {
       if (!o || !c) { setError('One or both snapshots not found.'); return; }
       setOldRecord(o);
       setCurrentRecord(c);
       setDiff(compareSnapshots(o.data, c.data));
     }).catch(() => setError('Failed to load snapshots.'));
-  }, [oldId, currentId]);
+  }, [oldId, currentId, userId]);
 
   if (error) {
     return (

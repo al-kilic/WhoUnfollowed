@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { useSnapshotStore } from '@/lib/store';
-import { useSnapshotList, deleteSnapshot, updateSnapshotLabel, redateSnapshot, setSnapshotCloudId, restoreSnapshot, FREE_SNAPSHOT_LIMIT, type SnapshotRecord } from '@/hooks/useSnapshots';
+import { useSnapshotList, deleteSnapshot, updateSnapshotLabel, redateSnapshot, setSnapshotCloudId, restoreSnapshot, claimAnonymousSnapshots, FREE_SNAPSHOT_LIMIT, type SnapshotRecord } from '@/hooks/useSnapshots';
 import { useCloudSync } from '@/hooks/useCloudSync';
 import type { CloudSnapshotMeta } from '@/app/api/sync/actions';
 import { UnlockSyncForm } from '@/components/sync/UnlockSyncForm';
@@ -17,16 +17,17 @@ import { trackUpgradeClick, trackFunnel } from '@/lib/analytics';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
 interface HistoryClientProps {
+  userId: string | null;
   userEmail: string | null;
   isPro: boolean;
   subscriptionStatus: 'active' | 'grace' | 'cancelled' | 'none';
   gracePeriodEndsAt: string | null;
 }
 
-export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePeriodEndsAt }: HistoryClientProps) {
+export function HistoryClient({ userId, userEmail, isPro, subscriptionStatus, gracePeriodEndsAt }: HistoryClientProps) {
   const router       = useRouter();
   const setSnapshot  = useSnapshotStore(s => s.setSnapshot);
-  const snapshots    = useSnapshotList();
+  const snapshots    = useSnapshotList(userId);
   const [deletingId, setDeletingId]     = useState<number | null>(null);
   const [compareBaseId, setCompareBase] = useState<number | null>(null);
   const [syncingId, setSyncingId]       = useState<number | null>(null);
@@ -43,6 +44,13 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
     listSnapshots().then(setCloudList);
   }, [userEmail, isPro, listSnapshots]);
 
+  // If this account just logged in/signed up in the same browser session that
+  // uploaded anonymously, claim that anonymous data as theirs now. No-op if
+  // there's nothing unclaimed for this session, safe to run on every mount.
+  useEffect(() => {
+    if (userId) claimAnonymousSnapshots(userId);
+  }, [userId]);
+
   // Snapshots that exist in the cloud but not in this browser's local history
   // yet (a different browser/device uploaded them, or local storage was
   // cleared here). This is what makes "sync" actually sync both ways.
@@ -56,7 +64,7 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
 
   async function handleDelete(id: number) {
     setDeletingId(id);
-    await deleteSnapshot(id);
+    await deleteSnapshot(id, userId);
     setDeletingId(null);
   }
 
@@ -91,6 +99,7 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
 
   async function handleRestore(meta: CloudSnapshotMeta) {
     setRestoreError(null);
+    if (!userId) return; // cloud restore always requires being logged in
     if (!isUnlocked) {
       setShowUnlock(true);
       return;
@@ -98,7 +107,7 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
     setRestoringId(meta.id);
     const data = await fetchSnapshot(meta.id);
     if (data) {
-      await restoreSnapshot(data, meta.label, meta.exportedAt, meta.id);
+      await restoreSnapshot(data, meta.label, meta.exportedAt, meta.id, userId);
       trackFunnel('Snapshot Saved', { storage: 'cloud' });
     } else {
       setRestoreError(`Could not restore "${meta.label}". Try unlocking sync again.`);
@@ -278,6 +287,7 @@ export function HistoryClient({ userEmail, isPro, subscriptionStatus, gracePerio
                 compareBaseId={compareBaseId}
                 isDeleting={deletingId === record.id}
                 isSyncing={syncingId === record.id}
+                userId={userId}
                 userEmail={userEmail}
                 isPro={isPro}
                 onView={() => handleView(record)}
@@ -304,6 +314,7 @@ interface CardProps {
   compareBaseId: number | null;
   isDeleting: boolean;
   isSyncing: boolean;
+  userId: string | null;
   userEmail: string | null;
   isPro: boolean;
   onView: () => void;
@@ -313,7 +324,7 @@ interface CardProps {
   onSync: () => void;
 }
 
-function SnapshotCard({ record, allSnapshots, compareBaseId, isDeleting, isSyncing, userEmail, isPro, onView, onDelete, onSetCompareBase, onCompareWith, onSync }: CardProps) {
+function SnapshotCard({ record, allSnapshots, compareBaseId, isDeleting, isSyncing, userId, userEmail, isPro, onView, onDelete, onSetCompareBase, onCompareWith, onSync }: CardProps) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editLabel, setEditLabel] = useState(record.label);
@@ -328,8 +339,8 @@ function SnapshotCard({ record, allSnapshots, compareBaseId, isDeleting, isSynci
     const newExportedAt = Math.floor(new Date(editDate + 'T12:00:00').getTime() / 1000);
     const labelChanged = editLabel.trim() !== record.label;
     const dateChanged = newExportedAt !== record.exportedAt;
-    if (labelChanged) await updateSnapshotLabel(record.id, editLabel.trim() || record.label);
-    if (dateChanged) await redateSnapshot(record.id, record.exportedAt, newExportedAt);
+    if (labelChanged) await updateSnapshotLabel(record.id, editLabel.trim() || record.label, userId);
+    if (dateChanged) await redateSnapshot(record.id, record.exportedAt, newExportedAt, userId);
     setEditing(false);
   }
   const others        = allSnapshots.filter(s => s.id !== record.id);

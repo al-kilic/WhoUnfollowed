@@ -8,5 +8,5 @@ export default async function DashboardPage() {
   const { user } = await validateRequest();
   if (user && !(await isUserVerified(user.id))) redirect('/verify-email');
   const isPro = await isProUser();
-  return <DashboardClient account={{ userEmail: user?.email ?? null, isPro }} />;
+  return <DashboardClient account={{ userId: user?.id ?? null, userEmail: user?.email ?? null, isPro }} />;
 }

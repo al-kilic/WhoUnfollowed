@@ -1073,15 +1073,15 @@ function RadarModal({ onClose }: { onClose: () => void }) {
 }
 
 interface DashboardClientProps {
-  account: { userEmail: string | null; isPro: boolean };
+  account: { userId: string | null; userEmail: string | null; isPro: boolean };
 }
 
 export function DashboardClient({ account }: DashboardClientProps) {
   const router = useRouter();
   const storeSnapshot = useSnapshotStore(s => s.currentSnapshot);
   const setSnapshot   = useSnapshotStore(s => s.setSnapshot);
-  const snapshots     = useSnapshotList();
-  const snapshotsLoaded = useSnapshotsLoaded();
+  const snapshots     = useSnapshotList(account.userId);
+  const snapshotsLoaded = useSnapshotsLoaded(account.userId);
   const [radarModalOpen, setRadarModalOpen] = useState(false);
   const [loading, setLoading] = useState(!storeSnapshot);
 

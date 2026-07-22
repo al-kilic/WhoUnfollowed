@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, type TriageState, type TriageRecord } from '@/lib/db';
+import { isOwnedByCurrentViewer } from '@/lib/localOwnership';
 
 export type { TriageState };
 
@@ -79,6 +80,7 @@ export interface PriorSnapshotOption {
 export function usePreviousTriage(
   currentSnapshotKey: number,
   usernames: Set<string>,
+  currentUserId: string | null,
 ) {
   const [options, setOptions]           = useState<PriorSnapshotOption[]>([]);
   const [selectedKey, setSelectedKey]   = useState<number | null>(null);
@@ -92,7 +94,8 @@ export function usePreviousTriage(
 
     async function loadOptions() {
       const allSnapshots = await db.snapshots.orderBy('exportedAt').reverse().toArray();
-      const priors = allSnapshots.filter(s => s.exportedAt !== currentSnapshotKey);
+      const owned = allSnapshots.filter(s => isOwnedByCurrentViewer(s, currentUserId));
+      const priors = owned.filter(s => s.exportedAt !== currentSnapshotKey);
       if (!priors.length) { setLoading(false); return; }
 
       const opts: PriorSnapshotOption[] = await Promise.all(
@@ -111,7 +114,7 @@ export function usePreviousTriage(
 
     void loadOptions();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentSnapshotKey]);
+  }, [currentSnapshotKey, currentUserId]);
 
   // Load matches whenever selected snapshot changes
   useEffect(() => {

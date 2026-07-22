@@ -34,6 +34,7 @@ export default async function HistoryPage({
     <>
       {welcome === '1' && <AnalyticsEvent event="signup" />}
       <HistoryClient
+        userId={user?.id ?? null}
         userEmail={user?.email ?? null}
         isPro={isPro}
         subscriptionStatus={status}
