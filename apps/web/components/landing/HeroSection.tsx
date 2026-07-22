@@ -13,7 +13,7 @@ import {
 import { detectDeltaExport, type DeltaReason } from '@ig-tracker/core';
 import { useSnapshotStore } from '@/lib/store';
 import { useSnapshotList, saveSnapshot, deleteSnapshot, FREE_SNAPSHOT_LIMIT } from '@/hooks/useSnapshots';
-import { db } from '@/lib/db';
+import { useAuth } from '@/components/AuthProvider';
 import { track, trackFunnel } from '@/lib/analytics';
 import { recordParse as recordParseAction } from '@/app/actions/stats';
 import { DeltaWarning } from '@/components/DeltaWarning';
@@ -74,8 +74,9 @@ function classifyError(err: unknown): { message: string; kind: ErrorKind; showGu
 
 export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; initialStats: { snapshots: number; avgNonFollowers: number } }) {
   const router       = useRouter();
+  const { userId }   = useAuth();
   const setSnapshot  = useSnapshotStore((s) => s.setSnapshot);
-  const snapshots    = useSnapshotList();
+  const snapshots    = useSnapshotList(userId);
 
   const [phase,   setPhase]   = useState<UploadPhase>('idle');
   const [progress, setProgress] = useState(0);
@@ -120,10 +121,10 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
     router.push('/results');
     // Save to IndexedDB in background (non-blocking). Track only on actual
     // success — a rejected save should never report a false "Snapshot Saved".
-    saveSnapshot(snap)
+    saveSnapshot(snap, userId)
       .then(() => trackFunnel('Snapshot Saved', { storage: 'local' }))
       .catch(() => {});
-  }, [router, setSnapshot]);
+  }, [router, setSnapshot, userId]);
 
   // ── Process a dropped / selected file ────────────────────────────────────
   const processFile = async (file: File) => {
@@ -158,8 +159,9 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
 
       await new Promise(r => setTimeout(r, 300));
 
-      // Delta detection — always query DB directly (never stale)
-      const latestSaved = await db.snapshots.orderBy('exportedAt').last();
+      // Delta detection against the current viewer's own most recent snapshot
+      // only (snapshots is already scoped to this account/anonymous session).
+      const latestSaved = snapshots[0];
       const detection = detectDeltaExport(snap, latestSaved?.data);
       if (detection.isDelta) {
         setPhase('idle');
@@ -186,10 +188,10 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
   const handleDeleteOldest = useCallback(async () => {
     if (!pending) return;
     const oldest = [...snapshots].sort((a, b) => a.savedAt - b.savedAt)[0];
-    if (oldest?.id != null) await deleteSnapshot(oldest.id);
+    if (oldest?.id != null) await deleteSnapshot(oldest.id, userId);
     await commit(pending);
     setPending(null);
-  }, [pending, snapshots, commit]);
+  }, [pending, snapshots, commit, userId]);
 
   const handleUpgrade = useCallback(() => {
     router.push('/pricing');
