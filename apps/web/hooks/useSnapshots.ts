@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { format } from 'date-fns';
 import type { ParsedSnapshot } from '@ig-tracker/core';
@@ -52,11 +53,26 @@ export async function claimAnonymousSnapshots(userId: string): Promise<number> {
 }
 
 export function useSnapshotList(currentUserId: string | null): SnapshotRecord[] {
+  // The one-time legacy backfill MUST run outside the liveQuery querier below.
+  // Dexie 4 throws ReadOnlyError ("Readwrite transaction in liveQuery context")
+  // if any write happens inside a live query, which white-screened the homepage
+  // for every returning user who had pre-ownership snapshots. Run it imperatively
+  // instead; its writes still trigger the liveQuery below to re-run and surface
+  // the now-tagged records.
+  useEffect(() => {
+    void migrateLegacyOwnership(currentUserId).catch(() => {});
+  }, [currentUserId]);
+
   return useLiveQuery(
     async () => {
-      await migrateLegacyOwnership(currentUserId);
-      const all = await db.snapshots.orderBy('exportedAt').reverse().toArray();
-      return all.filter(r => isOwnedByCurrentViewer(r, currentUserId));
+      // Read-only: never write here (see migrateLegacyOwnership note above).
+      // Defensive fallback keeps a Dexie failure from crashing the whole page.
+      try {
+        const all = await db.snapshots.orderBy('exportedAt').reverse().toArray();
+        return all.filter(r => isOwnedByCurrentViewer(r, currentUserId));
+      } catch {
+        return [] as SnapshotRecord[];
+      }
     },
     [currentUserId],
     [],
