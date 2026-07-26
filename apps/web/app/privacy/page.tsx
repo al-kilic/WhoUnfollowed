@@ -24,7 +24,7 @@ export default function PrivacyPage() {
           <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', color: T.ink, marginBottom: 12 }}>
             Privacy Policy
           </h1>
-          <p style={{ fontSize: 13, color: T.inkMute, fontFamily: T.mono }}>Effective date: April 28, 2026 · Last updated: May 15, 2026</p>
+          <p style={{ fontSize: 13, color: T.inkMute, fontFamily: T.mono }}>Effective date: April 28, 2026 · Last updated: July 26, 2026</p>
         </div>
 
         {/* Disclaimer box */}
@@ -90,7 +90,9 @@ export default function PrivacyPage() {
           <Section title="5. Pro tier data processing">
             Users who create a Pro account provide an email address and password. Passwords are hashed using argon2id and are never stored in plaintext. Snapshot data uploaded for cloud sync is encrypted client-side before transmission using a key derived from the user&apos;s password. This key is never stored on our servers, and we are technically unable to decrypt user snapshot data.
             <br /><br />
-            Pro account data is stored on infrastructure located within the European Union (Germany), and processing is governed by GDPR. The Pro tier is not yet active. During the beta period, all users receive Pro features at no charge and no payment data is collected or stored.
+            Pro account data is stored on infrastructure located within the European Union (Germany), and processing is governed by GDPR.
+            <br /><br />
+            Payments for the Pro subscription are handled by Stripe, our payment processor. You enter your card details directly with Stripe. Your full card number never reaches our servers, and we do not store it. We retain only a Stripe customer and subscription reference, your current subscription status, and the email address on your account, which is the minimum needed to manage billing. Stripe processes your payment information under its own privacy policy and is PCI-DSS compliant.
           </Section>
 
           <Section title="6. Relationship with Meta and Instagram">
