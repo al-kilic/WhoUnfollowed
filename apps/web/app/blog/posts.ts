@@ -26,12 +26,31 @@ export interface BlogPost {
   image?: string;
   /** Accessible/SEO alt text for the cover illustration or photo. */
   imageAlt: string;
+  /**
+   * Topic-specific end-of-post call to action. Names the pain from THIS post
+   * and points at WhoUnfollowed as the fix, instead of a one-size-fits-all
+   * prompt. Falls back to a generic CTA when absent. `proNudge`, when set,
+   * adds a second line linking to /pricing for tracking-over-time posts
+   * (snapshot history, unfollow alerts, ghost/charts).
+   */
+  cta?: {
+    heading: string;
+    body: string;
+    buttonLabel: string;
+    proNudge?: string;
+  };
   body: string;
 }
 
 export const BLOG_POSTS: BlogPost[] = [
   {
     slug: 'why-did-i-lose-followers-overnight-on-instagram',
+    cta: {
+      heading: 'Find out exactly who dropped off.',
+      body: 'An overnight dip has names attached to it. Upload your own Instagram export and WhoUnfollowed shows precisely who left, in your browser, in about two minutes. No password, nothing uploaded.',
+      buttonLabel: 'See who unfollowed you',
+      proNudge: 'Want to catch the next drop the moment it happens? Pro keeps your snapshot history and emails you when someone unfollows.',
+    },
     cluster: 'unfollowers',
     title: 'Why Did I Lose Followers Overnight on Instagram?',
     metaTitle: 'Why Did I Lose Followers Overnight on Instagram?',
@@ -99,6 +118,11 @@ An overnight drop is almost always one of the five reasons above, and most of th
   },
   {
     slug: 'how-to-download-your-instagram-data',
+    cta: {
+      heading: 'Got your export? Put it to work.',
+      body: 'Once your ZIP arrives, WhoUnfollowed reads it in your browser and turns it into a clear list of who does not follow you back and who unfollowed you. No password, no upload to any server.',
+      buttonLabel: 'Analyze your export free',
+    },
     cluster: 'data-export',
     title: 'How to Download Your Instagram Data (Step by Step)',
     metaTitle: 'How to Download Your Instagram Data (Step by Step)',
@@ -194,6 +218,11 @@ Once you've uploaded the ZIP somewhere that reads it locally, like WhoUnfollowed
   },
   {
     slug: 'is-it-safe-to-mass-unfollow-on-instagram',
+    cta: {
+      heading: 'Unfollow the right people, safely.',
+      body: 'Before you mass unfollow, see exactly who does not follow you back so you only cut dead weight. WhoUnfollowed builds that list from your own export, in your browser, with no password and nothing stored.',
+      buttonLabel: 'Get your non-follower list',
+    },
     cluster: 'privacy-safety',
     title: 'Is It Safe to Mass Unfollow on Instagram?',
     metaTitle: 'Is It Safe to Mass Unfollow on Instagram?',
@@ -263,6 +292,12 @@ Is it safe to mass unfollow on Instagram? Unfollowing thoughtfully, at a human p
   },
   {
     slug: 'how-to-see-who-unfollowed-you-on-instagram',
+    cta: {
+      heading: 'See who unfollowed you, safely.',
+      body: 'No risky login. Upload the export Instagram already gives you and WhoUnfollowed shows the exact names in your browser in about two minutes. The parser is open source, so you can verify it yourself.',
+      buttonLabel: 'See who unfollowed you',
+      proNudge: 'Checking regularly? Pro stores your history and alerts you the moment someone leaves.',
+    },
     cluster: 'unfollowers',
     title: 'Who Unfollowed You on Instagram? How to See (Without Getting Banned)',
     metaTitle: 'Who Unfollowed You on Instagram? How to See',
@@ -364,6 +399,12 @@ If a tool asks for your Instagram password, close the tab.`,
   },
   {
     slug: 'instagram-follow-ratio-what-it-means-how-to-improve-it',
+    cta: {
+      heading: 'Fix your ratio at the source.',
+      body: 'A cleaner follow ratio starts with cutting the accounts that do not follow you back. WhoUnfollowed finds them in your own export, in your browser, with no password required.',
+      buttonLabel: 'See who to unfollow',
+      proNudge: 'Pro charts your follower and following counts over time so you can watch the ratio actually improve.',
+    },
     cluster: 'account-health',
     title: 'Your Instagram Follow Ratio: What It Means and How to Actually Improve It',
     metaTitle: 'Instagram Follow Ratio: What It Means & How to Fix It',
@@ -447,6 +488,11 @@ Clean your list thoughtfully. The ratio will follow.`,
   },
   {
     slug: 'why-instagram-follower-trackers-ask-for-your-password',
+    cta: {
+      heading: 'Here is the tracker that never asks.',
+      body: 'WhoUnfollowed reads the export Instagram gives you, entirely in your browser, so there is nothing to log into and no password to hand over. The whole thing is open source, so you never have to take our word for it.',
+      buttonLabel: 'Try the no-password tracker',
+    },
     cluster: 'privacy-safety',
     title: 'Why Instagram Follower Trackers Ask for Your Password (It\'s Not an Accident)',
     metaTitle: 'Why Follower Trackers Want Your Instagram Password',
@@ -529,6 +575,11 @@ Occasionally. Instagram's own official "Meta Business Suite" and verified partne
   },
   {
     slug: 'who-doesnt-follow-you-back-on-instagram',
+    cta: {
+      heading: 'Get the full list in two minutes.',
+      body: 'Stop checking profiles one by one. Upload your Instagram export and WhoUnfollowed lists everyone who does not follow you back, in your browser, with no password and nothing stored.',
+      buttonLabel: 'See who doesn\'t follow back',
+    },
     cluster: 'unfollowers',
     title: 'How to See Who Doesn\'t Follow You Back on Instagram (Free, No App)',
     metaTitle: 'See Who Doesn\'t Follow You Back on Instagram',
@@ -588,6 +639,12 @@ If a tool asks for your Instagram login to do this, close the tab. The file Inst
   },
   {
     slug: 'instagram-ghost-followers-how-to-find-and-remove-them',
+    cta: {
+      heading: 'Surface your likely ghosts.',
+      body: 'WhoUnfollowed reads your own export in your browser to map your real, reciprocal audience and separate it from dead weight. No password needed.',
+      buttonLabel: 'Analyze your audience free',
+      proNudge: 'Pro approximates ghost followers by flagging long-tenure accounts that never engaged back.',
+    },
     cluster: 'account-health',
     title: 'Instagram Ghost Followers: How to Find and Remove Them',
     metaTitle: 'Instagram Ghost Followers: Find & Remove Them',
@@ -652,6 +709,11 @@ Clearing ghosts will probably shrink your follower number. That feels bad for a 
   },
   {
     slug: 'does-instagram-notify-when-you-unfollow-someone',
+    cta: {
+      heading: 'Unfollow quietly, and know who did it to you.',
+      body: 'Instagram will not tell you who unfollowed you either. WhoUnfollowed will: upload your export and see the exact names in your browser. No password, nothing uploaded.',
+      buttonLabel: 'See who unfollowed you',
+    },
     cluster: 'unfollowers',
     title: 'Does Instagram Notify Someone When You Unfollow Them?',
     metaTitle: 'Does Instagram Notify When You Unfollow Someone?',
@@ -706,6 +768,11 @@ When you unfollow someone on Instagram, are they notified? No. Unfollowing, remo
   },
   {
     slug: 'can-you-get-banned-for-using-a-follower-tracker-on-instagram',
+    cta: {
+      heading: 'The tracker that can\'t get you banned.',
+      body: 'Nothing to log into means nothing for Instagram to flag. WhoUnfollowed only reads the export you already own, in your browser, and the code is open source so you can check exactly what it does.',
+      buttonLabel: 'Try the safe way',
+    },
     cluster: 'privacy-safety',
     title: 'Can You Get Banned for Using a Follower Tracker on Instagram?',
     metaTitle: 'Can You Get Banned for Using an Instagram Follower Tracker?',
@@ -761,6 +828,11 @@ You can get banned for using a follower tracker, but only if it asks for your lo
   },
   {
     slug: 'are-instagram-follower-trackers-safe',
+    cta: {
+      heading: 'See what a safe tracker looks like.',
+      body: 'No login, no password, no data leaving your device. WhoUnfollowed reads your own Instagram export in your browser, and the parser is open source, so safety is something you can verify, not just trust.',
+      buttonLabel: 'Try it free',
+    },
     cluster: 'privacy-safety',
     title: 'Are Instagram Follower Trackers Safe?',
     metaTitle: 'Are Instagram Follower Trackers Safe? What to Check First',
@@ -807,6 +879,11 @@ As a category, no. As a specific choice, it depends entirely on one thing: wheth
   },
   {
     slug: 'how-long-does-an-instagram-data-request-take',
+    cta: {
+      heading: 'The moment your export lands.',
+      body: 'As soon as your ZIP arrives, drop it into WhoUnfollowed and get your non-follower and unfollower lists in your browser, in about two minutes. No password, nothing uploaded.',
+      buttonLabel: 'Analyze your export',
+    },
     cluster: 'data-export',
     title: 'How Long Does an Instagram Data Request Take?',
     metaTitle: 'How Long Does an Instagram Data Request Take?',
@@ -852,6 +929,11 @@ The moment you have the ZIP, the slow part is over. Reading it is instant. Drop 
   },
   {
     slug: 'instagram-data-export-json-vs-html',
+    cta: {
+      heading: 'Either format works here.',
+      body: 'JSON or HTML, WhoUnfollowed reads whichever one you picked, right in your browser, and shows who does not follow you back. No password, nothing stored.',
+      buttonLabel: 'Upload your export',
+    },
     cluster: 'data-export',
     title: 'Instagram Data Export: JSON vs HTML (Which to Pick and Why)',
     metaTitle: 'Instagram Data Export: JSON vs HTML (Which to Choose)',
@@ -895,6 +977,12 @@ Drop the JSON export into [WhoUnfollowed](/). It reads the file in your browser,
   },
   {
     slug: 'can-you-see-who-unfollowed-you-on-instagram',
+    cta: {
+      heading: 'Yes, and here is how.',
+      body: 'Instagram hides it, but your own export does not. Upload it to WhoUnfollowed and see the exact people who unfollowed you, in your browser, with no password required.',
+      buttonLabel: 'See who unfollowed you',
+      proNudge: 'Pro keeps every snapshot and emails you whenever someone new drops off.',
+    },
     cluster: 'unfollowers',
     title: 'Can You See Who Unfollowed You on Instagram?',
     metaTitle: 'Can You See Who Unfollowed You on Instagram?',
@@ -939,6 +1027,11 @@ You cannot see who unfollowed you directly, and no app can do it safely by loggi
   },
   {
     slug: 'what-is-a-good-follower-to-following-ratio-on-instagram',
+    cta: {
+      heading: 'Tighten your ratio today.',
+      body: 'The fastest lever is cutting accounts that do not follow you back. WhoUnfollowed finds them in your own export, in your browser, with no password.',
+      buttonLabel: 'See who to unfollow',
+    },
     cluster: 'account-health',
     title: 'What Is a Good Follower-to-Following Ratio on Instagram?',
     metaTitle: 'What Is a Good Follower-to-Following Ratio on Instagram?',
@@ -989,6 +1082,11 @@ To do the trimming cleanly, you need to see who does not follow you back. [WhoUn
   },
   {
     slug: 'whats-inside-your-instagram-data-download',
+    cta: {
+      heading: 'Turn the ZIP into answers.',
+      body: 'The followers and following files are just lists until something compares them. WhoUnfollowed does that in your browser and shows who does not follow you back. No password, nothing uploaded.',
+      buttonLabel: 'Analyze your download',
+    },
     cluster: 'data-export',
     title: "What's Actually Inside Your Instagram Data Download",
     metaTitle: "What's Inside Your Instagram Data Download (The ZIP Explained)",
@@ -1037,6 +1135,11 @@ Because the whole file is just a few small, plain JSON documents, a tool like [W
   },
   {
     slug: 'how-to-clean-up-who-you-follow-on-instagram',
+    cta: {
+      heading: 'Start your cleanup with the list.',
+      body: 'Cleaning up is easy once you can see who does not follow you back. WhoUnfollowed builds that list from your export, in your browser, with no password and nothing uploaded.',
+      buttonLabel: 'Get your cleanup list',
+    },
     cluster: 'account-health',
     title: 'How to Clean Up Who You Follow on Instagram (The Safe Way)',
     metaTitle: 'How to Clean Up Who You Follow on Instagram Safely',
@@ -1090,6 +1193,11 @@ See the full list first, sort it deliberately, unfollow in small paced batches, 
   },
   {
     slug: 'instagram-follower-tracker-without-login',
+    cta: {
+      heading: 'A tracker with no login, for real.',
+      body: 'WhoUnfollowed never asks you to sign into Instagram. It reads the export you download yourself, in your browser, and the code is open source. Upload it and see who unfollowed you in about two minutes.',
+      buttonLabel: 'Try it without logging in',
+    },
     cluster: 'privacy-safety',
     title: 'Instagram Follower Tracker Without Login: Do They Exist?',
     metaTitle: 'Instagram Follower Tracker Without Login: Do They Exist?',
@@ -1133,6 +1241,11 @@ A real no-login Instagram follower tracker exists and works by reading your own 
   },
   {
     slug: 'deactivated-or-blocked-on-instagram-how-to-tell',
+    cta: {
+      heading: 'Tell a real unfollow from a deactivation.',
+      body: 'WhoUnfollowed compares your own exports to show exactly who is gone from your followers, so you can separate a genuine unfollow from a deactivated account. In your browser, with no password.',
+      buttonLabel: 'Check who\'s gone',
+    },
     cluster: 'unfollowers',
     title: 'Deactivated, Deleted, or Blocked? How to Tell What Happened on Instagram',
     metaTitle: 'Deactivated or Blocked on Instagram? How to Tell',
@@ -1209,6 +1322,11 @@ Instagram is required under GDPR to hand you a full copy of your own followers a
   },
   {
     slug: 'how-to-unfollow-everyone-on-instagram-at-once',
+    cta: {
+      heading: 'Know who to cut before you start.',
+      body: 'Bulk unfollowing is safer when you work from an exact list. WhoUnfollowed turns your export into a clean non-follower list in your browser, with no password and nothing stored.',
+      buttonLabel: 'Get your non-follower list',
+    },
     cluster: 'account-health',
     title: 'How to Unfollow Everyone on Instagram at Once (the Fastest Safe Way)',
     metaTitle: 'How to Unfollow Everyone on Instagram at Once',
@@ -1292,6 +1410,11 @@ The fastest real way to unfollow everyone on Instagram is manual, paced batches 
   },
   {
     slug: 'what-is-the-follow-unfollow-method-on-instagram',
+    cta: {
+      heading: 'Prune with intent, not a bot.',
+      body: 'Skip the risky follow/unfollow loop. WhoUnfollowed shows exactly who does not follow you back from your own export, in your browser, so you can clean up deliberately. No password, open source.',
+      buttonLabel: 'See who doesn\'t follow back',
+    },
     cluster: 'privacy-safety',
     title: 'What Is the Follow/Unfollow Method on Instagram (and Why It Backfires)',
     metaTitle: 'The Follow/Unfollow Method on Instagram: Why It Backfires',
@@ -1357,6 +1480,12 @@ The follow/unfollow method optimises for a vanity number while charging you in r
   },
   {
     slug: 'instagram-unfollow-checker',
+    cta: {
+      heading: 'Be your own unfollow checker.',
+      body: 'You do not need to trust an app with your login. Upload the export Instagram already gives you and WhoUnfollowed shows the exact names in about two minutes, in your browser. No password, and the code is open source.',
+      buttonLabel: 'Check who unfollowed you',
+      proNudge: 'Pro turns the monthly check into an automatic one, with saved history and email alerts.',
+    },
     cluster: 'unfollowers',
     title: 'Instagram Unfollow Checker: How to Check Who Unfollowed You (Free)',
     metaTitle: 'Instagram Unfollow Checker: Check Who Unfollowed You Free',
@@ -1420,6 +1549,12 @@ An unfollow checker is only ever a follower-list diff, so the tool itself is not
   },
   {
     slug: 'how-to-compare-two-instagram-follower-lists',
+    cta: {
+      heading: 'Skip the spreadsheet.',
+      body: 'COUNTIF works until your lists get long or a handle changes. WhoUnfollowed merges the files and diffs the two lists in your browser in seconds. Open source, no password, nothing leaves your device.',
+      buttonLabel: 'Compare your lists free',
+      proNudge: 'Pro saves each snapshot so the next comparison is automatic, not another manual export.',
+    },
     cluster: 'unfollowers',
     title: 'How to Compare Two Instagram Follower Lists (Without an App)',
     metaTitle: 'How to Compare Two Instagram Follower Lists (No App)',

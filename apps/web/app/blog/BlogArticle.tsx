@@ -205,15 +205,25 @@ export function BlogArticle({ post, otherPosts }: { post: BlogPost; otherPosts: 
           {renderBody(post.body)}
         </article>
 
-        {/* CTA */}
-        <div style={{ marginTop: 48, padding: '28px', borderRadius: 16, background: T.surface1, border: `1px solid ${T.border1}`, textAlign: 'center' }}>
-          <p style={{ fontFamily: T.serif, fontSize: 17, fontStyle: 'italic', color: T.inkDim, marginBottom: 16 }}>
-            See your own list. Takes 2 minutes.
+        {/* CTA: topic-specific when the post defines one (post.cta), generic
+            fallback otherwise. Bridges the post's pain straight to the tool. */}
+        <div style={{ marginTop: 48, padding: '30px 28px', borderRadius: 16, background: T.surface1, border: `1px solid ${T.border1}`, textAlign: 'center' }}>
+          <p style={{ fontFamily: T.serif, fontSize: 23, color: T.ink, marginBottom: 10, letterSpacing: '-0.01em', lineHeight: 1.15 }}>
+            {post.cta?.heading ?? 'See your own list.'}
           </p>
-          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '11px 22px', borderRadius: 11, background: T.teal, color: T.cream, fontSize: 13, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans, boxShadow: `0 6px 20px ${T.tealGlow}` }}>
-            Upload your Instagram export
+          <p style={{ fontSize: 15, color: T.inkDim, lineHeight: 1.6, maxWidth: 460, margin: '0 auto 20px' }}>
+            {post.cta?.body ?? 'Upload the export Instagram gives you and see exactly who unfollowed you and who never followed back, right in your browser. No password, nothing uploaded.'}
+          </p>
+          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 11, background: T.teal, color: T.cream, fontSize: 14, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans, boxShadow: `0 6px 20px ${T.tealGlow}` }}>
+            {post.cta?.buttonLabel ?? 'Upload your Instagram export'}
             <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M11 7L8 4M11 7L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </Link>
+          {post.cta?.proNudge && (
+            <p style={{ fontSize: 13, color: T.inkMute, lineHeight: 1.6, marginTop: 18 }}>
+              {post.cta.proNudge}{' '}
+              <Link href="/pricing" style={{ color: T.tealLight, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>See Pro →</Link>
+            </p>
+          )}
         </div>
 
         {/* Topic cluster: pillar + series linking. Hidden on a pillar that has
