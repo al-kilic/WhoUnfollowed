@@ -1533,6 +1533,208 @@ If you have been searching for an "unfollow tracker" and finding "checker" tools
 
 An unfollow checker is only ever a follower-list diff, so the tool itself is not the risk. The risk is how it gets your list. Pick one that reads your own Instagram export, keeps the work on your device, and shows you its code. Ours does all three: upload your export, see who unfollowed in your browser, no password and nothing stored.`,
   },
+  {
+    slug: 'is-there-a-free-app-to-see-who-unfollowed-you-on-instagram',
+    cluster: 'unfollowers',
+    title: 'Is There a Free App to See Who Unfollowed You on Instagram?',
+    metaTitle: 'Free App to See Who Unfollowed You on Instagram?',
+    metaDescription: 'Looking for a free app to see who unfollowed you on Instagram? Here is the truth about those apps, why most are a bad trade, and the genuinely free, safe way.',
+    excerpt: 'You searched for a free app to see who unfollowed you, and the stores are full of them. Here is what those apps actually cost you, and the genuinely free way that does not touch your password.',
+    date: 'August 1, 2026',
+    readTime: '6 min',
+    tag: 'Guide',
+    primaryKeyword: 'free app to see who unfollowed you on instagram',
+    art: 'lock',
+    image: '/blog/no-login-tracker-hero.jpg',
+    imageAlt: 'A stylized 3D render of the Instagram app icon, representing a free app to see who unfollowed you on Instagram',
+    cta: {
+      heading: 'Skip the app. See it free, right here.',
+      body: 'No download, no login, no subscription. Upload the export Instagram already gives you and WhoUnfollowed shows who unfollowed you and who never followed back, in your browser. No password, and it is open source so you can check it.',
+      buttonLabel: 'See who unfollowed you free',
+    },
+    body: `Search "free app to see who unfollowed you on Instagram" and the app stores hand you dozens of results: unfollowers for Instagram, unfollow trackers, an unfollowers APK for Android, even browser extensions promising a one-click list. Most are free to download. Almost none are actually free once you see what they take in exchange. Here is what these apps really cost, and the genuinely free way to see who unfollowed you that does not involve any of them.
+
+## What "free" usually means for these apps
+
+A free download is not the same as a free tool. The typical app to see who unfollowed you on Instagram makes its money in one of a few ways, and you are what it sells:
+
+- **It wants your Instagram login.** To read your followers, the app signs into your account from its servers and calls Instagram's private API as you. That breaks Instagram's terms and is a common trigger for [a ban or action block](/blog/can-you-get-banned-for-using-a-follower-tracker-on-instagram). We explain why so many insist on this in [why follower trackers ask for your password](/blog/why-instagram-follower-trackers-ask-for-your-password).
+- **It shows you three names, then asks for money.** "Free" gets you a teaser. The actual list is behind a subscription.
+- **It sells the data.** A free unfollow tracker with no login wall and no subscription is often monetising the one asset you handed it.
+
+So "best unfollow app for Instagram free" is close to a contradiction. The ones that are safe are rarely free, and the ones that are free are rarely safe.
+
+## The APK and extension versions are the same trade
+
+Searching for an unfollowers APK (the Android install file) or an unfollow Instagram extension for your browser does not change the math. An APK sideloaded outside the Play Store has even less oversight, and a browser extension that can read your Instagram session is one update away from doing whatever it wants with it. Same login, same risk, same reason accounts get flagged.
+
+## The genuinely free, safe way
+
+There is a version that is actually free and actually safe, and it needs no app at all. Instagram already gives you your own follower and following lists. You just have to ask.
+
+1. Request your data export from Instagram. It is free, official, and built into the app under your settings. Step by step: [how to download your Instagram data](/blog/how-to-download-your-instagram-data).
+2. Upload that file to a tool that reads it instead of logging into your account. That single difference is the whole line between safe and not.
+3. See your non-followers straight away, and upload a second export later to see exactly who unfollowed you in between.
+
+This is what WhoUnfollowed does. It reads the export in your browser, so your data never touches a server, it never asks for your Instagram password, and the full non-followers and unfollowers breakdown is free with no account required. Because the code is open source, you can confirm all of that yourself instead of trusting a store listing. If "no login" is the part you care about, there is more in [Instagram follower trackers without login](/blog/instagram-follower-tracker-without-login).
+
+## What to check before trusting any tool
+
+Whether it calls itself an app, an unfollow tracker, or an Instagram unfollow tool, run it past this first:
+
+- Does it ask for your Instagram login? If yes, close the tab.
+- Does it read your own export, or log into your account?
+- Can you see the results for free without making an account?
+- Is the code open, so the privacy claim is verifiable?
+
+## The bottom line
+
+The honest answer to "is there a free app to see who unfollowed you on Instagram" is that the safest free option is not an app at all. It is your own official export, read by a tool that never logs in as you. Skip the APK, skip the extension, skip the login screen, and get the same answer without the risk.`,
+  },
+  {
+    slug: 'how-to-see-who-unfollowed-you-without-them-knowing',
+    cluster: 'unfollowers',
+    title: 'How to See Who Unfollowed You on Instagram Without Them Knowing',
+    metaTitle: 'See Who Unfollowed You Without Them Knowing (Instagram)',
+    metaDescription: 'Want to see who unfollowed you on Instagram without them knowing? The safe method is completely invisible. Here is how it works, with no login needed.',
+    excerpt: 'The good news about checking who unfollowed you: done the right way, nobody ever finds out. Here is how to see who unfollowed you on Instagram without them knowing, and without logging in anywhere.',
+    date: 'August 2, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'how to see who unfollowed you without them knowing',
+    art: 'bell',
+    image: '/blog/see-who-unfollowed-hero.jpg',
+    imageAlt: 'The Instagram logo displayed on a phone screen, representing checking who unfollowed you on Instagram',
+    cta: {
+      heading: 'Check completely invisibly.',
+      body: 'WhoUnfollowed reads your own Instagram export in your browser. It never logs into your account and never notifies anyone, so nobody, including the people who left, can tell you looked. No password required.',
+      buttonLabel: 'See who unfollowed you',
+      proNudge: 'Pro saves your history and quietly emails you when someone new unfollows, so you never have to check by hand.',
+    },
+    body: `There are really two worries hidden inside "how to see who unfollowed you on Instagram without them knowing." One: will the person get a notification that I looked? Two: do I have to log in somewhere sketchy to find out? The safe method answers both. It is completely invisible to the other person, and it never asks you to log in anywhere.
+
+## Does Instagram tell someone you checked?
+
+No. Instagram has no "viewed your profile" feature, and it does not notify anyone when you look at their account, unfollow them, or check whether they still follow you. It also never tells you when someone unfollows you, which is the whole reason "who unfollowed me on Instagram" is such a common search in the first place. The platform stays silent in both directions. We covered exactly what does and does not trigger a notification in [does Instagram notify when you unfollow someone](/blog/does-instagram-notify-when-you-unfollow-someone).
+
+So checking who unfollowed you is invisible by default. The person who dropped you will never know you noticed. The only way that changes is if you use a tool that acts on your account.
+
+## The part that can actually expose you
+
+What can get you noticed is not looking, it is using an [Instagram unfollow tracker](/blog/instagram-unfollow-checker) that logs into your account to work. When an app signs in as you and starts hitting Instagram's servers, that activity is tied to your account. At best it earns you an action block. At worst, the person you were curious about is beside the point, because your own account is the one that gets flagged. An unfollow tracker that needs your password is the opposite of discreet.
+
+## The invisible method: your own export
+
+The way to see who unfollowed you without them knowing, and without exposing yourself, is to work from data Instagram already gives you:
+
+1. Request your data export from Instagram. It happens quietly inside your own settings and nobody is notified. Steps: [how to download your Instagram data](/blog/how-to-download-your-instagram-data).
+2. Upload it to a tool that reads the file instead of logging in. No login means no footprint on your account and nothing for anyone to see. See [follower trackers that work without login](/blog/instagram-follower-tracker-without-login).
+3. To catch unfollows going forward, save this export and compare it against a later one.
+
+WhoUnfollowed does exactly this. It reads your export in the browser, never logs into Instagram, never notifies anyone, and never asks for your password. Nobody, including the people who unfollowed you, has any way to know you looked.
+
+## The bottom line
+
+Seeing who unfollowed you on Instagram is private by design: Instagram tells no one, in either direction. The only way to lose that privacy is to use an unfollow tracker that logs into your account. Stick to your own export, read by a tool that never signs in as you, and the whole thing stays completely invisible.`,
+  },
+  {
+    slug: 'do-instagram-unfollow-apps-actually-work',
+    cluster: 'privacy-safety',
+    title: 'Do "Who Unfollowed Me" Apps Actually Work?',
+    metaTitle: 'Do "Who Unfollowed Me" Instagram Apps Actually Work?',
+    metaDescription: 'Do those "who unfollowed me" apps and Instagram unfollow trackers actually work? Here is what they really do, why many fail, and the reliable alternative.',
+    excerpt: 'Every "who unfollowed me" app promises the same thing. Some show wrong data, some want your login, some just stop working. Here is what is really going on under the hood, and what to use instead.',
+    date: 'August 3, 2026',
+    readTime: '6 min',
+    tag: 'Guide',
+    primaryKeyword: 'do who unfollowed me apps work',
+    art: 'search',
+    image: '/blog/banned-tracker-hero.jpg',
+    imageAlt: 'A cube showing a low-to-high risk gauge on a keyboard, representing whether follower tracker apps actually work safely',
+    cta: {
+      heading: 'Use the one that can\'t break.',
+      body: 'WhoUnfollowed reads your official Instagram export instead of logging into your account, so no API change can break it and nothing gets your account flagged. It is open source, so "does it work" is something you can verify, not hope for.',
+      buttonLabel: 'Try the reliable way',
+    },
+    body: `Search "do who unfollowed me apps actually work" and you find a wall of five-star ratings sitting next to a wall of one-star reviews saying "showed me wrong data" and "stopped working after the update." Both are telling the truth, because whether an unfollow tracker works depends entirely on how it is built. Here is what is happening under the hood, and why the reliable option looks nothing like the apps.
+
+## How most of these apps work, and why they break
+
+The typical Instagram follower tracker logs into your account and calls Instagram's private, undocumented API to pull your follower list. That approach has three built-in failure modes:
+
+- **Instagram changes its API and the app dies.** These are unofficial endpoints Instagram never promised to keep stable. When Instagram tweaks them, every app relying on them breaks at once. That is the "stopped working after the update" review, and it happens constantly.
+- **Rate limits give you partial data.** To avoid detection, these apps can only pull so much so fast. On a large account they often grab an incomplete list, then report people as unfollowers who never left. That is the "wrong data" review.
+- **Your account gets flagged.** Logging in from a third-party server and hammering the API is exactly the behavior Instagram polices. The app "working" can cost you [an action block or ban](/blog/can-you-get-banned-for-using-a-follower-tracker-on-instagram).
+
+So "does it work" is the wrong question. Even when one of these works today, it is one Instagram update from breaking tomorrow, and it puts your account at risk the whole time.
+
+## The newer "AI unfollow" apps do not fix this
+
+A wave of tools now market themselves as "IG unfollow AI" or AI-powered follower trackers. The AI branding does not change the plumbing. If the app still needs your Instagram login to read your followers, it has the same API dependency and the same ban risk as the old ones. A smarter label on the same risky method is still the risky method.
+
+## What actually works reliably
+
+The only approach that does not break when Instagram changes its API is one that never touches Instagram's API at all. Instagram gives every user an official export of their own followers and following lists. A tool that reads that file has nothing to break:
+
+- No login, so nothing to flag.
+- No private API, so no update can kill it.
+- The complete list every time, so no false unfollowers from rate limits.
+
+That is how WhoUnfollowed works. You upload the export Instagram gives you, it is parsed in your browser, and you get an accurate non-followers and unfollowers breakdown. And because it is [open source on GitHub](https://github.com/al-kilic/WhoUnfollowed) (AGPL for the app, MPL for the parser), "does it actually work" is not something you take on faith. You can read the code that does the work. No closed-source app can offer that.
+
+## The bottom line
+
+Do "who unfollowed me" apps work? Sometimes, briefly, until Instagram changes something or rate-limits them into showing you wrong data, and often at the cost of your account. A tool that reads your own official export instead has none of those failure points, and if it is open source you can verify exactly what it does. That is the difference between an app that works until it doesn't and a method that just works.`,
+  },
+  {
+    slug: 'how-often-should-you-check-who-unfollowed-you-on-instagram',
+    cluster: 'unfollowers',
+    title: 'How Often Should You Check Who Unfollowed You on Instagram?',
+    metaTitle: 'How Often Should You Check Who Unfollowed You?',
+    metaDescription: 'How often should you check who unfollowed you on Instagram? Here is a sane cadence by account type, and how to get alerted automatically instead of checking.',
+    excerpt: 'Checking who unfollowed you every hour is a fast way to make yourself miserable. Here is a sane cadence based on how you actually use Instagram, and how to stop checking manually altogether.',
+    date: 'August 4, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'how often should you check who unfollowed you',
+    art: 'bell',
+    image: '/blog/lost-followers-overnight.jpg',
+    imageAlt: 'A laptop screen showing analytics dashboards and graphs, representing tracking who unfollowed you over time',
+    cta: {
+      heading: 'Stop checking. Get told instead.',
+      body: 'Upload your export to WhoUnfollowed and it keeps each snapshot, so every check is an automatic comparison. See who unfollowed you in your browser, free, with no password.',
+      buttonLabel: 'See who unfollowed you',
+      proNudge: 'Pro keeps your full snapshot history and emails you the moment someone unfollows.',
+    },
+    body: `Once you can finally see who unfollowed you, it is tempting to check constantly. Resist that. Checking every hour turns a useful signal into low-grade anxiety, and follower counts wobble for reasons that have nothing to do with you. Here is a saner cadence, and a way to stop checking by hand entirely.
+
+## Why checking too often backfires
+
+Follower numbers move daily from things you cannot control: Instagram purging bot accounts, people deactivating, spam sweeps. If you check every few hours you are mostly reacting to noise, reading meaning into a single unfollow that was really just a bot getting removed. We break down those causes in [why you lose followers overnight](/blog/why-did-i-lose-followers-overnight-on-instagram). Checking less often, but consistently, filters out the noise and shows you the real pattern.
+
+## A sane cadence by account type
+
+There is no universal number, but a good rule is to match your checking to how fast your account actually changes:
+
+- **Casual or personal account:** once a month is plenty. Unfollows are slow and mostly do not matter.
+- **Growing creator (under ~10k):** every week or two. Often enough to spot a pattern, rare enough to stay sane.
+- **Active creator or small brand:** weekly. Tie it to when you review your other numbers so it becomes routine, not a compulsion.
+- **After a specific event** (a viral post, a collab, a controversial share): check once a few days later to see the real net effect, then return to your normal rhythm.
+
+The goal is a trend line, not a live feed. One clean data point a week beats ten anxious ones a day.
+
+## The catch with checking manually
+
+Every manual check means requesting or re-uploading an export and comparing it to the last one. Do that weekly and it becomes a chore you quietly abandon after a month. That is the real reason most people stop tracking: not that they stopped caring, but that the manual loop is tedious.
+
+## Let it check for you instead
+
+This is exactly what an [Instagram unfollow tracker](/blog/instagram-unfollow-checker) with saved history is for. Upload your export to WhoUnfollowed and it keeps each snapshot, so every future check is an automatic comparison instead of a manual diff. On the free tier you can always upload a fresh export and see who unfollowed you since the last one, in your browser, with no password. Pro adds saved snapshot history and email alerts, so instead of remembering to check, you simply get told when someone unfollows you.
+
+## The bottom line
+
+Check who unfollowed you often enough to see the trend and rarely enough to keep your sanity: monthly for casual accounts, weekly for active ones, plus a one-off after any big moment. Better yet, stop checking manually. Let a tracker keep your history and tell you when it actually matters.`,
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
