@@ -29,7 +29,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'WhoUnfollowed - See who unfollowed you',
+    default: 'Who Unfollowed You on Instagram? Check Free | WhoUnfollowed',
     template: '%s | WhoUnfollowed',
   },
   description:
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: SITE_URL,
     siteName: 'WhoUnfollowed',
-    title: 'WhoUnfollowed - See who unfollowed you',
+    title: 'Who Unfollowed You on Instagram? Check Free',
     description:
       'See who doesn\'t follow you back on Instagram by uploading your official data export. Open-source, processed entirely in your browser. No password, no login.',
     images: [
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'WhoUnfollowed - See who unfollowed you',
+    title: 'Who Unfollowed You on Instagram? Check Free',
     description:
       'See who doesn\'t follow you back on Instagram by uploading your official data export. Open-source, processed entirely in your browser. No password, no login.',
     images: ['/opengraph-image'],
