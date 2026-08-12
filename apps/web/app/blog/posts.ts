@@ -1735,6 +1735,156 @@ This is exactly what an [Instagram unfollow tracker](/blog/instagram-unfollow-ch
 
 Check who unfollowed you often enough to see the trend and rarely enough to keep your sanity: monthly for casual accounts, weekly for active ones, plus a one-off after any big moment. Better yet, stop checking manually. Let a tracker keep your history and tell you when it actually matters.`,
   },
+  {
+    slug: 'instagram-unfollow-not-working-still-shows-following',
+    cluster: 'unfollowers',
+    title: 'I Unfollowed Someone on Instagram, But It Still Shows Me Following Them',
+    metaTitle: 'Instagram Unfollow Not Working? Still Shows Following',
+    metaDescription: 'Unfollowed someone on Instagram but it still shows you following them? This is a known Instagram bug, not just you. Here is why it happens and how to check for sure.',
+    excerpt: 'You tap unfollow, close the app, and open it again to find you are still following them. This has actually been happening to a lot of people, including several public figures. Here is what is going on.',
+    date: 'August 5, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'instagram unfollow not working still shows following',
+    art: 'bell',
+    image: '/blog/unfollow-still-showing-hero.jpg',
+    imageAlt: 'A close-up of a smartphone with a cracked screen, representing an Instagram unfollow action that failed or reverted',
+    cta: {
+      heading: 'Stop guessing. Get the real answer.',
+      body: 'Instagram\'s own follow button can lag, glitch, or quietly revert. Your data export cannot. Upload it to WhoUnfollowed and see exactly who you follow and who follows you back, in your browser, with no password.',
+      buttonLabel: 'Check your real follow status',
+    },
+    body: `You tap unfollow. The button changes to "Follow." You move on with your day. Then you open Instagram later and that same account is back in your following list, like nothing happened. If this just happened to you, you are not losing your mind and you did not imagine tapping the button. Instagram unfollow actions failing or silently reverting is a real, documented problem, not just a you problem.
+
+## This has happened publicly, more than once
+
+In early 2026, several public figures reported this exact issue with official accounts on Instagram. Singer Gracie Abrams said she had to unfollow the same account three separate times because it kept coming back. Demi Lovato posted that she had unfollowed an account twice in one day. Regular users reported the same thing in droves: accounts they never chose to follow just appeared in their following list, and unfollowing them did not stick.
+
+Meta's own communications team responded publicly, saying people were not deliberately made to follow anything, but acknowledging that "it may take some time for follow and unfollow requests to go through." In plain terms: Instagram confirmed that unfollow actions can fail, lag, or get reversed on their end. That is not a rumor, it is an admission.
+
+## Why this happens
+
+A few different things can produce the same symptom:
+
+- **Request lag.** Your tap sends a request to Instagram's servers, and under load or during a backend change, that request can fail silently instead of erroring out. The app shows the button change locally before confirming it server-side, so you see success even when it did not save.
+- **App cache showing stale data.** Sometimes the unfollow did work, but your app is showing a cached version of your following list from before the change synced.
+- **A genuine bug during a backend rollout.** The 2026 incident above happened alongside Instagram changing how certain accounts are handled. New code paths are exactly when this kind of bug tends to surface.
+
+None of these are something you did wrong, and none of them mean your account is broken specifically.
+
+## How to tell if it actually worked
+
+Closing and reopening the app is not a reliable test, since it can be showing you the same stale cache that caused the confusion. A few things that actually work:
+
+1. **Force-quit and reopen the app**, not just switch away and back. This clears the in-memory cache that a soft-switch does not.
+2. **Check from a different device or the mobile web version** (instagram.com in a browser). If the account shows as unfollowed there but not in your app, it is a sync/cache issue on your device, not a failed unfollow.
+3. **Wait and check again in a few hours.** If Meta's own statement is accurate, some of these requests simply take time to finish processing.
+4. **Get the authoritative answer from your own data.** Instagram's live UI is exactly the layer that is glitching. Your official data export reads the underlying account record, not the app's local cache, which makes it the one source that cannot lie to you the way the follow button just did.
+
+## If you are trying to find out who unfollowed you, not who you unfollowed
+
+This bug runs in the other direction too. If someone unfollowed you and Instagram's notification or count is lagging, the visible number can look wrong for a while. That is a separate but related problem, covered in [does Instagram notify when you unfollow someone](/blog/does-instagram-notify-when-you-unfollow-someone) and [how to see who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram).
+
+## The bottom line
+
+If you unfollowed someone and Instagram still shows you following them, you almost certainly did nothing wrong. Instagram has publicly acknowledged that follow and unfollow requests can lag or fail. Force-quitting the app and waiting usually resolves it. If you want certainty instead of a guess, your own data export shows your real following list as Instagram's servers actually have it, not what a glitchy button claims.`,
+  },
+  {
+    slug: 'instagram-great-purge-2026-follower-drop',
+    cluster: 'unfollowers',
+    title: 'The Instagram "Great Purge" of 2026: What Happened to Everyone\'s Followers',
+    metaTitle: 'Instagram "Great Purge" 2026: Why Your Followers Dropped',
+    metaDescription: 'Lost a chunk of followers in 2026 and saw people calling it the "Great Purge"? Here is what actually happened, and how to tell if it hit your account or if real people left.',
+    excerpt: 'If your follower count dropped hard in 2026 and you saw people online calling it the "Great Purge," you were not imagining it. Here is what that event actually was, and how to check whether it was bots or real people.',
+    date: 'August 5, 2026',
+    readTime: '6 min',
+    tag: 'Guide',
+    primaryKeyword: 'instagram great purge 2026',
+    art: 'ghost',
+    image: '/blog/great-purge-2026-hero.jpg',
+    imageAlt: 'A close-up of a smartphone screen showing social media app icons, representing the 2026 Instagram mass account purge',
+    cta: {
+      heading: 'Find out what your drop actually was.',
+      body: 'Bot purge or real unfollows, the only way to know for sure is to see the names. Upload your Instagram export to WhoUnfollowed and see exactly who left, in your browser, with no password.',
+      buttonLabel: 'See who actually left',
+    },
+    body: `If you logged into Instagram sometime in 2026 and your follower count had dropped by a noticeable chunk overnight, with no post, no controversy, nothing you did, you were not alone. Creators, brands, and even celebrity accounts reported the same thing around the same window, and people started calling it the "Great Purge." Here is what that actually was, and how to tell if it touched your account.
+
+## What the Great Purge actually was
+
+Instagram ran a large-scale removal of accounts it identified as fake, spam, bot-operated, or otherwise inauthentic. This was not a rumor or a glitch, it was Instagram doing what it periodically does at a bigger scale than usual: cleaning bot and spam accounts off the platform. When those accounts get removed, every real account they were "following" loses that follower instantly, all at once. Do that across millions of fake accounts simultaneously and a lot of real users saw their numbers drop in a single day, hard enough that it became its own named moment online.
+
+This is the same underlying mechanism covered in [why you lose followers overnight](/blog/why-did-i-lose-followers-overnight-on-instagram), just at a much bigger, more visible scale than a routine daily purge.
+
+## How to tell if the Great Purge hit you
+
+Not every drop in 2026 was the purge, and not everyone who lost followers that month lost them to it. A few signals that point to a bot purge specifically, rather than real people leaving:
+
+- **The drop was sudden and large relative to your normal daily fluctuation**, not a slow bleed over days or weeks.
+- **You cannot recall any specific post, comment, or controversy** that would explain real people choosing to leave.
+- **The accounts that vanished, if you can check, had the classic ghost-follower signature**: little to no profile content, generic usernames, zero engagement history. More on identifying that pattern in [Instagram ghost followers](/blog/instagram-ghost-followers-how-to-find-and-remove-them).
+
+If your drop does not match that pattern, especially if it was gradual or tied to something you posted, it is more likely real people, not a purge.
+
+## Why this is actually a good thing, even though it stings
+
+A bot account was never a real person seeing your content, engaging with it, or being a potential customer or fan. It only ever inflated your number and dragged down your real engagement rate, since Instagram measures how many of your followers actually interact with what you post. Losing accounts that were never real people is not a loss of audience, it is Instagram doing an accuracy correction. The count feels worse. The actual reach to real humans does not change.
+
+## How to know for certain, instead of guessing
+
+Instagram does not label which unfollows were a bot purge and which were a real person leaving. The only way to know for sure which is which is to look at the actual accounts that disappeared from your list. That requires comparing two snapshots of your followers, one from before the drop and one from after, and reviewing exactly who is in the difference.
+
+That comparison is what [seeing who unfollowed you](/blog/how-to-see-who-unfollowed-you-on-instagram) is for. Upload your own Instagram export from before and after, and instead of a mystery number, you get the actual list of names, so you can judge for yourself whether it looks like bots or people you know.
+
+## The bottom line
+
+The 2026 "Great Purge" was a real, large-scale Instagram bot and spam removal, not a bug and not something you caused. If your drop was sudden, large, and unexplained by anything you posted, it was very likely this. If you want to know for certain rather than guess, compare your own before-and-after export and look at the actual names in the difference.`,
+  },
+  {
+    slug: 'why-follower-count-doesnt-match-tracker',
+    cluster: 'unfollowers',
+    title: 'Why Doesn\'t Your Instagram Follower Count Match What a Tracker Shows?',
+    metaTitle: 'Instagram Follower Count Wrong? Why Trackers Disagree',
+    metaDescription: 'Your Instagram follower count and your unfollow tracker show different numbers. Here is why that happens, from caching lag to outdated tools, and how to get the real answer.',
+    excerpt: 'Instagram says one number. Your tracker says another. Neither one is lying to you on purpose. Here is why follower counts drift out of sync, and how to get a number you can actually trust.',
+    date: 'August 5, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'instagram follower count doesn\'t match tracker',
+    art: 'ratio',
+    image: '/blog/follower-count-mismatch-hero.jpg',
+    imageAlt: 'A smartphone resting on printed charts and graphs, representing a mismatch between an Instagram follower count and a tracker',
+    cta: {
+      heading: 'Get a number you can actually trust.',
+      body: 'A fresh export is the one source that cannot be stale or wrong the way a cached count can. Upload it to WhoUnfollowed and see your real, current follower and following lists, in your browser, with no password.',
+      buttonLabel: 'Get your real numbers',
+    },
+    body: `You open the Instagram app and it says one follower count. You open an unfollow tracker, or even just switch to instagram.com in a browser, and it says something else, sometimes off by a handful, sometimes by a lot more. Neither number is necessarily wrong on purpose. Here is what actually causes the mismatch, and how to get an answer you do not have to second-guess.
+
+## Instagram's own number can lag
+
+The count shown at the top of your profile is not always recalculated live. Instagram frequently serves it from a cache to keep the app fast, and that cache can lag behind the true, current number by minutes or sometimes longer. If ten people followed you and three unfollowed in the same short window, your live count only reflects the net change of seven, and depending on caching, even that net number can take a moment to catch up. This is closely related to why counts can look strange right after [an overnight drop](/blog/why-did-i-lose-followers-overnight-on-instagram): the display is playing catch-up with reality, not reporting it live.
+
+## Follows and unfollows happening at the same time
+
+Your follower count is always a net number. If you are watching it in real time expecting it to only go up, it can look "wrong" simply because gains and losses are landing simultaneously and the number you see is gains minus losses, not gains alone.
+
+## Third-party tools reading outdated data
+
+Instagram periodically changes the structure of the data it exports, adding fields, renaming ones, or changing how relationships are represented. A tracker built against an older version of that structure can misread the new one, showing blank usernames, an inflated unfollower count, or a total that disagrees with Instagram's own number by a noticeable margin. This is a real, common cause of "why don't these numbers match," separate from whether the tracker itself is trustworthy, which is a different question covered in [do Instagram unfollow apps actually work](/blog/do-instagram-unfollow-apps-actually-work).
+
+## Which number should you actually trust
+
+Given all of the above, chasing the "real" live number is often the wrong goal. A count on a screen, whether it is Instagram's or a tracker's, is a snapshot that can be stale the moment you look at it. What does not go stale is a fresh export: it reflects your account's actual state at the exact moment you requested it, not a cached approximation.
+
+1. Request a fresh export from Instagram whenever you want a real answer, not last week's. Steps: [how to download your Instagram data](/blog/how-to-download-your-instagram-data).
+2. Read it with a tool that shows you the actual list of names, not just a summary number. A list you can scroll is much harder to get subtly wrong than a single count, and you can verify it yourself.
+3. If a number still looks off, recount from the export rather than trusting any cached display, including the one inside Instagram's own app.
+
+## The bottom line
+
+Follower counts disagree because they are cached, because gains and losses net out in real time, and because tools can misread Instagram's data format after it changes. None of that means any single number is lying to you. It means a live count is a snapshot, not a guarantee. A fresh export read into a full list of names, not just a total, is the closest thing to a number you can actually trust.`,
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
