@@ -1885,6 +1885,169 @@ Given all of the above, chasing the "real" live number is often the wrong goal. 
 
 Follower counts disagree because they are cached, because gains and losses net out in real time, and because tools can misread Instagram's data format after it changes. None of that means any single number is lying to you. It means a live count is a snapshot, not a guarantee. A fresh export read into a full list of names, not just a total, is the closest thing to a number you can actually trust.`,
   },
+  {
+    slug: 'instagram-instants-mutual-followers-who-unfollowed',
+    cluster: 'unfollowers',
+    title: 'Why Your Instagram Instants Audience Keeps Shrinking',
+    metaTitle: 'Instagram Instants Audience Shrinking? Here Is Why',
+    metaDescription: 'Instagram Instants only go to mutual followers. If your Instants audience feels smaller than it used to, some of those people unfollowed you. Here is how to check.',
+    excerpt: 'Instagram Instants only reach people who still follow you back. If that list looks smaller than it used to, it is not your imagination, someone in it unfollowed you. Here is how the two connect, and how to see exactly who.',
+    date: 'August 12, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'instagram instants audience shrinking',
+    art: 'ghost',
+    image: '/blog/instants-audience-hero.jpg',
+    imageAlt: 'A close-up of a hand holding a smartphone taking a photo, representing sharing an Instagram Instant with mutual followers',
+    cta: {
+      heading: 'Find out who dropped from your list.',
+      body: 'Instants only reach people who still follow you back, so a shrinking list usually means someone left. Upload your Instagram export to WhoUnfollowed and see exactly who unfollowed you, in your browser, with no password.',
+      buttonLabel: 'See who unfollowed you',
+    },
+    body: `Instagram Instants launched globally on May 13, 2026, the disappearing, one-view photo feature that borrows heavily from BeReal and Snapchat. If you have been using it for a while, you may have noticed something: the list of people you can send an Instant to feels smaller than it used to. That is not your imagination, and it is not a bug. It is directly tied to who still follows you.
+
+## What Instants actually are
+
+An Instant is a quick, unedited photo, caption only, no filters, no camera roll uploads. It disappears after the first view or automatically after 24 hours, and it cannot be screenshotted. You take it, send it, and it is gone. The feature is built inside Instagram's existing social graph rather than as a separate app, which matters for the next part.
+
+## Why your audience for it can shrink
+
+Instants can only go to your Close Friends list or your mutual followers, meaning accounts that follow you and that you follow back. That single detail is the whole story. Your Instants audience is not a fixed list you set once. It is recalculated from your current, live mutual-follow relationships every time you open the sender.
+
+If someone in that pool unfollows you, they stop being a mutual follow, and they quietly drop out of your eligible recipients the next time you go to send an Instant. You never get a notification about it. You just notice, eventually, that the list looks a little shorter than it did last month.
+
+## It is not always an unfollow
+
+A shrinking Instants list has a few possible causes, and unfollowing is only one:
+
+- **They unfollowed you.** The most common cause. Once the mutual follow breaks, they are out of the pool.
+- **You unfollowed them.** The same rule cuts both ways. If you cleaned up who you follow, some of those people leave your Instants pool too, even though they still follow you.
+- **Their account was removed or deactivated.** Covered in more detail in [deactivated, deleted, or blocked, how to tell](/blog/deactivated-or-blocked-on-instagram-how-to-tell).
+- **A Close Friends list change**, if you were sending to that list specifically rather than mutuals generally.
+
+Instagram will not tell you which of these happened, the same way it never tells you [when someone unfollows you](/blog/does-instagram-notify-when-you-unfollow-someone). The recipient picker just quietly reflects whatever your current mutual-follow list happens to be.
+
+## How to actually find out who left
+
+Scrolling the Instants sender and trying to remember who used to be on it is not reliable, you are working from memory against a list that changes constantly. The accurate way is the same one that works for any unfollow question: compare your own follower data from two points in time.
+
+1. Request your Instagram data export. Steps: [how to download your Instagram data](/blog/how-to-download-your-instagram-data).
+2. Do it again later and compare the two.
+3. Anyone missing from the newer list unfollowed you, and anyone who left your following list is someone you should expect to see missing from your Instants pool too.
+
+That comparison is exactly what [seeing who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram) covers in full. It reads your own export in your browser, so there is no password involved and nothing leaves your device.
+
+## The bottom line
+
+Instagram Instants only reach people who still follow you back, so watching that list shrink is actually a real, live signal about your follower relationships, even though Instagram never states it plainly. If you want to know exactly who caused the drop instead of guessing, your own data export gives you the real names, not a shrinking picker list you are trying to remember from last week.`,
+  },
+  {
+    slug: 'instagram-audience-connections-does-it-show-unfollowers',
+    cluster: 'unfollowers',
+    title: 'Does Instagram\'s "Audience Connections" Show Who Unfollowed You?',
+    metaTitle: 'Does Audience Connections Show Who Unfollowed You?',
+    metaDescription: 'Instagram is testing an "Audience Connections" dashboard for creators. Does it actually show who unfollowed you, or just who engaged less? Here is what it really does.',
+    excerpt: 'Instagram is testing a new creator dashboard that flags followers who have gone quiet. It sounds like the unfollow list creators have wanted for years. Here is what it actually shows, and what it still does not.',
+    date: 'August 13, 2026',
+    readTime: '6 min',
+    tag: 'Guide',
+    primaryKeyword: 'instagram audience connections unfollowers',
+    art: 'search',
+    image: '/blog/audience-connections-hero.jpg',
+    imageAlt: 'A tablet displaying analytics charts on a desk beside a smartphone, representing Instagram\'s Audience Connections creator dashboard',
+    cta: {
+      heading: 'Get the list, not just the trend.',
+      body: 'Audience Connections flags who has gone quiet. It does not name who unfollowed you. Upload your export to WhoUnfollowed and get the actual list, in your browser, with no password.',
+      buttonLabel: 'See your real unfollow list',
+    },
+    body: `Instagram is beta testing a new feature inside the Professional Dashboard called Audience Connections, built to help creators understand their audience better. It highlights your top engaged followers, your new followers, and followers who have become less engaged over time. That last category sounds like exactly what creators have wanted for years: a built-in unfollow list. It is not quite that. Here is what Audience Connections actually shows, and where the gap still is.
+
+## What the feature actually does
+
+Audience Connections lives inside the Professional Dashboard, available to business and creator accounts. It groups your audience into a few buckets:
+
+- **Top engaged followers**, the people who like, comment, and interact with your content most.
+- **New followers**, the people who recently started following you.
+- **Followers who have become less engaged over time**, people who used to interact and have gone quiet.
+
+That third bucket is the one people are excited about, because it is the closest thing Instagram has ever offered to "here is who is drifting away from you."
+
+## Less engaged is not the same as unfollowed
+
+This is the important distinction. A follower flagged as "less engaged" is still following you. They just stopped liking or commenting as much as they used to. That is a real, useful signal about your content and your relationship with that follower, but it is not an unfollow, and it will never overlap perfectly with your actual unfollower list.
+
+Someone can go completely quiet, never engage again, and still be sitting in your followers list a year later. Someone else can unfollow you the same day they last liked a post, and Audience Connections has no bucket for "gone entirely." The dashboard is built around engagement trends, not follow status changes, and those are genuinely different things. This is the same distinction covered in [Instagram ghost followers](/blog/instagram-ghost-followers-how-to-find-and-remove-them): a quiet follower and a gone follower are not the same problem.
+
+## Why Instagram still does not show a direct unfollow list
+
+Instagram has never shipped a plain "here is exactly who unfollowed you since last time" feature, in the Professional Dashboard or anywhere else, and Audience Connections does not change that. It confirmed once again in [does Instagram notify when you unfollow someone](/blog/does-instagram-notify-when-you-unfollow-someone) that the platform intentionally stays quiet on both follows and unfollows. A feature that surfaces engagement trends without naming exits fits that same pattern: useful insight, but stopping short of the one specific answer people actually want.
+
+## How to get the real answer
+
+If what you actually want is the names of people who unfollowed you, not an engagement trend, the dependable method has not changed:
+
+1. Save a snapshot of your followers using your own Instagram export. See [how to download your Instagram data](/blog/how-to-download-your-instagram-data).
+2. Do it again later.
+3. Compare the two. Anyone missing is a real, confirmed unfollow, not an engagement guess.
+
+That is the exact comparison covered in [how to see who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram), done in your browser with your own data, no password required.
+
+## The bottom line
+
+Audience Connections is a genuinely useful addition for creators who want to understand engagement trends, and it is closer to an unfollow signal than anything Instagram has shipped before. But "less engaged" and "unfollowed" are still two different lists. If you need the real one, a before-and-after comparison of your own export remains the only way to get it.`,
+  },
+  {
+    slug: 'does-unfollowing-someone-remove-them-as-your-follower',
+    cluster: 'unfollowers',
+    title: 'Does Unfollowing Someone Remove Them as Your Follower?',
+    metaTitle: 'Unfollow vs Remove Follower on Instagram: The Difference',
+    metaDescription: 'Does unfollowing someone on Instagram remove them as your follower too? No, they are two separate actions. Here is exactly what each one does.',
+    excerpt: 'You unfollow someone, expecting a clean break. Instead they are still right there in your followers list. Here is why that happens: unfollowing and removing a follower are two completely different actions.',
+    date: 'August 14, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'does unfollowing someone remove them as a follower',
+    art: 'split',
+    image: '/blog/unfollow-vs-remove-hero.jpg',
+    imageAlt: 'A close-up of hands using a smartphone touchscreen, representing the difference between unfollowing someone and removing them as a follower on Instagram',
+    cta: {
+      heading: 'See both lists clearly.',
+      body: 'Once you know unfollow and remove-follower are separate actions, the next step is seeing your real lists. Upload your export to WhoUnfollowed and see exactly who you follow, who follows you, and who left, in your browser, with no password.',
+      buttonLabel: 'See your real lists',
+    },
+    body: `You unfollow someone expecting a clean break from them. Then you check your followers list and there they are, still following you, still able to see everything you post. This trips people up constantly, and the reason is simple once you know it: unfollowing someone and removing them as a follower are two completely separate actions on Instagram, and doing one does not do the other.
+
+## The two actions, plainly
+
+**Unfollowing** affects what you see. When you unfollow someone, their posts stop showing up in your feed. That is the entire effect. It says nothing about whether they still follow you, and if your account is public, they can keep seeing everything you post, exactly as before.
+
+**Removing a follower** affects what they see. This is a separate action, found by opening your followers list, finding the account, and using the option to remove them. It ends their follow of you without blocking them. They stop seeing your posts in their feed, and if your account is private, they would need to send a new follow request to see your content again. Instagram does not notify them when you do this.
+
+## Why this confuses people
+
+Most people expect "unfollow" to be symmetrical, like it should undo a connection in both directions. It does not. Instagram treats "who you follow" and "who follows you" as two independent lists, and only one action affects each:
+
+| Action | What it changes | Do they know? |
+|---|---|---|
+| Unfollow | Your following list. Their posts leave your feed. | No notification either way |
+| Remove follower | Your followers list. You leave their feed. | No notification either way |
+
+Neither action tells the other person anything, which lines up with how quiet Instagram stays about follow changes in general, covered in [does Instagram notify when you unfollow someone](/blog/does-instagram-notify-when-you-unfollow-someone).
+
+## When you would use which one
+
+- **Use unfollow** when you just want a lighter feed and do not care whether they still see your posts. This is the normal move for [cleaning up who you follow](/blog/how-to-clean-up-who-you-follow-on-instagram).
+- **Use remove follower** when you specifically do not want someone seeing what you post anymore, without the more visible step of blocking them outright.
+- **Use both** if you want a genuinely clean break in each direction.
+
+## How this connects to who unfollowed you
+
+Understanding this distinction matters for the reverse question too. If you are trying to figure out [who unfollowed you](/blog/how-to-see-who-unfollowed-you-on-instagram), you are specifically looking for people who used to be in your followers list and are not anymore, meaning either they unfollowed you, or you removed them and forgot. The two look identical from your side unless you remember which action you took. If you are also checking [who does not follow you back](/blog/who-doesnt-follow-you-back-on-instagram), that is the other list entirely, people you follow who never followed you or who unfollowed you without you removing anything.
+
+## The bottom line
+
+Unfollowing someone changes your feed. Removing a follower changes theirs. They are independent actions, and doing one has no effect on the other. Once that clicks, the confusing case of "I unfollowed them but they are still following me" stops being confusing. If you want to see your real following and followers lists side by side instead of guessing which action you took on who, your own Instagram export shows both, exactly as they stand today.`,
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
