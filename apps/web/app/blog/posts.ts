@@ -2048,6 +2048,61 @@ Understanding this distinction matters for the reverse question too. If you are 
 
 Unfollowing someone changes your feed. Removing a follower changes theirs. They are independent actions, and doing one has no effect on the other. Once that clicks, the confusing case of "I unfollowed them but they are still following me" stops being confusing. If you want to see your real following and followers lists side by side instead of guessing which action you took on who, your own Instagram export shows both, exactly as they stand today.`,
   },
+  {
+    slug: 'can-you-see-who-unfollowed-you-private-instagram-account',
+    cluster: 'unfollowers',
+    title: 'Can You See Who Unfollowed You on a Private Instagram Account?',
+    metaTitle: 'Who Unfollowed You on a Private Instagram Account?',
+    metaDescription: 'Yes, you can see who unfollowed you on a private Instagram account. Here is why the official export method works the same either way, and why it is the better choice for private accounts specifically.',
+    excerpt: 'Your account is private for a reason, so handing a random app your login feels worse, not better. Here is why seeing who unfollowed you works exactly the same on a private account, and why the safe method matters even more here.',
+    date: 'August 20, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'see who unfollowed you private instagram account',
+    art: 'lock',
+    image: '/blog/private-account-hero.jpg',
+    imageAlt: 'A smartphone wrapped in a chain with a padlock, representing checking who unfollowed you on a private Instagram account',
+    cta: {
+      heading: 'Private account, same safe method.',
+      body: 'Your export includes your real followers and following lists no matter your privacy setting. Upload it to WhoUnfollowed and see exactly who unfollowed you, in your browser, with no password and no login.',
+      buttonLabel: 'See who unfollowed you',
+    },
+    body: `You keep your Instagram account private for a reason, so the idea of handing your login to some random "who unfollowed me" app feels worse than it would for a public account, not better. The good news is you do not have to. Seeing who unfollowed you works exactly the same on a private account as it does on a public one, and understanding why makes the case for the safe method even stronger here.
+
+## Yes, it works the same either way
+
+The official Instagram data export, the same one covered in [how to see who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram), includes your own followers and following lists regardless of your privacy setting. Privacy on Instagram controls who can see your content and who has to request to follow you. It has no bearing on your own access to your own data. When you request your export, Instagram hands you the same complete followers and following files whether your account is public or private, because it is your data either way.
+
+That means the whole method, compare two exports and see who is missing, works identically. There is no private-account version with fewer features or a smaller export.
+
+## Why this matters more, not less, for private accounts
+
+If your account is private, you likely already care more than average about who has access to your information. That instinct is correct, and it should extend to how you check who unfollowed you, not just to who can see your posts.
+
+Password-based unfollow trackers, the apps that ask you to log in with your Instagram credentials, are a bigger risk here for a specific reason: a private account's entire value is that you control who sees it. Handing a third-party app your login means that app can technically see your private followers list, your private content, and act on your behalf, all outside the boundary you set up your account to enforce in the first place. For a public account the same risk exists, but a private account is precisely the case where the mismatch between "why I made this private" and "what I just gave this app access to" is the most obvious.
+
+This is the same reasoning covered more generally in [why follower trackers ask for your password](/blog/why-instagram-follower-trackers-ask-for-your-password) and [can you get banned for using a follower tracker](/blog/can-you-get-banned-for-using-a-follower-tracker-on-instagram), it just lands harder when the account in question was set to private specifically to limit exposure.
+
+## What actually changes for a private account (not much)
+
+A couple of small, practical notes specific to private accounts:
+
+- **Follow requests you have not accepted yet do not count as followers.** Your export reflects confirmed followers only, pending requests are a separate thing Instagram tracks elsewhere.
+- **The export process itself is identical.** Same request flow, same file format, same wait time. Nothing about being private changes how you ask Instagram for your data.
+- **You are still never notified**, in either direction. A private account does not change the fact that [Instagram stays quiet about unfollows](/blog/does-instagram-notify-when-you-unfollow-someone) no matter who can see your profile.
+
+## How to do it
+
+The steps are exactly the pillar guide's steps, with no private-account detour required:
+
+1. Request your data export from Instagram's own settings. Full walkthrough: [how to download your Instagram data](/blog/how-to-download-your-instagram-data).
+2. Upload it to a tool that reads the file locally instead of asking for your login. See [follower trackers that work without login](/blog/instagram-follower-tracker-without-login).
+3. Do it again later and compare the two to see exactly who left.
+
+## The bottom line
+
+Being private does not limit what you can see about your own account, it only limits what other people can see. The safe, export-based way to check who unfollowed you works identically whether your account is public or private, and given that a private account exists specifically to control access, it is the one case where skipping a password-based app in favor of your own data matters most.`,
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
