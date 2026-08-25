@@ -2103,6 +2103,162 @@ The steps are exactly the pillar guide's steps, with no private-account detour r
 
 Being private does not limit what you can see about your own account, it only limits what other people can see. The safe, export-based way to check who unfollowed you works identically whether your account is public or private, and given that a private account exists specifically to control access, it is the one case where skipping a password-based app in favor of your own data matters most.`,
   },
+  {
+    slug: 'instagram-following-categories-least-interacted-with',
+    cluster: 'unfollowers',
+    title: 'Instagram\'s "Following Categories" Show Who You Ignore. Does It Show Who Unfollowed You?',
+    metaTitle: 'Instagram Following Categories: Does It Show Unfollowers?',
+    metaDescription: 'Instagram\'s new Following categories show your least interacted with accounts. Here is what that feature actually does, and why it still will not tell you who unfollowed you.',
+    excerpt: 'Instagram added a feature that sorts who you follow by how little you interact with them. It looks like a built-in cleanup tool, and it kind of is, but it answers a different question than who unfollowed you.',
+    date: 'August 22, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'instagram following categories unfollowers',
+    art: 'ratio',
+    image: '/blog/following-categories-hero.jpg',
+    imageAlt: 'A notebook, smartphone, and sticky notes on a desk, representing sorting and organizing who you follow on Instagram',
+    cta: {
+      heading: 'Ignoring them is not the same as them leaving.',
+      body: 'Following categories shows who you interact with least. It cannot show who stopped following you. Upload your export to WhoUnfollowed and see the real list, in your browser, with no password.',
+      buttonLabel: 'See who actually unfollowed you',
+    },
+    body: `Instagram quietly added a feature to the Following tab called categories, and it sorts the people you follow into "Most Shown in Feed" and "Least Interacted With." That second one, a list of the top 50 accounts you barely engage with, looks a lot like the built-in cleanup tool people have wanted for years. It is genuinely useful. It is also answering a different question than who unfollowed you, and mixing the two up leads to the wrong conclusion.
+
+## What the feature actually shows
+
+Open your profile, tap Following, and the category options sort your following list two ways, based on your activity over the last 90 days:
+
+- **Most Shown in Feed**: the accounts whose posts you see most often when scrolling.
+- **Least Interacted With**: the top 50 accounts you like, comment on, or view the least.
+
+Instagram frames the second list explicitly as a decision aid, a way to spot accounts you might want to unfollow because you clearly are not engaging with their content anymore. That is a real, honest use case, and it is worth using for exactly that.
+
+## Why it is not an unfollow list
+
+Following categories only ever looks at accounts you currently follow. It has no memory of anyone who is not on that list anymore, so it cannot show you who left, only who is still there and quiet. An account that unfollowed you six months ago is not "least interacted with," it is just gone, and this feature was never built to surface that.
+
+This is the same gap covered in [does Instagram's Audience Connections show who unfollowed you](/blog/instagram-audience-connections-does-it-show-unfollowers): Instagram keeps shipping features that measure engagement trends among people still connected to you, not a list of people who disconnected. Following categories is the same pattern, applied to your following list instead of your followers list.
+
+## The two questions this actually answers
+
+Following categories is genuinely good for a narrower job than "who unfollowed me":
+
+- **Who am I following that I do not actually care about anymore?** The Least Interacted With list is a solid starting point for that specific cleanup, covered more broadly in [how to clean up who you follow on Instagram](/blog/how-to-clean-up-who-you-follow-on-instagram).
+- **Who does the algorithm think I care about?** Most Shown in Feed is really a window into Instagram's ranking of your relationships, not a follower or unfollower signal at all.
+
+Neither of those is the same as [who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram), which is specifically about people who used to follow you and do not anymore.
+
+## How to actually get the unfollow list
+
+If cleaning up who you follow reminded you that you also want to know who stopped following you, that still requires comparing two points in time, which Following categories does not do:
+
+1. Request your Instagram data export. Steps: [how to download your Instagram data](/blog/how-to-download-your-instagram-data).
+2. Do it again later and compare the two.
+3. Anyone missing from the newer followers list unfollowed you, full stop, regardless of how much they used to engage.
+
+## The bottom line
+
+Following categories is a real, useful native tool for deciding who to unfollow based on how little you interact with them, and it is worth using for that. It was never built to tell you who unfollowed you, and no amount of sorting your current following list will surface someone who already left. For that, you still need a before-and-after comparison of your own data, not a snapshot of who is currently there.`,
+  },
+  {
+    slug: 'does-blocking-someone-count-as-unfollowing-them-instagram',
+    cluster: 'unfollowers',
+    title: 'Does Blocking Someone Count as Unfollowing Them on Instagram?',
+    metaTitle: 'Does Blocking Someone Unfollow Them on Instagram?',
+    metaDescription: 'Does blocking someone on Instagram also unfollow them? Yes, blocking automatically removes the follow connection in both directions. Here is exactly what changes.',
+    excerpt: 'Unfollowing changes your feed. Removing a follower changes theirs. Blocking does both at once, plus more. Here is exactly what blocking someone on Instagram actually does to your follow status.',
+    date: 'August 23, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'does blocking someone unfollow them instagram',
+    art: 'lock',
+    image: '/blog/block-vs-unfollow-hero.jpg',
+    imageAlt: 'A hand raised in a stop gesture, representing blocking someone on Instagram and its effect on your follow status',
+    cta: {
+      heading: 'See your real lists, block or no block.',
+      body: 'Blocking someone quietly changes your followers and following counts. Upload your export to WhoUnfollowed and see exactly who is on each list right now, in your browser, with no password.',
+      buttonLabel: 'See your real lists',
+    },
+    body: `Unfollowing someone only changes your feed. Removing a follower only changes theirs. Blocking is different, it does both of those at once, and then adds a wall on top. If you have ever blocked someone and wondered what actually happened to your follow status with them, here is the exact answer.
+
+## Yes, blocking removes the follow connection
+
+Blocking someone on Instagram automatically and immediately unfollows them if you were following them, and removes them as a follower if they were following you. There is no separate step, no toggle to keep the follow intact. The moment you block, both directions of the follow relationship are severed.
+
+This is different from the two actions covered in [does unfollowing someone remove them as your follower](/blog/does-unfollowing-someone-remove-them-as-your-follower), where each action only affects one direction and you have to do both deliberately to get a full separation. Blocking does the full separation automatically, as part of the block itself.
+
+## What blocking adds on top of that
+
+Removing the follow connection is only part of what blocking does. The rest is what makes it a genuinely different tool than unfollow or remove-follower:
+
+- **They cannot find your profile.** A blocked account cannot search for you, view your profile, or see your posts and Stories even if your account is public.
+- **They cannot message you.** Any existing DM thread becomes inaccessible to them.
+- **They cannot see your comments or likes** on other people's posts, anywhere on the platform.
+- **The block is not announced**, but it is discoverable. If they visit a link to your old profile or a shared post, the behavior they see, usually a generic "user not found" style result, can make a block obvious even without a direct notification.
+
+## Can you follow someone again after unblocking them?
+
+Yes, but not automatically. Unblocking someone does not restore the previous follow relationship. If you want to follow them again, you have to follow them fresh, the same as following anyone else for the first time, and if their account is private, that means sending a new follow request.
+
+## What this means if you are trying to track who unfollowed you
+
+If someone disappears from your followers list, blocking is one possible explanation alongside a plain unfollow, them deactivating, or [Instagram removing a fake account in a purge](/blog/instagram-great-purge-2026-follower-drop). From your side, all of these look identical: the account is just gone from your list. Instagram does not label which one happened, and neither does a before-and-after export comparison. The comparison tells you who left, not why.
+
+If you specifically remember blocking someone, you already know the answer for that account. For everyone else who vanished, the same method applies: compare two exports and see who is missing, covered fully in [how to see who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram).
+
+## The bottom line
+
+Blocking someone on Instagram automatically unfollows them and removes them as your follower, in both directions, immediately, on top of cutting off messaging and profile visibility entirely. It is a stronger action than unfollow or remove-follower, not a milder version of either. If an account disappeared from your list and you are not sure why, your own export will confirm they are gone, even if it cannot tell you whether it was a block, an unfollow, or something else.`,
+  },
+  {
+    slug: 'can-someone-tell-you-unfollowed-and-refollowed-them-instagram',
+    cluster: 'unfollowers',
+    title: 'Can Someone Tell If You Unfollowed and Refollowed Them on Instagram?',
+    metaTitle: 'Does Instagram Show If You Unfollowed and Refollowed?',
+    metaDescription: 'Unfollowed someone on Instagram and refollowed them shortly after? Here is whether they can tell, what Instagram actually shows them, and when it might look suspicious anyway.',
+    excerpt: 'You unfollowed someone, thought better of it, and followed them again a few minutes later. Here is whether they noticed anything at all, and the one situation where they actually might.',
+    date: 'August 24, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'can someone tell if you unfollowed and refollowed them instagram',
+    art: 'bell',
+    image: '/blog/refollow-hero.jpg',
+    imageAlt: 'A hand holding a smartphone showing social media apps, representing checking whether someone noticed an unfollow and refollow on Instagram',
+    cta: {
+      heading: 'Stop wondering. Check the record instead.',
+      body: 'Instagram will not tell either of you what happened. Your own export will. Upload it to WhoUnfollowed and see your real follow history, in your browser, with no password.',
+      buttonLabel: 'See your real follow history',
+    },
+    body: `You unfollow someone on impulse, immediately regret it, and follow them again a minute later. Or you unfollow to declutter your feed, then remember why you followed them in the first place and refollow the same day. Either way, the same worry shows up: did they see that? Here is exactly what Instagram does and does not surface when you unfollow and refollow someone quickly.
+
+## Instagram does not notify either action
+
+Covered in more depth in [does Instagram notify when you unfollow someone](/blog/does-instagram-notify-when-you-unfollow-someone), Instagram sends no notification for an unfollow, and it sends no notification for a follow from an account that already followed them recently either. A refollow looks, from a notification standpoint, exactly like following someone for the first time: nothing is pushed to the other person.
+
+So in the most literal sense, no, they do not get told "this person unfollowed you and then changed their mind." That specific event does not exist anywhere in Instagram's notification system.
+
+## Could they notice anyway
+
+There is a difference between "not notified" and "not noticeable," and a couple of situations can make a quick unfollow-refollow visible even without a direct alert:
+
+- **If they check your following list at the exact wrong moment.** Someone actively looking at who follows them, right when you happen to be mid-unfollow, could theoretically catch the gap. This requires them to be looking at that specific list at that specific moment, which is a narrow window for most people.
+- **If they use a follower tracker themselves.** Someone running their own export comparison, or a login-based unfollow tracker, could register you as a brief unfollow if their tool happens to run a check during the gap. Most people are not doing this constantly, but it is not impossible.
+- **The follow notification itself.** Following someone does trigger a notification to them in the normal case. If they already knew you followed them once, a second "so-and-so started following you" notification landing soon after could read as odd, even though Instagram is not labeling it as a refollow specifically.
+
+None of these are Instagram actively telling on you. They are edge cases where a person's own attentiveness, or their own tracking tool, happens to catch a brief state change.
+
+## Why this matters less than it feels like
+
+A single quick unfollow-refollow is genuinely low stakes. It is invisible by default, and the situations where it becomes visible require the other person to be doing something unusual at an unusual moment. Repeatedly and rapidly following and unfollowing the same account, however, is a different story entirely, that pattern is exactly what [the follow/unfollow method](/blog/what-is-the-follow-unfollow-method-on-instagram) is, and doing it at scale risks an Instagram action block regardless of whether the other person notices.
+
+## If you want the actual record
+
+If you are genuinely unsure whether you unfollowed and refollowed someone, or want to see your real, current relationship with any account rather than guessing from memory, your own Instagram export settles it. It reflects your actual following list as it stands right now, not a reconstruction of every change you made along the way.
+
+## The bottom line
+
+A quick unfollow and refollow is not something Instagram announces to the other person, and in the overwhelming majority of cases it goes completely unnoticed. It can theoretically be caught if someone happens to be watching closely or running their own tracker at the exact wrong moment, but that is a narrow edge case, not the default. If you want certainty about your current follow status with anyone, check your export rather than worrying about a gap that almost certainly went unseen.`,
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
