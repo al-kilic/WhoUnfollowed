@@ -127,6 +127,22 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* Fontshare - app pages */}
         <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.fontshare.com" />
+        {/*
+          Self-heal malformed UTM links that use a `#` fragment instead of a
+          `?` query string (e.g. a Reddit campaign link shared as
+          /#utm_source=Reddit&utm_medium=Comment...). Fragments never reach
+          the server and Umami's tracking script only reads location.search,
+          so links like that land real visitors but silently drop all
+          campaign attribution. This runs synchronously before the Umami
+          script below, so its very first pageview sees the corrected URL.
+          Scoped to hashes containing "utm_" so it never touches real
+          in-page anchors like #upload.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var h=window.location.hash;if(h&&h.indexOf('utm_')!==-1&&!window.location.search){window.history.replaceState(null,'',window.location.pathname+'?'+h.slice(1));}}catch(e){}})();`,
+          }}
+        />
         {UMAMI_WEBSITE_ID ? (
           <Script
             defer
