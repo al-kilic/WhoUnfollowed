@@ -2,8 +2,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import Script from 'next/script';
-import { useTheme } from 'next-themes';
 import { T } from './tokens';
 import { Icon } from './atoms';
 
@@ -287,16 +285,9 @@ export function FinalCTA() {
 
 // ─── Footer ───────────────────────────────────────────────────────────────────
 
-const preferredSourceProps: Record<string, string> = {
-  'google-add-preferred-source-btn': '',
-};
-
 export function LandingFooter() {
-  const { resolvedTheme } = useTheme();
-
   return (
     <footer className="px-4 sm:px-12 pt-14 pb-10" style={{ borderTop: `1px solid ${T.border1}`, position: 'relative' }}>
-      <Script async src="https://news.google.com/swg/js/v1/publisher.js" strategy="afterInteractive" />
       <div style={{ maxWidth: 1240, margin: '0 auto' }}>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-10 sm:gap-12 mb-14">
           <div>
@@ -353,14 +344,15 @@ export function LandingFooter() {
             © 2026 WhoUnfollowed · Not affiliated with Instagram or Meta
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <div {...preferredSourceProps} data-theme={resolvedTheme === 'dark' ? 'dark' : 'light'} />
             {[
+              { name: 'Prefer us on Google', href: 'https://www.google.com/preferences/source?q=whounfollowed.co', external: true, icon: <Icon.google size={16} color={T.inkDim} /> },
               { name: 'GitHub', href: 'https://github.com/al-kilic/WhoUnfollowed', icon: <Icon.gh size={16} color={T.inkDim} /> },
               { name: 'Email',  href: 'mailto:hello@whounfollowed.co', icon: (
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="3" width="13" height="10" rx="1.5" stroke={T.inkDim} strokeWidth="1.3"/><path d="M2 4 L8 9 L14 4" stroke={T.inkDim} strokeWidth="1.3" fill="none" strokeLinecap="round"/></svg>
               )},
             ].map(s => (
               <a key={s.name} title={s.name} href={s.href}
+                {...(s.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                 style={{ width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${T.border2}`, cursor: 'pointer', transition: 'all 0.2s' }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = T.border3; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = T.border2; }}>
