@@ -2,6 +2,8 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import Script from 'next/script';
+import { useTheme } from 'next-themes';
 import { T } from './tokens';
 import { Icon } from './atoms';
 
@@ -286,8 +288,19 @@ export function FinalCTA() {
 // ─── Footer ───────────────────────────────────────────────────────────────────
 
 export function LandingFooter() {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const preferredSourceRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => { setMounted(true); }, []);
+
+  useEffect(() => {
+    preferredSourceRef.current?.setAttribute('google-add-preferred-source-btn', '');
+  }, []);
+
   return (
     <footer className="px-4 sm:px-12 pt-14 pb-10" style={{ borderTop: `1px solid ${T.border1}`, position: 'relative' }}>
+      <Script async src="https://news.google.com/swg/js/v1/publisher.js" strategy="afterInteractive" />
       <div style={{ maxWidth: 1240, margin: '0 auto' }}>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-10 sm:gap-12 mb-14">
           <div>
@@ -344,6 +357,12 @@ export function LandingFooter() {
             © 2026 WhoUnfollowed · Not affiliated with Instagram or Meta
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            {mounted && (
+              <div
+                ref={preferredSourceRef}
+                data-theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
+              />
+            )}
             {[
               { name: 'GitHub', href: 'https://github.com/al-kilic/WhoUnfollowed', icon: <Icon.gh size={16} color={T.inkDim} /> },
               { name: 'Email',  href: 'mailto:hello@whounfollowed.co', icon: (
