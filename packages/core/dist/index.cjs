@@ -37,6 +37,8 @@ __export(index_exports, {
   analyzeSnapshot: () => analyzeSnapshot,
   compareSnapshots: () => compareSnapshots,
   detectDeltaExport: () => detectDeltaExport,
+  feedbackSchema: () => feedbackSchema,
+  feedbackSentiments: () => feedbackSentiments,
   findGhostFollowers: () => findGhostFollowers,
   parseInstagramZip: () => parseInstagramZip
 });
@@ -127,6 +129,13 @@ var parsedSnapshotSchema = import_zod.z.object({
   // snapshots already saved in a user's IndexedDB (from before this field
   // existed) still validate.
   format: import_zod.z.enum(["json", "html"]).optional()
+});
+var feedbackSentiments = ["angry", "sad", "neutral", "happy", "delighted"];
+var feedbackSchema = import_zod.z.object({
+  sentiment: import_zod.z.enum(feedbackSentiments),
+  reason: import_zod.z.string().trim().max(200).optional(),
+  comment: import_zod.z.string().trim().max(1e3).optional(),
+  page: import_zod.z.string().trim().max(200)
 });
 
 // src/parser.ts
@@ -416,6 +425,8 @@ function findGhostFollowers(snapshot, options) {
   analyzeSnapshot,
   compareSnapshots,
   detectDeltaExport,
+  feedbackSchema,
+  feedbackSentiments,
   findGhostFollowers,
   parseInstagramZip
 });

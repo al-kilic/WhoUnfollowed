@@ -17,6 +17,7 @@ import { useSnapshotList, useSnapshotsLoaded } from '@/hooks/useSnapshots';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { Tutorial } from '@/components/Tutorial';
 import { ProLockOverlay, lockedContentStyle } from '@/components/ProLockOverlay';
+import { FeedbackWidget } from '@/components/FeedbackWidget';
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 
@@ -1295,6 +1296,7 @@ export function DashboardClient({ account }: DashboardClientProps) {
       </div>
 
       <LandingFooter />
+      <FeedbackWidget />
     </div>
   );
 }

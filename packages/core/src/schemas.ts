@@ -60,6 +60,18 @@ export const parsedSnapshotSchema = z.object({
   format: z.enum(['json', 'html']).optional(),
 });
 
+export const feedbackSentiments = ['angry', 'sad', 'neutral', 'happy', 'delighted'] as const;
+
+export const feedbackSchema = z.object({
+  sentiment: z.enum(feedbackSentiments),
+  reason: z.string().trim().max(200).optional(),
+  comment: z.string().trim().max(1000).optional(),
+  page: z.string().trim().max(200),
+});
+
+export type FeedbackSentiment = (typeof feedbackSentiments)[number];
+export type FeedbackInput = z.infer<typeof feedbackSchema>;
+
 export type StringListItem = z.infer<typeof stringListItemSchema>;
 export type RelationshipEntry = z.infer<typeof relationshipEntrySchema>;
 export type FollowersFile = z.infer<typeof followersFileSchema>;

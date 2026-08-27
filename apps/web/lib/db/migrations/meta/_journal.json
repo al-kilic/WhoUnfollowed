@@ -15,6 +15,13 @@
       "when": 1781179469693,
       "tag": "0001_fuzzy_paper_doll",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1787968800000,
+      "tag": "0003_add_feedback_table",
+      "breakpoints": true
     }
   ]
 }

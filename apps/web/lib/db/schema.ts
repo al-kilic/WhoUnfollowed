@@ -20,6 +20,14 @@ export const subscriptionStatusEnum = pgEnum('subscription_status', [
   'none',
 ]);
 
+export const feedbackSentimentEnum = pgEnum('feedback_sentiment', [
+  'angry',
+  'sad',
+  'neutral',
+  'happy',
+  'delighted',
+]);
+
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
   email: text('email').notNull().unique(),
@@ -92,4 +100,16 @@ export const syncSettings = pgTable('sync_settings', {
     .references(() => users.id, { onDelete: 'cascade' }),
   passphraseSalt: text('passphrase_salt').notNull(),
   passphraseSetAt: timestamp('passphrase_set_at').notNull().defaultNow(),
+});
+
+export const feedback = pgTable('feedback', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  // Null for logged-out submissions (the widget also shows on /results, which
+  // doesn't require an account).
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }),
+  sentiment: feedbackSentimentEnum('sentiment').notNull(),
+  reason: text('reason'),
+  comment: text('comment'),
+  page: text('page').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
 });
