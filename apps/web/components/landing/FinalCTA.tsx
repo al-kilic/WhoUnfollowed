@@ -322,6 +322,7 @@ export function LandingFooter() {
               { label: 'Refund Policy',    href: '/refund' },
               { label: 'Cookie Policy',    href: '/cookies' },
               { label: 'Terms of Service', href: '/terms' },
+              { label: 'Accessibility',    href: '/accessibility' },
             ]},
           ].map(col => (
             <div key={col.title}>
