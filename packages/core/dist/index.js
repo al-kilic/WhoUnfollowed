@@ -84,6 +84,13 @@ var parsedSnapshotSchema = z.object({
   // existed) still validate.
   format: z.enum(["json", "html"]).optional()
 });
+var feedbackSentiments = ["angry", "sad", "neutral", "happy", "delighted"];
+var feedbackSchema = z.object({
+  sentiment: z.enum(feedbackSentiments),
+  reason: z.string().trim().max(200).optional(),
+  comment: z.string().trim().max(1e3).optional(),
+  page: z.string().trim().max(200)
+});
 
 // src/parser.ts
 function labelValuesToAccount(entry) {
@@ -371,6 +378,8 @@ export {
   analyzeSnapshot,
   compareSnapshots,
   detectDeltaExport,
+  feedbackSchema,
+  feedbackSentiments,
   findGhostFollowers,
   parseInstagramZip
 };

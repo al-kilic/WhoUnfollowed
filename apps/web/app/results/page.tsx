@@ -15,6 +15,7 @@ import { T } from '@/components/landing/tokens';
 import { useTriage } from '@/hooks/useTriage';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { Tutorial } from '@/components/Tutorial';
+import { FeedbackWidget } from '@/components/FeedbackWidget';
 
 // ─── Stat card ───────────────────────────────────────────────────────────────
 
@@ -350,6 +351,7 @@ export default function ResultsPage() {
       </main>
 
       <LandingFooter />
+      <FeedbackWidget />
     </div>
   );
 }

@@ -52,6 +52,21 @@ declare const parsedSnapshotSchema: z.ZodObject<{
         html: "html";
     }>>;
 }, z.core.$strip>;
+declare const feedbackSentiments: readonly ["angry", "sad", "neutral", "happy", "delighted"];
+declare const feedbackSchema: z.ZodObject<{
+    sentiment: z.ZodEnum<{
+        angry: "angry";
+        sad: "sad";
+        neutral: "neutral";
+        happy: "happy";
+        delighted: "delighted";
+    }>;
+    reason: z.ZodOptional<z.ZodString>;
+    comment: z.ZodOptional<z.ZodString>;
+    page: z.ZodString;
+}, z.core.$strip>;
+type FeedbackSentiment = (typeof feedbackSentiments)[number];
+type FeedbackInput = z.infer<typeof feedbackSchema>;
 type FollowersFile = z.infer<typeof followersFileSchema>;
 type FollowingFile = z.infer<typeof followingFileSchema>;
 type Account = z.infer<typeof accountSchema>;
@@ -104,4 +119,4 @@ declare class SchemaValidationError extends Error {
     constructor(filename: string, detail: string);
 }
 
-export { type Account, type DeltaDetectionResult, type DeltaReason, type FollowersFile, type FollowingFile, InvalidZipError, MissingFilesError, MixedFormatError, type ParsedSnapshot, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, analyzeSnapshot, compareSnapshots, detectDeltaExport, findGhostFollowers, parseInstagramZip };
+export { type Account, type DeltaDetectionResult, type DeltaReason, type FeedbackInput, type FeedbackSentiment, type FollowersFile, type FollowingFile, InvalidZipError, MissingFilesError, MixedFormatError, type ParsedSnapshot, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, analyzeSnapshot, compareSnapshots, detectDeltaExport, feedbackSchema, feedbackSentiments, findGhostFollowers, parseInstagramZip };

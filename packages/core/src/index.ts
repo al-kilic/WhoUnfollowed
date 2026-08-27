@@ -12,5 +12,8 @@ export type {
   ParsedSnapshot,
   FollowersFile,
   FollowingFile,
+  FeedbackInput,
+  FeedbackSentiment,
 } from './schemas.js';
+export { feedbackSchema, feedbackSentiments } from './schemas.js';
 export type { SingleSnapshotAnalysis, SnapshotComparison } from './diff.js';
