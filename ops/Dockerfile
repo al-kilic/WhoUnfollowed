@@ -29,6 +29,9 @@ ENV PORT=3000
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
+# The migrator reads these via a runtime-built fs path (not a static import),
+# so Next's output-file tracer can't discover them on its own — copy explicitly.
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web/lib/db/migrations ./apps/web/lib/db/migrations
 
 USER nextjs
 EXPOSE 3000

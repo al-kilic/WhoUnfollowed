@@ -191,22 +191,47 @@ jobs:
           username: deploy
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
+            set -e
             cd /srv/ig-tracker
             docker compose pull
             docker compose up -d --remove-orphans
             # Recreated containers can change the pg-proxy IP, which breaks the
             # NocoDB->Postgres DNAT route. Re-apply it to the current proxy IP.
             sudo systemctl restart nocodb-pg-route || true
+
+            # Calls /api/internal/migrate over the container's own loopback
+            # (never exposed publicly) so pending migrations actually apply.
+            # Retries while the new container is still starting up; fails the
+            # deploy loudly on a real migration error instead of swallowing it.
             docker compose exec -T web node -e "
-              const { drizzle } = require('drizzle-orm/postgres-js');
-              const { migrate } = require('drizzle-orm/postgres-js/migrator');
-              const postgres = require('postgres');
-              const sql = postgres(process.env.DATABASE_URL);
-              const db = drizzle(sql);
-              migrate(db, { migrationsFolder: 'apps/web/lib/db/migrations' })
-                .then(() => { console.log('migrations done'); process.exit(0); })
-                .catch(e => { console.error(e); process.exit(1); });
-            " || true
+              const secret = process.env.MIGRATE_SECRET;
+              async function attempt() {
+                let res;
+                try {
+                  res = await fetch('http://localhost:3000/api/internal/migrate', {
+                    method: 'POST',
+                    headers: { 'x-migrate-secret': secret },
+                  });
+                } catch {
+                  return { ready: false };
+                }
+                const body = await res.text();
+                console.log('migrate:', res.status, body);
+                return { ready: true, ok: res.ok };
+              }
+              async function main() {
+                for (let i = 0; i < 30; i++) {
+                  const r = await attempt();
+                  if (r.ready) {
+                    if (!r.ok) throw new Error('migration failed');
+                    return;
+                  }
+                  await new Promise(res => setTimeout(res, 1000));
+                }
+                throw new Error('server never became ready');
+              }
+              main().then(() => process.exit(0)).catch(e => { console.error(e); process.exit(1); });
+            "
             docker image prune -f
 
       - name: Ping IndexNow
