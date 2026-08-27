@@ -27,7 +27,9 @@ export async function POST(req: Request) {
   }
 
   try {
-    await migrate(db, { migrationsFolder: path.join(process.cwd(), 'apps/web/lib/db/migrations') });
+    // Next's standalone server.js does process.chdir(__dirname) on startup,
+    // so cwd here is already .../apps/web — not the monorepo root.
+    await migrate(db, { migrationsFolder: path.join(process.cwd(), 'lib/db/migrations') });
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error('[internal/migrate] failed:', err);
