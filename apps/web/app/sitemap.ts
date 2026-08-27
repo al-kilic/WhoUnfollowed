@@ -25,6 +25,7 @@ const STATIC_PAGES: Array<{
   { path: '/terms', priority: 0.3, changeFrequency: 'yearly' },
   { path: '/cookies', priority: 0.3, changeFrequency: 'yearly' },
   { path: '/refund', priority: 0.3, changeFrequency: 'yearly' },
+  { path: '/accessibility', priority: 0.3, changeFrequency: 'yearly' },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

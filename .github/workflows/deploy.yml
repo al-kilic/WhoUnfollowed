@@ -151,7 +151,7 @@ jobs:
             fi
           }
 
-          for r in / /about /account /author/alan-kilic /blog /changelog /compare /contact \
+          for r in / /about /accessibility /account /author/alan-kilic /blog /changelog /compare /contact \
                    /cookies /dashboard /diff /forgot-password /history /how-to-export /login \
                    /pricing /privacy /refund /reset-password /results /settings /signup /terms \
                    /verify-email /welcome /what-is-whounfollowed /robots.txt /sitemap.xml; do
