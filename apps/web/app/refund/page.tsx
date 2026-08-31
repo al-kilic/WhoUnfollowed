@@ -21,12 +21,12 @@ export default function RefundPage() {
           <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', color: T.ink, marginBottom: 12 }}>
             Refund Policy
           </h1>
-          <p style={{ fontSize: 13, color: T.inkMute, fontFamily: T.mono }}>Last updated: May 5, 2026</p>
+          <p style={{ fontSize: 13, color: T.inkMute, fontFamily: T.mono }}>Last updated: August 31, 2026</p>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 36 }}>
           <Section title="No Refund Policy">
-            WhoUnfollowed provides a substantial free tier that allows you to fully test the application's core functionality before ever considering an upgrade. Because the service is intangible and the free tier is always available to ensure the tool meets your needs, we do not offer refunds once a Pro subscription has been purchased.
+            WhoUnfollowed provides a substantial free tier that allows you to fully test the application's core functionality before ever considering an upgrade. Pro is a one-time payment that unlocks access for a fixed period (30 or 365 days), not a recurring subscription. Because the service is intangible and the free tier is always available to ensure the tool meets your needs, we do not offer refunds once a Pro unlock has been purchased.
           </Section>
 
           <Section title="Try Before You Buy">

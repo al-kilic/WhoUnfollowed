@@ -11,7 +11,6 @@ interface Props {
   userEmail: string | null;
   paymentsEnabled: boolean;
   isPro?: boolean;
-  hasRecurringSubscription?: boolean;
 }
 
 const FREE_BULLETS = [
@@ -85,7 +84,7 @@ function Perk({ label, note }: { label: string; note: string }) {
   );
 }
 
-export function PricingClient({ userEmail, paymentsEnabled, isPro = false, hasRecurringSubscription = false }: Props) {
+export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Props) {
   const [duration, setDuration] = useState<'monthly' | 'yearly'>('monthly');
   const [showAll, setShowAll] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -112,27 +111,6 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, hasRe
       } else {
         setError('Something went wrong. Please try again.');
       }
-    } catch {
-      setError('Something went wrong. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  // Existing subscribers manage/cancel through the Stripe billing portal instead
-  // of being offered the plan again (which would create a duplicate subscription).
-  async function handleManageBilling() {
-    track(Events.manageBilling);
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch('/api/stripe/portal', { method: 'POST' });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-        return;
-      }
-      setError('Something went wrong. Please try again.');
     } catch {
       setError('Something went wrong. Please try again.');
     } finally {
@@ -338,7 +316,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, hasRe
             {error && <p style={{ color: '#ef4444', fontSize: 13, marginBottom: 12 }}>{error}</p>}
 
             <button
-              onClick={paymentsEnabled && hasRecurringSubscription ? handleManageBilling : handleUnlock}
+              onClick={handleUnlock}
               disabled={loading}
               style={{
                 width: '100%', padding: '13px 24px', borderRadius: 12, border: 'none',
@@ -346,11 +324,9 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, hasRe
                 fontSize: 15, fontWeight: 600, fontFamily: T.sans, opacity: loading ? 0.7 : 1,
               }}
             >
-              {paymentsEnabled && hasRecurringSubscription
-                ? (loading ? 'Opening...' : 'Manage billing')
-                : isPro
-                  ? (loading ? 'Redirecting...' : `Extend by ${duration === 'yearly' ? 'a year' : '30 days'}`)
-                  : ctaLabel}
+              {isPro
+                ? (loading ? 'Redirecting...' : `Extend by ${duration === 'yearly' ? 'a year' : '30 days'}`)
+                : ctaLabel}
             </button>
 
             <p style={{ fontSize: 12, color: T.inkMute, textAlign: 'center', marginTop: 10 }}>

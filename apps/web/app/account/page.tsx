@@ -7,14 +7,12 @@ import { validateRequest } from '@/lib/auth/session';
 import { db } from '@/lib/db/index';
 import { profiles, syncSettings } from '@/lib/db/schema';
 import { isPaidFeaturesEnabled, isProUser } from '@/lib/flags';
-import { getStripe, isStripeConfigured } from '@/lib/stripe';
 import { isUserVerified } from '@/lib/auth/verification';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { T } from '@/components/landing/tokens';
 import { SyncSetup } from '@/app/settings/SyncSetup';
 import { DeleteAccountButton } from '@/app/settings/DeleteAccountButton';
-import { ManageBillingButton } from './ManageBillingButton';
 import { ChangePassword } from './ChangePassword';
 import { UpgradeLink } from './UpgradeLink';
 
@@ -67,34 +65,13 @@ export default async function AccountPage() {
   const status = profile?.subscriptionStatus ?? 'none';
   const memberSince = fmtDate(profile?.createdAt);
   const graceEnds = fmtDate(profile?.gracePeriodEndsAt);
-  // Manage billing (Stripe portal) is only meaningful for a real recurring
-  // subscriber. A one-time unlock has no subscription to manage there.
-  const canManageBilling = paymentsEnabled && !!profile?.stripeSubscriptionId;
   const hasSyncSetup = !!syncRow;
 
-  // For real subscribers, surface the next renewal / charge from Stripe. For a
-  // one-time unlock, show "Pro until <date>" instead, no Stripe call needed.
-  let renewal: { label: string; date: string; amount: string } | null = null;
-  if (paymentsEnabled && isStripeConfigured() && profile?.stripeSubscriptionId) {
-    try {
-      const sub = await getStripe().subscriptions.retrieve(profile.stripeSubscriptionId);
-      const item = sub.items.data[0];
-      const periodEnd = item?.current_period_end;
-      const unit = item?.price?.unit_amount ?? null;
-      const interval = item?.price?.recurring?.interval ?? '';
-      if (periodEnd) {
-        renewal = {
-          label: sub.cancel_at_period_end ? 'Cancels' : 'Renews',
-          date: fmtDate(new Date(periodEnd * 1000)) ?? '',
-          amount: unit != null ? `$${(unit / 100).toFixed(2)}/${interval === 'year' ? 'yr' : 'mo'}` : '',
-        };
-      }
-    } catch {
-      // Stripe unavailable — show no renewal line
-    }
-  } else if (paymentsEnabled && !profile?.stripeSubscriptionId && profile?.subscriptionExpiresAt) {
-    renewal = { label: 'Pro until', date: fmtDate(profile.subscriptionExpiresAt) ?? '', amount: '' };
-  }
+  // Every purchase is a one-time unlock, so "renewal" just means the expiry date.
+  const renewal =
+    paymentsEnabled && profile?.subscriptionExpiresAt
+      ? { label: 'Pro until', date: fmtDate(profile.subscriptionExpiresAt) ?? '', amount: '' }
+      : null;
 
   const card: CSSProperties = {
     background: T.surface1,
@@ -161,11 +138,9 @@ export default async function AccountPage() {
                       : 'You are on the free plan.'}
                 </div>
               </div>
-              {canManageBilling ? (
-                <ManageBillingButton />
-              ) : !isPro && paymentsEnabled ? (
+              {paymentsEnabled ? (
                 <UpgradeLink source="account-plan" style={{ fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none', padding: '9px 18px', borderRadius: 10, background: T.teal, whiteSpace: 'nowrap' }}>
-                  Upgrade to Pro
+                  {isPro ? 'Extend Pro' : 'Upgrade to Pro'}
                 </UpgradeLink>
               ) : null}
             </div>

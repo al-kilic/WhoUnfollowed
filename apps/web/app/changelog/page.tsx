@@ -14,6 +14,16 @@ export const metadata: Metadata = {
 
 const entries: { version: string; date: string; tag: 'launch' | 'fix' | 'improvement' | 'feature'; items: string[] }[] = [
   {
+    version: '1.3',
+    date: 'August 31, 2026',
+    tag: 'feature',
+    items: [
+      'Pro pricing changed from a recurring subscription to a one-time unlock: $1.99 for 30 days, or $9.99 for 365 days. No auto-renewal, no cancellation to manage, buy again whenever you want more time.',
+      'You can now buy Pro without creating an account first. Pay, then set a password to access it, instead of signing up before you know if you want it.',
+      'Added a "support the project" donation option in the footer, no account needed.',
+    ],
+  },
+  {
     version: '1.2',
     date: 'July 22, 2026',
     tag: 'improvement',

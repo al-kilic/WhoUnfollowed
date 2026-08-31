@@ -34,8 +34,9 @@ const jsonLd = {
   description:
     'Privacy-first, open-source Instagram follower analysis. Upload your official data export to see who doesn\'t follow you back. Save snapshots over time to see who unfollowed. No password or login required.',
   offers: [
-    { '@type': 'Offer', name: 'Free', price: '0',    priceCurrency: 'USD' },
-    { '@type': 'Offer', name: 'Pro',  price: '4.99', priceCurrency: 'USD', billingIncrement: 'P1M' },
+    { '@type': 'Offer', name: 'Free',              price: '0',    priceCurrency: 'USD' },
+    { '@type': 'Offer', name: 'Pro (30 days)',      price: '1.99', priceCurrency: 'USD' },
+    { '@type': 'Offer', name: 'Pro (365 days)',     price: '9.99', priceCurrency: 'USD' },
   ],
   featureList: [
     'Open-source web app (AGPL-3.0), auditable on GitHub',
