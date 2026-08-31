@@ -2,9 +2,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db/index';
 import { profiles, users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
-import { getStripe, isStripeConfigured } from '@/lib/stripe';
+import { getStripe, isStripeConfigured, UNLOCK_DURATION_DAYS, type UnlockDuration } from '@/lib/stripe';
 
 const GRACE_PERIOD_DAYS = 14;
+
+// Extends from the later of "now" and any unexpired unlock already on the
+// profile, so buying another unlock before the current one runs out stacks
+// instead of resetting the clock.
+function extendUnlockExpiry(currentExpiresAt: Date | null, duration: UnlockDuration): Date {
+  const days = UNLOCK_DURATION_DAYS[duration];
+  const base = currentExpiresAt && currentExpiresAt.getTime() > Date.now() ? currentExpiresAt : new Date();
+  const next = new Date(base);
+  next.setDate(next.getDate() + days);
+  return next;
+}
 
 export async function POST(request: NextRequest) {
   const stripeSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -63,26 +74,52 @@ export async function POST(request: NextRequest) {
         customer: string;
         customer_email: string | null;
         customer_details?: { email?: string | null };
-        subscription: string;
-        metadata?: { userId?: string };
+        subscription: string | null;
+        mode: 'payment' | 'subscription' | 'setup';
+        metadata?: { userId?: string; type?: string; unlockDuration?: UnlockDuration };
       };
+
+      // Donation checkouts share this webhook but carry no account/profile
+      // implications — Stripe's own dashboard is the record of them.
+      if (session.mode === 'payment' && session.metadata?.type === 'donation') {
+        break;
+      }
+
+      const isUnlock = session.mode === 'payment' && session.metadata?.type === 'unlock';
+      const unlockDuration: UnlockDuration = session.metadata?.unlockDuration === 'yearly' ? 'yearly' : 'monthly';
 
       const email =
         session.customer_email ?? session.customer_details?.email ?? null;
 
       if (session.metadata?.userId) {
-        // Existing user upgrading
-        await db
-          .update(profiles)
-          .set({
-            subscriptionStatus: 'active',
-            stripeCustomerId: session.customer,
-            stripeSubscriptionId: session.subscription,
-            gracePeriodEndsAt: null,
-          })
-          .where(eq(profiles.userId, session.metadata.userId));
+        // Existing user upgrading or buying/renewing an unlock
+        if (isUnlock) {
+          const existingProfile = await db.query.profiles.findFirst({
+            where: eq(profiles.userId, session.metadata.userId),
+            columns: { subscriptionExpiresAt: true },
+          });
+          await db
+            .update(profiles)
+            .set({
+              subscriptionStatus: 'active',
+              stripeCustomerId: session.customer,
+              gracePeriodEndsAt: null,
+              subscriptionExpiresAt: extendUnlockExpiry(existingProfile?.subscriptionExpiresAt ?? null, unlockDuration),
+            })
+            .where(eq(profiles.userId, session.metadata.userId));
+        } else {
+          await db
+            .update(profiles)
+            .set({
+              subscriptionStatus: 'active',
+              stripeCustomerId: session.customer,
+              stripeSubscriptionId: session.subscription,
+              gracePeriodEndsAt: null,
+            })
+            .where(eq(profiles.userId, session.metadata.userId));
+        }
       } else if (email) {
-        // New subscriber — create account without password (set on /welcome page)
+        // New customer — create account without password (set on /welcome page)
         const existing = await db.query.users.findFirst({
           where: eq(users.email, email.toLowerCase()),
         });
@@ -101,9 +138,25 @@ export async function POST(request: NextRequest) {
               userId: newUser.id,
               subscriptionStatus: 'active',
               stripeCustomerId: session.customer,
-              stripeSubscriptionId: session.subscription,
+              stripeSubscriptionId: isUnlock ? null : session.subscription,
+              subscriptionExpiresAt: isUnlock ? extendUnlockExpiry(null, unlockDuration) : null,
             });
           }
+        } else if (isUnlock) {
+          // Existing (logged-out) email buying/renewing an unlock
+          const existingProfile = await db.query.profiles.findFirst({
+            where: eq(profiles.userId, existing.id),
+            columns: { subscriptionExpiresAt: true },
+          });
+          await db
+            .update(profiles)
+            .set({
+              subscriptionStatus: 'active',
+              stripeCustomerId: session.customer,
+              gracePeriodEndsAt: null,
+              subscriptionExpiresAt: extendUnlockExpiry(existingProfile?.subscriptionExpiresAt ?? null, unlockDuration),
+            })
+            .where(eq(profiles.userId, existing.id));
         } else {
           // Re-subscribing after grace period
           await db

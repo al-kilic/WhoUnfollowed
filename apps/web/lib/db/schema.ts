@@ -78,6 +78,11 @@ export const profiles = pgTable('profiles', {
   stripeCustomerId: text('stripe_customer_id'),
   stripeSubscriptionId: text('stripe_subscription_id'),
   gracePeriodEndsAt: timestamp('grace_period_ends_at'),
+  // Set only for one-time unlock purchases (30-day / 365-day). Null for a real
+  // recurring Stripe subscription, which never "expires" on its own, Stripe
+  // webhooks flip subscriptionStatus instead. isProUser() treats a non-null,
+  // past-dated value as no longer active.
+  subscriptionExpiresAt: timestamp('subscription_expires_at'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 

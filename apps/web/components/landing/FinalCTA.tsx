@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { T } from './tokens';
 import { Icon } from './atoms';
+import { DonateWidget } from './DonateWidget';
 
 // ─── Animated counter ────────────────────────────────────────────────────────
 
@@ -298,10 +299,11 @@ export function LandingFooter() {
             <p style={{ fontFamily: T.serif, fontSize: 16, fontStyle: 'italic', color: T.inkDim, lineHeight: 1.4, maxWidth: 320, marginBottom: 20 }}>
               A simple tool that respects what every other one of these tools quietly violated.
             </p>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 12, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.04em' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 12, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.04em', marginBottom: 24 }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#5fbb73' }} />
               All systems operational
             </div>
+            <DonateWidget />
           </div>
 
           {[
