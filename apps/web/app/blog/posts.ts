@@ -2259,6 +2259,186 @@ If you are genuinely unsure whether you unfollowed and refollowed someone, or wa
 
 A quick unfollow and refollow is not something Instagram announces to the other person, and in the overwhelming majority of cases it goes completely unnoticed. It can theoretically be caught if someone happens to be watching closely or running their own tracker at the exact wrong moment, but that is a narrow edge case, not the default. If you want certainty about your current follow status with anyone, check your export rather than worrying about a gap that almost certainly went unseen.`,
   },
+  {
+    slug: 'do-businesses-need-to-track-instagram-unfollowers',
+    cluster: 'unfollowers',
+    title: 'Do Businesses Need to Track Who Unfollows Them on Instagram?',
+    metaTitle: 'Do Businesses Need to Track Instagram Unfollowers?',
+    metaDescription: 'Should a business or brand account track Instagram unfollowers? Here\'s what a follower drop can mean, and how to see exactly who left, for free.',
+    excerpt: 'A creator losing a follower is background noise. A business losing one after a price change or a bad customer exchange is a different signal entirely, and most brand accounts never see it.',
+    date: 'September 2, 2026',
+    readTime: '5 min',
+    tag: 'Growth',
+    primaryKeyword: 'instagram unfollow tracking for business accounts',
+    art: 'bell',
+    imageAlt: 'Abstract geometric illustration representing a business account tracking who unfollows it on Instagram',
+    cta: {
+      heading: 'See which customers walked away.',
+      body: 'A follower drop after a launch or a price change has names attached to it. Upload your Instagram export and WhoUnfollowed shows exactly who left, in your browser, whether you run one account or ten.',
+      buttonLabel: 'Check your unfollowers',
+      proNudge: 'Managing more than one account? Pro keeps snapshot history and email alerts, and the Team plan extends coverage across up to ten accounts for agencies and brand teams.',
+    },
+    body: `A creator loses a follower and it barely registers. People follow and unfollow accounts all day for reasons that have nothing to do with the content. A business account loses a follower and the question is different: was that a customer? Did we do something to lose them? Most brand and small-business accounts never actually answer that, because Instagram gives them the same blank follower count everyone else gets, with zero explanation of who left or why.
+
+## The follower count means something different for a business
+
+For a personal or creator account, follows and unfollows are mostly noise. People clean out their feed, get bored, or move on for reasons unrelated to you. For a business account, every follower arrived through a specific channel: a post, a friend's tag, an ad, an in-store sign, a partnership shoutout. When one of them leaves, there was usually a reason, even a small one. A cluster of unfollows in the same week is rarely coincidence.
+
+Common events that tend to cluster unfollows on a business account:
+
+- A price increase or subscription change customers didn't expect
+- A public customer service complaint that went unresolved
+- A partnership or sponsorship the audience reacted to badly
+- A product recall, defect, or quality issue that spread
+- A tone or content shift that stopped matching what people originally followed for
+
+None of that is visible in the follower count alone. Instagram shows you 4,812 followers today and 4,780 tomorrow. It never shows you which 32 people left.
+
+## Why the signal gets missed at business scale
+
+Individual creators notice a drop because they are the only one watching the number. Business accounts are usually managed by more than one person, a marketing coordinator, an agency, occasionally a rotating cast of interns, and that split attention means slow bleeds go unnoticed for months. New-follower growth from ads can also mask the problem entirely: a business can gain 200 followers from a paid push in the same month it loses 150 organic ones, and the net number still climbs. Nobody flags the 150, because the top-line metric looks fine.
+
+That's the trap. A rising follower count and a shrinking, disengaged base of actual customers can happen at the same time, and the only way to tell the difference is to look at who specifically came and went, not just the total.
+
+## The agency problem: whose password is it anyway
+
+If an agency or freelance social manager runs the account, the stakes around how you check this go up, not down. A follower-tracking tool that asks for the Instagram password works the same way whether it's your personal account or a client's business account: it logs in and pulls data through Instagram's private API, which [violates Instagram's Terms of Use](/blog/why-instagram-follower-trackers-ask-for-your-password) and risks the account getting flagged. For a personal account, that's an inconvenience. For a business account with real revenue behind it, a suspension is an emergency, and it's one an agency caused by handing a client's login to a third-party app for no good reason.
+
+This is where an export-based, open-source tool matters more, not less, at business scale. [WhoUnfollowed's parser is open source under MPL-2.0](https://github.com/al-kilic/WhoUnfollowed), so an agency evaluating it on behalf of a client isn't taking a vendor's word for what happens to the data. They, or the client's own developer, can read the code that touches it. That's a different conversation with a security-conscious client than "trust us, we don't store anything."
+
+## How to actually track it
+
+The mechanism is the same one that works for a personal account, applied on a schedule. Instagram is required under GDPR to hand over a full copy of a business account's own data on request, including the complete followers and following lists, a right laid out directly in [Article 20 of the GDPR](https://gdpr-info.eu/art-20-gdpr/). [Export it](/blog/how-to-download-your-instagram-data) monthly, or right after any moment likely to move the needle: a price change, a PR moment, a big campaign launch. Upload each export to [WhoUnfollowed](/) and compare it against the last one. You get the exact list of who left in that window, not just the delta in a number.
+
+## What to do with the list
+
+Names alone don't tell you why someone left, but a pattern across names often does. If a wave of unfollows lines up with a specific post, comment thread, or announcement, that's worth a look, especially if it repeats. If the unfollows are scattered and gradual, it's probably ordinary churn, the same background noise every account has, and not worth chasing.
+
+## The bottom line
+
+A business account has more reason to know who's leaving than almost any other kind of account, because behind the number are actual customers, not just an audience. The tool to find out is the same one that works for anyone: your own official export, read locally, compared over time. No login handed to a third party, and for an agency managing someone else's account, [nothing to explain to a client except that the code is public](/blog/do-instagram-unfollow-apps-actually-work) if they ever want to check for themselves.`,
+  },
+  {
+    slug: 'did-they-unfollow-you-or-start-a-new-instagram-account',
+    cluster: 'unfollowers',
+    title: 'Did They Unfollow You, or Just Start a New Instagram Account?',
+    metaTitle: 'Unfollowed You or Made a New Instagram Account?',
+    metaDescription: 'They vanished from your followers, no notification, no explanation. Here\'s how to tell a plain unfollow apart from a fresh start on a new Instagram account.',
+    excerpt: 'Their old profile still loads fine. It is not blocked, not deactivated, and not in your followers anymore either. Here is the fifth explanation nobody accounts for.',
+    date: 'September 9, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'did they unfollow me or make a new instagram account',
+    art: 'ghost',
+    imageAlt: 'Abstract geometric illustration representing the uncertainty of whether someone unfollowed you or moved to a new Instagram account',
+    cta: {
+      heading: 'Confirm what you can actually know.',
+      body: 'Whatever the reason, your export shows the one fact that matters right now: whether they are following the account you actually have. Upload it to WhoUnfollowed and see for yourself, in your browser, no password required.',
+      buttonLabel: 'Check who\'s really gone',
+      proNudge: 'If this kind of mystery keeps happening, Pro keeps a running history of your exports so you are never stuck guessing which snapshot to compare.',
+    },
+    body: `Someone disappears from your followers list, and when you go looking for an explanation, none of the usual ones fit. Their old profile still loads. It's not marked unavailable, so it's not a block. It's not gone from search either, so it's not a deactivation (per [Instagram's Help Center](https://help.instagram.com/139886812848894), a deactivated profile disappears from search entirely). There's just nothing: no post, no story, no activity, for weeks. It sits there, technically alive, functionally abandoned. That's usually the fingerprint of a fifth scenario nobody accounts for: they didn't unfollow you, deactivate, or block you. They started over on a different account.
+
+## Why this doesn't match the usual patterns
+
+We've covered the four standard explanations for someone vanishing from your list elsewhere: [deactivation, deletion, blocking, and a plain unfollow](/blog/deactivated-or-blocked-on-instagram-how-to-tell) each leave a distinct trail you can check for, and no notification fires for any of them, the same way [Instagram never notifies an unfollow](/blog/does-instagram-notify-when-you-unfollow-someone). A new account is different because it isn't really about your relationship with them at all. The old profile can sit there indefinitely, technically functional, simply unused, while its owner has moved their actual presence somewhere else entirely. You'd have to notice the silence yourself, and most people don't check that closely.
+
+## Why people actually do this
+
+Starting fresh on Instagram is more common than the follower-tracking conversation usually admits, and the reasons are rarely about you specifically:
+
+- A privacy reset, cutting ties with an old follower list that grew messy or uncomfortable to be seen by
+- Escaping a specific person, an ex, a harasser, a boss, without the friction of blocking one account
+- A rebrand, personal or business, where the old handle no longer matches who they are now
+- Outgrowing a handle picked at 16 that they're embarrassed to still have at 30
+- Splitting a personal account from a business or creator one, and letting the original go quiet
+
+None of these are about the people they used to follow. They're about the account itself becoming something the owner didn't want to keep using.
+
+## Instagram gives you zero way to connect the dots
+
+This is the part that makes the mystery unsolvable from the outside. Instagram has no "formerly known as" field, no migration flag, nothing that links an old account to a new one, even when the same person controls both. If your old friend follows you again from a brand-new handle six months later, you would have no way to know it's the same person unless they told you directly, tagged you the way they used to, or you simply recognized their face in a new profile photo. From your export's perspective, a new follow from a stranger and a new follow from your reinvented old friend look identical: just a username with a timestamp.
+
+## What your export can actually prove
+
+This is worth being precise about, because it's easy to want more certainty than the data can give you. Comparing two exports through [WhoUnfollowed](/) tells you, with total accuracy, that a specific username is no longer in your followers list as of a specific date. That's a hard fact, not a guess. What it cannot tell you is why, or whether the person behind that username is still on Instagram somewhere under a different name. No tool, including ones that ask for your password and violate Instagram's terms to get it, has access to data that links separate accounts together. That information doesn't exist anywhere for a third party to read, because Instagram doesn't expose it, even to itself, in any customer-facing way.
+
+## The practical move
+
+Chasing certainty here usually isn't worth the energy. Instead of trying to reverse-engineer whether a specific disappearance was a quiet unfollow or a fresh start, treat every export comparison the same way: it tells you who's currently in your corner and who isn't, right now, regardless of the backstory. If someone you cared about really did start over, they'll usually resurface on their own terms, a DM, a mutual tag, a bio link, rather than through detective work on your end. Your energy is better spent knowing your current list cold than solving a case Instagram's data was never built to close.
+
+## How to check what changed
+
+[Export your Instagram data](/blog/how-to-download-your-instagram-data) now if you don't already have a recent one. Keep it. Export again in a few weeks, and drop both into [WhoUnfollowed](/) to see exactly who's gone, comparing timestamps rather than memory. For the full walkthrough, see [how to see who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram).
+
+## Quick answers
+
+**Can I find someone's new Instagram account from their old one?** Not through any data Instagram provides. There's no public or exportable link between two separate accounts, even ones run by the same person.
+
+**Does deleting an old account after making a new one change anything for me?** Not really. Whether the old account sits dormant or gets deleted outright, it disappears from your followers either way, and your export shows the same thing: they're gone.
+
+**Is there any way to tell a new-account restart apart from a plain unfollow, just from my export?** No. Both look identical in the data, a username that was there before and isn't now. The distinction only exists in circumstances you'd have to know separately, like recognizing a new account later.`,
+  },
+  {
+    slug: 'why-you-lose-followers-when-you-change-your-instagram-content-or-niche',
+    cluster: 'account-health',
+    title: 'Why You Lose Followers When You Change What You Post on Instagram',
+    metaTitle: 'Why You Lose Followers After Changing Your Niche',
+    metaDescription: 'Pivoted your Instagram content and watched followers drop? Here\'s why niche changes cost you followers, and how to see exactly who left.',
+    excerpt: 'You started posting something different, and the follower count dropped with no explanation from Instagram. Here is what actually happens when your content changes and part of your audience doesn\'t follow along.',
+    date: 'September 16, 2026',
+    readTime: '5 min',
+    tag: 'Growth',
+    primaryKeyword: 'why do I lose followers when I change my instagram niche',
+    art: 'split',
+    imageAlt: 'Abstract geometric illustration representing an Instagram audience splitting after a content or niche change',
+    cta: {
+      heading: 'See who left after the pivot.',
+      body: 'A content or niche change has a real list of names behind it. Upload two exports, one from before the shift and one after, and WhoUnfollowed shows you exactly who dropped off, in your browser, no password needed.',
+      buttonLabel: 'See who unfollowed after the shift',
+      proNudge: 'Planning more changes down the road? Pro keeps your snapshot history so you can watch the effect of each one instead of guessing after the fact.',
+    },
+    body: `You changed what you post, on purpose, and the follower count started dropping in a way it never did before. No policy violation, no controversy, just a shift from what you used to make to something else, and a chunk of your audience quietly left. It feels like a punishment for trying something new. It's actually closer to the audience doing exactly what it's supposed to do.
+
+## Why a content pivot costs followers, and it's not a glitch
+
+People don't follow accounts in the abstract, they follow specific content: your travel photos, your recipes, your fitness routine, your commentary on a particular topic. When that content changes meaningfully, a portion of your audience followed for something that, from their perspective, no longer exists. Losing them isn't Instagram punishing you and it isn't a sign your new content is bad. It's the exact same mechanism that brought them in, working in reverse.
+
+This is worth separating from a [random overnight drop](/blog/why-did-i-lose-followers-overnight-on-instagram), which is usually unrelated to anything you posted. A pivot-driven drop has a cause you can point to directly: the day your content changed.
+
+## The two waves of unfollows a pivot causes
+
+A niche change rarely produces one clean drop. It tends to show up in two separate waves that look different in your data:
+
+- **The fast wave.** People who followed specifically for the old topic notice the change within a post or two and unfollow almost immediately. This is the visible, sharp dip right after the pivot becomes obvious.
+- **The slow bleed.** Others don't react right away. They just stop opening your posts, and Instagram quietly shows you to them less as engagement drops. Weeks later, during an unrelated feed cleanup, they unfollow an account they'd already mentally checked out of.
+
+Both waves are real consequences of the same decision. The second one is just slower to show up, which is exactly why comparing two exports weeks apart, not just the day after a change, gives a truer picture than watching the count in real time.
+
+## What's happening with reach at the same time
+
+Something separate but related happens on the algorithm side. Instagram has said publicly that its ranking systems weigh signals including a user's past interaction history when deciding what to keep showing them, laid out in [Instagram's own explanation of how the app works](https://about.instagram.com/blog/announcements/shedding-more-light-on-how-instagram-works). A sudden content-type shift can mean the system takes a beat to recalibrate who among your existing followers is likely to engage with the new material, which can look like a reach dip that has nothing to do with anyone actually unfollowing. It's easy to mistake a temporary reach dip for a follower exodus when they're two different things happening around the same time.
+
+## Reframing what actually happened
+
+Losing followers who wanted your old content is not the same as losing your audience. The people who stay after a pivot are, almost by definition, the ones who follow you for something more than one specific topic: your voice, your point of view, or genuine interest in whatever you make next. That's a smaller number, and it's usually a better one. It's the same underlying logic as [clearing out ghost followers](/blog/instagram-ghost-followers-how-to-find-and-remove-them): a leaner, more aligned audience produces a stronger engagement rate than a bigger, half-interested one, even though the top-line number looks worse for a while.
+
+## How to actually see who left, instead of guessing
+
+Feeling like "a lot of people left" and knowing exactly who left are different experiences, and only one of them is useful. [Export your Instagram data](/blog/how-to-download-your-instagram-data) before you make a major pivot if you can, or as soon as possible after. Do it again three or four weeks later, since that gap captures both the fast wave and a good chunk of the slow bleed. Upload both files to [WhoUnfollowed](/) and you get the specific list of who left in that window. Scan it for a pattern: were these mostly people who engaged heavily with your old content and never touched the new posts? That's the pivot working as expected. A list that looks random and unrelated to the shift points to ordinary churn instead.
+
+## When it's actually worth worrying
+
+Some follower loss after a pivot is expected and even healthy. It becomes a real problem only if the drop is large relative to what's left, keeps compounding well past the initial adjustment period, and isn't being offset by any new followers arriving for the new content. If that's the pattern, the issue usually isn't that you pivoted, it's that the pivot happened all at once with no bridge content connecting the old audience to the new direction. A gradual shift tends to keep more of the audience along for the ride than a hard cutover.
+
+## Quick answers
+
+**Should I be worried if I lose followers right after changing my content?** A first wave of unfollows right after a visible pivot is normal and expected. What matters more is whether it keeps compounding weeks later or levels off once the people who wanted the old content have moved on.
+
+**Does Instagram punish accounts for changing their niche?** No. There's no penalty mechanism for changing what you post. What changes is which of your existing followers the algorithm expects to engage with the new material, which is a recalibration, not a punishment.
+
+**How long should I wait before comparing exports after a pivot?** A few weeks at minimum. Comparing the day after the change only catches the fast, obvious wave and misses the slower one that shows up later.`,
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
