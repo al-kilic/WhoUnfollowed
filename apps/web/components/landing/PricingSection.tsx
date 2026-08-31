@@ -64,9 +64,9 @@ function PricingMobileTabs({ billing, mobileEmail, setMobileEmail, mobileStatus,
         <div style={{ padding: '28px 24px', borderRadius: 20, background: `linear-gradient(180deg, rgba(2,136,143,0.16) 0%, rgba(2,136,143,0.04) 100%)`, border: `1px solid ${T.tealMid}`, boxShadow: `0 20px 60px rgba(2,136,143,0.18)`, position: 'relative', overflow: 'hidden' }}>
           <div style={{ fontSize: 10, color: T.tealLight, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 8, fontFamily: T.mono }}>Pro</div>
           <div style={{ fontFamily: T.serif, fontSize: 52, lineHeight: 1, letterSpacing: '-0.04em', color: T.ink, marginBottom: 4 }}>
-            ${billing === 'monthly' ? '4.99' : '3.25'}<span style={{ fontSize: 16, color: T.inkMute, fontFamily: T.sans, fontWeight: 400 }}>/mo</span>
+            ${billing === 'monthly' ? '1.99' : '9.99'}<span style={{ fontSize: 16, color: T.inkMute, fontFamily: T.sans, fontWeight: 400 }}> one-time</span>
           </div>
-          <div style={{ fontSize: 12, color: T.inkMute, marginBottom: 16 }}>{billing === 'monthly' ? 'billed monthly' : 'billed annually · save 35%'}</div>
+          <div style={{ fontSize: 12, color: T.inkMute, marginBottom: 16 }}>{billing === 'monthly' ? 'unlocks Pro for 30 days' : 'unlocks Pro for 365 days · save 59%'}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
             {['Everything in Free','Unlimited snapshot history','Radar: an account health score plus how long each follower has stuck around','Compare any two snapshots to see exactly who unfollowed','Follower growth charts','Triage: mark non-followers to drop, whitelist, or skip for now','Cloud sync across your devices'].map(f => (
               <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: T.ink }}>
@@ -87,10 +87,10 @@ function PricingMobileTabs({ billing, mobileEmail, setMobileEmail, mobileStatus,
           <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
             {['iOS','Android'].map(p => <span key={p} style={{ padding: '5px 12px', borderRadius: 20, border: `1px solid ${T.border2}`, fontSize: 11, fontFamily: T.mono, color: T.inkDim }}>{p}</span>)}
           </div>
-          <p style={{ fontSize: 12, color: T.tealMid, fontFamily: T.mono, marginBottom: 12 }}>Included with your Pro subscription</p>
+          <p style={{ fontSize: 12, color: T.tealMid, fontFamily: T.mono, marginBottom: 12 }}>Included with Pro</p>
           <p style={{ fontFamily: T.serif, fontSize: 15, fontStyle: 'italic', color: T.inkDim, lineHeight: 1.4, marginBottom: 16 }}>&ldquo;Your full Radar, in your pocket. No browser needed.&rdquo;</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 20 }}>
-            {['Everything in Pro','Native iOS and Android','Works offline','Share results as an image','Included with your Pro subscription'].map(f => (
+            {['Everything in Pro','Native iOS and Android','Works offline','Share results as an image','Included with Pro'].map(f => (
               <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: T.ink }}>
                 <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.tealMid, flexShrink: 0 }} />{f}
               </div>
@@ -147,16 +147,15 @@ function PricingBig() {
             color: billing === v ? T.toggleActiveText : T.inkDim,
             border: 'none',
             transition: 'all 0.3s cubic-bezier(0.16,1,0.3,1)',
-            textTransform: 'capitalize',
           }}>
-            {v}
+            {v === 'monthly' ? '30 days' : '365 days'}
             {v === 'annual' && (
               <span style={{
                 marginLeft: 6, fontSize: 9, padding: '2px 6px', borderRadius: 6,
                 background: billing === 'annual' ? T.terra : 'rgba(168,75,47,0.2)',
                 color: billing === 'annual' ? T.cream : T.terra,
                 fontWeight: 700,
-              }}>−35%</span>
+              }}>−59%</span>
             )}
           </button>
         ))}
@@ -206,12 +205,12 @@ function PricingBig() {
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
               <span style={{ fontSize: 16, color: T.inkMute, marginRight: -2 }}>$</span>
               <span style={{ fontFamily: T.serif, fontSize: 52, lineHeight: 1, letterSpacing: '-0.03em', color: T.ink }}>
-                {billing === 'monthly' ? '4.99' : '3.25'}
+                {billing === 'monthly' ? '1.99' : '9.99'}
               </span>
-              <span style={{ fontSize: 12, color: T.inkMute }}>/month</span>
+              <span style={{ fontSize: 12, color: T.inkMute }}>one-time</span>
             </div>
             <div style={{ fontSize: 11, color: T.inkMute, marginBottom: 16 }}>
-              {billing === 'monthly' ? 'billed monthly · cancel anytime' : 'billed annually · save 35%'}
+              {billing === 'monthly' ? 'unlocks Pro for 30 days' : 'unlocks Pro for 365 days · save 59%'}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20, flex: 1 }}>
               {['Everything in Free','Unlimited snapshot history','Radar: an account health score plus how long each follower has stuck around','Compare any two snapshots to see exactly who unfollowed','Follower growth charts','Triage: mark non-followers to drop, whitelist, or skip for now','Cloud sync across your devices'].map(f => (

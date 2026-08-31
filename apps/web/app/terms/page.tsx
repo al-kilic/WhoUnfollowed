@@ -21,7 +21,7 @@ export default function TermsPage() {
           <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', color: T.ink, marginBottom: 12 }}>
             Terms of Service
           </h1>
-          <p style={{ fontSize: 13, color: T.inkMute, fontFamily: T.mono }}>Last updated: May 5, 2026</p>
+          <p style={{ fontSize: 13, color: T.inkMute, fontFamily: T.mono }}>Last updated: August 31, 2026</p>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 36 }}>
@@ -41,8 +41,8 @@ export default function TermsPage() {
             Your privacy is important to us. Please review our <Link href="/privacy" style={{ color: T.tealLight, textDecoration: 'none' }}>Privacy Policy</Link> to understand how we handle your information.
           </Section>
 
-          <Section title="5. Pro Subscription">
-            WhoUnfollowed Pro is an optional paid subscription that provides additional features. Subscriptions are billed on a recurring basis. Please refer to our <Link href="/refund" style={{ color: T.tealLight, textDecoration: 'none' }}>Refund Policy</Link> for information regarding cancellations and refunds.
+          <Section title="5. Pro">
+            WhoUnfollowed Pro is an optional paid upgrade that provides additional features. It is a one-time payment that unlocks Pro access for a fixed period (30 or 365 days), not a recurring subscription, and there is no auto-renewal or ongoing billing. Please refer to our <Link href="/refund" style={{ color: T.tealLight, textDecoration: 'none' }}>Refund Policy</Link> for information regarding refunds.
           </Section>
 
           <Section title="6. Disclaimer of Warranties">

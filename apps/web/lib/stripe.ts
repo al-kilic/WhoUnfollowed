@@ -23,19 +23,10 @@ export function getStripe(): Stripe {
   return cached;
 }
 
-export type Billing = 'monthly' | 'yearly';
-
-// Resolves the Stripe Price id for the chosen billing interval. Returns null if
-// the corresponding price env var is not configured.
-export function priceIdForBilling(billing: Billing): string | null {
-  return billing === 'yearly'
-    ? (process.env.STRIPE_PRICE_YEARLY ?? null)
-    : (process.env.STRIPE_PRICE_MONTHLY ?? null);
-}
-
 // One-time unlock durations. 'monthly'/'yearly' name the two SKUs (30 vs 365
 // days), not a recurring interval — these are one-off Stripe Prices in
-// `payment` mode, never `subscription` mode.
+// `payment` mode. There is no recurring/subscription pricing any more, every
+// purchase on this site is a one-time unlock.
 export type UnlockDuration = 'monthly' | 'yearly';
 
 export const UNLOCK_DURATION_DAYS: Record<UnlockDuration, number> = {

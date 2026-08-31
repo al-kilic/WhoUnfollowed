@@ -35,9 +35,9 @@ export const ITEMS: Record<CategoryId, [string, string][]> = {
   ],
   billing: [
     ['How much does Pro cost?',
-     "Pro is $4.99 per month, or $39 per year. The free plan stays free and needs no account. You get your full non-followers list, mutuals, and fans every time you upload. Pro adds saved snapshot history, growth charts, and alerts when a new export reveals unfollowers."],
-    ["What happens if I cancel Pro?",
-     "You can cancel anytime from your account. Your saved snapshots export to CSV whenever you want, even after cancelling. The free plan stays available with no data loss."],
+     "Pro is a one-time payment: $1.99 unlocks it for 30 days, or $9.99 for 365 days. No recurring charge, no auto-renewal. The free plan stays free and needs no account. You get your full non-followers list, mutuals, and fans every time you upload. Pro adds saved snapshot history, growth charts, and alerts when a new export reveals unfollowers."],
+    ["What happens when my Pro unlock runs out?",
+     "You drop back to the free plan automatically, no charge, nothing to cancel. Your saved snapshots still export to CSV whenever you want. Buy another unlock any time you want Pro again."],
   ],
 };
 

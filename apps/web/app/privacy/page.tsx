@@ -24,7 +24,7 @@ export default function PrivacyPage() {
           <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', color: T.ink, marginBottom: 12 }}>
             Privacy Policy
           </h1>
-          <p style={{ fontSize: 13, color: T.inkMute, fontFamily: T.mono }}>Effective date: April 28, 2026 · Last updated: July 26, 2026</p>
+          <p style={{ fontSize: 13, color: T.inkMute, fontFamily: T.mono }}>Effective date: April 28, 2026 · Last updated: August 31, 2026</p>
         </div>
 
         {/* Disclaimer box */}
@@ -54,7 +54,7 @@ export default function PrivacyPage() {
               {[
                 { label: 'Legitimate interest', text: 'Providing the analytical service you have explicitly requested.' },
                 { label: 'GDPR Article 20', text: 'Supporting your right to receive and reuse your own personal data from a controller, in a structured, commonly used, and machine-readable format.' },
-                { label: 'Performance of contract', text: 'Providing the features of the Pro tier to paying subscribers.' },
+                { label: 'Performance of contract', text: 'Providing the features of the Pro tier to users who have purchased it.' },
               ].map(item => (
                 <li key={item.label} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 14, color: T.inkDim }}>
                   <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.tealMid, flexShrink: 0, marginTop: 7 }} />
@@ -92,7 +92,7 @@ export default function PrivacyPage() {
             <br /><br />
             Pro account data is stored on infrastructure located within the European Union (Germany), and processing is governed by GDPR.
             <br /><br />
-            Payments for the Pro subscription are handled by Stripe, our payment processor. You enter your card details directly with Stripe. Your full card number never reaches our servers, and we do not store it. We retain only a Stripe customer and subscription reference, your current subscription status, and the email address on your account, which is the minimum needed to manage billing. Stripe processes your payment information under its own privacy policy and is PCI-DSS compliant.
+            Pro is a one-time payment (not a recurring subscription) that unlocks access for a fixed period. Payments are handled by Stripe, our payment processor. You enter your card details directly with Stripe. Your full card number never reaches our servers, and we do not store it. We retain only a Stripe customer reference, the date your Pro access expires, and the email address on your account, which is the minimum needed to manage billing. Stripe processes your payment information under its own privacy policy and is PCI-DSS compliant.
           </Section>
 
           <Section title="6. Relationship with Meta and Instagram">
