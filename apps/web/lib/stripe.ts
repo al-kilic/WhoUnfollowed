@@ -32,3 +32,19 @@ export function priceIdForBilling(billing: Billing): string | null {
     ? (process.env.STRIPE_PRICE_YEARLY ?? null)
     : (process.env.STRIPE_PRICE_MONTHLY ?? null);
 }
+
+// One-time unlock durations. 'monthly'/'yearly' name the two SKUs (30 vs 365
+// days), not a recurring interval — these are one-off Stripe Prices in
+// `payment` mode, never `subscription` mode.
+export type UnlockDuration = 'monthly' | 'yearly';
+
+export const UNLOCK_DURATION_DAYS: Record<UnlockDuration, number> = {
+  monthly: 30,
+  yearly: 365,
+};
+
+export function priceIdForUnlock(duration: UnlockDuration): string | null {
+  return duration === 'yearly'
+    ? (process.env.STRIPE_PRICE_UNLOCK_YEARLY ?? null)
+    : (process.env.STRIPE_PRICE_UNLOCK_MONTHLY ?? null);
+}

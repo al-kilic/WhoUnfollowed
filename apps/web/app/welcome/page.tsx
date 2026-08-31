@@ -33,7 +33,7 @@ function WelcomeForm() {
 
   return (
     <form action={action} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      {/* Reached only with a valid checkout session = a completed subscription. */}
+      {/* Reached only with a valid checkout session = a completed subscription or unlock. */}
       <AnalyticsEvent event={Events.subscribeComplete} />
       <input type="hidden" name="sessionId" value={sessionId} />
 
@@ -69,7 +69,7 @@ export default function WelcomePage() {
   return (
     <AuthShell
       title="Welcome to WhoUnfollowed"
-      subtitle="Your subscription is active. Set a password to access your account."
+      subtitle="Your payment is confirmed. Set a password to access your account."
       footer={
         <>
           Already set your password?{' '}

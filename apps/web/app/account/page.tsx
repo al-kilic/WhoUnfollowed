@@ -67,10 +67,13 @@ export default async function AccountPage() {
   const status = profile?.subscriptionStatus ?? 'none';
   const memberSince = fmtDate(profile?.createdAt);
   const graceEnds = fmtDate(profile?.gracePeriodEndsAt);
-  const canManageBilling = paymentsEnabled && !!profile?.stripeCustomerId;
+  // Manage billing (Stripe portal) is only meaningful for a real recurring
+  // subscriber. A one-time unlock has no subscription to manage there.
+  const canManageBilling = paymentsEnabled && !!profile?.stripeSubscriptionId;
   const hasSyncSetup = !!syncRow;
 
-  // For real subscribers, surface the next renewal / charge from Stripe.
+  // For real subscribers, surface the next renewal / charge from Stripe. For a
+  // one-time unlock, show "Pro until <date>" instead, no Stripe call needed.
   let renewal: { label: string; date: string; amount: string } | null = null;
   if (paymentsEnabled && isStripeConfigured() && profile?.stripeSubscriptionId) {
     try {
@@ -89,6 +92,8 @@ export default async function AccountPage() {
     } catch {
       // Stripe unavailable — show no renewal line
     }
+  } else if (paymentsEnabled && !profile?.stripeSubscriptionId && profile?.subscriptionExpiresAt) {
+    renewal = { label: 'Pro until', date: fmtDate(profile.subscriptionExpiresAt) ?? '', amount: '' };
   }
 
   const card: CSSProperties = {
@@ -203,7 +208,7 @@ export default async function AccountPage() {
             {!isPro && paymentsEnabled && (
               <div style={{ marginTop: 22, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', paddingTop: 18, borderTop: `1px solid ${T.border1}` }}>
                 <span style={{ fontSize: 13, color: T.inkDim }}>
-                  <strong style={{ color: T.ink }}>$4.99/mo</strong> or $39/yr · cancel anytime
+                  <strong style={{ color: T.ink }}>$1.99</strong> for 30 days, or $9.99 for a year · one-time, no auto-renewal
                 </span>
                 <UpgradeLink source="account-features" style={{ fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none', padding: '10px 20px', borderRadius: 10, background: T.teal }}>
                   Upgrade to Pro

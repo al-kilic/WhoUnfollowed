@@ -11,6 +11,7 @@ interface Props {
   userEmail: string | null;
   paymentsEnabled: boolean;
   isPro?: boolean;
+  hasRecurringSubscription?: boolean;
 }
 
 const FREE_BULLETS = [
@@ -53,6 +54,10 @@ const FAQ = [
     a: 'Yes. The core app (see who unfollowed you, who doesn\'t follow back, CSV export) is free forever and needs no account. Pro is optional and adds history, cloud sync, and trends.',
   },
   {
+    q: 'Does Pro auto-renew?',
+    a: 'No. It\'s a one-time payment that unlocks Pro for 30 or 365 days. When it runs out, buy again if you want to keep going. No recurring charge, ever.',
+  },
+  {
     q: 'Why charge for Pro at all?',
     a: 'To keep the lights on. Pro covers servers and storage so the free app stays free, fast, and independent. No ads, no investors, no selling your data.',
   },
@@ -80,26 +85,26 @@ function Perk({ label, note }: { label: string; note: string }) {
   );
 }
 
-export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Props) {
-  const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly');
+export function PricingClient({ userEmail, paymentsEnabled, isPro = false, hasRecurringSubscription = false }: Props) {
+  const [duration, setDuration] = useState<'monthly' | 'yearly'>('monthly');
   const [showAll, setShowAll] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleSubscribe() {
+  async function handleUnlock() {
     trackFunnel('Upgrade CTA Clicked', { placement: 'pricing' });
     if (!paymentsEnabled) {
       window.location.href = userEmail ? '/history' : '/signup';
       return;
     }
-    track(Events.checkoutStart, { billing });
+    track(Events.checkoutStart, { billing: `unlock-${duration}` });
     setLoading(true);
     setError(null);
     try {
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ billing }),
+        body: JSON.stringify({ mode: 'unlock', billing: duration }),
       });
       const data = await res.json();
       if (data.url) {
@@ -135,15 +140,19 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
     }
   }
 
-  const monthlyPrice = 4.99;
-  const yearlyPrice = 39;
-  const yearlyMonthly = (yearlyPrice / 12).toFixed(2);
-  const saving = Math.round((1 - yearlyPrice / (monthlyPrice * 12)) * 100);
+  // One-time unlocks, not recurring billing: $1.99 unlocks Pro for 30 days,
+  // $9.99 for 365 days. The "save X%" figure compares the yearly unlock
+  // against buying the 30-day one repeatedly for a year.
+  const unlock30Price = 1.99;
+  const unlock365Price = 9.99;
+  const annualizedFromMonthly = unlock30Price * (365 / 30);
+  const saving = Math.round((1 - unlock365Price / annualizedFromMonthly) * 100);
+  const price = duration === 'yearly' ? unlock365Price : unlock30Price;
 
   const ctaLabel = loading
     ? 'Redirecting...'
     : paymentsEnabled
-      ? `Subscribe ${billing === 'yearly' ? 'yearly' : 'monthly'}`
+      ? `Unlock for ${duration === 'yearly' ? 'a year' : '30 days'}`
       : userEmail
         ? 'Go to dashboard'
         : 'Try Pro free';
@@ -253,26 +262,26 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>Pro</div>
 
-              {/* Animated monthly / yearly toggle with a pulsing savings badge */}
+              {/* Animated 30-day / 365-day toggle with a pulsing savings badge */}
               <div style={{ position: 'relative', display: 'inline-flex', background: T.surface2, borderRadius: 9, padding: 3 }}>
                 <div style={{
                   position: 'absolute', top: 3, bottom: 3, left: 3, width: 'calc(50% - 3px)',
                   background: T.teal, borderRadius: 6,
-                  transform: billing === 'yearly' ? 'translateX(100%)' : 'translateX(0)',
+                  transform: duration === 'yearly' ? 'translateX(100%)' : 'translateX(0)',
                   transition: 'transform 0.25s cubic-bezier(0.4,0,0.2,1)',
                 }} />
                 {(['monthly', 'yearly'] as const).map((b) => (
                   <button
                     key={b}
-                    onClick={() => setBilling(b)}
+                    onClick={() => setDuration(b)}
                     style={{
                       position: 'relative', zIndex: 1, width: 78, textAlign: 'center',
                       padding: '6px 0', border: 'none', background: 'transparent', cursor: 'pointer',
                       fontSize: 12, fontWeight: 600, fontFamily: T.sans,
-                      color: billing === b ? T.cream : T.inkDim, transition: 'color 0.2s',
+                      color: duration === b ? T.cream : T.inkDim, transition: 'color 0.2s',
                     }}
                   >
-                    {b === 'monthly' ? 'Monthly' : 'Yearly'}
+                    {b === 'monthly' ? '30 days' : '365 days'}
                   </button>
                 ))}
                 {/* Savings badge floating over the Yearly side: terra accent + pulse */}
@@ -290,12 +299,12 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
 
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 2 }}>
               <span style={{ fontFamily: T.serif, fontSize: 50, fontWeight: 400, lineHeight: 1 }}>
-                ${billing === 'monthly' ? monthlyPrice : yearlyMonthly}
+                ${price}
               </span>
-              <span style={{ color: T.inkMute, fontSize: 14 }}>/ month</span>
+              <span style={{ color: T.inkMute, fontSize: 14 }}>one-time</span>
             </div>
             <div style={{ fontSize: 13, color: T.inkDim, marginBottom: 22, minHeight: 18 }}>
-              {billing === 'yearly' ? `Billed $${yearlyPrice}/year · save ${saving}%` : `or $${yearlyMonthly}/mo billed yearly`}
+              {duration === 'yearly' ? `Unlocks Pro for 365 days · save ${saving}% vs. buying 30 days at a time` : 'Unlocks Pro for 30 days'}
             </div>
 
             <div style={{ flex: 1, marginBottom: 22 }}>
@@ -329,7 +338,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
             {error && <p style={{ color: '#ef4444', fontSize: 13, marginBottom: 12 }}>{error}</p>}
 
             <button
-              onClick={paymentsEnabled && isPro ? handleManageBilling : handleSubscribe}
+              onClick={paymentsEnabled && hasRecurringSubscription ? handleManageBilling : handleUnlock}
               disabled={loading}
               style={{
                 width: '100%', padding: '13px 24px', borderRadius: 12, border: 'none',
@@ -337,13 +346,15 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
                 fontSize: 15, fontWeight: 600, fontFamily: T.sans, opacity: loading ? 0.7 : 1,
               }}
             >
-              {paymentsEnabled && isPro
+              {paymentsEnabled && hasRecurringSubscription
                 ? (loading ? 'Opening...' : 'Manage billing')
-                : ctaLabel}
+                : isPro
+                  ? (loading ? 'Redirecting...' : `Extend by ${duration === 'yearly' ? 'a year' : '30 days'}`)
+                  : ctaLabel}
             </button>
 
             <p style={{ fontSize: 12, color: T.inkMute, textAlign: 'center', marginTop: 10 }}>
-              {paymentsEnabled ? 'Cancel any time.' : 'No credit card required during beta.'}
+              {paymentsEnabled ? 'One-time payment. No auto-renewal.' : 'No credit card required during beta.'}
             </p>
           </div>
         </div>
