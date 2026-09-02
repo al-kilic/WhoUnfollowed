@@ -3,7 +3,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { InvalidZipError, MissingFilesError, MixedFormatError, SchemaValidationError } from './errors.js';
-import { parseInstagramZip } from './parser.js';
+import { parseInstagramZip, extractExportDateFromFilename } from './parser.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const FIXTURES = join(__dirname, '../test/fixtures');
@@ -116,6 +116,48 @@ describe('parseInstagramZip', () => {
     const blob = new Blob([buf], { type: 'application/zip' });
     const snapshot = await parseInstagramZip(blob);
     expect(snapshot.followers).toHaveLength(3);
+  });
+
+  it('uses the date embedded in a File name instead of "now"', async () => {
+    const buf = readFileSync(join(FIXTURES, 'valid-export.zip'));
+    const file = new File([buf], 'instagram-sebastiencs-2026-08-31-L6iOOC8w.zip', { type: 'application/zip' });
+    const snapshot = await parseInstagramZip(file);
+    expect(snapshot.exportedAt).toBe(Math.floor(Date.UTC(2026, 7, 31, 12, 0, 0) / 1000));
+  });
+
+  it('falls back to "now" when the File name has no plausible date', async () => {
+    const buf = readFileSync(join(FIXTURES, 'valid-export.zip'));
+    const file = new File([buf], 'export.zip', { type: 'application/zip' });
+    const before = Math.floor(Date.now() / 1000) - 1;
+    const snapshot = await parseInstagramZip(file);
+    const after = Math.floor(Date.now() / 1000) + 1;
+    expect(snapshot.exportedAt).toBeGreaterThanOrEqual(before);
+    expect(snapshot.exportedAt).toBeLessThanOrEqual(after);
+  });
+});
+
+describe('extractExportDateFromFilename', () => {
+  it('reads a dashed YYYY-MM-DD date from a current-style Instagram filename', () => {
+    const ts = extractExportDateFromFilename('instagram-sebastiencs-2026-08-31-L6iOOC8w.zip');
+    expect(ts).toBe(Math.floor(Date.UTC(2026, 7, 31, 12, 0, 0) / 1000));
+  });
+
+  it('reads a compact YYYYMMDD date from an older-style filename', () => {
+    const ts = extractExportDateFromFilename('username_20260215.zip');
+    expect(ts).toBe(Math.floor(Date.UTC(2026, 1, 15, 12, 0, 0) / 1000));
+  });
+
+  it('returns null when no plausible date is present', () => {
+    expect(extractExportDateFromFilename('export.zip')).toBeNull();
+    expect(extractExportDateFromFilename('archive-12345.zip')).toBeNull();
+  });
+
+  it('rejects an invalid calendar date', () => {
+    expect(extractExportDateFromFilename('instagram-user-2026-13-40-abc.zip')).toBeNull();
+  });
+
+  it('rejects a date in the future', () => {
+    expect(extractExportDateFromFilename('instagram-user-2099-01-01-abc.zip')).toBeNull();
   });
 });
 

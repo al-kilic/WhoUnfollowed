@@ -155,11 +155,43 @@ function detectFiles(fileNames: string[]): DetectedFiles {
   return { format: 'json', followerFileNames: followerJson, followingFileName: followingJson! };
 }
 
+// ─── Filename-based export date ────────────────────────────────────────────
+
+// Neither the JSON nor HTML export payload records when Instagram generated
+// the ZIP, but the filename usually does: "instagram-username-2026-08-31-
+// L6iOOC8w.zip" (current format) or an older "username_20260831.zip" style.
+// Falls back to null (caller uses "now") when nothing plausible is found.
+export function extractExportDateFromFilename(filename: string): number | null {
+  const candidates: [string, string, string][] = [];
+  for (const m of filename.matchAll(/(\d{4})-(\d{2})-(\d{2})/g)) {
+    candidates.push([m[1]!, m[2]!, m[3]!]);
+  }
+  for (const m of filename.matchAll(/(\d{4})(\d{2})(\d{2})/g)) {
+    candidates.push([m[1]!, m[2]!, m[3]!]);
+  }
+
+  const now = Date.now();
+  for (const [y, mo, d] of candidates) {
+    const year = Number(y);
+    const month = Number(mo);
+    const day = Number(d);
+    if (year < 2010 || year > 2100 || month < 1 || month > 12 || day < 1 || day > 31) continue;
+    // Noon UTC keeps the date from shifting a day depending on local timezone.
+    const date = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+    if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) continue;
+    if (date.getTime() > now) continue; // never trust a future date
+    return Math.floor(date.getTime() / 1000);
+  }
+  return null;
+}
+
 // ─── Public API ───────────────────────────────────────────────────────────────
 
 export async function parseInstagramZip(
   zipFile: File | Blob | ArrayBuffer,
 ): Promise<ParsedSnapshot> {
+  const filenameDate = zipFile instanceof File ? extractExportDateFromFilename(zipFile.name) : null;
+
   // Normalize File/Blob → ArrayBuffer so jszip works consistently across envs
   const input = zipFile instanceof ArrayBuffer ? zipFile : await (zipFile as Blob).arrayBuffer();
 
@@ -206,7 +238,7 @@ export async function parseInstagramZip(
   );
 
   return {
-    exportedAt: Math.floor(Date.now() / 1000),
+    exportedAt: filenameDate ?? Math.floor(Date.now() / 1000),
     followers,
     following,
     ...(pendingRequests ? { pendingRequests } : {}),
