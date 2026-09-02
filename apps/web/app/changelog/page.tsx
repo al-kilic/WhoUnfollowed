@@ -14,13 +14,47 @@ export const metadata: Metadata = {
 
 const entries: { version: string; date: string; tag: 'launch' | 'fix' | 'improvement' | 'feature'; items: string[] }[] = [
   {
-    version: '1.3',
+    version: '1.6',
+    date: 'September 3, 2026',
+    tag: 'feature',
+    items: [
+      'Export date is now read straight from your Instagram ZIP\'s filename, so a snapshot uploaded weeks after the actual export gets dated correctly instead of showing today.',
+      'You can still set the date by hand any time from Snapshot History.',
+      'Added sorting by follow date, not just alphabetical, on every results tab: non-followers, fans, and mutuals.',
+    ],
+  },
+  {
+    version: '1.5',
     date: 'August 31, 2026',
     tag: 'feature',
     items: [
       'Pro pricing changed from a recurring subscription to a one-time unlock: $1.99 for 30 days, or $9.99 for 365 days. No auto-renewal, no cancellation to manage, buy again whenever you want more time.',
       'You can now buy Pro without creating an account first. Pay, then set a password to access it, instead of signing up before you know if you want it.',
       'Added a "support the project" donation option in the footer, no account needed.',
+      'New blog guides added, including a look at follower tracking for business and agency accounts.',
+    ],
+  },
+  {
+    version: '1.4',
+    date: 'August 27, 2026',
+    tag: 'feature',
+    items: [
+      'Added an Accessibility page covering what we\'ve done and where we\'re still catching up, linked in the footer.',
+      'Added a quick feedback widget after you view your results. Tell us what\'s working or not in a couple of taps.',
+      'Replaced the broken Google "Preferred Source" button in the footer with a working link.',
+    ],
+  },
+  {
+    version: '1.3',
+    date: 'August 25, 2026',
+    tag: 'improvement',
+    items: [
+      'Cloud snapshots saved from another device or browser now sync back down automatically instead of only living on the device that made them.',
+      'Fixed: resetting your password could quietly delete your synced cloud snapshots with no warning. You\'ll always see it coming now.',
+      'Fixed: local snapshots and triage progress could leak between two different accounts sharing the same browser.',
+      'Fixed: the homepage could crash on load for some returning users.',
+      'Fixed a missing site favicon.',
+      'New blog guides added: deactivated vs. blocked vs. deleted, mass-unfollowing safely, Instagram\'s Instants and Audience Connections features, private accounts, and more.',
     ],
   },
   {
