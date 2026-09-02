@@ -3,7 +3,7 @@ import { feedbackSchema } from '@ig-tracker/core';
 import { db } from '@/lib/db/index';
 import { feedback } from '@/lib/db/schema';
 import { validateRequest } from '@/lib/auth/session';
-import { sendTelegramMessage } from '@/lib/telegram';
+import { sendTelegramMessage, escapeTelegramHtml } from '@/lib/telegram';
 
 // Simple in-memory rate limit: max 10 requests per IP per 10 minutes
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
@@ -29,13 +29,6 @@ const SENTIMENT_EMOJI: Record<string, string> = {
   happy: '🙂',
   delighted: '🤩',
 };
-
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-}
 
 export async function POST(req: Request) {
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
@@ -65,12 +58,12 @@ export async function POST(req: Request) {
   });
 
   const lines = [
-    `${SENTIMENT_EMOJI[sentiment] ?? ''} <b>New feedback</b> (${escapeHtml(sentiment)})`,
-    `Page: ${escapeHtml(page)}`,
+    `${SENTIMENT_EMOJI[sentiment] ?? ''} <b>New feedback</b> (${escapeTelegramHtml(sentiment)})`,
+    `Page: ${escapeTelegramHtml(page)}`,
   ];
-  if (reason) lines.push(`Reason: ${escapeHtml(reason)}`);
-  if (comment) lines.push(`Comment: ${escapeHtml(comment)}`);
-  if (user?.email) lines.push(`From: ${escapeHtml(user.email)}`);
+  if (reason) lines.push(`Reason: ${escapeTelegramHtml(reason)}`);
+  if (comment) lines.push(`Comment: ${escapeTelegramHtml(comment)}`);
+  if (user?.email) lines.push(`From: ${escapeTelegramHtml(user.email)}`);
 
   const notify = await sendTelegramMessage(lines.join('\n'));
   if (!notify.ok) {
