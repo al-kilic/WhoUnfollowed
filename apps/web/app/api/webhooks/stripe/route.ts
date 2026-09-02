@@ -3,6 +3,7 @@ import { db } from '@/lib/db/index';
 import { profiles, users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { getStripe, isStripeConfigured, UNLOCK_DURATION_DAYS, type UnlockDuration } from '@/lib/stripe';
+import { sendTelegramMessage, escapeTelegramHtml } from '@/lib/telegram';
 
 // Extends from the later of "now" and any unexpired unlock already on the
 // profile, so buying another unlock before the current one runs out stacks
@@ -48,6 +49,8 @@ export async function POST(request: NextRequest) {
       customer_details?: { email?: string | null };
       mode: 'payment' | 'subscription' | 'setup';
       metadata?: { userId?: string; type?: string; unlockDuration?: UnlockDuration };
+      amount_total?: number | null;
+      currency?: string | null;
     };
 
     // Donation checkouts share this webhook but carry no account/profile
@@ -58,6 +61,7 @@ export async function POST(request: NextRequest) {
 
     const unlockDuration: UnlockDuration = session.metadata?.unlockDuration === 'yearly' ? 'yearly' : 'monthly';
     const email = session.customer_email ?? session.customer_details?.email ?? null;
+    let kind: 'new_customer' | 'renewal' = 'renewal';
 
     if (session.metadata?.userId) {
       // Existing user buying/renewing an unlock
@@ -80,6 +84,7 @@ export async function POST(request: NextRequest) {
       });
 
       if (!existing) {
+        kind = 'new_customer';
         const result = await db
           .insert(users)
           // Paying via Stripe with a confirmed email counts as verified, so the
@@ -111,6 +116,21 @@ export async function POST(request: NextRequest) {
           })
           .where(eq(profiles.userId, existing.id));
       }
+    }
+
+    const amount = typeof session.amount_total === 'number'
+      ? new Intl.NumberFormat('en-US', { style: 'currency', currency: (session.currency ?? 'usd').toUpperCase() }).format(session.amount_total / 100)
+      : null;
+    const heading = kind === 'new_customer' ? '🎉 New Pro customer!' : '💳 Pro unlock renewed';
+    const lines = [heading];
+    if (email) lines.push(`Email: ${escapeTelegramHtml(email)}`);
+    if (amount) lines.push(`Amount: ${escapeTelegramHtml(amount)}`);
+    lines.push(`Plan: ${unlockDuration === 'yearly' ? 'Yearly' : 'Monthly'}`);
+
+    const notify = await sendTelegramMessage(lines.join('\n'));
+    if (!notify.ok) {
+      // Non-fatal: the purchase already went through; just log.
+      console.error('[stripe webhook] telegram notify failed:', notify.error);
     }
   }
 
