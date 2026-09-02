@@ -4,6 +4,8 @@ import { profiles, users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { getStripe, isStripeConfigured, UNLOCK_DURATION_DAYS, type UnlockDuration } from '@/lib/stripe';
 import { sendTelegramMessage, escapeTelegramHtml } from '@/lib/telegram';
+import { trackServerEvent } from '@/lib/umamiServer';
+import { Events } from '@/lib/analytics';
 
 // Extends from the later of "now" and any unexpired unlock already on the
 // profile, so buying another unlock before the current one runs out stacks
@@ -132,6 +134,10 @@ export async function POST(request: NextRequest) {
       // Non-fatal: the purchase already went through; just log.
       console.error('[stripe webhook] telegram notify failed:', notify.error);
     }
+
+    // Server-side, so it's recorded even if the customer never loads /welcome
+    // (ad blocker, closed tab, etc.) — see lib/umamiServer.ts.
+    await trackServerEvent(Events.subscribeComplete, '/welcome');
   }
 
   return NextResponse.json({ received: true });
