@@ -239,7 +239,29 @@ function detectFiles(fileNames) {
   if (missing.length > 0) throw new MissingFilesError(missing);
   return { format: "json", followerFileNames: followerJson, followingFileName: followingJson };
 }
+function extractExportDateFromFilename(filename) {
+  const candidates = [];
+  for (const m of filename.matchAll(/(\d{4})-(\d{2})-(\d{2})/g)) {
+    candidates.push([m[1], m[2], m[3]]);
+  }
+  for (const m of filename.matchAll(/(\d{4})(\d{2})(\d{2})/g)) {
+    candidates.push([m[1], m[2], m[3]]);
+  }
+  const now = Date.now();
+  for (const [y, mo, d] of candidates) {
+    const year = Number(y);
+    const month = Number(mo);
+    const day = Number(d);
+    if (year < 2010 || year > 2100 || month < 1 || month > 12 || day < 1 || day > 31) continue;
+    const date = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+    if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) continue;
+    if (date.getTime() > now) continue;
+    return Math.floor(date.getTime() / 1e3);
+  }
+  return null;
+}
 async function parseInstagramZip(zipFile) {
+  const filenameDate = zipFile instanceof File ? extractExportDateFromFilename(zipFile.name) : null;
   const input = zipFile instanceof ArrayBuffer ? zipFile : await zipFile.arrayBuffer();
   let zip;
   try {
@@ -279,7 +301,7 @@ async function parseInstagramZip(zipFile) {
     }
   );
   return {
-    exportedAt: Math.floor(Date.now() / 1e3),
+    exportedAt: filenameDate ?? Math.floor(Date.now() / 1e3),
     followers,
     following,
     ...pendingRequests ? { pendingRequests } : {},

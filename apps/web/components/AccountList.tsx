@@ -2,7 +2,7 @@
 
 import { useState, useRef, useMemo } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { ExternalLink, Download, Search } from 'lucide-react';
+import { ExternalLink, Download, Search, ArrowUpDown, Calendar, CaseSensitive } from 'lucide-react';
 import { format } from 'date-fns';
 import type { Account } from '@ig-tracker/core';
 import { Button } from '@/components/ui/button';
@@ -23,14 +23,20 @@ export function AccountList({
   emptyMessage = 'No accounts here.',
 }: AccountListProps) {
   const [search, setSearch] = useState('');
+  const [sortField, setSortField] = useState<'username' | 'date'>('username');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
   const { requestExport, modal } = useCsvExport(csvFilename);
   const parentRef = useRef<HTMLDivElement>(null);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return accounts;
-    return accounts.filter((a) => a.username.toLowerCase().includes(q));
-  }, [accounts, search]);
+    const searched = q ? accounts.filter((a) => a.username.toLowerCase().includes(q)) : [...accounts];
+    const cmp = sortField === 'username'
+      ? (a: Account, b: Account) => a.username.localeCompare(b.username)
+      : (a: Account, b: Account) => (a.followedAt ?? 0) - (b.followedAt ?? 0);
+    searched.sort(sortDir === 'asc' ? cmp : (a, b) => -cmp(a, b));
+    return searched;
+  }, [accounts, search, sortField, sortDir]);
 
   const virtualizer = useVirtualizer({
     count: filtered.length,
@@ -44,8 +50,8 @@ export function AccountList({
   return (
     <div className="flex flex-col gap-3">
       {/* Toolbar */}
-      <div className="flex items-center gap-2">
-        <div className="relative flex-1">
+      <div className="flex items-center gap-2 flex-wrap">
+        <div className="relative flex-1 min-w-40">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-foreground/40 pointer-events-none" />
           <input
             type="search"
@@ -55,6 +61,30 @@ export function AccountList({
             className="w-full rounded-lg border border-foreground/15 bg-background pl-9 pr-4 py-2 text-sm outline-none focus:border-primary/60 focus:ring-2 focus:ring-primary/20 placeholder:text-foreground/40 transition-colors"
           />
         </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setSortField((f) => (f === 'username' ? 'date' : 'username'))}
+          title={sortField === 'username' ? 'Sorting by name. Click to sort by follow date' : 'Sorting by follow date. Click to sort by name'}
+        >
+          {sortField === 'username' ? <CaseSensitive className="size-4" /> : <Calendar className="size-4" />}
+          {sortField === 'username' ? 'Name' : 'Date'}
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))}
+          title={
+            sortField === 'username'
+              ? (sortDir === 'asc' ? 'A→Z. Click for Z→A' : 'Z→A. Click for A→Z')
+              : (sortDir === 'asc' ? 'Oldest first. Click for newest first' : 'Newest first. Click for oldest first')
+          }
+        >
+          <ArrowUpDown className="size-4" />
+          {sortField === 'username'
+            ? (sortDir === 'asc' ? 'A→Z' : 'Z→A')
+            : (sortDir === 'asc' ? 'Oldest' : 'Newest')}
+        </Button>
         <Button
           variant="outline"
           size="sm"

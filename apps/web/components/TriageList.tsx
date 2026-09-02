@@ -2,7 +2,7 @@
 
 import { useState, useRef, useMemo, useEffect, useCallback } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { ExternalLink, Download, Search, ChevronDown, ChevronRight, ArrowUpDown } from 'lucide-react';
+import { ExternalLink, Download, Search, ChevronDown, ChevronRight, ArrowUpDown, Calendar, CaseSensitive } from 'lucide-react';
 import { format } from 'date-fns';
 import type { Account } from '@ig-tracker/core';
 import { Button } from '@/components/ui/button';
@@ -460,6 +460,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
   const { triage, setTriageState, bulkImportTriage } = useTriage(snapshotKey);
 
   const [search, setSearch]           = useState('');
+  const [sortField, setSortField]     = useState<'username' | 'date'>('username');
   const [sortDir, setSortDir]         = useState<'asc' | 'desc'>('asc');
   const [filterState, setFilterState] = useState<TriageState | 'untriaged' | 'all'>('all');
   const [focusedIndex, setFocusedIdx] = useState<number>(-1);
@@ -522,10 +523,12 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
       if (filterState === 'untriaged' && !s) main.push(a);
       else if (filterState !== 'untriaged' && s === filterState) main.push(a);
     }
-    const cmp = (a: Account, b: Account) => a.username.localeCompare(b.username);
+    const cmp = sortField === 'username'
+      ? (a: Account, b: Account) => a.username.localeCompare(b.username)
+      : (a: Account, b: Account) => (a.followedAt ?? 0) - (b.followedAt ?? 0);
     main.sort(sortDir === 'asc' ? cmp : (a, b) => -cmp(a, b));
     return { mainAccounts: main, slideAccounts: slide, deactivatedAccounts: deactivated };
-  }, [accounts, triage, search, sortDir, filterState]);
+  }, [accounts, triage, search, sortField, sortDir, filterState]);
 
   // Count non-let_it_slide / non-deactivated triaged
   const triaged = useMemo(
@@ -725,8 +728,8 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
       })()}
 
       {/* Toolbar */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <div style={{ position: 'relative', flex: 1 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+        <div style={{ position: 'relative', flex: 1, minWidth: 160 }}>
           <Search size={14} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: T.inkMute, pointerEvents: 'none' }} />
           <input
             type="search"
@@ -745,11 +748,26 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
         <Button
           variant="outline"
           size="sm"
+          onClick={() => setSortField(f => f === 'username' ? 'date' : 'username')}
+          title={sortField === 'username' ? 'Sorting by name. Click to sort by follow date' : 'Sorting by follow date. Click to sort by name'}
+        >
+          {sortField === 'username' ? <CaseSensitive size={14} /> : <Calendar size={14} />}
+          {sortField === 'username' ? 'Name' : 'Date'}
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
           onClick={() => setSortDir(d => d === 'asc' ? 'desc' : 'asc')}
-          title={sortDir === 'asc' ? 'A→Z. Click for Z→A' : 'Z→A. Click for A→Z'}
+          title={
+            sortField === 'username'
+              ? (sortDir === 'asc' ? 'A→Z. Click for Z→A' : 'Z→A. Click for A→Z')
+              : (sortDir === 'asc' ? 'Oldest first. Click for newest first' : 'Newest first. Click for oldest first')
+          }
         >
           <ArrowUpDown size={14} />
-          {sortDir === 'asc' ? 'A→Z' : 'Z→A'}
+          {sortField === 'username'
+            ? (sortDir === 'asc' ? 'A→Z' : 'Z→A')
+            : (sortDir === 'asc' ? 'Oldest' : 'Newest')}
         </Button>
         <Button
           id="tutorial-export-csv"
