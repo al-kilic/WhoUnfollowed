@@ -37,6 +37,7 @@ export const Events = {
   csvExport: 'csv-export',            // { mode: pro | free | capture | limit }
   emailCaptured: 'email-captured',    // { context }
   snapshotLimitHit: 'snapshot-limit-hit',
+  blogCtaClick: 'blog-cta-click',     // { slug } — the post's main "upload your export" CTA, not an upgrade click
 } as const;
 
 // The most important conversion signal: which surface drove an upgrade intent.

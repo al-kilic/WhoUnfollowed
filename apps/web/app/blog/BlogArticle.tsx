@@ -7,6 +7,7 @@ import { T } from '@/components/landing/tokens';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { BlogArt, BlogCover, type ArtVariant } from './BlogArt';
+import { BlogCtaLink } from './BlogCtaLink';
 import { BLOG_POSTS, CLUSTERS, type BlogPost } from './posts';
 import { GLOSSARY_TERMS } from './glossary';
 
@@ -214,14 +215,14 @@ export function BlogArticle({ post, otherPosts }: { post: BlogPost; otherPosts: 
           <p style={{ fontSize: 15, color: T.inkDim, lineHeight: 1.6, maxWidth: 460, margin: '0 auto 20px' }}>
             {post.cta?.body ?? 'Upload the export Instagram gives you and see exactly who unfollowed you and who never followed back, right in your browser. No password, nothing uploaded.'}
           </p>
-          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 11, background: T.teal, color: T.cream, fontSize: 14, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans, boxShadow: `0 6px 20px ${T.tealGlow}` }}>
+          <BlogCtaLink href="/" slug={post.slug} kind="primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 11, background: T.teal, color: T.cream, fontSize: 14, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans, boxShadow: `0 6px 20px ${T.tealGlow}` }}>
             {post.cta?.buttonLabel ?? 'Upload your Instagram export'}
             <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M11 7L8 4M11 7L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-          </Link>
+          </BlogCtaLink>
           {post.cta?.proNudge && (
             <p style={{ fontSize: 13, color: T.inkMute, lineHeight: 1.6, marginTop: 18 }}>
               {post.cta.proNudge}{' '}
-              <Link href="/pricing" style={{ color: T.tealLight, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>See Pro →</Link>
+              <BlogCtaLink href="/pricing" slug={post.slug} kind="pro-nudge" style={{ color: T.tealLight, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>See Pro →</BlogCtaLink>
             </p>
           )}
         </div>
