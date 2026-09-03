@@ -223,11 +223,15 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
               ))}
             </ul>
 
-            <Link href="/" style={{
-              display: 'block', width: '100%', padding: '13px 24px', borderRadius: 12,
-              border: `1px solid ${T.border3}`, textAlign: 'center', textDecoration: 'none',
-              fontSize: 15, fontWeight: 600, fontFamily: T.sans, color: T.ink, boxSizing: 'border-box',
-            }}>
+            <Link
+              href="/"
+              onClick={() => track('pricing-use-free-clicked')}
+              style={{
+                display: 'block', width: '100%', padding: '13px 24px', borderRadius: 12,
+                border: `1px solid ${T.border3}`, textAlign: 'center', textDecoration: 'none',
+                fontSize: 15, fontWeight: 600, fontFamily: T.sans, color: T.ink, boxSizing: 'border-box',
+              }}
+            >
               Use it free
             </Link>
           </div>
@@ -254,7 +258,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
                 {(['monthly', 'yearly'] as const).map((b) => (
                   <button
                     key={b}
-                    onClick={() => setDuration(b)}
+                    onClick={() => { setDuration(b); track('pricing-duration-toggled', { duration: b }); }}
                     style={{
                       position: 'relative', zIndex: 1, width: 78, textAlign: 'center',
                       padding: '6px 0', border: 'none', background: 'transparent', cursor: 'pointer',
@@ -301,7 +305,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
 
               {!showAll && (
                 <button
-                  onClick={() => setShowAll(true)}
+                  onClick={() => { setShowAll(true); track('pricing-see-everything-clicked'); }}
                   style={{
                     marginTop: 14, background: 'transparent', border: 'none', cursor: 'pointer',
                     color: T.tealMid, fontSize: 13, fontWeight: 600, fontFamily: T.sans,
