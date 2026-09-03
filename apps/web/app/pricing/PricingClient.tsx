@@ -100,10 +100,13 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
     setLoading(true);
     setError(null);
     try {
+      let acquisitionSource: string | undefined;
+      try { acquisitionSource = sessionStorage.getItem('wu:acq_source') ?? undefined; } catch {}
+
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mode: 'unlock', billing: duration }),
+        body: JSON.stringify({ mode: 'unlock', billing: duration, acquisitionSource }),
       });
       const data = await res.json();
       if (data.url) {

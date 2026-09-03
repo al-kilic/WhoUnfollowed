@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
       customer_email: string | null;
       customer_details?: { email?: string | null };
       mode: 'payment' | 'subscription' | 'setup';
-      metadata?: { userId?: string; type?: string; unlockDuration?: UnlockDuration };
+      metadata?: { userId?: string; type?: string; unlockDuration?: UnlockDuration; acquisitionSource?: string };
       amount_total?: number | null;
       currency?: string | null;
     };
@@ -123,11 +123,13 @@ export async function POST(request: NextRequest) {
     const amount = typeof session.amount_total === 'number'
       ? new Intl.NumberFormat('en-US', { style: 'currency', currency: (session.currency ?? 'usd').toUpperCase() }).format(session.amount_total / 100)
       : null;
+    const acquisitionSource = session.metadata?.acquisitionSource || null;
     const heading = kind === 'new_customer' ? '🎉 New Pro customer!' : '💳 Pro unlock renewed';
     const lines = [heading];
     if (email) lines.push(`Email: ${escapeTelegramHtml(email)}`);
     if (amount) lines.push(`Amount: ${escapeTelegramHtml(amount)}`);
     lines.push(`Plan: ${unlockDuration === 'yearly' ? 'Yearly' : 'Monthly'}`);
+    if (acquisitionSource) lines.push(`Source: ${escapeTelegramHtml(acquisitionSource)}`);
 
     const notify = await sendTelegramMessage(lines.join('\n'));
     if (!notify.ok) {
@@ -136,8 +138,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Server-side, so it's recorded even if the customer never loads /welcome
-    // (ad blocker, closed tab, etc.) — see lib/umamiServer.ts.
-    await trackServerEvent(Events.subscribeComplete, '/welcome');
+    // (ad blocker, closed tab, etc.) — see lib/umamiServer.ts. The source
+    // property mirrors upgrade-click's, so the daily report can group
+    // completed purchases by acquisition channel the same way it already
+    // does for upgrade-click intent.
+    await trackServerEvent(
+      Events.subscribeComplete,
+      '/welcome',
+      acquisitionSource ? { source: acquisitionSource } : undefined,
+    );
   }
 
   return NextResponse.json({ received: true });
