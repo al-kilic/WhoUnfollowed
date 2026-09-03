@@ -12,7 +12,7 @@ Upload the data export Instagram already gives you. Your browser reads it locall
 [![TypeScript strict](https://img.shields.io/badge/TypeScript-strict-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Self-hosted](https://img.shields.io/badge/hosting-self--hosted-0B2426?style=flat-square)](https://www.hetzner.com/cloud/)
 
-[**whounfollowed.co**](https://whounfollowed.co) · [How it works](#how-it-works) · [Privacy](#privacy) · [Self-hosting](#self-hosting)
+[**whounfollowed.co**](https://bit.ly/4yjqBM5) · [How it works](#how-it-works) · [Privacy](#privacy) · [Self-hosting](#self-hosting)
 
 </div>
 
@@ -38,7 +38,7 @@ You export data you already own. We just read it. And unlike every closed-source
 
 1. Request your data from Instagram (Followers and Following, JSON format, all time)
 2. Download the ZIP that Instagram emails you, usually within minutes
-3. Drop it on [whounfollowed.co](https://whounfollowed.co)
+3. Drop it on [whounfollowed.co](https://bit.ly/4yjqBM5)
 4. The browser parses it in roughly two seconds and renders the full report
 
 | | |
@@ -163,7 +163,7 @@ The full web app is open source. Clone the repo, copy the variables from `.env.e
 - [x] Follower growth charts
 - [x] Light and dark themes
 - [x] Mobile-responsive layout
-- [ ] Encrypted cloud sync for Pro snapshots
+- [x] Encrypted cloud sync for Pro snapshots
 - [ ] iOS app
 - [ ] Android app
 
