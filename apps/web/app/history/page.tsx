@@ -6,7 +6,15 @@ import { db } from '@/lib/db/index';
 import { profiles } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { HistoryClient } from './HistoryClient';
+import type { Metadata } from 'next';
 import { AnalyticsEvent } from '@/components/AnalyticsEvent';
+
+// Private, per-user surface. robots.ts already disallows it, but the meta tag
+// also covers crawlers that fetch the page directly and ignore robots.txt.
+export const metadata: Metadata = {
+  title: 'Snapshot history',
+  robots: { index: false, follow: false },
+};
 
 export default async function HistoryPage({
   searchParams,

@@ -1,6 +1,9 @@
 import { ResetPasswordForm } from './ResetPasswordForm';
 
-export const metadata = { title: 'Set a new password' };
+export const metadata = {
+  title: 'Set a new password',
+  robots: { index: false, follow: false },
+};
 
 export default async function ResetPasswordPage({
   searchParams,
