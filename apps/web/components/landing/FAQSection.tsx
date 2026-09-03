@@ -35,7 +35,7 @@ export const ITEMS: Record<CategoryId, [string, string][]> = {
   ],
   billing: [
     ['How much does Pro cost?',
-     "Pro is a one-time payment: $1.99 unlocks it for 30 days, or $9.99 for 365 days. No recurring charge, no auto-renewal. The free plan stays free and needs no account. You get your full non-followers list, mutuals, and fans every time you upload. Pro adds saved snapshot history, growth charts, and alerts when a new export reveals unfollowers."],
+     "Pro is a one-time payment: $1.99 unlocks it for 30 days, or $9.99 for 365 days. No recurring charge, no auto-renewal. The free plan stays free and needs no account. You get your full non-followers list, mutuals, and fans every time you upload. Pro adds saved snapshot history, growth charts, ghost-follower detection, and encrypted cloud sync across your devices."],
     ["What happens when my Pro unlock runs out?",
      "You drop back to the free plan automatically, no charge, nothing to cancel. Your saved snapshots still export to CSV whenever you want. Buy another unlock any time you want Pro again."],
   ],

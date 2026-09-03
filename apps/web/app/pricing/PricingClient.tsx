@@ -6,6 +6,7 @@ import { SiteNav } from '@/components/landing/SiteNav';
 import { GridBg, ProfileCard } from '@/components/landing/atoms';
 import { T } from '@/components/landing/tokens';
 import { track, Events, trackFunnel } from '@/lib/analytics';
+import { PRICING_FAQ } from './faq';
 
 interface Props {
   userEmail: string | null;
@@ -45,29 +46,6 @@ const PRIVACY = [
   'Your ZIP is parsed entirely in your browser. Nothing is uploaded to analyze.',
   'Cloud snapshots are encrypted in your browser before they ever leave your device.',
   'EU-based servers. Open-source core. No ads, no data brokers.',
-];
-
-const FAQ = [
-  {
-    q: 'Is it really free?',
-    a: 'Yes. The core app (see who unfollowed you, who doesn\'t follow back, CSV export) is free forever and needs no account. Pro is optional and adds history, cloud sync, and trends.',
-  },
-  {
-    q: 'Does Pro auto-renew?',
-    a: 'No. It\'s a one-time payment that unlocks Pro for 30 or 365 days. When it runs out, buy again if you want to keep going. No recurring charge, ever.',
-  },
-  {
-    q: 'Why charge for Pro at all?',
-    a: 'To keep the lights on. Pro covers servers and storage so the free app stays free, fast, and independent. No ads, no investors, no selling your data.',
-  },
-  {
-    q: 'Do I need to give you my Instagram password?',
-    a: 'Never. You download your own data from Instagram and upload the ZIP here. We have no connection to Instagram whatsoever.',
-  },
-  {
-    q: 'Is my Instagram data safe?',
-    a: 'Yes. ZIP parsing happens entirely in your browser, so nothing is sent to us. Cloud-synced snapshots are encrypted in your browser before leaving your device. We store only blobs we cannot read.',
-  },
 ];
 
 function Perk({ label, note }: { label: string; note: string }) {
@@ -191,7 +169,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
           <p style={{ color: T.inkDim, fontSize: 14.5, lineHeight: 1.6, margin: '0 auto', maxWidth: 560 }}>
             See when someone unfollows you, who never follows back, and how your audience
             shifts over time. WhoUnfollowed is free, open source, and runs entirely in your
-            browser. Pro adds memory and depth (history, trends, and alerts) and keeps the
+            browser. Pro adds memory and depth (history, trends, and cloud sync) and keeps the
             servers running so the free app stays free.
           </p>
         </div>
@@ -362,7 +340,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
         {/* FAQ */}
         <div style={{ maxWidth: 720, margin: '48px auto 0' }}>
           <div style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.12em', marginBottom: 18 }}>COMMON QUESTIONS</div>
-          {FAQ.map(({ q, a }) => (
+          {PRICING_FAQ.map(({ q, a }) => (
             <div key={q} style={{ marginBottom: 18, paddingBottom: 18, borderBottom: `1px solid ${T.border1}` }}>
               <p style={{ fontWeight: 600, fontSize: 15, marginBottom: 6, color: T.ink }}>{q}</p>
               <p style={{ color: T.inkDim, fontSize: 14, lineHeight: 1.65, margin: 0 }}>{a}</p>

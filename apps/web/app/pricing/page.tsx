@@ -1,11 +1,45 @@
+import type { Metadata } from 'next';
 import { validateRequest } from '@/lib/auth/session';
 import { isPaidFeaturesEnabled, isPaidSubscriber } from '@/lib/flags';
 import { PricingClient } from './PricingClient';
+import { PRICING_FAQ } from './faq';
 
-export const metadata = {
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
+
+export const metadata: Metadata = {
   title: 'Pricing',
-  description: 'Always free and open source. Pro adds history, trends, and alerts, and helps keep the app alive.',
+  description:
+    'Free forever, no account needed. Pro is a one-time unlock ($1.99 for 30 days, $9.99 for 365 days) that adds snapshot history, cloud sync, and trends. No auto-renewal.',
   alternates: { canonical: '/pricing' },
+  openGraph: {
+    type: 'website',
+    title: 'Pricing',
+    description:
+      'Free forever, no account needed. Pro is a one-time unlock ($1.99 for 30 days, $9.99 for 365 days). No subscription, no auto-renewal.',
+    url: `${SITE_URL}/pricing`,
+    siteName: 'WhoUnfollowed',
+  },
+};
+
+// FAQPage markup is generated from the same PRICING_FAQ array the page renders,
+// so the structured data can never drift from the visible on-page text.
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: PRICING_FAQ.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
+};
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+    { '@type': 'ListItem', position: 2, name: 'Pricing', item: `${SITE_URL}/pricing` },
+  ],
 };
 
 export default async function PricingPage() {
@@ -14,10 +48,20 @@ export default async function PricingPage() {
   const isPro = await isPaidSubscriber();
 
   return (
-    <PricingClient
-      userEmail={user?.email ?? null}
-      paymentsEnabled={paymentsEnabled}
-      isPro={isPro}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <PricingClient
+        userEmail={user?.email ?? null}
+        paymentsEnabled={paymentsEnabled}
+        isPro={isPro}
+      />
+    </>
   );
 }

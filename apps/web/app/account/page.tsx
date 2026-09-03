@@ -19,6 +19,7 @@ import { UpgradeLink } from './UpgradeLink';
 export const metadata: Metadata = {
   title: 'Account',
   description: 'Manage your plan, billing, and data.',
+  robots: { index: false, follow: false },
 };
 
 // Outcome-framed Pro features (what you get, not just the feature name).
