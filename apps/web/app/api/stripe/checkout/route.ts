@@ -16,6 +16,12 @@ export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => ({}));
   const unlockDuration: UnlockDuration = body.billing === 'yearly' ? 'yearly' : 'monthly';
   const email: string | undefined = typeof body.email === 'string' ? body.email : undefined;
+  // Where the visitor first came from this tab session (utm_source, referring
+  // domain, or "direct"), captured client-side in layout.tsx. Purely for the
+  // Telegram purchase alert / analytics reporting, never used for access
+  // control, so a missing or tampered value is harmless.
+  const acquisitionSource: string | undefined =
+    typeof body.acquisitionSource === 'string' ? body.acquisitionSource.slice(0, 100) : undefined;
 
   const price = priceIdForUnlock(unlockDuration);
   if (!price) {
@@ -36,6 +42,7 @@ export async function POST(request: NextRequest) {
   };
 
   const metadata: Record<string, string> = { type: 'unlock', unlockDuration };
+  if (acquisitionSource) metadata.acquisitionSource = acquisitionSource;
 
   if (user) {
     // Logged-in upgrade: reuse the existing Stripe customer if we have one so we

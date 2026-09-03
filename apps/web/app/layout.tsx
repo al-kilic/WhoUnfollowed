@@ -143,6 +143,21 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             __html: `(function(){try{var h=window.location.hash;if(h&&h.indexOf('utm_')!==-1&&!window.location.search){window.history.replaceState(null,'',window.location.pathname+'?'+h.slice(1));}}catch(e){}})();`,
           }}
         />
+        {/*
+          Remembers the first external referrer (or utm_source) seen this tab
+          session, so a later Pro purchase can be attributed to where the
+          visitor actually came from. Runs once per tab: sessionStorage means
+          in-site navigation (results -> pricing -> checkout) never overwrites
+          it with our own domain. Read at checkout time (see PricingClient)
+          and sent through Stripe metadata, because the purchase-confirmation
+          event now fires server-side from the webhook (for reliability) and
+          so no longer carries Umami's own in-browser session/referrer data.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var K='wu:acq_source';if(!sessionStorage.getItem(K)){var src='direct';var p=new URLSearchParams(location.search);var u=p.get('utm_source');if(u){src=u;}else if(document.referrer){try{var h=new URL(document.referrer).hostname;if(h&&h.indexOf('whounfollowed.co')===-1){src=h;}}catch(e){}}sessionStorage.setItem(K,src);}}catch(e){}})();`,
+          }}
+        />
         {UMAMI_WEBSITE_ID ? (
           <Script
             defer

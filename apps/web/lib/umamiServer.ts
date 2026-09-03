@@ -15,7 +15,11 @@ const UMAMI_HOST = (() => {
 })();
 const UMAMI_WEBSITE_ID = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID ?? '380314e5-fc79-480f-9483-d5ddded7ad59';
 
-export async function trackServerEvent(name: string, url: string): Promise<void> {
+export async function trackServerEvent(
+  name: string,
+  url: string,
+  data?: Record<string, string>,
+): Promise<void> {
   if (!UMAMI_WEBSITE_ID) return;
   try {
     await fetch(`${UMAMI_HOST}/api/send`, {
@@ -34,6 +38,7 @@ export async function trackServerEvent(name: string, url: string): Promise<void>
           hostname: 'whounfollowed.co',
           url,
           name,
+          ...(data ? { data } : {}),
         },
       }),
     });
