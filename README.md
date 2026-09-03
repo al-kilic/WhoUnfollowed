@@ -182,6 +182,6 @@ This repository uses an open-core model:
 
 ## Contact
 
-Built by [Alan Kılıç](https://github.com/al-kilic) · [aekilicc@gmail.com](mailto:aekilicc@gmail.com) · [@alterindoles](https://instagram.com/alterindoles)
+Built by [Alan Kılıç](https://github.com/al-kilic) · [aekilicc@gmail.com](mailto:aekilicc@gmail.com)
 
 Not affiliated with Instagram or Meta.
