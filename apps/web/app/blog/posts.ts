@@ -296,7 +296,7 @@ Is it safe to mass unfollow on Instagram? Unfollowing thoughtfully, at a human p
       heading: 'See who unfollowed you, safely.',
       body: 'No risky login. Upload the export Instagram already gives you and WhoUnfollowed shows the exact names in your browser in about two minutes. The parser is open source, so you can verify it yourself.',
       buttonLabel: 'See who unfollowed you',
-      proNudge: 'Checking regularly? Pro stores your history and alerts you the moment someone leaves.',
+      proNudge: 'Checking regularly? Pro stores every snapshot, so each new upload shows you exactly who left since the last one.',
     },
     cluster: 'unfollowers',
     title: 'Who Unfollowed You on Instagram? How to See (Without Getting Banned)',
@@ -1470,7 +1470,7 @@ If a follower vanished days after you followed back, you were most likely on the
       heading: 'Be your own unfollow checker.',
       body: 'You do not need to trust an app with your login. Upload the export Instagram already gives you and WhoUnfollowed shows the exact names in about two minutes, in your browser. No password, and the code is open source.',
       buttonLabel: 'Check who unfollowed you',
-      proNudge: 'Pro turns the monthly check into an automatic one, with saved history and email alerts.',
+      proNudge: 'Pro keeps every snapshot, so the monthly check becomes a comparison instead of a fresh start.',
     },
     cluster: 'unfollowers',
     title: 'Instagram Unfollow Checker: How to Check Who Unfollowed You (Free)',
@@ -1729,7 +1729,7 @@ Every manual check means requesting or re-uploading an export and comparing it t
 
 ## Let it check for you instead
 
-This is exactly what an [Instagram unfollow tracker](/blog/instagram-unfollow-checker) with saved history is for. Upload your export to WhoUnfollowed and it keeps each snapshot, so every future check is an automatic comparison instead of a manual diff. On the free tier you can always upload a fresh export and see who unfollowed you since the last one, in your browser, with no password. Pro adds saved snapshot history and email alerts, so instead of remembering to check, you simply get told when someone unfollows you.
+This is exactly what an [Instagram unfollow tracker](/blog/instagram-unfollow-checker) with saved history is for. Upload your export to WhoUnfollowed and it keeps each snapshot, so every future check is an automatic comparison instead of a manual diff. On the free tier you can always upload a fresh export and see who unfollowed you since the last one, in your browser, with no password. Pro adds saved snapshot history, so instead of rebuilding the picture each time, every upload is measured against the last one.
 
 ## The bottom line
 
@@ -2276,7 +2276,7 @@ A quick unfollow and refollow is not something Instagram announces to the other 
       heading: 'See which customers walked away.',
       body: 'A follower drop after a launch or a price change has names attached to it. Upload your Instagram export and WhoUnfollowed shows exactly who left, in your browser, whether you run one account or ten.',
       buttonLabel: 'Check your unfollowers',
-      proNudge: 'Managing more than one account? Pro keeps snapshot history and email alerts, and the Team plan extends coverage across up to ten accounts for agencies and brand teams.',
+      proNudge: 'Managing more than one account? Pro keeps unlimited snapshot history and syncs it across your devices, encrypted in your browser.',
     },
     body: `A creator loses a follower and it barely registers. People follow and unfollow accounts all day for reasons that have nothing to do with the content. A business account loses a follower and the question is different: was that a customer? Did we do something to lose them? Most brand and small-business accounts never actually answer that, because Instagram gives them the same blank follower count everyone else gets, with zero explanation of who left or why.
 
@@ -2438,6 +2438,183 @@ Some follower loss after a pivot is expected and even healthy. It becomes a real
 **Does Instagram punish accounts for changing their niche?** No. There's no penalty mechanism for changing what you post. What changes is which of your existing followers the algorithm expects to engage with the new material, which is a recalibration, not a punishment.
 
 **How long should I wait before comparing exports after a pivot?** A few weeks at minimum. Comparing the day after the change only catches the fast, obvious wave and misses the slower one that shows up later.`,
+  },
+  {
+    slug: 'mute-restrict-or-unfollow-on-instagram-whats-the-difference',
+    cluster: 'unfollowers',
+    title: 'Mute, Restrict, or Unfollow on Instagram: What\'s the Difference?',
+    metaTitle: 'Mute vs Restrict vs Unfollow on Instagram',
+    metaDescription: 'Muting and restricting someone on Instagram both hide them from your feed, but neither one unfollows them. Here\'s exactly what each setting changes.',
+    excerpt: 'Tap the Following button on someone\'s profile and Restrict, Mute, and Unfollow sit together like a spectrum. They are not. Only one of them actually removes the follow relationship, and it is not the one most people reach for first.',
+    date: 'September 23, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'mute vs restrict vs unfollow instagram',
+    art: 'split',
+    imageAlt: 'Abstract geometric illustration representing the choice between muting, restricting, and unfollowing someone on Instagram',
+    cta: {
+      heading: 'Stop guessing. Get the actual list.',
+      body: 'Muting and restricting are settings you control. Unfollowing is something only they control, and it happens silently. If you want to know who has actually stopped following you instead of just wondering, upload your Instagram export and WhoUnfollowed shows you the real names, in your browser, with no password.',
+      buttonLabel: 'See who actually unfollowed you',
+    },
+    body: `Tap the Following button on someone's profile and the menu that opens stacks three options close together: Restrict, Mute, and Unfollow. They read like a spectrum, mild to severe, and it's easy to assume they all do roughly the same thing at different intensities. They don't. Only one of them actually removes you from their followers, and it's not the one most people reach for first.
+
+## What Muting Does
+
+Muting hides someone's posts, their Stories, or both from what you see, without changing the follow relationship in either direction. You still follow them. They still follow you, if they did before. Nobody is notified when you mute someone, and nothing changes on their side of the app. [Instagram's own Help Center](https://help.instagram.com/469042960409432) covers the mechanics directly: you can mute posts and Stories independently, so it's possible to keep seeing someone's Stories while their feed posts disappear, or the reverse.
+
+## What Restricting Does
+
+Restricting goes a step further but still doesn't touch the connection itself. A restricted person stays a follower. What changes is what they can do to you: their comments on your posts become visible only to them unless you approve them, they lose the ability to see when you're online or whether you've read their messages, and their DM requests move to a separate, quieter folder. Like muting, restricting sends no notification, and [Instagram is explicit that it's designed to work discreetly](https://help.instagram.com/2638385956221960), specifically so you can de-escalate an uncomfortable interaction without a confrontation.
+
+## What Unfollowing Actually Does
+
+Unfollowing is the only one of the three that touches the follow relationship itself. It removes you from their followers list. If they check who follows them, you're gone. It doesn't notify them either ([what Instagram does and doesn't announce when you unfollow someone](/blog/does-instagram-notify-when-you-unfollow-someone) is covered in more detail elsewhere), but the change is structural, not cosmetic. Muting and restricting leave the follow graph untouched. Unfollowing rewrites it.
+
+It's worth separating from a related, frequently confused action: unfollowing someone you follow does not remove them as one of your followers. Those are two separate lists, moving in two separate directions, [covered in more detail here](/blog/does-unfollowing-someone-remove-them-as-your-follower).
+
+## Why People Mix These Up
+
+The confusion isn't really about the settings. It's about intent. Someone wants a person's content out of their life without a confrontation, and Instagram offers three tools that all move in that general direction but land at very different distances. According to [Instagram's own comparison of these controls](https://about.instagram.com/blog/tips-and-tricks/restrict-mute-block-report-guide), muting and restricting are both designed to work quietly and reversibly: no follow relationship changes, nothing is announced, and either can be undone in one tap with no trace left behind. Unfollowing is the only one of the three with a real, lasting effect on who follows whom.
+
+That distinction matters most in reverse. If you're trying to figure out why someone's activity toward you has gone quiet, muting and restricting are functionally invisible from your side. There's no way to detect either one happening to you. A genuine unfollow is the only one of the three that shows up anywhere in your own data, and even that only shows up if you know where to look.
+
+## The One Question None of These Settings Answer
+
+None of this tells you whether a specific person has actually unfollowed you. Instagram doesn't put a "here's who left" screen anywhere in the app, for any of these three actions. The only way to know for certain is to compare your followers list at two points in time and look at what's missing between them.
+
+That's the entire premise behind [WhoUnfollowed](/). You export your own follower data from Instagram's settings, a right you have under GDPR, not a workaround, and the app reads that file locally in your browser to build the comparison for you. Nothing about your export is uploaded anywhere, and the parsing logic is [open source and public on GitHub](https://github.com/al-kilic/WhoUnfollowed), so "does it actually read the file the way it claims to" isn't something you have to take on faith.
+
+## Quick Answers
+
+**Does muting someone unfollow them?** No. It only hides their content from your feed. The follow relationship, in both directions, stays exactly as it was.
+
+**Does restricting someone unfollow them?** No. They remain a follower. What changes is their visibility into your activity, and where their comments and messages land.
+
+**Will they know if I mute or restrict them?** No. Neither action sends a notification, and Restrict in particular is built to work without alerting the other person at all.
+
+**If I want someone's content gone but don't want to unfollow, which should I use?** Mute, generally. It's the lightest option and reversible in one tap. Restrict is more useful when the concern is what they can see of you, like your online status or read receipts, rather than what you see of them.
+
+**How do I find out who actually unfollowed me, as opposed to who I've muted or restricted?** [Compare two exports of your Instagram data](/blog/how-to-see-who-unfollowed-you-on-instagram) taken a few weeks apart. Whoever disappears from your followers list between the two is your real answer, independent of any mute or restrict setting on either side.`,
+  },
+  {
+    slug: 'why-you-still-see-posts-after-unfollowing-someone-on-instagram',
+    cluster: 'account-health',
+    title: 'Why You Still See Someone\'s Posts After Unfollowing Them on Instagram',
+    metaTitle: 'Why You Still See Posts After Unfollowing Someone',
+    metaDescription: 'Unfollowed someone but their posts still show up in Explore or Reels? Here\'s why that happens, and how to see who really still follows you.',
+    excerpt: 'The unfollow worked. Their name is off your following list. So why does their Reel still turn up in Explore a week later? Here is what is actually happening, and it has nothing to do with the unfollow failing.',
+    date: 'September 30, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'why do I still see someone\'s posts after unfollowing them on instagram',
+    art: 'ghost',
+    imageAlt: 'Abstract geometric illustration representing content from an unfollowed account still appearing in Instagram recommendations',
+    cta: {
+      heading: 'The algorithm showing them doesn\'t mean anything about your list.',
+      body: 'Seeing someone\'s content in Explore after you unfollowed them doesn\'t mean the unfollow failed, and it doesn\'t mean they\'re still following you either. If you want to know who is actually on your followers list right now, and who has dropped off since last time, upload your Instagram export and WhoUnfollowed reads it in your browser and shows you the real names.',
+      buttonLabel: 'See your real follower list',
+    },
+    body: `You unfollow someone. The button changes, their profile confirms it, you move on. Then a few days later their Reel shows up on your Reels tab, or their photo turns up in Explore, sitting there like the unfollow never happened. It's easy to assume something glitched. Usually nothing did.
+
+## Unfollowing Removes Them From Your Feed. It Doesn't Erase Your History With Them.
+
+The follow relationship and Instagram's recommendation systems run on separate logic. Unfollowing correctly and immediately removes someone's posts from your main following feed. What it doesn't do is delete the record of every time you previously watched their Reels to the end, liked their posts, or tapped through to their profile. That history doesn't reset the moment you tap Unfollow.
+
+## Explore and Reels Don't Just Read Your Follow List
+
+Your main feed leans heavily on who you follow. Explore and the Reels tab don't work that way. Both are recommendation surfaces built to predict what you're likely to engage with next, using a much wider set of signals than your following list alone. Meta's own documentation on how these systems work states that recommendations are based on "a variety of factors, including what and whom you've followed, liked or engaged with recently" ([Meta's Transparency Center](https://transparency.meta.com/features/explaining-ranking/ig-feed-recommendations/)), weighing watch time, comment and save activity, and your interaction history with similar content well beyond the current state of your follow graph. Instagram's own [Help Center page on how recommendations work](https://help.instagram.com/313829416281232) describes the same thing: what surfaces in these tabs draws on your broader activity, not a live read of who you currently follow.
+
+That means someone you unfollowed last week can keep surfacing in Explore for a while, purely because the system is still weighing months of engagement history you built with their content before the unfollow. It isn't reading your current following list and getting it wrong. It's reading your engagement history, and the unfollow doesn't touch that.
+
+## This Is a Different Problem From the "Still Shows Following" Bug
+
+There's a separate issue worth ruling out first: cases where the follow button itself silently reverts, and Instagram genuinely still lists you as following someone you tried to unfollow. That's [a real, documented bug](/blog/instagram-unfollow-not-working-still-shows-following), not a recommendation quirk, and it's worth checking your following list directly if you're unsure which one you're dealing with. If their name is gone from your following list but their content still turns up in Explore or Reels, that's the recommendation behavior described above. If their name is still sitting in your following list after you unfollowed, that's the bug, and the fix is different.
+
+## How Long This Actually Takes to Fade
+
+Instagram doesn't publish a specific timeline for this, and it likely isn't a fixed number of days so much as a gradual decay as fresh signals, or the lack of them, retrain what gets recommended to you. In practice, the frequency tends to drop off noticeably within one to two weeks of no further interaction with the account, though an occasional resurface further out isn't unusual, especially if the content closely resembles other things you engage with regularly.
+
+## What You Can Actually Do About It
+
+Beyond waiting it out, Instagram gives you a couple of direct levers. Tapping "Not Interested" on a specific post tells the recommendation system to weight that content and similar content lower, and tends to work faster than letting old engagement history decay on its own. There's also a broader reset under Settings, then Content Preferences, that clears your suggested content signals entirely, though that resets recommendations across the board, not just for one account.
+
+## When It's Actually Not the Algorithm
+
+Occasionally the explanation is simpler than any of this. The person didn't resurface because of leftover interest signals, they showed up because someone you do follow liked, commented on, or shared their post, and that activity is what put it in front of you. It's worth a glance at how a post reached you (a "liked by" or "shared by" line naming a mutual) before assuming it's a lingering algorithm effect from before your unfollow.
+
+## The Actual Fix, If You Just Want the Real List
+
+None of this matters much if what you actually want is a simple, accurate answer: who follows you right now, and who's dropped off since you last checked. Neither Explore nor Reels can tell you that, no matter how long you stare at what shows up in them. [WhoUnfollowed](/) reads your own Instagram data export locally in your browser and gives you that list directly, without guessing at what an algorithm is or isn't trying to tell you.
+
+## Quick Answers
+
+**Did my unfollow actually work if I still see their posts?** Almost certainly yes. Check your following list directly. If their name isn't there, the unfollow worked, and what you're seeing afterward is a recommendation, not a feed built from your following list.
+
+**Can I make it stop faster?** Tapping "Not Interested" on their content is the most direct lever available. It retrains the recommendation signal faster than waiting for old engagement history to decay naturally.
+
+**Does this mean they can tell I unfollowed them and am still watching their content in Explore?** No. Explore and Reels activity isn't visible to the person whose content you're watching, and none of it connects back to your follow status in any way they can see.
+
+**Is this the same issue as Instagram showing me as still following someone after I unfollowed?** No. That's a [separate, documented bug](/blog/instagram-unfollow-not-working-still-shows-following) affecting the follow relationship itself. This is a recommendation-surface behavior after a successful unfollow. Checking your actual following list is the fastest way to tell which one you're dealing with.
+
+**If I want to know who's really still following me, not just whose content keeps showing up, how do I check?** Neither Explore nor Reels reflects your current followers at all, since both are built from your own activity, not theirs. The only reliable way to see who actually still follows you is to [compare your Instagram data export against a previous one](/blog/how-to-see-who-unfollowed-you-on-instagram).`,
+  },
+  {
+    slug: 'did-i-accidentally-unfollow-someone-on-instagram',
+    cluster: 'unfollowers',
+    title: 'Did I Accidentally Unfollow Someone on Instagram? How to Check',
+    metaTitle: 'Accidentally Unfollowed Someone on Instagram?',
+    metaDescription: 'A mis-tap or a fast cleanup can cost you a follow you meant to keep. Here\'s how to check exactly who, fix it, and see your real following list.',
+    excerpt: 'Instagram has no undo button and no unfollow history. If a mis-tap or a fast cleanup cost you a follow you meant to keep, here is the only way to actually find out who, and fix it.',
+    date: 'October 8, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'accidentally unfollowed someone on instagram',
+    art: 'bell',
+    imageAlt: 'Abstract geometric illustration representing the moment of realizing you accidentally unfollowed someone on Instagram',
+    cta: {
+      heading: 'Never lose track of who you actually follow.',
+      body: 'One mis-tap during a cleanup and you could lose a follow you meant to keep, with no way to prove it happened. Upload your Instagram export and WhoUnfollowed shows you exactly who dropped off your following list since your last one, so an accidental unfollow does not just vanish.',
+      buttonLabel: 'Check your following list',
+      proNudge: 'Pro keeps a running history of every export, so you always have a recent snapshot on hand before your next cleanup.',
+    },
+    body: `Your thumb catches a profile at the wrong moment, or you're three hundred accounts deep into a following-list cleanup and moving fast, and a few days later it occurs to you: did I actually mean to unfollow that person? Instagram gives you no undo button and no log of what you just did. The unfollow already happened, silently, the same way every unfollow does.
+
+## How This Actually Happens
+
+Two situations account for almost every accidental unfollow. The first is a genuine mis-tap: the follow and unfollow controls sit in roughly the same spot on a profile, and a fast scroll or a full-screen tap can catch the wrong one. The second, more common one, is [cleaning up who you follow](/blog/how-to-clean-up-who-you-follow-on-instagram) in a batch session and losing track partway through. When you're working through a long list quickly, it's easy to unfollow someone you actually wanted to keep simply because you stopped reading names and started tapping on rhythm.
+
+## Why You Can't Just "Check" for This in the App
+
+Instagram has no unfollow history, no "recently unfollowed" list, and no confirmation step before the action completes. Once you unfollow someone, the only record that existed of the fact that you used to follow them is gone from the app entirely. If you didn't notice at the moment it happened, there is nothing inside Instagram itself you can look at afterward to reconstruct it. You would need to already suspect a specific name to check, and even then, all you can confirm is that you don't currently follow them, not why.
+
+## Will They Notice If I Accidentally Unfollowed Them?
+
+Not directly. Instagram doesn't send a notification for an unfollow in either direction, [covered in full detail here](/blog/does-instagram-notify-when-you-unfollow-someone), so there's no alert telling them anything changed. The only way they'd notice is passively, by checking their own followers list and seeing you're no longer on it, the same way you'd notice if it happened to you. Some people check that list regularly. Most don't. If you catch the mistake and refollow quickly, the odds that anyone registered the gap at all are low, though not zero, especially with someone who checks their followers often. If you're worried about someone noticing an unfollow and a quick refollow back to back, [the mechanics of that specific scenario are covered separately](/blog/can-someone-tell-you-unfollowed-and-refollowed-them-instagram).
+
+## The Fix If You Catch It Immediately
+
+If you realize the mistake right away, the fix is simple: open their profile and tap Follow again. There's no cooldown or penalty for refollowing someone you just unfollowed, and nothing on their end distinguishes an intentional refollow from a corrected mistake.
+
+## The Fix If You're Not Sure When It Happened
+
+This is the harder case, and it's the one that actually needs a record. If you suspect you lost someone during a cleanup session days or weeks ago but can't pin down who, guessing from memory doesn't hold up past a handful of names. What does work is having an export of your following list from before the session and comparing it against your current one.
+
+Instagram is required under [GDPR Article 20](https://gdpr-info.eu/art-20-gdpr/) to give you a full copy of your own data, including your following list, on request. If you [requested an export](/blog/how-to-download-your-instagram-data) before your last cleanup, or even around that general time, you already have what you need. Instagram's own [Help Center walks through the export process](https://help.instagram.com/181231772500920) if you haven't done it before. Upload both files, the older one and a fresh one, to [WhoUnfollowed](/), and it reads them locally in your browser and shows you exactly who dropped off your following list between the two dates, whether that was intentional or not. It won't tell you which unfollows were accidents. Only you know that. But it turns a bad feeling into an actual list of names you can review in a minute.
+
+## Building a Habit That Prevents This
+
+The real fix is slowing down during any cleanup session. Work through a following list in smaller batches, actually read each name before deciding, and take a fresh export before any large cleanup so you have a clean before-and-after to check against if something feels off later. A snapshot taken five minutes before you start costs nothing and is the only thing that makes an accidental unfollow findable after the fact.
+
+## Quick Answers
+
+**Is there any way to undo an unfollow automatically?** No. Refollowing manually is the only fix, and it only works if you catch the mistake and know exactly who it was.
+
+**Does Instagram keep a log of accounts I've unfollowed?** No. Nothing in the app records this. Once the follow relationship changes, there's no history of the previous state left anywhere inside Instagram.
+
+**How far back can I check if I don't remember when it happened?** As far back as your oldest saved export goes. If you don't have one from around the time you suspect, you can't reconstruct it retroactively, which is why keeping a recent export on hand matters more than it seems like it should.
+
+**Can I tell the difference between someone I accidentally unfollowed and someone who deactivated their account?** Not from the fact that they're missing alone. A deactivated account disappears from your following list the same way an unfollow does. Checking whether their profile still loads at all is the fastest way to tell the two apart.`,
   },
 ];
 
