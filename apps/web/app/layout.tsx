@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import { ThemeProvider } from 'next-themes';
+import { getLocale } from 'next-intl/server';
 import { FontLoader } from '@/components/FontLoader';
 import { AuthProvider } from '@/components/AuthProvider';
 import { getAuthState } from '@/lib/auth/getAuthState';
@@ -109,9 +110,9 @@ const orgJsonLd = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const auth = await getAuthState();
+  const [auth, locale] = await Promise.all([getAuthState(), getLocale()]);
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
