@@ -44,7 +44,7 @@ export function DeltaWarning({ reasons, followerCount, followingCount, onReExpor
       {/* Modal card */}
       <div style={{
         maxWidth: 520, width: '100%',
-        background: 'rgba(18,24,24,0.97)',
+        background: T.bgCard,
         border: '1px solid var(--t-border2)',
         borderRadius: 24,
         boxShadow: '0 40px 120px rgba(0,0,0,0.7)',

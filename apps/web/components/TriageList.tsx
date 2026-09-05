@@ -460,8 +460,8 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
   const { triage, setTriageState, bulkImportTriage } = useTriage(snapshotKey);
 
   const [search, setSearch]           = useState('');
-  const [sortField, setSortField]     = useState<'username' | 'date'>('username');
-  const [sortDir, setSortDir]         = useState<'asc' | 'desc'>('asc');
+  const [sortField, setSortField]     = useState<'username' | 'date'>('date');
+  const [sortDir, setSortDir]         = useState<'asc' | 'desc'>('desc');
   const [filterState, setFilterState] = useState<TriageState | 'untriaged' | 'all'>('all');
   const [focusedIndex, setFocusedIdx] = useState<number>(-1);
   const [slideOpen, setSlideOpen]         = useState(false);
@@ -749,10 +749,11 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
           variant="outline"
           size="sm"
           onClick={() => setSortField(f => f === 'username' ? 'date' : 'username')}
-          title={sortField === 'username' ? 'Sorting by name. Click to sort by follow date' : 'Sorting by follow date. Click to sort by name'}
+          title={sortField === 'username' ? 'Sorting by name. Click to sort by follow date instead' : 'Sorting by follow date. Click to sort by name instead'}
         >
           {sortField === 'username' ? <CaseSensitive size={14} /> : <Calendar size={14} />}
           {sortField === 'username' ? 'Name' : 'Date'}
+          <ChevronDown size={12} style={{ opacity: 0.5, marginLeft: -2 }} />
         </Button>
         <Button
           variant="outline"
@@ -760,14 +761,15 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
           onClick={() => setSortDir(d => d === 'asc' ? 'desc' : 'asc')}
           title={
             sortField === 'username'
-              ? (sortDir === 'asc' ? 'A→Z. Click for Z→A' : 'Z→A. Click for A→Z')
-              : (sortDir === 'asc' ? 'Oldest first. Click for newest first' : 'Newest first. Click for oldest first')
+              ? (sortDir === 'asc' ? 'A to Z. Click to reverse to Z to A' : 'Z to A. Click to reverse to A to Z')
+              : (sortDir === 'asc' ? 'Oldest first. Click to reverse to newest first' : 'Newest first. Click to reverse to oldest first')
           }
         >
           <ArrowUpDown size={14} />
           {sortField === 'username'
             ? (sortDir === 'asc' ? 'A→Z' : 'Z→A')
             : (sortDir === 'asc' ? 'Oldest' : 'Newest')}
+          <ChevronDown size={12} style={{ opacity: 0.5, marginLeft: -2 }} />
         </Button>
         <Button
           id="tutorial-export-csv"
