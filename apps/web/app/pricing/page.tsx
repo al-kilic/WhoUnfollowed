@@ -3,19 +3,20 @@ import { validateRequest } from '@/lib/auth/session';
 import { isPaidFeaturesEnabled, isPaidSubscriber } from '@/lib/flags';
 import { PricingClient } from './PricingClient';
 import { PRICING_FAQ } from './faq';
+import { UNLOCK_PRICE_SUMMARY } from '@/lib/pricing';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
 export const metadata: Metadata = {
   title: 'Pricing',
   description:
-    'Free forever, no account needed. Pro is a one-time unlock ($1.99 for 30 days, $9.99 for 365 days) that adds snapshot history, cloud sync, and trends. No auto-renewal.',
+    `Free forever, no account needed. Pro is a one-time unlock (${UNLOCK_PRICE_SUMMARY}) that adds snapshot history, cloud sync, and trends. No auto-renewal.`,
   alternates: { canonical: '/pricing' },
   openGraph: {
     type: 'website',
     title: 'Pricing',
     description:
-      'Free forever, no account needed. Pro is a one-time unlock ($1.99 for 30 days, $9.99 for 365 days). No subscription, no auto-renewal.',
+      `Free forever, no account needed. Pro is a one-time unlock (${UNLOCK_PRICE_SUMMARY}). No subscription, no auto-renewal.`,
     url: `${SITE_URL}/pricing`,
     siteName: 'WhoUnfollowed',
   },

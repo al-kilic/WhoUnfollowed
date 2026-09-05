@@ -6,6 +6,7 @@ import { SiteNav } from '@/components/landing/SiteNav';
 import { GridBg, ProfileCard } from '@/components/landing/atoms';
 import { T } from '@/components/landing/tokens';
 import { track, Events, trackFunnel } from '@/lib/analytics';
+import { UNLOCK_PRICE_USD } from '@/lib/pricing';
 import { PRICING_FAQ } from './faq';
 
 interface Props {
@@ -102,8 +103,8 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
   // One-time unlocks, not recurring billing: $1.99 unlocks Pro for 30 days,
   // $9.99 for 365 days. The "save X%" figure compares the yearly unlock
   // against buying the 30-day one repeatedly for a year.
-  const unlock30Price = 1.99;
-  const unlock365Price = 9.99;
+  const unlock30Price = UNLOCK_PRICE_USD.monthly;
+  const unlock365Price = UNLOCK_PRICE_USD.yearly;
   const annualizedFromMonthly = unlock30Price * (365 / 30);
   const saving = Math.round((1 - unlock365Price / annualizedFromMonthly) * 100);
   const price = duration === 'yearly' ? unlock365Price : unlock30Price;

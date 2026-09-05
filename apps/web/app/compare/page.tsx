@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { CompareIndexContent } from './CompareIndexContent';
+import { COMPARISONS } from './comparisons';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
 };
 
 export default function ComparePage() {
-  const jsonLd = {
+  const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
@@ -34,9 +35,23 @@ export default function ComparePage() {
     ],
   };
 
+  // Mirrors the "more comparisons" links this page actually renders.
+  const comparisonsJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'WhoUnfollowed comparisons',
+    itemListElement: COMPARISONS.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: c.title,
+      url: `${SITE_URL}/compare/${c.slug}`,
+    })),
+  };
+
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(comparisonsJsonLd) }} />
       <CompareIndexContent />
     </>
   );

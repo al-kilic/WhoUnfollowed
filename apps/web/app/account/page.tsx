@@ -8,6 +8,7 @@ import { db } from '@/lib/db/index';
 import { profiles, syncSettings } from '@/lib/db/schema';
 import { isPaidFeaturesEnabled, isProUser } from '@/lib/flags';
 import { isUserVerified } from '@/lib/auth/verification';
+import { UNLOCK_PRICE_USD, UNLOCK_DAYS_LABEL } from '@/lib/pricing';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { T } from '@/components/landing/tokens';
@@ -184,7 +185,7 @@ export default async function AccountPage() {
             {!isPro && paymentsEnabled && (
               <div style={{ marginTop: 22, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', paddingTop: 18, borderTop: `1px solid ${T.border1}` }}>
                 <span style={{ fontSize: 13, color: T.inkDim }}>
-                  <strong style={{ color: T.ink }}>$1.99</strong> for 30 days, or $9.99 for a year · one-time, no auto-renewal
+                  <strong style={{ color: T.ink }}>${UNLOCK_PRICE_USD.monthly}</strong> for {UNLOCK_DAYS_LABEL.monthly}, or ${UNLOCK_PRICE_USD.yearly} for a year · one-time, no auto-renewal
                 </span>
                 <UpgradeLink source="account-features" style={{ fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none', padding: '10px 20px', borderRadius: 10, background: T.teal }}>
                   Upgrade to Pro

@@ -946,7 +946,7 @@ function GrowthChart({ snapshots }: { snapshots: SnapshotSummary[] }) {
     if (!active || !payload?.length) return null;
     const entry = data.find(d => d.date === label);
     return (
-      <div style={{ background: 'rgba(16,20,20,0.97)', border: '1px solid var(--t-border3)', borderRadius: 8, padding: '10px 14px', fontSize: 12, color: T.inkDim, minWidth: 160 }}>
+      <div style={{ background: T.bgCard, border: '1px solid var(--t-border3)', borderRadius: 8, padding: '10px 14px', fontSize: 12, color: T.inkDim, minWidth: 160 }}>
         <div style={{ color: T.inkMute, marginBottom: 6, fontSize: 11 }}>{label}</div>
         <div style={{ color: T.ink, fontSize: 15, fontFamily: T.serif, marginBottom: 6 }}>{payload[0]?.value.toLocaleString()} followers</div>
         {entry && entry.gained > 0 && <div style={{ color: T.tealLight }}>+{entry.gained} gained</div>}
