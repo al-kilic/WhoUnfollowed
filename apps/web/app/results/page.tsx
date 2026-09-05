@@ -16,6 +16,8 @@ import { useTriage } from '@/hooks/useTriage';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { Tutorial } from '@/components/Tutorial';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
+import { UpgradeLink } from '@/app/account/UpgradeLink';
+import { trackLockedView } from '@/lib/analytics';
 
 // ─── Stat card ───────────────────────────────────────────────────────────────
 
@@ -118,6 +120,72 @@ function TabBar({ tabs, activeId, onChange }: { tabs: Tab[]; activeId: string; o
         );
       })}
     </div>
+  );
+}
+
+// ─── Radar teaser ─────────────────────────────────────────────────────────────
+// The only page every free visitor actually sees. Locked-feature nudges on
+// Radar/cloud sync only reach people who already made an account and went
+// looking for them, so this is the highest-reach place to surface Pro.
+
+function CheckItem({ label }: { label: string }) {
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 13, color: T.ink }}>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T.tealMid} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
+      {label}
+    </span>
+  );
+}
+
+function RadarTeaser({ isPro }: { isPro: boolean }) {
+  useEffect(() => { if (!isPro) trackLockedView('results-radar-teaser'); }, [isPro]);
+  if (isPro) return null;
+
+  return (
+    <section
+      style={{
+        marginTop: 48,
+        padding: '28px 26px',
+        borderRadius: 20,
+        background: 'linear-gradient(180deg, rgba(2,136,143,0.10) 0%, rgba(2,136,143,0.02) 100%)',
+        border: `1px solid ${T.tealMid}`,
+      }}
+    >
+      <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', color: T.tealLight, fontFamily: T.mono, textTransform: 'uppercase', marginBottom: 10 }}>
+        Beyond this snapshot
+      </div>
+      <h2 style={{ fontFamily: T.serif, fontSize: 24, fontWeight: 400, color: T.ink, letterSpacing: '-0.01em', marginBottom: 10, maxWidth: 480 }}>
+        Next time you export, Radar tells you exactly who left.
+      </h2>
+      <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.6, marginBottom: 20, maxWidth: 520 }}>
+        This list is a one-time check. Radar keeps every snapshot, compares them automatically, and adds a health score, growth chart, and ghost-follower detection on top.
+      </p>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 22px', marginBottom: 22 }}>
+        <CheckItem label="Compare any two snapshots" />
+        <CheckItem label="Account health score" />
+        <CheckItem label="Follower growth chart" />
+        <CheckItem label="Ghost-follower detection" />
+      </div>
+      <UpgradeLink
+        source="results-radar"
+        style={{
+          display: 'inline-block',
+          padding: '12px 24px',
+          borderRadius: 11,
+          background: T.teal,
+          color: T.cream,
+          textDecoration: 'none',
+          fontSize: 14,
+          fontWeight: 600,
+          fontFamily: T.sans,
+          boxShadow: '0 8px 24px rgba(2,136,143,0.35)',
+        }}
+      >
+        See what&apos;s in Radar
+      </UpgradeLink>
+    </section>
   );
 }
 
@@ -348,6 +416,8 @@ export default function ResultsPage() {
             />
           )}
         </div>
+
+        <RadarTeaser isPro={isPro} />
       </main>
 
       <LandingFooter />
