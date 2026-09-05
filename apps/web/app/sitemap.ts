@@ -1,11 +1,15 @@
 import type { MetadataRoute } from 'next';
 import { BLOG_POSTS } from './blog/posts';
 import { COMPARISONS } from './compare/comparisons';
+import { routing } from '@/i18n/routing';
+import { getPathname } from '@/i18n/navigation';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
 // Static, indexable marketing/legal pages. Private app + auth routes are
-// intentionally excluded (and disallowed in robots.ts).
+// intentionally excluded (and disallowed in robots.ts). /pricing is handled
+// separately below: it has es/pt variants under app/[locale], each needing
+// its own entry with reciprocal hreflang alternates.
 const STATIC_PAGES: Array<{
   path: string;
   priority: number;
@@ -14,7 +18,6 @@ const STATIC_PAGES: Array<{
   { path: '', priority: 1, changeFrequency: 'weekly' },
   { path: '/how-to-export', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/what-is-whounfollowed', priority: 0.8, changeFrequency: 'monthly' },
-  { path: '/pricing', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/blog', priority: 0.6, changeFrequency: 'weekly' },
   { path: '/compare', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/about', priority: 0.5, changeFrequency: 'monthly' },
@@ -51,5 +54,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticEntries, ...blogEntries, ...compareEntries];
+  const pricingLanguages = Object.fromEntries(
+    routing.locales.map((l) => [l, `${SITE_URL}${getPathname({ href: '/pricing', locale: l })}`]),
+  );
+  const pricingEntries: MetadataRoute.Sitemap = routing.locales.map((locale) => ({
+    url: `${SITE_URL}${getPathname({ href: '/pricing', locale })}`,
+    changeFrequency: 'monthly',
+    priority: 0.7,
+    alternates: { languages: pricingLanguages },
+  }));
+
+  return [...staticEntries, ...blogEntries, ...compareEntries, ...pricingEntries];
 }

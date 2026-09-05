@@ -7,47 +7,23 @@ import { GridBg, ProfileCard } from '@/components/landing/atoms';
 import { T } from '@/components/landing/tokens';
 import { track, Events, trackFunnel } from '@/lib/analytics';
 import { UNLOCK_PRICE_USD } from '@/lib/pricing';
-import { PRICING_FAQ } from './faq';
+import type { PricingFaqItem } from './faq';
+import type { PricingContent } from './content';
 
 interface Props {
   userEmail: string | null;
   paymentsEnabled: boolean;
   isPro?: boolean;
+  content: PricingContent;
+  faq: PricingFaqItem[];
 }
 
-const FREE_BULLETS = [
-  'See who unfollowed you',
-  'Full non-followers list',
-  'One snapshot at a time',
-  'CSV export',
-  'No account needed',
-];
-
-// Core perks shown by default, plus more revealed on "See everything in Pro".
-// Outcome-led copy, kept honest (no fluff, no em dashes).
-const PRO_CORE = [
-  { label: 'Keep every snapshot forever', note: 'unlimited history' },
-  { label: 'See exactly who unfollowed you, and when', note: '' },
-  { label: 'Cloud sync across all your devices', note: 'encrypted in your browser' },
-  { label: 'Watch your follower count trend over time', note: '' },
-  { label: 'Catch the ghosts who never engage', note: '' },
-];
-
-const PRO_MORE = [
-  { label: 'Get alerted the moment someone drops', note: 'email alerts, soon' },
-  { label: 'See pending follow requests, and how long they\'ve been waiting', note: '' },
-  { label: 'Compare any two snapshots side by side', note: '' },
-  { label: 'Surface restricted, blocked, and close-friends lists', note: '' },
-  { label: 'Clean up fast: batch-open everyone who left', note: '' },
-  { label: 'Mobile app included', note: 'iOS + Android, soon' },
-  { label: 'Keep the app free and independent', note: 'no ads, no investors' },
-];
-
-const PRIVACY = [
-  'Your ZIP is parsed entirely in your browser. Nothing is uploaded to analyze.',
-  'Cloud snapshots are encrypted in your browser before they ever leave your device.',
-  'EU-based servers. Open-source core. No ads, no data brokers.',
-];
+function fillTemplate(template: string, values: Record<string, string | number>): string {
+  return Object.entries(values).reduce(
+    (acc, [key, value]) => acc.replaceAll(`{${key}}`, String(value)),
+    template,
+  );
+}
 
 function Perk({ label, note }: { label: string; note: string }) {
   return (
@@ -63,7 +39,7 @@ function Perk({ label, note }: { label: string; note: string }) {
   );
 }
 
-export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Props) {
+export function PricingClient({ userEmail, paymentsEnabled, isPro = false, content, faq }: Props) {
   const [duration, setDuration] = useState<'monthly' | 'yearly'>('monthly');
   const [showAll, setShowAll] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -91,10 +67,10 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
       if (data.url) {
         window.location.href = data.url;
       } else {
-        setError('Something went wrong. Please try again.');
+        setError(content.errorGeneric);
       }
     } catch {
-      setError('Something went wrong. Please try again.');
+      setError(content.errorGeneric);
     } finally {
       setLoading(false);
     }
@@ -108,14 +84,15 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
   const annualizedFromMonthly = unlock30Price * (365 / 30);
   const saving = Math.round((1 - unlock365Price / annualizedFromMonthly) * 100);
   const price = duration === 'yearly' ? unlock365Price : unlock30Price;
+  const period = duration === 'yearly' ? content.periodYear : content.period30Days;
 
   const ctaLabel = loading
-    ? 'Redirecting...'
+    ? content.ctaRedirecting
     : paymentsEnabled
-      ? `Unlock for ${duration === 'yearly' ? 'a year' : '30 days'}`
+      ? fillTemplate(content.ctaUnlockForTemplate, { period })
       : userEmail
-        ? 'Go to dashboard'
-        : 'Try Pro free';
+        ? content.ctaGoToDashboard
+        : content.ctaTryProFree;
 
   return (
     <div style={{ position: 'relative', minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans, overflow: 'hidden' }}>
@@ -156,7 +133,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
             }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: T.tealLight, flexShrink: 0 }} />
               <span style={{ fontSize: 13, color: T.tealLight, fontWeight: 600 }}>
-                Pro is free during beta. Try everything for now.
+                {content.betaBadge}
               </span>
             </div>
           </div>
@@ -165,13 +142,10 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
         {/* Slogan / value header */}
         <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 28px' }}>
           <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(30px, 4.5vw, 46px)', fontWeight: 400, letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 12 }}>
-            Always free. Pro helps keep it alive.
+            {content.headline}
           </h1>
           <p style={{ color: T.inkDim, fontSize: 14.5, lineHeight: 1.6, margin: '0 auto', maxWidth: 560 }}>
-            See when someone unfollows you, who never follows back, and how your audience
-            shifts over time. WhoUnfollowed is free, open source, and runs entirely in your
-            browser. Pro adds memory and depth (history, trends, and cloud sync) and keeps the
-            servers running so the free app stays free.
+            {content.subhead}
           </p>
         </div>
 
@@ -188,13 +162,13 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
           }}>
             <div style={{ display: 'inline-flex', alignSelf: 'flex-start', alignItems: 'center', gap: 6, padding: '4px 11px', borderRadius: 100, background: T.tealGlow, marginBottom: 14 }}>
               <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.tealLight, flexShrink: 0 }} />
-              <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>Free forever</span>
+              <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>{content.freeBadge}</span>
             </div>
             <div style={{ fontFamily: T.serif, fontSize: 50, lineHeight: 1, letterSpacing: '-0.03em', marginBottom: 4 }}>$0</div>
-            <div style={{ fontSize: 13, color: T.inkMute, marginBottom: 22 }}>no sign up required</div>
+            <div style={{ fontSize: 13, color: T.inkMute, marginBottom: 22 }}>{content.freeNoSignup}</div>
 
             <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px', display: 'flex', flexDirection: 'column', gap: 11, flex: 1 }}>
-              {FREE_BULLETS.map((f) => (
+              {content.freeBullets.map((f) => (
                 <li key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: T.ink }}>
                   <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.tealMid, flexShrink: 0 }} />
                   {f}
@@ -211,7 +185,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
                 fontSize: 15, fontWeight: 600, fontFamily: T.sans, color: T.ink, boxSizing: 'border-box',
               }}
             >
-              Use it free
+              {content.freeCta}
             </Link>
           </div>
 
@@ -224,7 +198,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
             boxShadow: '0 18px 50px rgba(2,136,143,0.14)',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>Pro</div>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>{content.proLabel}</div>
 
               {/* Animated 30-day / 365-day toggle with a pulsing savings badge */}
               <div style={{ position: 'relative', display: 'inline-flex', background: T.surface2, borderRadius: 9, padding: 3 }}>
@@ -245,7 +219,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
                       color: duration === b ? T.cream : T.inkDim, transition: 'color 0.2s',
                     }}
                   >
-                    {b === 'monthly' ? '30 days' : '365 days'}
+                    {content.durationLabels[b]}
                   </button>
                 ))}
                 {/* Savings badge floating over the Yearly side: terra accent + pulse */}
@@ -256,7 +230,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
                   padding: '3px 7px', borderRadius: 100, fontFamily: T.sans, whiteSpace: 'nowrap',
                   animation: 'save-pulse 2.2s ease-in-out infinite',
                 }}>
-                  SAVE {saving}%
+                  {fillTemplate(content.saveBadgeTemplate, { pct: saving })}
                 </div>
               </div>
             </div>
@@ -265,20 +239,20 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
               <span style={{ fontFamily: T.serif, fontSize: 50, fontWeight: 400, lineHeight: 1 }}>
                 ${price}
               </span>
-              <span style={{ color: T.inkMute, fontSize: 14 }}>one-time</span>
+              <span style={{ color: T.inkMute, fontSize: 14 }}>{content.oneTime}</span>
             </div>
             <div style={{ fontSize: 13, color: T.inkDim, marginBottom: 22, minHeight: 18 }}>
-              {duration === 'yearly' ? `Unlocks Pro for 365 days · save ${saving}% vs. buying 30 days at a time` : 'Unlocks Pro for 30 days'}
+              {duration === 'yearly' ? fillTemplate(content.unlockDescYearlyTemplate, { pct: saving }) : content.unlockDescMonthly}
             </div>
 
             <div style={{ flex: 1, marginBottom: 22 }}>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 11 }}>
-                {PRO_CORE.map((p) => <Perk key={p.label} {...p} />)}
+                {content.proCore.map((p) => <Perk key={p.label} {...p} />)}
               </ul>
 
               {showAll && (
                 <ul style={{ listStyle: 'none', padding: 0, margin: '11px 0 0', display: 'flex', flexDirection: 'column', gap: 11, animation: 'fade-in 0.3s ease both' }}>
-                  {PRO_MORE.map((p) => <Perk key={p.label} {...p} />)}
+                  {content.proMore.map((p) => <Perk key={p.label} {...p} />)}
                 </ul>
               )}
 
@@ -291,7 +265,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
                     display: 'inline-flex', alignItems: 'center', gap: 6, padding: 0,
                   }}
                 >
-                  See everything you get
+                  {content.seeEverything}
                   <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
                     <path d="M2.5 4.5 L6 8 L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
@@ -311,12 +285,12 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
               }}
             >
               {isPro
-                ? (loading ? 'Redirecting...' : `Extend by ${duration === 'yearly' ? 'a year' : '30 days'}`)
+                ? (loading ? content.ctaRedirecting : fillTemplate(content.ctaExtendByTemplate, { period }))
                 : ctaLabel}
             </button>
 
             <p style={{ fontSize: 12, color: T.inkMute, textAlign: 'center', marginTop: 10 }}>
-              {paymentsEnabled ? 'One-time payment. No auto-renewal.' : 'No credit card required during beta.'}
+              {paymentsEnabled ? content.onetimeNote : content.betaNote}
             </p>
           </div>
         </div>
@@ -327,9 +301,9 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
           background: T.tealGlow, border: '1px solid rgba(1,105,111,0.2)', borderRadius: 14,
           padding: '20px 22px',
         }}>
-          <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.12em', marginBottom: 10 }}>WHY PEOPLE TRUST IT</div>
+          <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.12em', marginBottom: 10 }}>{content.privacyTitle}</div>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {PRIVACY.map((line) => (
+            {content.privacy.map((line) => (
               <li key={line} style={{ fontSize: 14, color: T.teal, lineHeight: 1.5, display: 'flex', alignItems: 'flex-start', gap: 8 }}>
                 <span style={{ flexShrink: 0, marginTop: 1 }}>·</span>
                 {line}
@@ -340,8 +314,8 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false }: Pro
 
         {/* FAQ */}
         <div style={{ maxWidth: 720, margin: '48px auto 0' }}>
-          <div style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.12em', marginBottom: 18 }}>COMMON QUESTIONS</div>
-          {PRICING_FAQ.map(({ q, a }) => (
+          <div style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.12em', marginBottom: 18 }}>{content.faqTitle}</div>
+          {faq.map(({ q, a }) => (
             <div key={q} style={{ marginBottom: 18, paddingBottom: 18, borderBottom: `1px solid ${T.border1}` }}>
               <p style={{ fontWeight: 600, fontSize: 15, marginBottom: 6, color: T.ink }}>{q}</p>
               <p style={{ color: T.inkDim, fontSize: 14, lineHeight: 1.65, margin: 0 }}>{a}</p>
