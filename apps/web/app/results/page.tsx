@@ -130,7 +130,7 @@ function TabBar({ tabs, activeId, onChange }: { tabs: Tab[]; activeId: string; o
 
 function CheckItem({ label }: { label: string }) {
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 13, color: T.ink }}>
+    <span style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13.5, color: T.ink }}>
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={T.tealMid} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
         <polyline points="20 6 9 17 4 12" />
       </svg>
@@ -139,52 +139,119 @@ function CheckItem({ label }: { label: string }) {
   );
 }
 
-function RadarTeaser({ isPro }: { isPro: boolean }) {
+// Small live "Radar preview" built from the visitor's own numbers, not demo
+// data, so it reads as their report rather than a generic ad.
+function RadarPreviewCard({ mutualsCount, nonFollowersCount, totalFollowing }: {
+  mutualsCount: number;
+  nonFollowersCount: number;
+  totalFollowing: number;
+}) {
+  const followBackRate = totalFollowing > 0 ? Math.round((mutualsCount / totalFollowing) * 100) : 0;
+
+  return (
+    <div style={{
+      background: '#060e10',
+      border: `1px solid ${T.tealMid}`,
+      borderRadius: 16,
+      padding: '18px 20px',
+      boxShadow: '0 20px 50px rgba(0,0,0,0.35)',
+      flexShrink: 0,
+      width: '100%',
+    }}>
+      {/* Window chrome, matches the homepage's product preview style */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
+        <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#ff5f57' }} />
+        <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'rgba(255,255,255,0.15)' }} />
+        <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'rgba(255,255,255,0.15)' }} />
+        <span style={{ marginLeft: 6, fontSize: 10, color: 'rgba(244,240,232,0.35)', fontFamily: T.mono, letterSpacing: '0.06em' }}>your Radar preview · today</span>
+      </div>
+
+      <div style={{ marginBottom: 4 }}>
+        <span style={{ fontFamily: T.serif, fontSize: 40, lineHeight: 1, letterSpacing: '-0.03em', color: '#5fc4c8' }}>{followBackRate}%</span>
+      </div>
+      <div style={{ fontSize: 11, color: 'rgba(244,240,232,0.45)', marginBottom: 14, fontFamily: T.mono }}>of who you follow, follows back</div>
+
+      {/* Real proportion bar: mutuals vs non-followers, out of everyone you follow */}
+      <div style={{ display: 'flex', height: 8, borderRadius: 5, overflow: 'hidden', marginBottom: 8 }}>
+        <div style={{ width: `${followBackRate}%`, background: '#5fc4c8' }} />
+        <div style={{ width: `${100 - followBackRate}%`, background: '#a84b2f' }} />
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'rgba(244,240,232,0.5)', fontFamily: T.mono, marginBottom: 18 }}>
+        <span>{mutualsCount.toLocaleString()} mutuals</span>
+        <span>{nonFollowersCount.toLocaleString()} don&apos;t follow back</span>
+      </div>
+
+      {/* Timeline hint: this is the one number we can't show yet, it needs a second export */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, paddingTop: 14, borderTop: '1px solid rgba(244,240,232,0.08)' }}>
+        <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#5fc4c8', flexShrink: 0 }} />
+        <div style={{ flex: 1, height: 1, background: 'repeating-linear-gradient(90deg, rgba(95,196,200,0.4) 0 4px, transparent 4px 8px)' }} />
+        <span style={{ width: 7, height: 7, borderRadius: '50%', border: '1px dashed rgba(244,240,232,0.35)', flexShrink: 0 }} />
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'rgba(244,240,232,0.35)', fontFamily: T.mono, marginTop: 6 }}>
+        <span>today</span>
+        <span>your next export plots here</span>
+      </div>
+    </div>
+  );
+}
+
+function RadarTeaser({ isPro, mutualsCount, nonFollowersCount, totalFollowing }: {
+  isPro: boolean;
+  mutualsCount: number;
+  nonFollowersCount: number;
+  totalFollowing: number;
+}) {
   useEffect(() => { if (!isPro) trackLockedView('results-radar-teaser'); }, [isPro]);
   if (isPro) return null;
 
   return (
     <section
+      className="grid grid-cols-1 sm:grid-cols-[1fr_300px]"
       style={{
         marginTop: 48,
+        gap: 28,
+        alignItems: 'center',
         padding: '28px 26px',
         borderRadius: 20,
         background: 'linear-gradient(180deg, rgba(2,136,143,0.10) 0%, rgba(2,136,143,0.02) 100%)',
         border: `1px solid ${T.tealMid}`,
       }}
     >
-      <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', color: T.tealLight, fontFamily: T.mono, textTransform: 'uppercase', marginBottom: 10 }}>
-        Beyond this snapshot
+      <div>
+        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', color: T.tealLight, fontFamily: T.mono, textTransform: 'uppercase', marginBottom: 10 }}>
+          Beyond this snapshot
+        </div>
+        <h2 style={{ fontFamily: T.serif, fontSize: 24, fontWeight: 400, color: T.ink, letterSpacing: '-0.01em', marginBottom: 10, maxWidth: 460 }}>
+          {nonFollowersCount.toLocaleString()} {nonFollowersCount === 1 ? "account doesn't" : "accounts don't"} follow you back right now. Radar tracks the moment that changes.
+        </h2>
+        <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.6, marginBottom: 20, maxWidth: 480 }}>
+          This is a one-time check. Radar keeps every export you make, compares them automatically, and turns your numbers into a running health score and growth chart.
+        </p>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 22px', marginBottom: 22 }}>
+          <CheckItem label="Compare any two snapshots" />
+          <CheckItem label="Follower growth chart" />
+          <CheckItem label="Ghost-follower detection" />
+        </div>
+        <UpgradeLink
+          source="results-radar"
+          style={{
+            display: 'inline-block',
+            padding: '12px 24px',
+            borderRadius: 11,
+            background: T.teal,
+            color: T.cream,
+            textDecoration: 'none',
+            fontSize: 14,
+            fontWeight: 600,
+            fontFamily: T.sans,
+            boxShadow: '0 8px 24px rgba(2,136,143,0.35)',
+          }}
+        >
+          See what&apos;s in Radar
+        </UpgradeLink>
       </div>
-      <h2 style={{ fontFamily: T.serif, fontSize: 24, fontWeight: 400, color: T.ink, letterSpacing: '-0.01em', marginBottom: 10, maxWidth: 480 }}>
-        Next time you export, Radar tells you exactly who left.
-      </h2>
-      <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.6, marginBottom: 20, maxWidth: 520 }}>
-        This list is a one-time check. Radar keeps every snapshot, compares them automatically, and adds a health score, growth chart, and ghost-follower detection on top.
-      </p>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 22px', marginBottom: 22 }}>
-        <CheckItem label="Compare any two snapshots" />
-        <CheckItem label="Account health score" />
-        <CheckItem label="Follower growth chart" />
-        <CheckItem label="Ghost-follower detection" />
-      </div>
-      <UpgradeLink
-        source="results-radar"
-        style={{
-          display: 'inline-block',
-          padding: '12px 24px',
-          borderRadius: 11,
-          background: T.teal,
-          color: T.cream,
-          textDecoration: 'none',
-          fontSize: 14,
-          fontWeight: 600,
-          fontFamily: T.sans,
-          boxShadow: '0 8px 24px rgba(2,136,143,0.35)',
-        }}
-      >
-        See what&apos;s in Radar
-      </UpgradeLink>
+
+      <RadarPreviewCard mutualsCount={mutualsCount} nonFollowersCount={nonFollowersCount} totalFollowing={totalFollowing} />
     </section>
   );
 }
@@ -417,7 +484,12 @@ export default function ResultsPage() {
           )}
         </div>
 
-        <RadarTeaser isPro={isPro} />
+        <RadarTeaser
+          isPro={isPro}
+          mutualsCount={analysis.mutuals.length}
+          nonFollowersCount={analysis.nonFollowers.length}
+          totalFollowing={analysis.totalFollowing}
+        />
       </main>
 
       <LandingFooter />

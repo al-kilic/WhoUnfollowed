@@ -2,7 +2,7 @@
 
 import { useState, useRef, useMemo } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { ExternalLink, Download, Search, ArrowUpDown, Calendar, CaseSensitive } from 'lucide-react';
+import { ExternalLink, Download, Search, ArrowUpDown, Calendar, CaseSensitive, ChevronDown } from 'lucide-react';
 import { format } from 'date-fns';
 import type { Account } from '@ig-tracker/core';
 import { Button } from '@/components/ui/button';
@@ -23,8 +23,8 @@ export function AccountList({
   emptyMessage = 'No accounts here.',
 }: AccountListProps) {
   const [search, setSearch] = useState('');
-  const [sortField, setSortField] = useState<'username' | 'date'>('username');
-  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
+  const [sortField, setSortField] = useState<'username' | 'date'>('date');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
   const { requestExport, modal } = useCsvExport(csvFilename);
   const parentRef = useRef<HTMLDivElement>(null);
 
@@ -65,10 +65,11 @@ export function AccountList({
           variant="outline"
           size="sm"
           onClick={() => setSortField((f) => (f === 'username' ? 'date' : 'username'))}
-          title={sortField === 'username' ? 'Sorting by name. Click to sort by follow date' : 'Sorting by follow date. Click to sort by name'}
+          title={sortField === 'username' ? 'Sorting by name. Click to sort by follow date instead' : 'Sorting by follow date. Click to sort by name instead'}
         >
           {sortField === 'username' ? <CaseSensitive className="size-4" /> : <Calendar className="size-4" />}
           {sortField === 'username' ? 'Name' : 'Date'}
+          <ChevronDown className="size-3 -ml-0.5 opacity-50" />
         </Button>
         <Button
           variant="outline"
@@ -76,14 +77,15 @@ export function AccountList({
           onClick={() => setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))}
           title={
             sortField === 'username'
-              ? (sortDir === 'asc' ? 'A→Z. Click for Z→A' : 'Z→A. Click for A→Z')
-              : (sortDir === 'asc' ? 'Oldest first. Click for newest first' : 'Newest first. Click for oldest first')
+              ? (sortDir === 'asc' ? 'A to Z. Click to reverse to Z to A' : 'Z to A. Click to reverse to A to Z')
+              : (sortDir === 'asc' ? 'Oldest first. Click to reverse to newest first' : 'Newest first. Click to reverse to oldest first')
           }
         >
           <ArrowUpDown className="size-4" />
           {sortField === 'username'
             ? (sortDir === 'asc' ? 'A→Z' : 'Z→A')
             : (sortDir === 'asc' ? 'Oldest' : 'Newest')}
+          <ChevronDown className="size-3 -ml-0.5 opacity-50" />
         </Button>
         <Button
           variant="outline"
