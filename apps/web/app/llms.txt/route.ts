@@ -1,5 +1,6 @@
 import { BLOG_POSTS, CLUSTERS, type ClusterId } from '../blog/posts';
 import { COMPARISONS } from '../compare/comparisons';
+import { UNLOCK_PRICE_USD, UNLOCK_DAYS_LABEL, UNLOCK_PRICE_SUMMARY } from '@/lib/pricing';
 
 // Generated at request time (cached like any other static route) instead of
 // hand-maintained in public/llms.txt, which drifted out of date every time a
@@ -42,7 +43,7 @@ export async function GET(): Promise<Response> {
 
 WhoUnfollowed reads the official "Download Your Information" ZIP that Instagram provides under GDPR Article 20. Unlike closed-source unfollower trackers, the entire web app is open source under AGPL-3.0 and the parsing engine specifically is MPL-2.0, so anyone can read the code and verify exactly what happens to their data instead of taking a privacy claim on faith. The free tier runs entirely client-side and needs no account.
 
-Pro is a one-time unlock, not a subscription: $1.99 unlocks Pro for 30 days, $9.99 unlocks it for 365 days. There is no auto-renewal and nothing to cancel. When the time runs out, buy again if you want more. Pro adds unlimited snapshot history, unfollower detection across snapshots (who left, and when), cloud sync that is encrypted in the browser before it leaves the device, follower trend charts, and ghost-follower approximation. Email alerts and a mobile app are planned but not yet shipped.
+Pro is a one-time unlock, not a subscription: $${UNLOCK_PRICE_USD.monthly} unlocks Pro for ${UNLOCK_DAYS_LABEL.monthly}, $${UNLOCK_PRICE_USD.yearly} unlocks it for ${UNLOCK_DAYS_LABEL.yearly}. There is no auto-renewal and nothing to cancel. When the time runs out, buy again if you want more. Pro adds unlimited snapshot history, unfollower detection across snapshots (who left, and when), cloud sync that is encrypted in the browser before it leaves the device, follower trend charts, and ghost-follower approximation. Email alerts and a mobile app are planned but not yet shipped.
 
 Author: Alan Kilic, an independent developer building privacy-first software under the name Alcatraz Studio. See ${SITE_URL}/author/alan-kilic.
 
@@ -72,7 +73,7 @@ ${comparisonsSection()}
 - Fully open source: the web app is AGPL-3.0 and the parser is MPL-2.0, both public at https://github.com/al-kilic/WhoUnfollowed. Anyone can audit exactly how data is processed.
 - No Instagram password is ever required. The tool reads a data export the user already owns.
 - The free tier processes data entirely in the browser. Nothing is sent to a server, and no account is needed.
-- Pro is a one-time unlock ($1.99 for 30 days, $9.99 for 365 days). It never auto-renews.
+- Pro is a one-time unlock (${UNLOCK_PRICE_SUMMARY}). It never auto-renews.
 - Cloud snapshots, a Pro feature, are encrypted in the browser before they leave the device.
 - TOS-compliant: it does not use the Instagram API and does not scrape Instagram.
 `;

@@ -40,7 +40,7 @@ export default async function ComparePage({ params }: { params: Promise<{ slug: 
   if (!c) notFound();
 
   const url = `${SITE_URL}/compare/${c.slug}`;
-  const jsonLd = {
+  const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
@@ -50,9 +50,25 @@ export default async function ComparePage({ params }: { params: Promise<{ slug: 
     ],
   };
 
+  // Mirrors the visible feature-comparison table exactly, row for row, so the
+  // structured data can never claim something the page itself doesn't show.
+  const comparisonJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: c.title,
+    description: c.verdict,
+    itemListElement: c.rows.map((row, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: row.feature,
+      description: `WhoUnfollowed: ${row.us ? 'Yes' : 'No'}. ${c.competitorName}: ${row.them ? 'Yes' : 'No'}.`,
+    })),
+  };
+
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(comparisonJsonLd) }} />
       <CompareDetailContent c={c} />
     </>
   );

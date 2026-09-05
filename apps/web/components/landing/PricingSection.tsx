@@ -5,6 +5,13 @@ import Link from 'next/link';
 import { T } from './tokens';
 import { Icon } from './atoms';
 import { trackUpgradeClick } from '@/lib/analytics';
+import { UNLOCK_PRICE_USD } from '@/lib/pricing';
+
+// The yearly unlock's savings vs. buying the 30-day one repeatedly for a
+// year, computed from the same prices instead of a separately hardcoded
+// percentage that could drift from them.
+const ANNUALIZED_MONTHLY = UNLOCK_PRICE_USD.monthly * (365 / 30);
+const YEARLY_SAVINGS_PCT = Math.round((1 - UNLOCK_PRICE_USD.yearly / ANNUALIZED_MONTHLY) * 100);
 
 type Billing = 'monthly' | 'annual';
 
@@ -65,9 +72,9 @@ function PricingMobileTabs({ billing, mobileEmail, setMobileEmail, mobileStatus,
         <div style={{ padding: '28px 24px', borderRadius: 20, background: `linear-gradient(180deg, rgba(2,136,143,0.16) 0%, rgba(2,136,143,0.04) 100%)`, border: `1px solid ${T.tealMid}`, boxShadow: `0 20px 60px rgba(2,136,143,0.18)`, position: 'relative', overflow: 'hidden' }}>
           <div style={{ fontSize: 10, color: T.tealLight, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 8, fontFamily: T.mono }}>Pro</div>
           <div style={{ fontFamily: T.serif, fontSize: 52, lineHeight: 1, letterSpacing: '-0.04em', color: T.ink, marginBottom: 4 }}>
-            ${billing === 'monthly' ? '1.99' : '9.99'}<span style={{ fontSize: 16, color: T.inkMute, fontFamily: T.sans, fontWeight: 400 }}> one-time</span>
+            ${billing === 'monthly' ? UNLOCK_PRICE_USD.monthly : UNLOCK_PRICE_USD.yearly}<span style={{ fontSize: 16, color: T.inkMute, fontFamily: T.sans, fontWeight: 400 }}> one-time</span>
           </div>
-          <div style={{ fontSize: 12, color: T.inkMute, marginBottom: 16 }}>{billing === 'monthly' ? 'unlocks Pro for 30 days' : 'unlocks Pro for 365 days · save 59%'}</div>
+          <div style={{ fontSize: 12, color: T.inkMute, marginBottom: 16 }}>{billing === 'monthly' ? 'unlocks Pro for 30 days' : `unlocks Pro for 365 days · save ${YEARLY_SAVINGS_PCT}%`}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
             {['Everything in Free','Unlimited snapshot history','Radar: an account health score plus how long each follower has stuck around','Compare any two snapshots to see exactly who unfollowed','Follower growth charts','Triage: mark non-followers to drop, whitelist, or skip for now','Cloud sync across your devices'].map(f => (
               <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: T.ink }}>
@@ -156,7 +163,7 @@ function PricingBig() {
                 background: billing === 'annual' ? T.terra : 'rgba(168,75,47,0.2)',
                 color: billing === 'annual' ? T.cream : T.terra,
                 fontWeight: 700,
-              }}>−59%</span>
+              }}>{`−${YEARLY_SAVINGS_PCT}%`}</span>
             )}
           </button>
         ))}
@@ -206,12 +213,12 @@ function PricingBig() {
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
               <span style={{ fontSize: 16, color: T.inkMute, marginRight: -2 }}>$</span>
               <span style={{ fontFamily: T.serif, fontSize: 52, lineHeight: 1, letterSpacing: '-0.03em', color: T.ink }}>
-                {billing === 'monthly' ? '1.99' : '9.99'}
+                {billing === 'monthly' ? UNLOCK_PRICE_USD.monthly : UNLOCK_PRICE_USD.yearly}
               </span>
               <span style={{ fontSize: 12, color: T.inkMute }}>one-time</span>
             </div>
             <div style={{ fontSize: 11, color: T.inkMute, marginBottom: 16 }}>
-              {billing === 'monthly' ? 'unlocks Pro for 30 days' : 'unlocks Pro for 365 days · save 59%'}
+              {billing === 'monthly' ? 'unlocks Pro for 30 days' : `unlocks Pro for 365 days · save ${YEARLY_SAVINGS_PCT}%`}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20, flex: 1 }}>
               {['Everything in Free','Unlimited snapshot history','Radar: an account health score plus how long each follower has stuck around','Compare any two snapshots to see exactly who unfollowed','Follower growth charts','Triage: mark non-followers to drop, whitelist, or skip for now','Cloud sync across your devices'].map(f => (

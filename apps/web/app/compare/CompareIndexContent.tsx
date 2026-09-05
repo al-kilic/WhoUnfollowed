@@ -7,6 +7,7 @@ import { Check, X, Minus, ShieldCheck, Sparkles, BarChart3, Tag } from 'lucide-r
 import { T } from '@/components/landing/tokens';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
+import { UNLOCK_PRICE_USD } from '@/lib/pricing';
 
 // ── Competitors ───────────────────────────────────────────────────────────────
 
@@ -73,7 +74,7 @@ const FEATURES: FeatureGroup[] = [
       { label: 'iOS app',                            values: ['soon', true, true,  true,  true]  },
       { label: 'Android app',                        values: ['soon', true, true,  true,  true]  },
       { label: 'Full list on free plan',             values: [true,  'partial', 'partial', 'partial', false] },
-      { label: 'Price',                               values: ['$1.99 one-time (30 days)', '$2.99/mo', '$3.49/mo', '$1.99/mo', '$4.49/mo'] },
+      { label: 'Price',                               values: [`$${UNLOCK_PRICE_USD.monthly} one-time (30 days)`, '$2.99/mo', '$3.49/mo', '$1.99/mo', '$4.49/mo'] },
     ],
   },
 ];

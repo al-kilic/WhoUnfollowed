@@ -4,6 +4,7 @@ import { ITEMS as FAQ_ITEMS } from '@/components/landing/FAQSection';
 import { validateRequest } from '@/lib/auth/session';
 import { isProUser } from '@/lib/flags';
 import { getStats } from '@/lib/stats';
+import { UNLOCK_PRICE_USD } from '@/lib/pricing';
 
 // Self-referencing canonical for the homepage. Title and description are
 // inherited from the root layout default.
@@ -35,8 +36,8 @@ const jsonLd = {
     'Privacy-first, open-source Instagram follower analysis. Upload your official data export to see who doesn\'t follow you back. Save snapshots over time to see who unfollowed. No password or login required.',
   offers: [
     { '@type': 'Offer', name: 'Free',              price: '0',    priceCurrency: 'USD' },
-    { '@type': 'Offer', name: 'Pro (30 days)',      price: '1.99', priceCurrency: 'USD' },
-    { '@type': 'Offer', name: 'Pro (365 days)',     price: '9.99', priceCurrency: 'USD' },
+    { '@type': 'Offer', name: 'Pro (30 days)',      price: String(UNLOCK_PRICE_USD.monthly), priceCurrency: 'USD' },
+    { '@type': 'Offer', name: 'Pro (365 days)',     price: String(UNLOCK_PRICE_USD.yearly),  priceCurrency: 'USD' },
   ],
   featureList: [
     'Open-source web app (AGPL-3.0), auditable on GitHub',
