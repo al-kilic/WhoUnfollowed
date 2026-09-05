@@ -137,14 +137,19 @@ function AudienceBreakdown({ followers, mutuals, fans, nonFollowers }: {
       <SectionLabel>Audience</SectionLabel>
       <CardTitle>Who follows you</CardTitle>
       <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginTop: 16 }}>
-        <ResponsiveContainer width={160} height={160}>
-          <PieChart>
-            <Pie data={data} cx="50%" cy="50%" innerRadius={48} outerRadius={72} paddingAngle={2} dataKey="value" strokeWidth={0}>
-              {data.map((d, i) => <Cell key={i} fill={d.color} opacity={0.9} />)}
-            </Pie>
-            <Tooltip content={<CustomTooltip />} />
-          </PieChart>
-        </ResponsiveContainer>
+        {/* The list to the right already states these same numbers and
+            percentages as real text, so the donut is purely decorative here
+            and hidden from assistive tech rather than announced twice. */}
+        <div aria-hidden="true">
+          <ResponsiveContainer width={160} height={160}>
+            <PieChart>
+              <Pie data={data} cx="50%" cy="50%" innerRadius={48} outerRadius={72} paddingAngle={2} dataKey="value" strokeWidth={0}>
+                {data.map((d, i) => <Cell key={i} fill={d.color} opacity={0.9} />)}
+              </Pie>
+              <Tooltip content={<CustomTooltip />} />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, flex: 1 }}>
           {data.map(d => (
             <div key={d.name} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -246,11 +251,15 @@ function FollowRatioCard({ followers, following, snapshots }: {
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginTop: 16 }}>
         <div style={{ position: 'relative', width: 120, height: 120, flexShrink: 0 }}>
-          <ResponsiveContainer width={120} height={120}>
-            <RadialBarChart innerRadius={40} outerRadius={56} startAngle={225} endAngle={-45} data={radialData} barSize={10}>
-              <RadialBar dataKey="value" cornerRadius={5} fill={ratioColor} background={{ fill: 'var(--t-surface2)' }} />
-            </RadialBarChart>
-          </ResponsiveContainer>
+          {/* The ratio value is repeated as real text in the overlay below and
+              in the paragraph to the right, so the gauge itself is decorative. */}
+          <div aria-hidden="true">
+            <ResponsiveContainer width={120} height={120}>
+              <RadialBarChart innerRadius={40} outerRadius={56} startAngle={225} endAngle={-45} data={radialData} barSize={10}>
+                <RadialBar dataKey="value" cornerRadius={5} fill={ratioColor} background={{ fill: 'var(--t-surface2)' }} />
+              </RadialBarChart>
+            </ResponsiveContainer>
+          </div>
           <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
             <span style={{ fontFamily: T.serif, fontSize: 22, letterSpacing: '-0.02em', color: ratioColor, lineHeight: 1 }}>{ratio.toFixed(2)}</span>
           </div>
@@ -265,21 +274,26 @@ function FollowRatioCard({ followers, following, snapshots }: {
       {trendData.length >= 2 && (
         <div style={{ marginTop: 20 }}>
           <div style={{ fontSize: 10, color: T.inkMute, fontFamily: T.mono, marginBottom: 8, letterSpacing: '0.08em' }}>RATIO OVER TIME</div>
-          <ResponsiveContainer width="100%" height={60}>
-            <AreaChart data={trendData} margin={{ top: 2, right: 4, left: -20, bottom: 0 }}>
-              <defs>
-                <linearGradient id="ratioGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={T.tealMid} stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor={T.tealMid} stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--t-surface2)" />
-              <XAxis dataKey="date" tick={{ fontSize: 9, fill: T.inkMute }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 9, fill: T.inkMute }} axisLine={false} tickLine={false} />
-              <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="ratio" stroke={T.tealMid} strokeWidth={1.5} fill="url(#ratioGrad)" dot={{ fill: T.tealMid, r: 2 }} />
-            </AreaChart>
-          </ResponsiveContainer>
+          <div
+            role="img"
+            aria-label={`Follow ratio across your last ${trendData.length} snapshots: from ${trendData[0]!.ratio.toFixed(2)} on ${trendData[0]!.date} to ${trendData[trendData.length - 1]!.ratio.toFixed(2)} on ${trendData[trendData.length - 1]!.date}.`}
+          >
+            <ResponsiveContainer width="100%" height={60}>
+              <AreaChart data={trendData} margin={{ top: 2, right: 4, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="ratioGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={T.tealMid} stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor={T.tealMid} stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--t-surface2)" />
+                <XAxis dataKey="date" tick={{ fontSize: 9, fill: T.inkMute }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 9, fill: T.inkMute }} axisLine={false} tickLine={false} />
+                <Tooltip content={<CustomTooltip />} />
+                <Area type="monotone" dataKey="ratio" stroke={T.tealMid} strokeWidth={1.5} fill="url(#ratioGrad)" dot={{ fill: T.tealMid, r: 2 }} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       )}
     </Card>
@@ -447,27 +461,47 @@ function FollowAgeCard({ nonFollowers }: { nonFollowers: { username: string; hre
         <style>{`@keyframes rainbow-shine { 0% { background-position: 0% center } 100% { background-position: 200% center } }`}</style>
       </p>
 
-      <ResponsiveContainer width="100%" height={180}>
-        <BarChart data={buckets} layout="vertical" margin={{ top: 0, right: 40, left: 0, bottom: 0 }}>
-          <XAxis type="number" tick={{ fontSize: 10, fill: T.inkMute }} axisLine={false} tickLine={false} />
-          <YAxis type="category" dataKey="label" tick={{ fontSize: 11, fill: T.inkDim }} axisLine={false} tickLine={false} width={80} />
-          <Tooltip content={<CustomTooltip />} />
-          <Bar
-            dataKey="count"
-            radius={[0, 4, 4, 0]}
-            name="Accounts"
-            style={{ cursor: 'pointer' }}
-            onClick={(data: unknown) => {
-              const label = (data as { label?: string } | null)?.label;
-              setSelectedBucket(prev => prev === label ? null : (label ?? null));
-            }}
+      <div
+        role="img"
+        aria-label={`Non-followers by how long you've followed them: ${buckets.map(b => `${b.label}, ${b.count} accounts`).join('; ')}.`}
+      >
+        <ResponsiveContainer width="100%" height={180}>
+          <BarChart data={buckets} layout="vertical" margin={{ top: 0, right: 40, left: 0, bottom: 0 }}>
+            <XAxis type="number" tick={{ fontSize: 10, fill: T.inkMute }} axisLine={false} tickLine={false} />
+            <YAxis type="category" dataKey="label" tick={{ fontSize: 11, fill: T.inkDim }} axisLine={false} tickLine={false} width={80} />
+            <Tooltip content={<CustomTooltip />} />
+            <Bar
+              dataKey="count"
+              radius={[0, 4, 4, 0]}
+              name="Accounts"
+              style={{ cursor: 'pointer' }}
+              onClick={(data: unknown) => {
+                const label = (data as { label?: string } | null)?.label;
+                setSelectedBucket(prev => prev === label ? null : (label ?? null));
+              }}
+            >
+              {buckets.map((b, i) => (
+                <Cell key={i} fill={b.color} opacity={selectedBucket === null || selectedBucket === b.label ? 0.85 : 0.25} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Keyboard/screen-reader equivalent of clicking a bar above: visually
+          hidden but focusable, so the same filter-by-age-range interaction
+          doesn't require a mouse. */}
+      <div className="sr-only" style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8 }}>
+        {buckets.map(b => (
+          <button
+            key={b.label}
+            onClick={() => setSelectedBucket(prev => prev === b.label ? null : b.label)}
+            aria-pressed={selectedBucket === b.label}
           >
-            {buckets.map((b, i) => (
-              <Cell key={i} fill={b.color} opacity={selectedBucket === null || selectedBucket === b.label ? 0.85 : 0.25} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+            {b.label}: {b.count} accounts
+          </button>
+        ))}
+      </div>
 
       {activeBucket && activeBucket.accounts.length > 0 && (
         <div style={{ marginTop: 16, borderRadius: 10, border: `1px solid ${activeBucket.color}30`, overflow: 'hidden' }}>
@@ -946,6 +980,10 @@ function GrowthChart({ snapshots }: { snapshots: SnapshotSummary[] }) {
         </div>
       )}
 
+      <div
+        role="img"
+        aria-label={`Follower count across ${data.length} snapshots, from ${data[0]!.followers.toLocaleString()} on ${data[0]!.date} to ${latest.followers.toLocaleString()} on ${latest.date}${showDropAlert ? `. Biggest drop was on ${biggestDrop.date}, losing ${biggestDrop.lost} followers` : ''}.`}
+      >
       <ResponsiveContainer width="100%" height={200}>
         <AreaChart data={data} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
           <defs>
@@ -964,6 +1002,7 @@ function GrowthChart({ snapshots }: { snapshots: SnapshotSummary[] }) {
           <Area type="monotone" dataKey="followers" stroke={T.tealMid} strokeWidth={2} fill="url(#growthGrad)" dot={{ fill: T.tealMid, r: 3, strokeWidth: 0 }} activeDot={{ r: 5, fill: T.tealLight }} />
         </AreaChart>
       </ResponsiveContainer>
+      </div>
 
       {/* Gained / lost summary row */}
       <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>

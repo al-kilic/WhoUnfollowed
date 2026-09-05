@@ -21,7 +21,7 @@ export default function AccessibilityPage() {
           <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', color: T.ink, marginBottom: 12 }}>
             Accessibility
           </h1>
-          <p style={{ fontSize: 13, color: T.inkMute, fontFamily: T.mono }}>Last updated: August 27, 2026</p>
+          <p style={{ fontSize: 13, color: T.inkMute, fontFamily: T.mono }}>Last updated: September 5, 2026</p>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 36 }}>
@@ -36,7 +36,7 @@ export default function AccessibilityPage() {
           <Section title="Where We're Still Catching Up">
             <strong style={{ color: T.ink }}>We are not going to claim full compliance we haven't verified.</strong>
             <br /><br />
-            Some of the richer visuals in the Pro dashboard, like the follower timeline charts and comparison graphs, are not yet fully described for screen readers. We're working through these incrementally rather than promising a finish date we can't back up.
+            The Pro dashboard's charts (follower growth, follow ratio over time, follow age) now carry text descriptions for screen readers, and the click-to-filter bar chart has a keyboard-accessible equivalent. What's still incomplete: none of this has been tested with a real screen reader end to end, only built to the spec, so treat it as improved, not verified.
           </Section>
 
           <Section title="Our Standard">
