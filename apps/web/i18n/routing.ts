@@ -8,6 +8,12 @@ export const routing = defineRouting({
   locales: ['en', 'es', 'pt'],
   defaultLocale: 'en',
   localePrefix: 'as-needed',
+  // No auto-redirect on Accept-Language: there's no language switcher on most
+  // of the site yet (only the small, growing set of pages in
+  // LOCALIZED_PATHS), so guessing wrong would trap a visitor with no way
+  // back to their preferred language. Revisit once the switcher covers
+  // enough of the site to make redirecting safe.
+  localeDetection: false,
 });
 
 export type AppLocale = (typeof routing.locales)[number];
