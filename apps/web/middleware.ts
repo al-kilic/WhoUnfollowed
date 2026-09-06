@@ -48,6 +48,7 @@ export const config = {
     '/history/:path*',
     '/account/:path*',
     '/settings/:path*',
+    '/',
     '/pricing/:path*',
     '/(es|pt)/:path*',
   ],

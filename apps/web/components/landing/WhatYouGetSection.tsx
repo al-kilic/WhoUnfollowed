@@ -31,29 +31,40 @@ function GetCard({
   );
 }
 
-export function WhatYouGetSection() {
+interface WhatYouGetContent {
+  eyebrow: string;
+  card1Eyebrow: string;
+  card1Title: string;
+  card1Body: string;
+  card2Eyebrow: string;
+  card2Title: string;
+  card2Body: string;
+  trustLine: string;
+}
+
+export function WhatYouGetSection({ content }: { content: WhatYouGetContent }) {
   return (
     <section className="px-4 sm:px-12 pt-14 sm:pt-20 pb-10 sm:pb-14">
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 20 }}>
-          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>WHAT YOU GET</span>
+          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>{content.eyebrow}</span>
           <div style={{ flex: 1, height: 1, background: 'var(--t-border2)' }} />
         </div>
         <div className="flex flex-col sm:flex-row" style={{ gap: 14, marginBottom: 18 }}>
           <GetCard
-            eyebrow="Today · one export"
-            title="See who doesn't follow you back"
-            body="Find every account you follow that does not currently follow you."
+            eyebrow={content.card1Eyebrow}
+            title={content.card1Title}
+            body={content.card1Body}
           />
           <GetCard
-            eyebrow="Over time · snapshots"
-            title="See who unfollowed you"
-            body="Save a snapshot, upload another export later, and compare what changed."
+            eyebrow={content.card2Eyebrow}
+            title={content.card2Title}
+            body={content.card2Body}
           />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontSize: 12, color: T.inkMute, fontFamily: T.mono }}>
           <Icon.shield size={12} color={T.tealMid} />
-          No password. No account connection. Your ZIP is processed locally in this browser.
+          {content.trustLine}
         </div>
       </div>
     </section>

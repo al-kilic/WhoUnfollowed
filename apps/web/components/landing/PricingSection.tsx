@@ -17,7 +17,47 @@ type Billing = 'monthly' | 'annual';
 
 type MobileTab = 'free' | 'pro' | 'mobile';
 
-function PricingMobileTabs({ billing, mobileEmail, setMobileEmail, mobileStatus, handleMobileNotify }: {
+interface PricingTeaserContent {
+  eyebrow: string;
+  headlineLine1: string;
+  headlineLine2: string;
+  monthlyLabel: string;
+  yearlyLabel: string;
+  freeBadge: string;
+  freeNoSignup: string;
+  freeBullets: string[];
+  freeCta: string;
+  proBadge: string;
+  oneTime: string;
+  proDescMonthly: string;
+  proDescYearlyTemplate: string;
+  proBullets: string[];
+  proCta: string;
+  mobileBadge: string;
+  mobileSoon: string;
+  mobileIncludedWithPro: string;
+  mobileQuote: string;
+  mobileBullets: string[];
+  mobileEmailPlaceholder: string;
+  mobileNotifyButton: string;
+  mobileOnTheList: string;
+  mobileError: string;
+  freeTab: string;
+  proTab: string;
+  mobileTab: string;
+  paymentNotes: string[];
+  learnMore: string;
+}
+
+function fillTemplate(template: string, values: Record<string, string | number>): string {
+  return Object.entries(values).reduce(
+    (acc, [key, value]) => acc.replaceAll(`{${key}}`, String(value)),
+    template,
+  );
+}
+
+function PricingMobileTabs({ content, billing, mobileEmail, setMobileEmail, mobileStatus, handleMobileNotify }: {
+  content: PricingTeaserContent;
   billing: Billing;
   mobileEmail: string;
   setMobileEmail: (v: string) => void;
@@ -32,7 +72,7 @@ function PricingMobileTabs({ billing, mobileEmail, setMobileEmail, mobileStatus,
       <div style={{ display: 'flex', gap: 4, padding: 4, borderRadius: 14, background: T.surface1, border: `1px solid ${T.border1}`, marginBottom: 16 }}>
         {(['free', 'pro', 'mobile'] as MobileTab[]).map(t => {
           const active = tab === t;
-          const labels: Record<MobileTab, string> = { free: 'Free', pro: 'Pro', mobile: 'Mobile' };
+          const labels: Record<MobileTab, string> = { free: content.freeTab, pro: content.proTab, mobile: content.mobileTab };
           return (
             <button key={t} onClick={() => setTab(t)} style={{
               flex: 1, padding: '10px 8px', borderRadius: 10, cursor: 'pointer',
@@ -52,37 +92,37 @@ function PricingMobileTabs({ billing, mobileEmail, setMobileEmail, mobileStatus,
         <div style={{ padding: '24px', borderRadius: 18, background: T.surface1, border: `1px solid ${T.border1}` }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 11px', borderRadius: 100, background: T.tealGlow, marginBottom: 10 }}>
             <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.tealLight, flexShrink: 0 }} />
-            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>Free forever</span>
+            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>{content.freeBadge}</span>
           </div>
           <div style={{ fontFamily: T.serif, fontSize: 52, lineHeight: 1, letterSpacing: '-0.04em', color: T.ink, marginBottom: 4 }}>$0</div>
-          <div style={{ fontSize: 12, color: T.inkMute, marginBottom: 16 }}>no sign up required</div>
+          <div style={{ fontSize: 12, color: T.inkMute, marginBottom: 16 }}>{content.freeNoSignup}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
-            {['One snapshot at a time','Full non-followers list','CSV export','No account needed'].map(f => (
+            {content.freeBullets.map(f => (
               <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: T.ink }}>
                 <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.tealMid, flexShrink: 0 }} />{f}
               </div>
             ))}
           </div>
-          <button onClick={() => { const el = document.getElementById('upload'); if (el) el.scrollIntoView({ behavior: 'smooth' }); else window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{ width: '100%', padding: '14px', borderRadius: 12, background: 'transparent', color: T.ink, border: `1px solid ${T.border3}`, fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: T.sans }}>Use it free</button>
+          <button onClick={() => { const el = document.getElementById('upload'); if (el) el.scrollIntoView({ behavior: 'smooth' }); else window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{ width: '100%', padding: '14px', borderRadius: 12, background: 'transparent', color: T.ink, border: `1px solid ${T.border3}`, fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: T.sans }}>{content.freeCta}</button>
         </div>
       )}
 
       {/* Pro */}
       {tab === 'pro' && (
         <div style={{ padding: '28px 24px', borderRadius: 20, background: `linear-gradient(180deg, rgba(2,136,143,0.16) 0%, rgba(2,136,143,0.04) 100%)`, border: `1px solid ${T.tealMid}`, boxShadow: `0 20px 60px rgba(2,136,143,0.18)`, position: 'relative', overflow: 'hidden' }}>
-          <div style={{ fontSize: 10, color: T.tealLight, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 8, fontFamily: T.mono }}>Pro</div>
+          <div style={{ fontSize: 10, color: T.tealLight, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 8, fontFamily: T.mono }}>{content.proBadge}</div>
           <div style={{ fontFamily: T.serif, fontSize: 52, lineHeight: 1, letterSpacing: '-0.04em', color: T.ink, marginBottom: 4 }}>
-            ${billing === 'monthly' ? UNLOCK_PRICE_USD.monthly : UNLOCK_PRICE_USD.yearly}<span style={{ fontSize: 16, color: T.inkMute, fontFamily: T.sans, fontWeight: 400 }}> one-time</span>
+            ${billing === 'monthly' ? UNLOCK_PRICE_USD.monthly : UNLOCK_PRICE_USD.yearly}<span style={{ fontSize: 16, color: T.inkMute, fontFamily: T.sans, fontWeight: 400 }}> {content.oneTime}</span>
           </div>
-          <div style={{ fontSize: 12, color: T.inkMute, marginBottom: 16 }}>{billing === 'monthly' ? 'unlocks Pro for 30 days' : `unlocks Pro for 365 days · save ${YEARLY_SAVINGS_PCT}%`}</div>
+          <div style={{ fontSize: 12, color: T.inkMute, marginBottom: 16 }}>{billing === 'monthly' ? content.proDescMonthly : fillTemplate(content.proDescYearlyTemplate, { pct: YEARLY_SAVINGS_PCT })}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
-            {['Everything in Free','Unlimited snapshot history','Radar: an account health score plus how long each follower has stuck around','Compare any two snapshots to see exactly who unfollowed','Follower growth charts','Triage: mark non-followers to drop, whitelist, or skip for now','Cloud sync across your devices'].map(f => (
+            {content.proBullets.map(f => (
               <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: T.ink }}>
                 <Icon.check color={T.tealLight} size={13} />{f}
               </div>
             ))}
           </div>
-          <Link href="/pricing" onClick={() => trackUpgradeClick('homepage-pricing-card-mobile')} style={{ display: 'block', width: '100%', padding: '14px', borderRadius: 12, background: T.teal, color: T.cream, border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: T.sans, boxShadow: `0 8px 24px ${T.tealGlow}`, textAlign: 'center', textDecoration: 'none', boxSizing: 'border-box' }}>See everything in Pro</Link>
+          <Link href="/pricing" onClick={() => trackUpgradeClick('homepage-pricing-card-mobile')} style={{ display: 'block', width: '100%', padding: '14px', borderRadius: 12, background: T.teal, color: T.cream, border: 'none', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: T.sans, boxShadow: `0 8px 24px ${T.tealGlow}`, textAlign: 'center', textDecoration: 'none', boxSizing: 'border-box' }}>{content.proCta}</Link>
         </div>
       )}
 
@@ -90,27 +130,27 @@ function PricingMobileTabs({ billing, mobileEmail, setMobileEmail, mobileStatus,
       {tab === 'mobile' && (
         <div style={{ padding: '24px', borderRadius: 18, background: T.surface1, border: `1px solid ${T.border1}` }}>
           <div style={{ fontSize: 10, color: T.inkMute, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 10, fontFamily: T.mono }}>
-            Mobile App <span style={{ marginLeft: 6, padding: '2px 8px', borderRadius: 20, background: T.surface2, border: `1px solid ${T.border1}`, fontSize: 8, letterSpacing: '0.08em' }}>Soon</span>
+            {content.mobileBadge} <span style={{ marginLeft: 6, padding: '2px 8px', borderRadius: 20, background: T.surface2, border: `1px solid ${T.border1}`, fontSize: 8, letterSpacing: '0.08em' }}>{content.mobileSoon}</span>
           </div>
           <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
             {['iOS','Android'].map(p => <span key={p} style={{ padding: '5px 12px', borderRadius: 20, border: `1px solid ${T.border2}`, fontSize: 11, fontFamily: T.mono, color: T.inkDim }}>{p}</span>)}
           </div>
-          <p style={{ fontSize: 12, color: T.tealMid, fontFamily: T.mono, marginBottom: 12 }}>Included with Pro</p>
-          <p style={{ fontFamily: T.serif, fontSize: 15, fontStyle: 'italic', color: T.inkDim, lineHeight: 1.4, marginBottom: 16 }}>&ldquo;Your full Radar, in your pocket. No browser needed.&rdquo;</p>
+          <p style={{ fontSize: 12, color: T.tealMid, fontFamily: T.mono, marginBottom: 12 }}>{content.mobileIncludedWithPro}</p>
+          <p style={{ fontFamily: T.serif, fontSize: 15, fontStyle: 'italic', color: T.inkDim, lineHeight: 1.4, marginBottom: 16 }}>{content.mobileQuote}</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 20 }}>
-            {['Everything in Pro','Native iOS and Android','Works offline','Share results as an image','Included with Pro'].map(f => (
+            {content.mobileBullets.map(f => (
               <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: T.ink }}>
                 <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.tealMid, flexShrink: 0 }} />{f}
               </div>
             ))}
           </div>
           {mobileStatus === 'sent' ? (
-            <div style={{ padding: '13px', borderRadius: 11, background: 'rgba(2,136,143,0.1)', border: '1px solid rgba(2,136,143,0.25)', textAlign: 'center', fontSize: 13, color: T.tealLight }}>You are on the list.</div>
+            <div style={{ padding: '13px', borderRadius: 11, background: 'rgba(2,136,143,0.1)', border: '1px solid rgba(2,136,143,0.25)', textAlign: 'center', fontSize: 13, color: T.tealLight }}>{content.mobileOnTheList}</div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <input type="email" placeholder="your@email.com" value={mobileEmail} onChange={e => { setMobileEmail(e.target.value); }} style={{ width: '100%', padding: '11px 14px', borderRadius: 10, boxSizing: 'border-box', border: `1px solid ${mobileStatus === 'error' ? 'rgba(168,75,47,0.4)' : T.border2}`, background: T.surface1, color: T.ink, fontSize: 13, fontFamily: T.sans, outline: 'none' }} />
-              <button onClick={handleMobileNotify} disabled={!mobileEmail.includes('@')} style={{ width: '100%', padding: '13px', borderRadius: 11, cursor: mobileEmail.includes('@') ? 'pointer' : 'not-allowed', background: 'transparent', color: mobileEmail.includes('@') ? T.ink : T.inkMute, border: `1px solid ${mobileEmail.includes('@') ? T.border3 : T.border1}`, fontSize: 13, fontWeight: 600, fontFamily: T.sans }}>Notify me at launch</button>
-              {mobileStatus === 'error' && <p style={{ fontSize: 11, color: T.terra, margin: 0, fontFamily: T.mono }}>Something went wrong. Try again.</p>}
+              <input type="email" placeholder={content.mobileEmailPlaceholder} value={mobileEmail} onChange={e => { setMobileEmail(e.target.value); }} style={{ width: '100%', padding: '11px 14px', borderRadius: 10, boxSizing: 'border-box', border: `1px solid ${mobileStatus === 'error' ? 'rgba(168,75,47,0.4)' : T.border2}`, background: T.surface1, color: T.ink, fontSize: 13, fontFamily: T.sans, outline: 'none' }} />
+              <button onClick={handleMobileNotify} disabled={!mobileEmail.includes('@')} style={{ width: '100%', padding: '13px', borderRadius: 11, cursor: mobileEmail.includes('@') ? 'pointer' : 'not-allowed', background: 'transparent', color: mobileEmail.includes('@') ? T.ink : T.inkMute, border: `1px solid ${mobileEmail.includes('@') ? T.border3 : T.border1}`, fontSize: 13, fontWeight: 600, fontFamily: T.sans }}>{content.mobileNotifyButton}</button>
+              {mobileStatus === 'error' && <p style={{ fontSize: 11, color: T.terra, margin: 0, fontFamily: T.mono }}>{content.mobileError}</p>}
             </div>
           )}
         </div>
@@ -119,7 +159,7 @@ function PricingMobileTabs({ billing, mobileEmail, setMobileEmail, mobileStatus,
   );
 }
 
-function PricingBig() {
+function PricingBig({ content }: { content: PricingTeaserContent }) {
   const [billing, setBilling] = React.useState<Billing>('monthly');
   const [mobileEmail, setMobileEmail] = React.useState('');
   const [mobileStatus, setMobileStatus] = React.useState<'idle' | 'sent' | 'error'>('idle');
@@ -156,7 +196,7 @@ function PricingBig() {
             border: 'none',
             transition: 'all 0.3s cubic-bezier(0.16,1,0.3,1)',
           }}>
-            {v === 'monthly' ? '30 days' : '365 days'}
+            {v === 'monthly' ? content.monthlyLabel : content.yearlyLabel}
             {v === 'annual' && (
               <span style={{
                 marginLeft: 6, fontSize: 9, padding: '2px 6px', borderRadius: 6,
@@ -179,14 +219,14 @@ function PricingBig() {
         }}>
           <div style={{ display: 'inline-flex', alignSelf: 'flex-start', alignItems: 'center', gap: 6, padding: '4px 11px', borderRadius: 100, background: T.tealGlow, marginBottom: 10 }}>
             <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.tealLight, flexShrink: 0 }} />
-            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>Free forever</span>
+            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>{content.freeBadge}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
             <span style={{ fontFamily: T.serif, fontSize: 44, lineHeight: 1, letterSpacing: '-0.03em', color: T.ink }}>$0</span>
           </div>
-          <div style={{ fontSize: 11, color: T.inkMute, marginBottom: 16 }}>no sign up required</div>
+          <div style={{ fontSize: 11, color: T.inkMute, marginBottom: 16 }}>{content.freeNoSignup}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20, flex: 1 }}>
-            {['One snapshot at a time','Full non-followers list','CSV export','No account needed'].map(f => (
+            {content.freeBullets.map(f => (
               <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: T.ink }}>
                 <span style={{ width: 4, height: 4, borderRadius: '50%', background: T.tealMid, flexShrink: 0 }} />{f}
               </div>
@@ -196,7 +236,7 @@ function PricingBig() {
             onClick={() => { const el = document.getElementById('upload'); if (el) el.scrollIntoView({ behavior: 'smooth' }); else window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             style={{ width: '100%', padding: '10px 14px', borderRadius: 9, background: 'transparent', color: T.ink, border: `1px solid ${T.border3}`, fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: T.sans }}
           >
-            Use it free
+            {content.freeCta}
           </button>
         </div>
 
@@ -209,19 +249,19 @@ function PricingBig() {
           display: 'flex', flexDirection: 'column', overflow: 'hidden',
         }}>
           <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', flex: 1 }}>
-            <div style={{ fontSize: 10, color: T.tealLight, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 10, fontFamily: T.mono }}>Pro</div>
+            <div style={{ fontSize: 10, color: T.tealLight, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 10, fontFamily: T.mono }}>{content.proBadge}</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
               <span style={{ fontSize: 16, color: T.inkMute, marginRight: -2 }}>$</span>
               <span style={{ fontFamily: T.serif, fontSize: 52, lineHeight: 1, letterSpacing: '-0.03em', color: T.ink }}>
                 {billing === 'monthly' ? UNLOCK_PRICE_USD.monthly : UNLOCK_PRICE_USD.yearly}
               </span>
-              <span style={{ fontSize: 12, color: T.inkMute }}>one-time</span>
+              <span style={{ fontSize: 12, color: T.inkMute }}>{content.oneTime}</span>
             </div>
             <div style={{ fontSize: 11, color: T.inkMute, marginBottom: 16 }}>
-              {billing === 'monthly' ? 'unlocks Pro for 30 days' : `unlocks Pro for 365 days · save ${YEARLY_SAVINGS_PCT}%`}
+              {billing === 'monthly' ? content.proDescMonthly : fillTemplate(content.proDescYearlyTemplate, { pct: YEARLY_SAVINGS_PCT })}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20, flex: 1 }}>
-              {['Everything in Free','Unlimited snapshot history','Radar: an account health score plus how long each follower has stuck around','Compare any two snapshots to see exactly who unfollowed','Follower growth charts','Triage: mark non-followers to drop, whitelist, or skip for now','Cloud sync across your devices'].map(f => (
+              {content.proBullets.map(f => (
                 <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: T.ink }}>
                   <Icon.check color={T.tealLight} size={13} />{f}
                 </div>
@@ -234,7 +274,7 @@ function PricingBig() {
               onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1px)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; }}
             >
-              See everything in Pro
+              {content.proCta}
             </Link>
           </div>
         </div>
@@ -245,8 +285,8 @@ function PricingBig() {
           background: T.surface1, border: `1px solid ${T.border1}`,
           display: 'flex', flexDirection: 'column', overflow: 'hidden',
         }}>
-          <div style={{ position: 'absolute', top: 14, right: 14, padding: '3px 8px', borderRadius: 100, background: T.surface2, border: `1px solid ${T.border2}`, fontSize: 8, fontWeight: 700, color: T.inkDim, letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: T.mono }}>Soon</div>
-          <div style={{ fontSize: 10, color: T.inkMute, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 10, fontFamily: T.mono }}>Mobile App</div>
+          <div style={{ position: 'absolute', top: 14, right: 14, padding: '3px 8px', borderRadius: 100, background: T.surface2, border: `1px solid ${T.border2}`, fontSize: 8, fontWeight: 700, color: T.inkDim, letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: T.mono }}>{content.mobileSoon}</div>
+          <div style={{ fontSize: 10, color: T.inkMute, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 10, fontFamily: T.mono }}>{content.mobileBadge}</div>
           <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
             {[
               { label: 'iOS', icon: <svg width="10" height="12" viewBox="0 0 384 512" fill="currentColor" opacity={.7}><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-16.9 75.8-16.9 31.8 0 48.3 16.9 76.4 16.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg> },
@@ -257,9 +297,9 @@ function PricingBig() {
               </span>
             ))}
           </div>
-          <p style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, marginBottom: 14 }}>Included with Pro</p>
+          <p style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, marginBottom: 14 }}>{content.mobileIncludedWithPro}</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20, flex: 1 }}>
-            {['Everything in Pro','Native iOS and Android','Works offline','Share results as an image'].map(f => (
+            {content.mobileBullets.map(f => (
               <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: T.ink }}>
                 <span style={{ width: 4, height: 4, borderRadius: '50%', background: T.tealMid, flexShrink: 0 }} />{f}
               </div>
@@ -267,13 +307,13 @@ function PricingBig() {
           </div>
           {mobileStatus === 'sent' ? (
             <div style={{ padding: '13px', borderRadius: 11, background: 'rgba(2,136,143,0.1)', border: '1px solid rgba(2,136,143,0.25)', textAlign: 'center', fontSize: 13, color: T.tealLight, fontFamily: T.sans }}>
-              You are on the list.
+              {content.mobileOnTheList}
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <input
                 type="email"
-                placeholder="your@email.com"
+                placeholder={content.mobileEmailPlaceholder}
                 value={mobileEmail}
                 onChange={e => { setMobileEmail(e.target.value); setMobileStatus('idle'); }}
                 style={{ width: '100%', padding: '11px 14px', borderRadius: 10, boxSizing: 'border-box', border: `1px solid ${mobileStatus === 'error' ? 'rgba(168,75,47,0.4)' : T.border3}`, background: T.surface1, color: T.ink, fontSize: 13, fontFamily: T.sans, outline: 'none' }}
@@ -283,20 +323,20 @@ function PricingBig() {
                 disabled={!mobileEmail.includes('@')}
                 style={{ width: '100%', padding: '12px', borderRadius: 11, cursor: mobileEmail.includes('@') ? 'pointer' : 'not-allowed', background: 'transparent', color: mobileEmail.includes('@') ? T.ink : T.inkMute, border: `1px solid ${mobileEmail.includes('@') ? T.border3 : T.border1}`, fontSize: 13, fontWeight: 600, fontFamily: T.sans, transition: 'all 0.15s' }}
               >
-                Notify me at launch
+                {content.mobileNotifyButton}
               </button>
-              {mobileStatus === 'error' && <p style={{ fontSize: 11, color: T.terra, margin: 0, fontFamily: T.mono }}>Something went wrong. Try again.</p>}
+              {mobileStatus === 'error' && <p style={{ fontSize: 11, color: T.terra, margin: 0, fontFamily: T.mono }}>{content.mobileError}</p>}
             </div>
           )}
         </div>
       </div>
 
       {/* Mobile: single merged card with tab switcher */}
-      <PricingMobileTabs billing={billing} mobileEmail={mobileEmail} setMobileEmail={setMobileEmail} mobileStatus={mobileStatus} handleMobileNotify={handleMobileNotify} />
+      <PricingMobileTabs content={content} billing={billing} mobileEmail={mobileEmail} setMobileEmail={setMobileEmail} mobileStatus={mobileStatus} handleMobileNotify={handleMobileNotify} />
 
       {/* Payment note */}
       <div className="hidden sm:flex" style={{ marginTop: 24, alignItems: 'center', justifyContent: 'center', gap: 18, fontSize: 11, color: T.inkMute, fontFamily: T.mono }}>
-        {['Stripe checkout','SCA compliant','EU VAT included'].map(l => (
+        {content.paymentNotes.map(l => (
           <span key={l} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
             <Icon.check size={11} color={T.tealMid} />{l}
           </span>
@@ -306,26 +346,26 @@ function PricingBig() {
       {/* Learn more */}
       <div style={{ marginTop: 18, textAlign: 'center' }}>
         <Link href="/pricing" onClick={() => trackUpgradeClick('homepage-pricing-learnmore')} style={{ fontSize: 13, color: T.tealMid, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans }}>
-          Get more information about Pro →
+          {content.learnMore}
         </Link>
       </div>
     </div>
   );
 }
 
-export function PricingSection() {
+export function PricingSection({ content }: { content: PricingTeaserContent }) {
   return (
     <section id="pricing" className="px-4 sm:px-12 pb-24 sm:pb-32 relative">
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 14 }}>
-          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>PRICING</span>
+          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>{content.eyebrow}</span>
           <div style={{ flex: 1, height: 1, background: T.border2 }} />
         </div>
         <h2 style={{ fontFamily: T.serif, fontSize: 'clamp(36px, 6vw, 72px)', fontWeight: 400, lineHeight: 1.0, letterSpacing: '-0.03em', marginBottom: 40, color: T.ink }}>
-          Free is the answer<br/>
-          <span style={{ fontStyle: 'italic', color: T.tealLight }}>for almost everyone.</span>
+          {content.headlineLine1}<br/>
+          <span style={{ fontStyle: 'italic', color: T.tealLight }}>{content.headlineLine2}</span>
         </h2>
-        <PricingBig />
+        <PricingBig content={content} />
       </div>
     </section>
   );

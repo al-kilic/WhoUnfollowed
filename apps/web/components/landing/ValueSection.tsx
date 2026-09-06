@@ -256,7 +256,25 @@ function PanelLabel({ children, description }: { children: React.ReactNode; desc
 
 // ─── Value Section ────────────────────────────────────────────────────────────
 
-export function ValueSection() {
+interface ValueContent {
+  eyebrow: string;
+  headlineLine1: string;
+  headlineLine2: string;
+  body: string;
+  panelAccountHealth: string;
+  panelAccountHealthDesc: string;
+  panelResults: string;
+  panelCompare: string;
+  panelCompareDesc: string;
+  statParseTime: string;
+  statParseTimeNote: string;
+  statDataLeaves: string;
+  statDataLeavesNote: string;
+  statApiCalls: string;
+  statApiCallsNote: string;
+}
+
+export function ValueSection({ content }: { content: ValueContent }) {
   const containerRef  = useRef<HTMLDivElement>(null);
   const leftRef       = useRef<HTMLDivElement>(null);
   const centerRef     = useRef<HTMLDivElement>(null);
@@ -291,16 +309,16 @@ export function ValueSection() {
     <section style={{ paddingTop: 40, paddingBottom: 120, paddingLeft: 48, paddingRight: 48, position: 'relative' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 14 }}>
-          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>RESULTS</span>
+          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>{content.eyebrow}</span>
           <div style={{ flex: 1, height: 1, background: 'var(--t-border2)' }} />
         </div>
         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 32, marginBottom: 64, flexWrap: 'wrap' }}>
           <h2 style={{ fontFamily: T.serif, fontSize: 'clamp(40px, 5vw, 64px)', fontWeight: 400, lineHeight: 1.0, letterSpacing: '-0.03em', color: T.ink, margin: 0 }}>
-            2 seconds to parse.<br/>
-            <span style={{ fontStyle: 'italic', color: T.tealLight }}>A full picture to act on.</span>
+            {content.headlineLine1}<br/>
+            <span style={{ fontStyle: 'italic', color: T.tealLight }}>{content.headlineLine2}</span>
           </h2>
           <p style={{ fontSize: 15, color: T.inkDim, maxWidth: 380, lineHeight: 1.65, margin: 0 }}>
-            Drop the ZIP. Your browser reads it locally and gives you the exact list of who does not follow you back, a Radar health score, and a growth timeline. Nothing leaves your device.
+            {content.body}
           </p>
         </div>
 
@@ -324,20 +342,20 @@ export function ValueSection() {
 
           {/* Left */}
           <div ref={leftRef} style={{ position: 'absolute', top: 60, left: '2%', width: '46%', zIndex: 1, transform: 'rotate(-2deg) translate(0px,0px)', transition: 'transform 0.15s ease-out' }}>
-            <PanelLabel description="Radar is your account health score: how many followers are sticking around, how long they've followed you, and how your growth is trending.">Radar · Account Health</PanelLabel>
+            <PanelLabel description={content.panelAccountHealthDesc}>{content.panelAccountHealth}</PanelLabel>
             <ProductMock title="Radar · Account Health" variant="csv" style={{ opacity: 0.92 }} />
           </div>
 
           {/* Centre */}
           <div ref={centerRef} style={{ position: 'absolute', top: 0, left: '22%', width: '56%', zIndex: 3, transform: 'rotate(0.4deg) translate(0px,0px)', transition: 'transform 0.12s ease-out' }}>
-            <PanelLabel>Results · Non-followers</PanelLabel>
+            <PanelLabel>{content.panelResults}</PanelLabel>
             <ProductMock title="whounfollowed.co · Non-followers" variant="list" featured />
           </div>
 
           {/* Right */}
           <div ref={rightRef} style={{ position: 'absolute', top: 60, left: '60%', width: '40%', zIndex: 4, transform: 'rotate(2deg) translate(0px,0px)', transition: 'transform 0.18s ease-out' }}>
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <PanelLabel description="Compare shows the difference between two snapshots: exactly who unfollowed you and who's new, between the export you uploaded before and this one.">Radar · Compare</PanelLabel>
+              <PanelLabel description={content.panelCompareDesc}>{content.panelCompare}</PanelLabel>
             </div>
             <ProductMock title="Radar · Compare snapshots" variant="diff" style={{ opacity: 0.92 }} />
           </div>
@@ -347,9 +365,9 @@ export function ValueSection() {
         {/* Bottom stat row */}
         <div style={{ marginTop: 40, display: 'flex', gap: 32, flexWrap: 'wrap' }}>
           {[
-            { label: 'Parse time',      value: '~2s',        note: 'in your browser' },
-            { label: 'Data leaves device', value: '0 bytes', note: 'nothing uploaded' },
-            { label: 'Instagram API calls', value: '0',      note: 'uses your own export' },
+            { label: content.statParseTime,   value: '~2s',      note: content.statParseTimeNote },
+            { label: content.statDataLeaves,  value: '0 bytes',  note: content.statDataLeavesNote },
+            { label: content.statApiCalls,    value: '0',        note: content.statApiCallsNote },
           ].map(s => (
             <div key={s.label} style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
               <span style={{ fontFamily: T.serif, fontSize: 28, letterSpacing: '-0.02em', color: T.tealLight }}>{s.value}</span>

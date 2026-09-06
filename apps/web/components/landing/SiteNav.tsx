@@ -40,7 +40,7 @@ function WhatIsDropdown() {
 
   return (
     <div style={{ position: 'relative' }} onMouseEnter={handleEnter} onMouseLeave={handleLeave}>
-      <a
+      <Link
         href="/what-is-whounfollowed"
         onClick={e => { e.preventDefault(); setOpen(o => !o); }}
         style={{ cursor: 'pointer', color: open ? T.ink : 'inherit', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4, transition: 'color 0.15s', whiteSpace: 'nowrap' }}
@@ -49,7 +49,7 @@ function WhatIsDropdown() {
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ opacity: 0.5, marginTop: 1 }}>
           <path d="M2 3.5 L5 6.5 L8 3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
-      </a>
+      </Link>
       {open && (
         <>
           <div style={{ position: 'absolute', top: '100%', left: '-20px', right: '-20px', height: 10 }} />
@@ -271,7 +271,7 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
           )}
           <WhatIsDropdown />
           <HowItWorksDropdown />
-          <a href="/privacy" style={{ cursor: 'pointer', color: 'inherit', textDecoration: 'none' }}>{t('privacy')}</a>
+          <Link href="/privacy" style={{ cursor: 'pointer', color: 'inherit', textDecoration: 'none' }}>{t('privacy')}</Link>
           <a
             href="https://github.com/al-kilic/WhoUnfollowed"
             target="_blank"
@@ -329,7 +329,7 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
           <a href="https://accountscenter.instagram.com/info_and_permissions/dyi/" target="_blank" rel="noopener noreferrer" style={{ fontSize: 16, color: T.tealLight, textDecoration: 'none' }}>
             {t('exportOnInstagram')} ↗
           </a>
-          <a href="/privacy" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('privacy')}</a>
+          <Link href="/privacy" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('privacy')}</Link>
           <a
             href="https://github.com/al-kilic/WhoUnfollowed"
             target="_blank"

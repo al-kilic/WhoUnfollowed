@@ -7,50 +7,28 @@ import { UNLOCK_PRICE_SUMMARY } from '@/lib/pricing';
 
 type CategoryId = 'privacy' | 'product' | 'billing';
 
-const CATEGORIES: { id: CategoryId; label: string; count: number }[] = [
-  { id: 'privacy', label: 'Privacy & data',  count: 4 },
-  { id: 'product', label: 'How it works',    count: 4 },
-  { id: 'billing', label: 'Plans & billing', count: 2 },
-];
+interface FaqContent {
+  eyebrow: string;
+  headlineLine1: string;
+  headlineLine2: string;
+  intro: string;
+  stillWondering: string;
+  emailUs: string;
+  categories: Record<CategoryId, string>;
+  items: Record<CategoryId, [string, string][]>;
+}
 
-export const ITEMS: Record<CategoryId, [string, string][]> = {
-  privacy: [
-    ['Do I need to give you my Instagram password?',
-     'No. There is no Instagram login on WhoUnfollowed. You upload your own data export, a ZIP file Instagram emails to you on request. Your password is never involved.'],
-    ['Where does my data go after I upload it?',
-     "On the Free plan, nowhere. The ZIP is read by JavaScript inside your browser tab and discarded when you close the page. On Pro, snapshots you choose to save are stored encrypted in our cloud so you can compare them across devices."],
-    ['Will Instagram ban me for using this?',
-     "No. The data export is a feature Instagram offers to comply with GDPR. You're using their official tool, not scraping their API or violating any terms."],
-    ['If I unfollow someone, will they know?',
-     "No notification is sent either way. Instagram doesn't tell someone they've been unfollowed, and it doesn't tell you when someone unfollows you. The only way to actually know is to compare your follower list before and after, which is what this tool is for."],
-  ],
-  product: [
-    ['How accurate are the results?',
-     "Exact. We compare your Followers list against your Following list directly. If a username appears in one and not the other, that is the truth, not an estimate or a probability."],
-    ['Can I track changes over time?',
-     "Yes, on Pro. Each upload becomes a snapshot. You can compare any two snapshots to see who started following, who unfollowed, and who quietly came back."],
-    ['What file format do you need?',
-     "The ZIP file Instagram sends you when you request your data. Just request followers and following, you don't need the whole archive."],
-    ['Is the code open source?',
-     "Yes. The web app is AGPL-3.0 licensed and the parser is MPL-2.0, both public on GitHub. You don't have to take a privacy claim on faith, you can read exactly what the code does with your data."],
-  ],
-  billing: [
-    ['How much does Pro cost?',
-     `Pro is a one-time payment: ${UNLOCK_PRICE_SUMMARY}. No recurring charge, no auto-renewal. The free plan stays free and needs no account. You get your full non-followers list, mutuals, and fans every time you upload. Pro adds saved snapshot history, growth charts, ghost-follower detection, and encrypted cloud sync across your devices.`],
-    ["What happens when my Pro unlock runs out?",
-     "You drop back to the free plan automatically, no charge, nothing to cancel. Your saved snapshots still export to CSV whenever you want. Buy another unlock any time you want Pro again."],
-  ],
-};
+const CATEGORY_ORDER: CategoryId[] = ['privacy', 'product', 'billing'];
 
-function CategoryTabs({ activeCat, setActiveCat }: { activeCat: CategoryId; setActiveCat: (c: CategoryId) => void }) {
+function CategoryTabs({ content, activeCat, setActiveCat }: { content: FaqContent; activeCat: CategoryId; setActiveCat: (c: CategoryId) => void }) {
   return (
     <div style={{ display: 'flex', gap: 4, overflowX: 'auto', paddingBottom: 4 }}>
-      {CATEGORIES.map(c => {
-        const active = activeCat === c.id;
+      {CATEGORY_ORDER.map(id => {
+        const active = activeCat === id;
         return (
           <button
-            key={c.id}
-            onClick={() => setActiveCat(c.id)}
+            key={id}
+            onClick={() => setActiveCat(id)}
             style={{
               flexShrink: 0,
               display: 'flex', alignItems: 'center', gap: 8,
@@ -64,8 +42,8 @@ function CategoryTabs({ activeCat, setActiveCat }: { activeCat: CategoryId; setA
             }}
           >
             <span style={{ width: 4, height: 14, borderRadius: 2, background: active ? T.tealLight : 'transparent', transition: 'background 0.2s', flexShrink: 0 }} />
-            {c.label}
-            <span style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono }}>{c.count}</span>
+            {content.categories[id]}
+            <span style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono }}>{content.items[id].length}</span>
           </button>
         );
       })}
@@ -73,13 +51,14 @@ function CategoryTabs({ activeCat, setActiveCat }: { activeCat: CategoryId; setA
   );
 }
 
-function Accordion({ activeCat }: { activeCat: CategoryId }) {
+function Accordion({ content, activeCat }: { content: FaqContent; activeCat: CategoryId }) {
   const [openIdx, setOpenIdx] = React.useState(0);
   React.useEffect(() => setOpenIdx(0), [activeCat]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      {ITEMS[activeCat].map(([q, a], i) => {
+      {content.items[activeCat].map(([q, rawAnswer], i) => {
+        const a = rawAnswer.replace('{price}', UNLOCK_PRICE_SUMMARY);
         const open = openIdx === i;
         return (
           <div
@@ -119,36 +98,36 @@ function Accordion({ activeCat }: { activeCat: CategoryId }) {
   );
 }
 
-export function FAQSection() {
+export function FAQSection({ content }: { content: FaqContent }) {
   const [activeCat, setActiveCat] = React.useState<CategoryId>('privacy');
 
   return (
     <section className="px-4 sm:px-12 pb-24 sm:pb-32">
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 14 }}>
-          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>QUESTIONS</span>
+          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>{content.eyebrow}</span>
           <div style={{ flex: 1, height: 1, background: 'var(--t-border2)' }} />
         </div>
 
         {/* ── Mobile layout: heading → tabs → accordion → contact ── */}
         <div className="sm:hidden">
           <h2 style={{ fontFamily: T.serif, fontSize: 'clamp(36px, 10vw, 56px)', fontWeight: 400, lineHeight: 1.0, letterSpacing: '-0.03em', marginBottom: 16, color: T.ink }}>
-            The honest<br/>
-            <span style={{ fontStyle: 'italic', color: T.tealLight }}>answers.</span>
+            {content.headlineLine1}<br/>
+            <span style={{ fontStyle: 'italic', color: T.tealLight }}>{content.headlineLine2}</span>
           </h2>
           <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.55, marginBottom: 24 }}>
-            Not the marketing ones. If something here doesn&apos;t address what you actually want to know, the contact link is real.
+            {content.intro}
           </p>
           <div style={{ marginBottom: 20 }}>
-            <CategoryTabs activeCat={activeCat} setActiveCat={setActiveCat} />
+            <CategoryTabs content={content} activeCat={activeCat} setActiveCat={setActiveCat} />
           </div>
           <div style={{ marginBottom: 24 }}>
-            <Accordion activeCat={activeCat} />
+            <Accordion content={content} activeCat={activeCat} />
           </div>
           <div style={{ padding: '16px', background: 'rgba(244,240,232,0.025)', border: '1px solid var(--t-border1)', borderRadius: 14 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
               <div style={{ width: 7, height: 7, borderRadius: '50%', background: T.tealLight }} />
-              <span style={{ fontSize: 12, color: T.tealLight, fontWeight: 600, fontFamily: T.mono }}>Still wondering?</span>
+              <span style={{ fontSize: 12, color: T.tealLight, fontWeight: 600, fontFamily: T.mono }}>{content.stillWondering}</span>
             </div>
             <a href="mailto:hello@whounfollowed.co" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, color: T.tealLight, fontWeight: 600, textDecoration: 'none' }}>
               hello@whounfollowed.co
@@ -162,19 +141,19 @@ export function FAQSection() {
           {/* Left: sticky sidebar */}
           <div style={{ position: 'sticky', top: 80 }}>
             <h2 style={{ fontFamily: T.serif, fontSize: 'clamp(40px, 4.5vw, 56px)', fontWeight: 400, lineHeight: 1.0, letterSpacing: '-0.03em', marginBottom: 18, color: T.ink }}>
-              The honest<br/>
-              <span style={{ fontStyle: 'italic', color: T.tealLight }}>answers.</span>
+              {content.headlineLine1}<br/>
+              <span style={{ fontStyle: 'italic', color: T.tealLight }}>{content.headlineLine2}</span>
             </h2>
             <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.55, marginBottom: 32, maxWidth: 320 }}>
-              Not the marketing ones. If something here doesn&apos;t address what you actually want to know, the contact link is real.
+              {content.intro}
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 28 }}>
-              {CATEGORIES.map(c => {
-                const active = activeCat === c.id;
+              {CATEGORY_ORDER.map(id => {
+                const active = activeCat === id;
                 return (
                   <button
-                    key={c.id}
-                    onClick={() => setActiveCat(c.id)}
+                    key={id}
+                    onClick={() => setActiveCat(id)}
                     style={{
                       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                       padding: '12px 14px', borderRadius: 10,
@@ -188,9 +167,9 @@ export function FAQSection() {
                   >
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
                       <span style={{ width: 4, height: 18, borderRadius: 2, background: active ? T.tealLight : 'transparent', transition: 'background 0.2s' }} />
-                      {c.label}
+                      {content.categories[id]}
                     </span>
-                    <span style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono }}>{c.count}</span>
+                    <span style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono }}>{content.items[id].length}</span>
                   </button>
                 );
               })}
@@ -198,9 +177,9 @@ export function FAQSection() {
             <div style={{ padding: '18px', background: 'rgba(244,240,232,0.025)', border: '1px solid var(--t-border1)', borderRadius: 14 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
                 <div style={{ width: 8, height: 8, borderRadius: '50%', background: T.tealLight, animation: 'glow-soft 2s ease-in-out infinite' }} />
-                <span style={{ fontSize: 12, color: T.tealLight, fontWeight: 600, fontFamily: T.mono, letterSpacing: '0.04em' }}>Still wondering?</span>
+                <span style={{ fontSize: 12, color: T.tealLight, fontWeight: 600, fontFamily: T.mono, letterSpacing: '0.04em' }}>{content.stillWondering}</span>
               </div>
-              <p style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5, marginBottom: 12 }}>Email us.</p>
+              <p style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5, marginBottom: 12 }}>{content.emailUs}</p>
               <a href="mailto:hello@whounfollowed.co" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, color: T.tealLight, fontWeight: 600, textDecoration: 'none' }}>
                 hello@whounfollowed.co
                 <Icon.arrow size={12} color={T.tealLight} />
@@ -209,7 +188,7 @@ export function FAQSection() {
           </div>
 
           {/* Right: accordion */}
-          <Accordion activeCat={activeCat} />
+          <Accordion content={content} activeCat={activeCat} />
         </div>
       </div>
     </section>

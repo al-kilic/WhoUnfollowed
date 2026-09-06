@@ -1,7 +1,7 @@
 import React from 'react';
 import { T } from './tokens';
 
-export function MarqueeBand() {
+export function MarqueeBand({ items }: { items: string[] }) {
   return (
     <section style={{
       marginTop: 16, padding: '24px 0',
@@ -22,16 +22,12 @@ export function MarqueeBand() {
         }}>
           {[0, 1].map((dup) => (
             <span key={dup} style={{ display: 'flex', alignItems: 'center', gap: 56, flexShrink: 0 }}>
-              <span>see who doesn&apos;t follow back</span>
-              <span style={{ color: T.tealMid }}>✶</span>
-              <span style={{ fontStyle: 'italic', color: T.tealLight }}>no login needed</span>
-              <span style={{ color: T.tealMid }}>✶</span>
-              <span>runs in your browser</span>
-              <span style={{ color: T.tealMid }}>✶</span>
-              <span style={{ fontStyle: 'italic', color: T.tealLight }}>open-source</span>
-              <span style={{ color: T.tealMid }}>✶</span>
-              <span>your data stays yours</span>
-              <span style={{ color: T.tealMid }}>✶</span>
+              {items.map((phrase, i) => (
+                <React.Fragment key={i}>
+                  <span style={i % 2 === 1 ? { fontStyle: 'italic', color: T.tealLight } : undefined}>{phrase}</span>
+                  <span style={{ color: T.tealMid }}>✶</span>
+                </React.Fragment>
+              ))}
             </span>
           ))}
         </div>

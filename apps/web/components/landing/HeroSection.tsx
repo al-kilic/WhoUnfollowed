@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef, useState, useCallback, useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   parseInstagramZip,
@@ -34,37 +35,76 @@ type UploadPhase = 'idle' | 'dragging' | 'parsing' | 'error' | 'success';
 // Failed's allowlist is fixed by the analytics contract, not by this mapper.
 type ErrorKind = 'missing_data' | 'invalid_zip' | 'unsupported_format' | 'html_export' | 'unknown';
 
-function classifyError(err: unknown): { message: string; kind: ErrorKind; showGuideCta: boolean } {
+interface HeroContent {
+  headlineSeeWho: string;
+  headlineDoesntFollowBack: string;
+  headlineOnInstagram: string;
+  headlineWithoutSharing: string;
+  headlinePassword: string;
+  subhead: string;
+  dropIdleTitle: string;
+  dropDraggingTitle: string;
+  dropIdleBody: string;
+  chooseFile: string;
+  orDropAnywhere: string;
+  noExportYetLink: string;
+  alreadyUsingLink: string;
+  parsingTitle: string;
+  parsingNote: string;
+  errorTitle: string;
+  tryAgain: string;
+  guideCtaMissingData: string;
+  guideCtaDefault: string;
+  errors: {
+    missingData: string;
+    mixedFormat: string;
+    invalidZip: string;
+    schemaChanged: string;
+    unsupportedFormat: string;
+    unknown: string;
+  };
+  trustOpenSourcePrefix: string;
+  trustOpenSourceSuffix: string;
+  trustNoLoginPrefix: string;
+  trustNoLoginSuffix: string;
+  trustNothingStoredPrefix: string;
+  trustNothingStoredSuffix: string;
+  statAnalyses: string;
+  statAvgNonFollowers: string;
+  statPasswords: string;
+}
+
+function classifyError(err: unknown, content: HeroContent): { message: string; kind: ErrorKind; showGuideCta: boolean } {
   if (err instanceof MissingFilesError) {
     return {
-      message: 'This ZIP does not include the Followers and following data we need.',
+      message: content.errors.missingData,
       kind: 'missing_data',
       showGuideCta: true,
     };
   }
   if (err instanceof MixedFormatError) {
     return {
-      message: 'This export mixes JSON and HTML files. Please request the JSON version from Instagram, then upload the ZIP again.',
+      message: content.errors.mixedFormat,
       kind: 'unsupported_format',
       showGuideCta: true,
     };
   }
   if (err instanceof InvalidZipError) {
     return {
-      message: 'We could not read this ZIP. Download the original file from Instagram again and upload it without unzipping it.',
+      message: content.errors.invalidZip,
       kind: 'invalid_zip',
       showGuideCta: false,
     };
   }
   if (err instanceof SchemaValidationError) {
     return {
-      message: 'Instagram may have changed their export format, so we could not read part of this file. Try requesting a fresh export.',
+      message: content.errors.schemaChanged,
       kind: 'unknown',
       showGuideCta: false,
     };
   }
   return {
-    message: 'Something went wrong. Make sure you uploaded the correct Instagram ZIP.',
+    message: content.errors.unknown,
     kind: 'unknown',
     showGuideCta: false,
   };
@@ -72,7 +112,7 @@ function classifyError(err: unknown): { message: string; kind: ErrorKind; showGu
 
 // ─── HeroSection ────────────────────────────────────────────────────────────
 
-export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; initialStats: { snapshots: number; avgNonFollowers: number } }) {
+export function HeroSection({ isPro = false, initialStats, content }: { isPro?: boolean; initialStats: { snapshots: number; avgNonFollowers: number }; content: HeroContent }) {
   const router       = useRouter();
   const { userId }   = useAuth();
   const setSnapshot  = useSnapshotStore((s) => s.setSnapshot);
@@ -131,7 +171,7 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
     if (!file.name.toLowerCase().endsWith('.zip') &&
         file.type !== 'application/zip' &&
         file.type !== 'application/x-zip-compressed') {
-      setErrInfo({ message: 'Please upload the original ZIP file Instagram provided.', kind: 'unsupported_format', showGuideCta: false });
+      setErrInfo({ message: content.errors.unsupportedFormat, kind: 'unsupported_format', showGuideCta: false });
       setPhase('error');
       trackFunnel('Analysis Failed', { error_type: 'unsupported_format' });
       return;
@@ -177,7 +217,7 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
       }
     } catch (err) {
       clearInterval(iv);
-      const info = classifyError(err);
+      const info = classifyError(err, content);
       setErrInfo(info);
       setPhase('error');
       trackFunnel('Analysis Failed', { error_type: info.kind });
@@ -330,7 +370,7 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
         color: T.ink,
       }}>
         <div style={{ marginBottom: 4 }}>
-          See who{' '}
+          {content.headlineSeeWho}{' '}
           <span style={{
             background: `linear-gradient(110deg, var(--t-tealLight) 0%, var(--t-shimmer-hi) 30%, var(--t-tealLight) 50%, var(--t-shimmer-hi) 70%, var(--t-tealLight) 100%)`,
             backgroundSize: '200% 100%',
@@ -338,14 +378,14 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
             WebkitTextFillColor: 'transparent', color: 'transparent',
             animation: 'shimmer-text 9s linear infinite',
             fontStyle: 'italic', display: 'inline-block', paddingBottom: '0.1em',
-          }}>{"doesn't follow you back"}</span>
+          }}>{content.headlineDoesntFollowBack}</span>
           <br />
-          on Instagram.
+          {content.headlineOnInstagram}
         </div>
         <div>
-          Without sharing{' '}
+          {content.headlineWithoutSharing}{' '}
           <span style={{ position: 'relative', display: 'inline-block' }}>
-            <s style={{ textDecorationColor: T.terra, textDecorationThickness: '5px' }}>your password.</s>
+            <s style={{ textDecorationColor: T.terra, textDecorationThickness: '5px' }}>{content.headlinePassword}</s>
           </span>
         </div>
       </h1>
@@ -357,8 +397,7 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
         position: 'relative', zIndex: 5,
         animation: 'fade-up 0.7s 0.25s cubic-bezier(0.16,1,0.3,1) both',
       }}>
-        The free tool reads your official Instagram data export entirely in your browser, so
-        your password and account data never leave your device.
+        {content.subhead}
       </p>
 
       {/* ── Drop zone ──────────────────────────────────────────────────────── */}
@@ -425,31 +464,31 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
                 </div>
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontFamily: T.serif, fontSize: 28, lineHeight: 1.1, letterSpacing: '-0.02em', marginBottom: 6, color: T.ink }}>
-                    {phase === 'dragging' ? 'Drop it here.' : 'Have your Instagram ZIP? Upload it here.'}
+                    {phase === 'dragging' ? content.dropDraggingTitle : content.dropIdleTitle}
                   </div>
                   <div style={{ fontSize: 13, color: T.inkDim, fontFamily: T.sans, maxWidth: 360, lineHeight: 1.5 }}>
-                    Upload the ZIP file Instagram sends after you request your data. Do not unzip it.
+                    {content.dropIdleBody}
                   </div>
                 </div>
                 {phase !== 'dragging' && (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                       <div onClick={e => e.stopPropagation()} style={{ display: 'inline-flex' }}>
-                        <MagneticCTA primary onClick={() => inputRef.current?.click()}>Choose file</MagneticCTA>
+                        <MagneticCTA primary onClick={() => inputRef.current?.click()}>{content.chooseFile}</MagneticCTA>
                       </div>
-                      <span style={{ fontSize: 12, color: T.inkMute }}>or drop anywhere</span>
+                      <span style={{ fontSize: 12, color: T.inkMute }}>{content.orDropAnywhere}</span>
                     </div>
-                    <a
+                    <Link
                       href="/how-to-export"
                       onClick={(e) => { e.stopPropagation(); trackFunnel('Export Guide Opened', { entry: 'hero' }); }}
                       style={{ fontSize: 12, color: T.tealLight, textDecoration: 'none', borderBottom: `1px solid rgba(2,136,143,0.3)`, paddingBottom: 1 }}
                     >
-                      Don&apos;t have it yet? See how to request your export →
-                    </a>
-                    <a href="/history" style={{ fontSize: 11, color: T.inkMute, textDecoration: 'none' }}
+                      {content.noExportYetLink}
+                    </Link>
+                    <Link href="/history" style={{ fontSize: 11, color: T.inkMute, textDecoration: 'none' }}
                       onClick={e => e.stopPropagation()}>
-                      Already using WhoUnfollowed? View snapshot history →
-                    </a>
+                      {content.alreadyUsingLink}
+                    </Link>
                   </div>
                 )}
               </div>
@@ -471,9 +510,9 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
                 </div>
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontFamily: T.serif, fontSize: 32, lineHeight: 1.05, letterSpacing: '-0.015em', color: T.ink }}>
-                    Reading your data<span style={{ animation: 'blink 0.6s step-end infinite', color: T.tealLight }}>.</span>
+                    {content.parsingTitle}<span style={{ animation: 'blink 0.6s step-end infinite', color: T.tealLight }}>.</span>
                   </div>
-                  <div style={{ fontSize: 13, color: T.inkMute, marginTop: 8 }}>Stays on your device. Nothing is uploaded.</div>
+                  <div style={{ fontSize: 13, color: T.inkMute, marginTop: 8 }}>{content.parsingNote}</div>
                 </div>
                 <div style={{ width: 340, height: 3, borderRadius: 3, background: 'var(--t-border1)', overflow: 'hidden', position: 'relative' }}>
                   <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: `${progress}%`, background: T.tealMid, transition: 'width 0.2s ease-out', borderRadius: 3 }} />
@@ -490,7 +529,7 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
                   </svg>
                 </div>
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontFamily: T.serif, fontSize: 28, lineHeight: 1.1, color: T.ink, marginBottom: 8 }}>Something went wrong.</div>
+                  <div style={{ fontFamily: T.serif, fontSize: 28, lineHeight: 1.1, color: T.ink, marginBottom: 8 }}>{content.errorTitle}</div>
                   <div style={{ fontSize: 13, color: T.inkDim, maxWidth: 380, lineHeight: 1.5 }}>{errInfo?.message}</div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -498,16 +537,16 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
                     onClick={(e) => { e.stopPropagation(); setPhase('idle'); setErrInfo(null); }}
                     style={{ padding: '11px 22px', borderRadius: 10, border: `1px solid var(--t-border3)`, background: 'transparent', color: T.ink, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: T.sans }}
                   >
-                    Try again
+                    {content.tryAgain}
                   </button>
                   {errInfo?.showGuideCta && (
-                    <a
+                    <Link
                       href="/how-to-export"
                       onClick={(e) => { e.stopPropagation(); trackFunnel('Export Guide Opened', { entry: 'upload_error' }); }}
                       style={{ padding: '11px 22px', borderRadius: 10, border: `1px solid rgba(2,136,143,0.4)`, background: 'rgba(2,136,143,0.08)', color: T.tealLight, fontSize: 13, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans }}
                     >
-                      {errInfo.kind === 'missing_data' ? 'Show me what to select in Instagram' : 'Show me the correct export settings'}
-                    </a>
+                      {errInfo.kind === 'missing_data' ? content.guideCtaMissingData : content.guideCtaDefault}
+                    </Link>
                   )}
                 </div>
               </div>
@@ -520,8 +559,8 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
           {/* Lead benefit: open source, free forever */}
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap', fontSize: 13, color: T.inkDim, fontFamily: T.mono, letterSpacing: '0.03em' }}>
             <Icon.code size={13} color={T.tealMid} />
-            <span>open source,</span>
-            <span style={{ color: T.ink, fontWeight: 700 }}>free forever</span>
+            <span>{content.trustOpenSourcePrefix}</span>
+            <span style={{ color: T.ink, fontWeight: 700 }}>{content.trustOpenSourceSuffix}</span>
           </span>
           {/* Supporting benefits */}
           <div style={{
@@ -530,14 +569,14 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
           }}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
               <Icon.shield size={12} color={T.tealMid} />
-              <span>no Instagram login,</span>
-              <span style={{ color: T.ink, fontWeight: 600 }}>no risk</span>
+              <span>{content.trustNoLoginPrefix}</span>
+              <span style={{ color: T.ink, fontWeight: 600 }}>{content.trustNoLoginSuffix}</span>
             </span>
             <span style={{ width: 3, height: 3, borderRadius: '50%', background: T.inkMute, flexShrink: 0 }} />
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap' }}>
               <Icon.bolt size={12} color={T.tealMid} />
-              <span>nothing stored,</span>
-              <span style={{ color: T.ink, fontWeight: 600 }}>nothing shared</span>
+              <span>{content.trustNothingStoredPrefix}</span>
+              <span style={{ color: T.ink, fontWeight: 600 }}>{content.trustNothingStoredSuffix}</span>
             </span>
           </div>
         </div>
@@ -552,9 +591,9 @@ export function HeroSection({ isPro = false, initialStats }: { isPro?: boolean; 
         animation: 'fade-up 0.7s 0.55s cubic-bezier(0.16,1,0.3,1) both',
       }}>
         {([
-          ['Analyses run',      liveStats.snapshots,       ''],
-          ['Avg non-followers', liveStats.avgNonFollowers, ''],
-          ['Passwords shared',  0, ''],
+          [content.statAnalyses,        liveStats.snapshots,       ''],
+          [content.statAvgNonFollowers, liveStats.avgNonFollowers, ''],
+          [content.statPasswords,       0, ''],
         ] as [string, number, string][]).map(([label, val, suf], i) => (
           <div key={label} style={{ padding: '14px 12px', borderRight: i < 2 ? '1px solid rgba(244,240,232,0.05)' : 'none', textAlign: 'center' }}>
             <div style={{ fontFamily: T.serif, fontSize: 24, lineHeight: 1, color: i === 2 ? T.tealLight : T.ink, animation: `count-up 0.7s ${0.9+i*0.1}s both` }}>
