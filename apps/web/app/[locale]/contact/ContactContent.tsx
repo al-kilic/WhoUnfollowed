@@ -5,16 +5,9 @@ import Link from 'next/link';
 import { T } from '@/components/landing/tokens';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
+import type { ContactContent as ContactContentData } from './content';
 
-const TOPICS = [
-  { id: 'bug',     label: 'Bug report',        desc: 'Something is broken or not working as expected' },
-  { id: 'feature', label: 'Feature request',   desc: 'Something you want WhoUnfollowed to do' },
-  { id: 'privacy', label: 'Privacy question',  desc: 'Questions about data handling or this policy' },
-  { id: 'press',   label: 'Press / media',     desc: 'Journalist or publication inquiry' },
-  { id: 'other',   label: 'Anything else',     desc: 'Whatever is on your mind' },
-];
-
-export function ContactContent() {
+export function ContactContent({ content }: { content: ContactContentData }) {
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
@@ -28,7 +21,7 @@ export function ContactContent() {
   }
 
   const subject = selectedTopic
-    ? `[${TOPICS.find(t => t.id === selectedTopic)?.label}] WhoUnfollowed`
+    ? `[${content.topics.find(t => t.id === selectedTopic)?.label}] WhoUnfollowed`
     : 'WhoUnfollowed';
 
   return (
@@ -39,27 +32,27 @@ export function ContactContent() {
 
         {/* Header */}
         <div style={{ marginBottom: 48 }}>
-          <div style={{ fontSize: 10, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 16 }}>Contact</div>
+          <div style={{ fontSize: 10, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 16 }}>{content.eyebrow}</div>
           <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', color: T.ink, marginBottom: 16 }}>
-            Get in touch.
+            {content.headline}
           </h1>
           <p style={{ fontSize: 15, color: T.inkDim, lineHeight: 1.65 }}>
-            One person reads every email. Response time is usually within 24 hours.
+            {content.intro}
           </p>
           <p style={{ fontSize: 13, color: T.inkMute, marginTop: 10 }}>
-            Quick question about exporting your data? The{' '}
-            <Link href="/how-to-export" style={{ color: T.tealLight, textDecoration: 'none', borderBottom: `1px solid ${T.tealLight}` }}>export guide</Link>
-            {' '}or{' '}
-            <Link href="/what-is-whounfollowed" style={{ color: T.tealLight, textDecoration: 'none', borderBottom: `1px solid ${T.tealLight}` }}>FAQ</Link>
-            {' '}might already have it.
+            {content.quickQuestionPrefix}{' '}
+            <Link href="/how-to-export" style={{ color: T.tealLight, textDecoration: 'none', borderBottom: `1px solid ${T.tealLight}` }}>{content.exportGuideLink}</Link>
+            {' '}{content.orWord}{' '}
+            <Link href="/what-is-whounfollowed" style={{ color: T.tealLight, textDecoration: 'none', borderBottom: `1px solid ${T.tealLight}` }}>{content.faqLink}</Link>
+            {' '}{content.quickQuestionSuffix}
           </p>
         </div>
 
         {/* Topic selector */}
         <div style={{ marginBottom: 32 }}>
-          <div style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>What is this about?</div>
+          <div style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>{content.whatIsThisAbout}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {TOPICS.map(topic => {
+            {content.topics.map(topic => {
               const active = selectedTopic === topic.id;
               return (
                 <button
@@ -88,7 +81,7 @@ export function ContactContent() {
         {/* Email card */}
         <div style={{ borderRadius: 16, background: T.bgCard, border: `1px solid ${T.border1}`, overflow: 'hidden', marginBottom: 32 }}>
           <div style={{ padding: '20px 22px 16px' }}>
-            <div style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>Email</div>
+            <div style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>{content.emailLabel}</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
               <span style={{ fontFamily: T.mono, fontSize: 16, color: T.ink }}>{EMAIL}</span>
               <button
@@ -101,7 +94,7 @@ export function ContactContent() {
                   boxShadow: copied ? 'none' : `0 4px 16px ${T.tealGlow}`, transition: 'all 0.15s',
                 }}
               >
-                {copied ? '✓ Copied' : 'Copy email address'}
+                {copied ? content.copied : content.copyEmail}
               </button>
             </div>
           </div>
@@ -110,12 +103,12 @@ export function ContactContent() {
               href={`mailto:${EMAIL}?subject=${encodeURIComponent(subject)}`}
               style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: T.inkDim, textDecoration: 'none', fontSize: 12, fontFamily: T.mono, borderBottom: `1px solid ${T.border2}` }}
             >
-              or open in mail app
+              {content.openInMailApp}
               <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M11 7L8 4M11 7L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </a>
             {selectedTopic && (
               <span style={{ fontSize: 12, color: T.inkMute, fontFamily: T.mono }}>
-                (subject pre-filled)
+                {content.subjectPrefilled}
               </span>
             )}
           </div>
@@ -123,12 +116,7 @@ export function ContactContent() {
 
         {/* Response expectations */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 48 }}>
-          {[
-            { label: 'Bug reports', detail: 'Acknowledged within 24h. Fix timeline depends on severity.' },
-            { label: 'Feature requests', detail: 'Read every one. Not all are built, but all are considered.' },
-            { label: 'Privacy questions', detail: 'Responded same day when possible.' },
-            { label: 'Press inquiries', detail: 'Happy to respond. Please include publication name.' },
-          ].map(row => (
+          {content.responseRows.map(row => (
             <div key={row.label} style={{ display: 'flex', gap: 12, padding: '12px 16px', borderRadius: 10, background: T.surface1, border: `1px solid ${T.border1}` }}>
               <div style={{ width: 4, height: 4, borderRadius: '50%', background: T.tealMid, flexShrink: 0, marginTop: 6 }} />
               <div>
@@ -142,7 +130,7 @@ export function ContactContent() {
         <div style={{ paddingTop: 28, borderTop: `1px solid ${T.border1}` }}>
           <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 13, color: T.inkDim, textDecoration: 'none' }}>
             <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M11 7 H3 M3 7 L6 4 M3 7 L6 10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            Back to WhoUnfollowed
+            {content.backToHome}
           </Link>
         </div>
       </main>
