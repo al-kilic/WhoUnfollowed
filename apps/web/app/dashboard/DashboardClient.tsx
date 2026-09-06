@@ -78,8 +78,8 @@ function EmptyState({ text }: { text: string }) {
 
 // ─── 1. Hero stats row ────────────────────────────────────────────────────────
 
-function HeroStats({ followers, following, mutuals, nonFollowers }: {
-  followers: number; following: number; mutuals: number; nonFollowers: number;
+function HeroStats({ followers, following, mutuals, nonFollowers, locked = false }: {
+  followers: number; following: number; mutuals: number; nonFollowers: number; locked?: boolean;
 }) {
   const ratio = following === 0 ? 0 : followers / following;
   const nonFollowerPct = following === 0 ? 0 : Math.round((nonFollowers / following) * 100);
@@ -98,7 +98,7 @@ function HeroStats({ followers, following, mutuals, nonFollowers }: {
       {stats.map(s => (
         <Card key={s.label} style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
           <div style={{ fontSize: 10, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.06em', textTransform: 'uppercase', height: 24, display: 'flex', alignItems: 'center', marginBottom: 10 }}>{s.label}</div>
-          <div style={{ fontFamily: T.serif, fontSize: 26, lineHeight: 1, letterSpacing: '-0.02em', color: s.color }}>{s.value}</div>
+          <div style={{ fontFamily: T.serif, fontSize: 26, lineHeight: 1, letterSpacing: '-0.02em', color: s.color, ...(locked ? lockedContentStyle : {}) }}>{s.value}</div>
         </Card>
       ))}
     </div>
@@ -123,8 +123,8 @@ const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?:
   );
 };
 
-function AudienceBreakdown({ followers, mutuals, fans, nonFollowers }: {
-  followers: number; mutuals: number; fans: number; nonFollowers: number;
+function AudienceBreakdown({ followers, mutuals, fans, nonFollowers, locked = false }: {
+  followers: number; mutuals: number; fans: number; nonFollowers: number; locked?: boolean;
 }) {
   const data = [
     { name: 'Mutuals',          value: mutuals,      color: T.tealLight },
@@ -136,7 +136,7 @@ function AudienceBreakdown({ followers, mutuals, fans, nonFollowers }: {
     <Card style={{ display: 'flex', flexDirection: 'column' }}>
       <SectionLabel>Audience</SectionLabel>
       <CardTitle>Who follows you</CardTitle>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginTop: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginTop: 16, ...(locked ? lockedContentStyle : {}) }}>
         {/* The list to the right already states these same numbers and
             percentages as real text, so the donut is purely decorative here
             and hidden from assistive tech rather than announced twice. */}
@@ -218,9 +218,10 @@ function RatioInfoTooltip() {
   );
 }
 
-function FollowRatioCard({ followers, following, snapshots }: {
+function FollowRatioCard({ followers, following, snapshots, locked = false }: {
   followers: number; following: number;
   snapshots: { exportedAt: number; data: { followers: { username: string }[]; following: { username: string }[] } }[];
+  locked?: boolean;
 }) {
   const ratio = following === 0 ? 0 : followers / following;
   const clampedPct = Math.min(ratio * 50, 100);
@@ -249,53 +250,55 @@ function FollowRatioCard({ followers, following, snapshots }: {
         <CardTitle>Followers vs following</CardTitle>
         <RatioInfoTooltip />
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginTop: 16 }}>
-        <div style={{ position: 'relative', width: 120, height: 120, flexShrink: 0 }}>
-          {/* The ratio value is repeated as real text in the overlay below and
-              in the paragraph to the right, so the gauge itself is decorative. */}
-          <div aria-hidden="true">
-            <ResponsiveContainer width={120} height={120}>
-              <RadialBarChart innerRadius={40} outerRadius={56} startAngle={225} endAngle={-45} data={radialData} barSize={10}>
-                <RadialBar dataKey="value" cornerRadius={5} fill={ratioColor} background={{ fill: 'var(--t-surface2)' }} />
-              </RadialBarChart>
-            </ResponsiveContainer>
+      <div style={locked ? lockedContentStyle : undefined}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginTop: 16 }}>
+          <div style={{ position: 'relative', width: 120, height: 120, flexShrink: 0 }}>
+            {/* The ratio value is repeated as real text in the overlay below and
+                in the paragraph to the right, so the gauge itself is decorative. */}
+            <div aria-hidden="true">
+              <ResponsiveContainer width={120} height={120}>
+                <RadialBarChart innerRadius={40} outerRadius={56} startAngle={225} endAngle={-45} data={radialData} barSize={10}>
+                  <RadialBar dataKey="value" cornerRadius={5} fill={ratioColor} background={{ fill: 'var(--t-surface2)' }} />
+                </RadialBarChart>
+              </ResponsiveContainer>
+            </div>
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontFamily: T.serif, fontSize: 22, letterSpacing: '-0.02em', color: ratioColor, lineHeight: 1 }}>{ratio.toFixed(2)}</span>
+            </div>
           </div>
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ fontFamily: T.serif, fontSize: 22, letterSpacing: '-0.02em', color: ratioColor, lineHeight: 1 }}>{ratio.toFixed(2)}</span>
+          <div style={{ flex: 1 }}>
+            <p style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5, marginBottom: 8 }}>
+              {ratio >= 1 ? `${ratio.toFixed(1)}x more followers than following.` : `Following ${(1 / ratio).toFixed(1)}x more than follow you.`}
+            </p>
+            {trend && <span style={{ fontSize: 12, fontFamily: T.mono, color: trendColor }}>{trend}</span>}
           </div>
         </div>
-        <div style={{ flex: 1 }}>
-          <p style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5, marginBottom: 8 }}>
-            {ratio >= 1 ? `${ratio.toFixed(1)}x more followers than following.` : `Following ${(1 / ratio).toFixed(1)}x more than follow you.`}
-          </p>
-          {trend && <span style={{ fontSize: 12, fontFamily: T.mono, color: trendColor }}>{trend}</span>}
-        </div>
+        {trendData.length >= 2 && (
+          <div style={{ marginTop: 20 }}>
+            <div style={{ fontSize: 10, color: T.inkMute, fontFamily: T.mono, marginBottom: 8, letterSpacing: '0.08em' }}>RATIO OVER TIME</div>
+            <div
+              role="img"
+              aria-label={`Follow ratio across your last ${trendData.length} snapshots: from ${trendData[0]!.ratio.toFixed(2)} on ${trendData[0]!.date} to ${trendData[trendData.length - 1]!.ratio.toFixed(2)} on ${trendData[trendData.length - 1]!.date}.`}
+            >
+              <ResponsiveContainer width="100%" height={60}>
+                <AreaChart data={trendData} margin={{ top: 2, right: 4, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="ratioGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor={T.tealMid} stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor={T.tealMid} stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--t-surface2)" />
+                  <XAxis dataKey="date" tick={{ fontSize: 9, fill: T.inkMute }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 9, fill: T.inkMute }} axisLine={false} tickLine={false} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Area type="monotone" dataKey="ratio" stroke={T.tealMid} strokeWidth={1.5} fill="url(#ratioGrad)" dot={{ fill: T.tealMid, r: 2 }} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
       </div>
-      {trendData.length >= 2 && (
-        <div style={{ marginTop: 20 }}>
-          <div style={{ fontSize: 10, color: T.inkMute, fontFamily: T.mono, marginBottom: 8, letterSpacing: '0.08em' }}>RATIO OVER TIME</div>
-          <div
-            role="img"
-            aria-label={`Follow ratio across your last ${trendData.length} snapshots: from ${trendData[0]!.ratio.toFixed(2)} on ${trendData[0]!.date} to ${trendData[trendData.length - 1]!.ratio.toFixed(2)} on ${trendData[trendData.length - 1]!.date}.`}
-          >
-            <ResponsiveContainer width="100%" height={60}>
-              <AreaChart data={trendData} margin={{ top: 2, right: 4, left: -20, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="ratioGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={T.tealMid} stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor={T.tealMid} stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--t-surface2)" />
-                <XAxis dataKey="date" tick={{ fontSize: 9, fill: T.inkMute }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 9, fill: T.inkMute }} axisLine={false} tickLine={false} />
-                <Tooltip content={<CustomTooltip />} />
-                <Area type="monotone" dataKey="ratio" stroke={T.tealMid} strokeWidth={1.5} fill="url(#ratioGrad)" dot={{ fill: T.tealMid, r: 2 }} />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      )}
     </Card>
   );
 }
@@ -310,7 +313,7 @@ const AGE_BUCKETS = [
   { label: '2+ years',    minDays: 730, maxDays: Infinity,  color: T.terra },
 ];
 
-function FollowAgeCard({ nonFollowers }: { nonFollowers: { username: string; href: string; followedAt: number | null }[] }) {
+function FollowAgeCard({ nonFollowers, locked = false }: { nonFollowers: { username: string; href: string; followedAt: number | null }[]; locked?: boolean }) {
   const now = Math.floor(Date.now() / 1000);
   const withTs = nonFollowers.filter(a => a.followedAt !== null);
   const [selectedBucket, setSelectedBucket] = useState<string | null>(null);
@@ -343,6 +346,7 @@ function FollowAgeCard({ nonFollowers }: { nonFollowers: { username: string; hre
     <Card>
       <SectionLabel>Follow age</SectionLabel>
       <CardTitle>How long you&apos;ve been waiting</CardTitle>
+      <div style={locked ? lockedContentStyle : undefined}>
       {/* Two stat boxes - distinct visual treatment */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 12, marginTop: 16, marginBottom: 20 }}>
         {/* Left: count box */}
@@ -529,6 +533,7 @@ function FollowAgeCard({ nonFollowers }: { nonFollowers: { username: string; hre
           </div>
         </div>
       )}
+      </div>
     </Card>
   );
 }
@@ -557,7 +562,7 @@ function pendingLabel(days: number | null, username: string): { text: string; co
   return null;
 }
 
-function PendingRequestsCard({ accounts }: { accounts: { username: string; href: string; followedAt: number | null }[] }) {
+function PendingRequestsCard({ accounts, locked = false }: { accounts: { username: string; href: string; followedAt: number | null }[]; locked?: boolean }) {
   const now = Math.floor(Date.now() / 1000);
   const [activeBucket, setActiveBucket] = useState<string | null>(null);
   const byAge = (a: typeof accounts[0]) => differenceInDays(now * 1000, (a.followedAt ?? now) * 1000);
@@ -587,6 +592,7 @@ function PendingRequestsCard({ accounts }: { accounts: { username: string; href:
       <SectionLabel>Pending requests</SectionLabel>
       <CardTitle>Sent, not accepted</CardTitle>
 
+      <div style={locked ? lockedContentStyle : undefined}>
       {!accounts.length ? (
         <EmptyState text="Nobody keeping you waiting." />
       ) : (
@@ -636,17 +642,19 @@ function PendingRequestsCard({ accounts }: { accounts: { username: string; href:
           </div>
         </>
       )}
+      </div>
     </Card>
   );
 }
 
 // ─── 6. Recently unfollowed ───────────────────────────────────────────────────
 
-function RecentlyUnfollowedCard({ accounts }: { accounts: { username: string; href: string; followedAt: number | null }[] }) {
+function RecentlyUnfollowedCard({ accounts, locked = false }: { accounts: { username: string; href: string; followedAt: number | null }[]; locked?: boolean }) {
   return (
     <Card>
       <SectionLabel>Recently unfollowed</SectionLabel>
       <CardTitle>Your recent clean-up</CardTitle>
+      <div style={locked ? lockedContentStyle : undefined}>
       {!accounts.length ? (
         <EmptyState text="Instagram didn't include this in your export." />
       ) : (
@@ -670,6 +678,7 @@ function RecentlyUnfollowedCard({ accounts }: { accounts: { username: string; hr
           ))}
         </div>
       )}
+      </div>
     </Card>
   );
 }
@@ -820,7 +829,9 @@ const BREAKDOWN_ICONS: Record<string, string> = {
 function AccountHealthCard(props: {
   followers: number; following: number; mutuals: number; nonFollowers: number;
   snapshots: { data: { followers: { username: string }[]; following: { username: string }[] } }[];
+  locked?: boolean;
 }) {
+  const { locked = false } = props;
   const { score, grade, color, breakdown } = computeHealth(props);
 
   const gradeDesc: Record<string, string> = {
@@ -844,7 +855,7 @@ function AccountHealthCard(props: {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
         <span style={{ fontSize: 10, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em' }}>ACCOUNT HEALTH</span>
-        <span style={{ fontSize: 11, fontFamily: T.mono, color: T.inkMute, fontStyle: 'italic' }}>{gradeDesc[grade]}</span>
+        <span style={{ fontSize: 11, fontFamily: T.mono, color: T.inkMute, fontStyle: 'italic', ...(locked ? lockedContentStyle : {}) }}>{gradeDesc[grade]}</span>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: 0 }}>
@@ -854,6 +865,7 @@ function AccountHealthCard(props: {
           padding: '32px 24px', gap: 8,
           borderRight: `1px solid ${color}15`,
           background: `radial-gradient(circle at center, ${color}08 0%, transparent 70%)`,
+          ...(locked ? lockedContentStyle : {}),
         }}>
           <GradeRing score={score} grade={grade} color={color} />
           <div style={{
@@ -877,21 +889,23 @@ function AccountHealthCard(props: {
                 borderRight:  !isRight  ? `1px solid var(--t-surface2)` : 'none',
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
               }}>
-                {/* Label + note + action stacked */}
+                {/* Label stays visible (it's the feature name), note/action/ring are the data */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0, flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <span style={{ fontSize: 13, lineHeight: 1, flexShrink: 0 }}>{BREAKDOWN_ICONS[b.label]}</span>
                     <span style={{ fontSize: 12, fontWeight: 600, color: T.inkDim, whiteSpace: 'nowrap' }}>{b.label}</span>
                   </div>
-                  <span style={{ fontSize: 11, color: c, paddingLeft: 19, lineHeight: 1.5 }}>
+                  <span style={{ fontSize: 11, color: c, paddingLeft: 19, lineHeight: 1.5, ...(locked ? lockedContentStyle : {}) }}>
                     {b.note}
                   </span>
-                  <span style={{ fontSize: 10, fontFamily: T.mono, color: T.inkMute, paddingLeft: 19, lineHeight: 1.4, fontStyle: 'italic' }}>
+                  <span style={{ fontSize: 10, fontFamily: T.mono, color: T.inkMute, paddingLeft: 19, lineHeight: 1.4, fontStyle: 'italic', ...(locked ? lockedContentStyle : {}) }}>
                     → {b.action}
                   </span>
                 </div>
                 {/* Ring */}
-                <MiniRing score={b.score} max={b.max} />
+                <div style={locked ? lockedContentStyle : undefined}>
+                  <MiniRing score={b.score} max={b.max} />
+                </div>
               </div>
             );
           })}
@@ -905,7 +919,7 @@ function AccountHealthCard(props: {
 
 type SnapshotSummary = { exportedAt: number; data: { followers: { username: string }[]; following: { username: string }[] } };
 
-function GrowthChart({ snapshots }: { snapshots: SnapshotSummary[] }) {
+function GrowthChart({ snapshots, locked = false }: { snapshots: SnapshotSummary[]; locked?: boolean }) {
   if (snapshots.length < 2) {
     return (
       <Card>
@@ -960,7 +974,7 @@ function GrowthChart({ snapshots }: { snapshots: SnapshotSummary[] }) {
       <SectionLabel>Growth</SectionLabel>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 4 }}>
         <CardTitle>Follower growth over time</CardTitle>
-        <div style={{ textAlign: 'right' }}>
+        <div style={{ textAlign: 'right', ...(locked ? lockedContentStyle : {}) }}>
           <div style={{ fontFamily: T.serif, fontSize: 28, letterSpacing: '-0.02em', color: netColor, lineHeight: 1 }}>
             {netPrefix}{netChange.toLocaleString()}
           </div>
@@ -968,6 +982,7 @@ function GrowthChart({ snapshots }: { snapshots: SnapshotSummary[] }) {
         </div>
       </div>
 
+      <div style={locked ? lockedContentStyle : undefined}>
       {showDropAlert && (
         <div style={{
           display: 'flex', alignItems: 'center', gap: 10,
@@ -1022,6 +1037,7 @@ function GrowthChart({ snapshots }: { snapshots: SnapshotSummary[] }) {
             <div style={{ fontSize: 11, color: T.inkMute, marginTop: 3 }}>total lost</div>
           </div>
         )}
+      </div>
       </div>
     </Card>
   );
@@ -1236,7 +1252,7 @@ export function DashboardClient({ account }: DashboardClientProps) {
       />}
 
       <div style={{ position: 'relative' }}>
-      <main className="px-4 sm:px-8 py-8 sm:py-12 pb-20" style={{ maxWidth: 1100, margin: '0 auto', ...(locked ? lockedContentStyle : {}) }}>
+      <main className="px-4 sm:px-8 py-8 sm:py-12 pb-20" style={{ maxWidth: 1100, margin: '0 auto' }}>
         {/* Header */}
         <div style={{ marginBottom: 40 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
@@ -1281,6 +1297,7 @@ export function DashboardClient({ account }: DashboardClientProps) {
             mutuals={mutuals.length}
             nonFollowers={nonFollowers.length}
             snapshots={snapshots as SnapshotSummary[]}
+            locked={locked}
           />
         </div>
 
@@ -1291,12 +1308,13 @@ export function DashboardClient({ account }: DashboardClientProps) {
             following={snapshot.following.length}
             mutuals={mutuals.length}
             nonFollowers={nonFollowers.length}
+            locked={locked}
           />
         </div>
 
         {/* Growth chart */}
         <div id="tutorial-growth" style={{ marginBottom: 16 }}>
-          <GrowthChart snapshots={snapshots as SnapshotSummary[]} />
+          <GrowthChart snapshots={snapshots as SnapshotSummary[]} locked={locked} />
         </div>
 
         {/* Row 1: Audience donut + Follow ratio */}
@@ -1306,23 +1324,25 @@ export function DashboardClient({ account }: DashboardClientProps) {
             mutuals={mutuals.length}
             fans={fans.length}
             nonFollowers={nonFollowers.length}
+            locked={locked}
           />
           <FollowRatioCard
             followers={snapshot.followers.length}
             following={snapshot.following.length}
             snapshots={snapshots as SnapshotSummary[]}
+            locked={locked}
           />
         </div>
 
         {/* Follow age full width */}
         <div id="tutorial-follow-age" style={{ marginBottom: 16 }}>
-          <FollowAgeCard nonFollowers={nonFollowers} />
+          <FollowAgeCard nonFollowers={nonFollowers} locked={locked} />
         </div>
 
         {/* Pending + Recently unfollowed */}
         <div id="tutorial-pending" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-          <PendingRequestsCard accounts={snapshot.pendingRequests ?? []} />
-          <RecentlyUnfollowedCard accounts={snapshot.recentlyUnfollowed ?? []} />
+          <PendingRequestsCard accounts={snapshot.pendingRequests ?? []} locked={locked} />
+          <RecentlyUnfollowedCard accounts={snapshot.recentlyUnfollowed ?? []} locked={locked} />
         </div>
       </main>
       {locked && (
