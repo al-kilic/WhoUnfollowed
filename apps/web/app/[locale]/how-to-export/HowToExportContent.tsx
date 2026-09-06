@@ -5,25 +5,26 @@ import Link from 'next/link';
 import { T } from '@/components/landing/tokens';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
+import type { HowToExportContent as HowToExportContentData } from './content';
 
 // ─── Shared CTA card ─────────────────────────────────────────────────────────
 
-function ZipCTA() {
+function ZipCTA({ content }: { content: HowToExportContentData }) {
   return (
     <div style={{ marginTop: 56, padding: '32px 36px', borderRadius: 20, border: `1px solid rgba(2,136,143,0.3)`, background: 'rgba(2,136,143,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
       <div>
-        <div style={{ fontFamily: T.serif, fontSize: 24, color: T.ink, letterSpacing: '-0.01em', marginBottom: 6 }}>Got the ZIP?</div>
-        <div style={{ fontSize: 14, color: T.inkDim }}>Drop it on the home page. Parsed in your browser. Nothing leaves your device.</div>
+        <div style={{ fontFamily: T.serif, fontSize: 24, color: T.ink, letterSpacing: '-0.01em', marginBottom: 6 }}>{content.zipCtaTitle}</div>
+        <div style={{ fontSize: 14, color: T.inkDim }}>{content.zipCtaBody}</div>
       </div>
       <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 22px', borderRadius: 12, background: T.teal, color: T.cream, fontSize: 14, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans, whiteSpace: 'nowrap' }}>
-        Upload your ZIP now
+        {content.zipCtaButton}
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7 H11 M11 7 L8 4 M11 7 L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
       </Link>
     </div>
   );
 }
 
-export function HowToExportContent() {
+export function HowToExportContent({ content }: { content: HowToExportContentData }) {
   const [tab, setTab] = useState<'device' | 'drive'>('device');
 
   return (
@@ -33,15 +34,15 @@ export function HowToExportContent() {
       <main style={{ maxWidth: 720, margin: '0 auto', padding: '56px 32px 80px' }}>
         {/* Header */}
         <div style={{ marginBottom: 36 }}>
-          <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 14 }}>STEP-BY-STEP GUIDE</div>
+          <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 14 }}>{content.eyebrow}</div>
           <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', color: T.ink, marginBottom: 16 }}>
-            How to get your Instagram data.
+            {content.headline}
           </h1>
           <p style={{ fontSize: 16, color: T.inkDim, lineHeight: 1.6, maxWidth: 560, marginBottom: 12 }}>
-            Instagram lets you export your followers and following list directly. Pick the method that works for you.
+            {content.intro}
           </p>
           <Link href="/what-is-whounfollowed" style={{ fontSize: 13, color: T.inkDim, textDecoration: 'none', borderBottom: '1px solid var(--t-border3)', paddingBottom: 1 }}>
-            New here? Learn what WhoUnfollowed does →
+            {content.newHereLink}
           </Link>
         </div>
 
@@ -49,78 +50,79 @@ export function HowToExportContent() {
         <div style={{ display: 'flex', gap: 8, marginBottom: 40, padding: 4, borderRadius: 14, background: 'var(--t-surface2)', border: '1px solid var(--t-border1)', width: 'fit-content' }}>
           <TabButton active={tab === 'device'} onClick={() => setTab('device')}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 16 V8 M12 8 L9 11 M12 8 L15 11" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/><rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" strokeWidth="1.5"/></svg>
-            Download to device
+            {content.deviceTab}
           </TabButton>
           <TabButton active={tab === 'drive'} onClick={() => setTab('drive')}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 17 L8.5 7 L14 17 H3Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/><path d="M14 17 L19.5 7 M8.5 7 H19.5 L22 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            Export to Google Drive
+            {content.driveTab}
           </TabButton>
         </div>
 
         {/* ── TAB: DOWNLOAD TO DEVICE ── */}
         {tab === 'device' && (
           <>
-            <Callout variant="tip">
-              Only request <strong>Followers and Following</strong>, not your entire Instagram history. A focused export is ready in under 2 minutes.
-            </Callout>
+            <Callout variant="tip">{content.device.tip}</Callout>
 
             <div style={{ marginTop: 40, display: 'flex', flexDirection: 'column', gap: 40 }}>
-              <Step n={1} title="Go to Instagram Accounts Center">
+              <Step n={1} title={content.device.step1.title}>
                 <a href="https://accountscenter.instagram.com/info_and_permissions/dyi/" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 18px', borderRadius: 10, background: 'rgba(2,136,143,0.1)', border: '1px solid rgba(2,136,143,0.3)', color: T.tealLight, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
-                  Open Instagram Accounts Center
+                  {content.device.step1.openButton}
                   <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M11 7L8 4M11 7L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </a>
-                <NavPath steps={['Profile', 'Settings and privacy', 'Accounts Center']} />
-                <Hint>Or navigate manually from your Profile. Works the same on phone, tablet, or desktop.</Hint>
+                <NavPath steps={content.device.step1.nav} />
+                <Hint>{content.device.step1.hint}</Hint>
               </Step>
 
-              <Step n={2} title="Open Your Information and Permissions">
-                <NavPath steps={['Accounts Center', 'Your information and permissions']} />
+              <Step n={2} title={content.device.step2.title}>
+                <NavPath steps={content.device.step2.nav} />
               </Step>
 
-              <Step n={3} title="Go to Export Your Information">
-                <NavPath steps={['Your information and permissions', 'Export your information', 'Export to device']} />
-                <Hint>Two options appear here. Pick <Kbd>Export to device</Kbd>, not &quot;Transfer to destination&quot;.</Hint>
+              <Step n={3} title={content.device.step3.title}>
+                <NavPath steps={content.device.step3.nav} />
+                <Hint>{content.device.step3.hint}</Hint>
               </Step>
 
-              <Step n={4} title="Select only Followers and Following">
-                <NavPath steps={['Create export', 'Choose account', 'Download to device', 'Customize information']} />
+              <Step n={4} title={content.device.step4.title}>
+                <NavPath steps={content.device.step4.nav} />
                 <div style={{ borderRadius: 14, border: '1px solid var(--t-border2)', background: 'var(--t-surface1)', overflow: 'hidden' }}>
-                  <div style={{ padding: '10px 14px', borderBottom: '1px solid var(--t-border1)', fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.1em' }}>CUSTOMIZE INFORMATION - SELECT ONLY:</div>
-                  {[{ label: 'Followers and Following', checked: true },{ label: 'Posts', checked: false },{ label: 'Stories', checked: false },{ label: 'Messages', checked: false },{ label: 'Comments', checked: false }].map((item, i) => (
-                    <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderBottom: i < 4 ? '1px solid var(--t-surface2)' : 'none', background: item.checked ? 'rgba(2,136,143,0.06)' : 'transparent' }}>
-                      <div style={{ width: 16, height: 16, borderRadius: 4, border: `1.5px solid ${item.checked ? T.tealMid : 'rgba(244,240,232,0.2)'}`, background: item.checked ? T.tealMid : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                        {item.checked && <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5 L4 7 L8 3" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                  <div style={{ padding: '10px 14px', borderBottom: '1px solid var(--t-border1)', fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.1em' }}>{content.device.step4.customizeHeader}</div>
+                  {content.device.step4.items.map((label, i) => {
+                    const checked = i === 0;
+                    return (
+                      <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', borderBottom: i < 4 ? '1px solid var(--t-surface2)' : 'none', background: checked ? 'rgba(2,136,143,0.06)' : 'transparent' }}>
+                        <div style={{ width: 16, height: 16, borderRadius: 4, border: `1.5px solid ${checked ? T.tealMid : 'rgba(244,240,232,0.2)'}`, background: checked ? T.tealMid : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          {checked && <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5 L4 7 L8 3" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                        </div>
+                        <span style={{ fontSize: 13, color: checked ? T.ink : T.inkMute, fontWeight: checked ? 600 : 400 }}>{label}</span>
+                        {checked && <span style={{ marginLeft: 'auto', fontSize: 10, color: T.tealLight, fontFamily: T.mono, padding: '2px 8px', borderRadius: 20, background: 'rgba(2,136,143,0.15)' }}>{content.device.step4.required}</span>}
                       </div>
-                      <span style={{ fontSize: 13, color: item.checked ? T.ink : T.inkMute, fontWeight: item.checked ? 600 : 400 }}>{item.label}</span>
-                      {item.checked && <span style={{ marginLeft: 'auto', fontSize: 10, color: T.tealLight, fontFamily: T.mono, padding: '2px 8px', borderRadius: 20, background: 'rgba(2,136,143,0.15)' }}>Required</span>}
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
-                <Hint>Date range: choose <strong style={{ color: T.inkDim }}>All time</strong>. A shorter range only exports recent followers, not your full list.</Hint>
+                <Hint>{content.device.step4.hint}</Hint>
               </Step>
 
-              <Step n={5} title='Choose JSON format, then tap "Start export"'>
+              <Step n={5} title={content.device.step5.title}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                   <div style={{ padding: '14px 16px', borderRadius: 12, border: `2px solid ${T.tealMid}`, background: 'rgba(2,136,143,0.08)' }}>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: T.tealLight, marginBottom: 4 }}>JSON</div>
-                    <div style={{ fontSize: 12, color: T.inkDim }}>Recommended. Includes timestamps.</div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: T.tealLight, marginBottom: 4 }}>{content.device.step5.jsonLabel}</div>
+                    <div style={{ fontSize: 12, color: T.inkDim }}>{content.device.step5.jsonDesc}</div>
                   </div>
                   <div style={{ padding: '14px 16px', borderRadius: 12, border: '1px solid var(--t-border2)', background: 'var(--t-surface1)', opacity: 0.5 }}>
-                    <div style={{ fontSize: 14, fontWeight: 500, color: T.inkDim, marginBottom: 4 }}>HTML</div>
-                    <div style={{ fontSize: 12, color: T.inkMute }}>No timestamps</div>
+                    <div style={{ fontSize: 14, fontWeight: 500, color: T.inkDim, marginBottom: 4 }}>{content.device.step5.htmlLabel}</div>
+                    <div style={{ fontSize: 12, color: T.inkMute }}>{content.device.step5.htmlDesc}</div>
                   </div>
                 </div>
-                <Hint>Then tap <Kbd>Start export</Kbd>. Instagram processes it in the background.</Hint>
+                <Hint>{content.device.step5.hint}</Hint>
               </Step>
 
-              <Step n={6} title="Download the ZIP from your email">
+              <Step n={6} title={content.device.step6.title}>
                 <div style={{ padding: '16px', borderRadius: 14, border: '1px solid var(--t-border2)', background: 'var(--t-surface1)', display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                   <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(2,136,143,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke={T.tealMid} strokeWidth="1.5"/><path d="M3 8 L12 13 L21 8" stroke={T.tealMid} strokeWidth="1.5" strokeLinecap="round"/></svg>
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: T.ink }}>Your Instagram data is ready</div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: T.ink }}>{content.device.step6.emailSubject}</div>
                     <div style={{ fontSize: 11, color: T.inkMute, marginTop: 2 }}>From: security-noreply@instagram.com</div>
                     <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
                       <div style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--t-border2)', fontSize: 11, color: T.inkDim, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>instagram-username-20260428.zip</div>
@@ -128,109 +130,102 @@ export function HowToExportContent() {
                     </div>
                   </div>
                 </div>
-                <Hint>Usually arrives within a few minutes.</Hint>
+                <Hint>{content.device.step6.hint}</Hint>
               </Step>
             </div>
 
             <div style={{ marginTop: 32 }}>
-              <Callout variant="warning">The download link <strong>expires in 4 days</strong>. Download the ZIP as soon as you get the email.</Callout>
+              <Callout variant="warning">{content.device.warning}</Callout>
             </div>
-            <ZipCTA />
+            <ZipCTA content={content} />
           </>
         )}
 
         {/* ── TAB: EXPORT TO GOOGLE DRIVE ── */}
         {tab === 'drive' && (
           <>
-            <Callout variant="tip">
-              Instagram can automatically send your data exports to Google Drive, Dropbox, and other platforms. Once set up, your data lands there on a schedule - no manual downloading needed.
-            </Callout>
+            <Callout variant="tip">{content.drive.tip}</Callout>
 
             <div style={{ marginTop: 40, display: 'flex', flexDirection: 'column', gap: 40 }}>
-              <Step n={1} title="Go to Instagram Accounts Center">
+              <Step n={1} title={content.drive.step1.title}>
                 <a href="https://accountscenter.instagram.com/info_and_permissions/dyi/" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 18px', borderRadius: 10, background: 'rgba(2,136,143,0.1)', border: '1px solid rgba(2,136,143,0.3)', color: T.tealLight, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>
-                  Open Instagram Accounts Center
+                  {content.drive.step1.openButton}
                   <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M11 7L8 4M11 7L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </a>
-                <NavPath steps={['Profile', 'Settings and privacy', 'Accounts Center']} />
-                <Hint>Works the same on phone, tablet, or desktop.</Hint>
+                <NavPath steps={content.drive.step1.nav} />
+                <Hint>{content.drive.step1.hint}</Hint>
               </Step>
-              <Step n={2} title="Open Your Information and Permissions">
-                <NavPath steps={['Accounts Center', 'Your information and permissions']} />
+              <Step n={2} title={content.drive.step2.title}>
+                <NavPath steps={content.drive.step2.nav} />
               </Step>
-              <Step n={3} title='Choose "Transfer to destination"'>
-                <NavPath steps={['Your information and permissions', 'Export your information', 'Transfer to destination']} />
-                <Hint>Not &quot;Export to device&quot;, that&apos;s the other tab.</Hint>
+              <Step n={3} title={content.drive.step3.title}>
+                <NavPath steps={content.drive.step3.nav} />
+                <Hint>{content.drive.step3.hint}</Hint>
               </Step>
-              <Step n={4} title="Connect your storage platform">
+              <Step n={4} title={content.drive.step4.title}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                  {[{ name: 'Google Drive', note: 'Recommended' },{ name: 'Dropbox', note: 'Supported' },{ name: 'OneDrive', note: 'Supported' },{ name: 'Box', note: 'Supported' }].map((p) => (
+                  {content.drive.step4.platforms.map((p) => (
                     <div key={p.name} style={{ padding: '12px 14px', borderRadius: 10, border: '1px solid var(--t-border2)', background: 'var(--t-surface1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ fontSize: 13, color: T.ink, fontWeight: 500 }}>{p.name}</span>
-                      <span style={{ fontSize: 10, color: p.note === 'Recommended' ? T.tealLight : T.inkMute, fontFamily: T.mono }}>{p.note}</span>
+                      <span style={{ fontSize: 10, color: p.note === content.drive.step4.platforms[0]!.note ? T.tealLight : T.inkMute, fontFamily: T.mono }}>{p.note}</span>
                     </div>
                   ))}
                 </div>
-                <Hint>Follow the login steps to authorise access to your chosen platform.</Hint>
+                <Hint>{content.drive.step4.hint}</Hint>
               </Step>
-              <Step n={5} title="Select Followers and Following, set date range to All time">
-                <NavPath steps={['Customize information', 'Followers and Following', 'All time']} />
-                <Hint>A shorter date range only exports recent followers, not your full list.</Hint>
+              <Step n={5} title={content.drive.step5.title}>
+                <NavPath steps={content.drive.step5.nav} />
+                <Hint>{content.drive.step5.hint}</Hint>
               </Step>
-              <Step n={6} title="Start the transfer">
-                <Hint>Arrives in your cloud storage within a few minutes. Download it from there and upload it here, same as the device method.</Hint>
+              <Step n={6} title={content.drive.step6.title}>
+                <Hint>{content.drive.step6.hint}</Hint>
               </Step>
             </div>
 
             <div style={{ marginTop: 32 }}>
-              <Callout variant="tip">You can set up recurring transfers so Instagram automatically sends fresh exports to your Drive on a schedule. This is the foundation of the automatic sync feature coming to WhoUnfollowed Pro.</Callout>
+              <Callout variant="tip">{content.drive.tip2}</Callout>
             </div>
-            <ZipCTA />
+            <ZipCTA content={content} />
           </>
         )}
 
         {/* ── SECTION A: How long does it take? ── */}
         <div style={{ marginTop: 72, paddingTop: 56, borderTop: '1px solid var(--t-border1)' }}>
-          <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 12 }}>TIMING</div>
-          <h2 style={{ fontFamily: T.serif, fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 400, letterSpacing: '-0.02em', color: T.ink, marginBottom: 20, lineHeight: 1.1 }}>How long does the export take?</h2>
-          <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.7, marginBottom: 20 }}>Most exports arrive within 1–5 minutes. If yours has not appeared after 15 minutes, here is what to check:</p>
+          <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 12 }}>{content.timing.eyebrow}</div>
+          <h2 style={{ fontFamily: T.serif, fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 400, letterSpacing: '-0.02em', color: T.ink, marginBottom: 20, lineHeight: 1.1 }}>{content.timing.headline}</h2>
+          <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.7, marginBottom: 20 }}>{content.timing.intro}</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
-            {[
-              'Check your spam or promotions folder. Instagram sends from security-noreply@instagram.com',
-              'Make sure you selected JSON format, not HTML - HTML exports sometimes take longer',
-              'Instagram throttles export requests. If you requested recently, wait 14 days before trying again',
-              'On rare occasions Instagram can take up to 48 hours, especially during high-traffic periods',
-            ].map((item) => (
+            {content.timing.items.map((item) => (
               <div key={item} style={{ display: 'flex', gap: 12, padding: '12px 16px', borderRadius: 10, background: 'var(--t-surface1)', border: '1px solid var(--t-border1)', fontSize: 14, color: T.inkDim, lineHeight: 1.6 }}>
                 <span style={{ color: T.tealMid, flexShrink: 0, marginTop: 2 }}>·</span>
                 <span>{item}</span>
               </div>
             ))}
           </div>
-          <Callout variant="warning">The download link in the email <strong>expires in 4 days</strong>. Download the ZIP as soon as it arrives.</Callout>
+          <Callout variant="warning">{content.timing.warning}</Callout>
         </div>
 
         {/* ── SECTION B: What's inside the ZIP? ── */}
         <div style={{ marginTop: 72, paddingTop: 56, borderTop: '1px solid var(--t-border1)' }}>
-          <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 12 }}>FILE STRUCTURE</div>
-          <h2 style={{ fontFamily: T.serif, fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 400, letterSpacing: '-0.02em', color: T.ink, marginBottom: 20, lineHeight: 1.1 }}>What&apos;s actually inside the file you download?</h2>
+          <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 12 }}>{content.structure.eyebrow}</div>
+          <h2 style={{ fontFamily: T.serif, fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 400, letterSpacing: '-0.02em', color: T.ink, marginBottom: 20, lineHeight: 1.1 }}>{content.structure.headline}</h2>
 
           {/* Folder tree */}
           <div style={{ borderRadius: 14, border: '1px solid var(--t-border2)', background: 'var(--t-surface1)', overflow: 'hidden', marginBottom: 20 }}>
-            <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--t-border1)', fontSize: 10, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.1em' }}>FOLDER STRUCTURE</div>
+            <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--t-border1)', fontSize: 10, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.1em' }}>{content.structure.folderLabel}</div>
             <pre style={{ margin: 0, padding: '16px', fontFamily: T.mono, fontSize: 13, color: T.inkDim, lineHeight: 1.8, overflowX: 'auto' }}>{`instagram-username-20260428.zip
 └── followers_and_following/
-    ├── followers_1.json      ← everyone who follows you
-    └── following.json        ← everyone you follow`}</pre>
+    ├── followers_1.json      ← ${content.structure.treeComment1}
+    └── following.json        ← ${content.structure.treeComment2}`}</pre>
           </div>
 
           <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.7, marginBottom: 20 }}>
-            You only need this ZIP. You do not need to unzip it or open the files yourself. Just drop the ZIP on WhoUnfollowed and the parser reads it in your browser in about 2 seconds.
+            {content.structure.body}
           </p>
 
           {/* JSON sample */}
           <div style={{ borderRadius: 14, border: '1px solid var(--t-border2)', background: 'var(--t-surface1)', overflow: 'hidden', marginBottom: 20 }}>
-            <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--t-border1)', fontSize: 10, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.1em' }}>WHAT THE JSON LOOKS LIKE</div>
+            <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--t-border1)', fontSize: 10, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.1em' }}>{content.structure.jsonSampleLabel}</div>
             <pre style={{ margin: 0, padding: '16px', fontFamily: T.mono, fontSize: 12, color: T.inkDim, lineHeight: 1.8, overflowX: 'auto' }}>{`[
   {
     "string_list_data": [{
@@ -242,14 +237,14 @@ export function HowToExportContent() {
           </div>
 
           <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.7, marginBottom: 32 }}>
-            This is what our parser reads. The <code style={{ fontFamily: T.mono, fontSize: 13, color: T.tealLight, background: 'rgba(2,136,143,0.08)', padding: '1px 6px', borderRadius: 4 }}>timestamp</code> tells you exactly when someone followed you.
+            {content.structure.closing}
           </p>
 
           {/* Mini CTA */}
           <div style={{ padding: '20px 24px', borderRadius: 14, border: `1px solid rgba(2,136,143,0.25)`, background: 'rgba(2,136,143,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 14, color: T.inkDim }}>Got the ZIP?</span>
+            <span style={{ fontSize: 14, color: T.inkDim }}>{content.structure.miniCtaLabel}</span>
             <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 14, fontWeight: 600, color: T.tealLight, textDecoration: 'none' }}>
-              Drop it here
+              {content.structure.miniCtaButton}
               <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M11 7L8 4M11 7L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </Link>
           </div>
@@ -257,32 +252,11 @@ export function HowToExportContent() {
 
         {/* ── SECTION C: Troubleshooting ── */}
         <div style={{ marginTop: 72, paddingTop: 56, borderTop: '1px solid var(--t-border1)' }}>
-          <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 12 }}>TROUBLESHOOTING</div>
-          <h2 style={{ fontFamily: T.serif, fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 400, letterSpacing: '-0.02em', color: T.ink, marginBottom: 32, lineHeight: 1.1 }}>Common problems and how to fix them.</h2>
+          <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 12 }}>{content.troubleshooting.eyebrow}</div>
+          <h2 style={{ fontFamily: T.serif, fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 400, letterSpacing: '-0.02em', color: T.ink, marginBottom: 32, lineHeight: 1.1 }}>{content.troubleshooting.headline}</h2>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-            {[
-              {
-                q: "I didn't receive the Instagram export email",
-                a: "Check your spam folder first. The sender is security-noreply@instagram.com. If it's not there after 15 minutes, go back to Accounts Center and confirm your request was submitted. Try requesting again - sometimes the first request silently fails.",
-              },
-              {
-                q: "The download link in the email has expired",
-                a: "Export links expire after 4 days. Go back to Accounts Center and request a new export. You'll get a fresh link within minutes.",
-              },
-              {
-                q: "My export only shows recent followers, not my full list",
-                a: "You selected the wrong date range. Go back and request again - under \"Date range\" select All time, not Last month or Last year. Any shorter range gives you a partial list.",
-              },
-              {
-                q: "Instagram is asking me to export my full archive",
-                a: "You navigated to the wrong option. Make sure you choose \"Export to device\" (not \"Transfer to destination\") and then under Customize information, deselect everything except Followers and Following.",
-              },
-              {
-                q: "The ZIP file won't open or shows an error on WhoUnfollowed",
-                a: "Make sure you're uploading the original ZIP Instagram sent - don't unzip and re-zip it, and don't rename the file. If you're on iOS, make sure you downloaded it with the Files app, not the Mail app.",
-              },
-            ].map((item, i, arr) => (
+            {content.troubleshooting.items.map((item, i, arr) => (
               <div key={item.q} style={{ padding: '24px 0', borderBottom: i < arr.length - 1 ? '1px solid var(--t-border1)' : 'none' }}>
                 <h3 style={{ fontFamily: T.serif, fontSize: 18, fontWeight: 400, color: T.ink, letterSpacing: '-0.01em', marginBottom: 10, lineHeight: 1.3 }}>{item.q}</h3>
                 <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.7, margin: 0 }}>{item.a}</p>
@@ -293,36 +267,11 @@ export function HowToExportContent() {
 
         {/* ── FAQ ── */}
         <div style={{ marginTop: 72, paddingTop: 56, borderTop: '1px solid var(--t-border1)' }}>
-          <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 12 }}>FAQ</div>
-          <h2 style={{ fontFamily: T.serif, fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 400, letterSpacing: '-0.02em', color: T.ink, marginBottom: 32, lineHeight: 1.1 }}>Frequently asked questions.</h2>
+          <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 12 }}>{content.faq.eyebrow}</div>
+          <h2 style={{ fontFamily: T.serif, fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: 400, letterSpacing: '-0.02em', color: T.ink, marginBottom: 32, lineHeight: 1.1 }}>{content.faq.headline}</h2>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-            {[
-              {
-                q: "Does requesting an Instagram data export notify my followers?",
-                a: "No. The export is completely private. Your followers have no way of knowing you requested or downloaded your data.",
-              },
-              {
-                q: "How often can I request an Instagram data export?",
-                a: "Instagram allows one export request approximately every 14 days per account.",
-              },
-              {
-                q: "Is it safe to request my Instagram data export?",
-                a: "Yes. It is an official Instagram feature required under GDPR. No third-party app is involved at any point.",
-              },
-              {
-                q: "What format should I choose - JSON or HTML?",
-                a: "Always choose JSON. It includes timestamps showing when each person followed you, and it's the format our parser is built for. HTML is only for human reading and contains less data.",
-              },
-              {
-                q: "Can I request an Instagram data export on desktop?",
-                a: "Yes. Go to accountscenter.instagram.com → Your information and permissions → Export your information. The process is identical to mobile.",
-              },
-              {
-                q: "Why do I only need the Followers and Following export, not my full archive?",
-                a: "The full Instagram archive can be several gigabytes and takes much longer. Followers and Following is a small, focused export - usually under 1MB - and ready in minutes.",
-              },
-            ].map((item, i, arr) => (
+            {content.faq.items.map((item, i, arr) => (
               <div key={item.q} style={{ padding: '20px 0', borderBottom: i < arr.length - 1 ? '1px solid var(--t-border1)' : 'none' }}>
                 <div style={{ fontSize: 14, fontWeight: 600, color: T.ink, marginBottom: 8, lineHeight: 1.4 }}>{item.q}</div>
                 <div style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.7 }}>{item.a}</div>
@@ -333,19 +282,19 @@ export function HowToExportContent() {
 
         {/* Related guide */}
         <div style={{ marginTop: 40, padding: '18px 20px', borderRadius: 14, background: 'var(--t-surface1)', border: '1px solid var(--t-border1)' }}>
-          <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 8 }}>RELATED GUIDE</div>
+          <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 8 }}>{content.relatedGuideEyebrow}</div>
           <Link href="/blog/how-to-download-your-instagram-data" style={{ fontFamily: T.serif, fontSize: 18, color: T.tealLight, textDecoration: 'none', lineHeight: 1.3 }}>
-            How to download your Instagram data (step by step) →
+            {content.relatedGuideLink}
           </Link>
         </div>
 
         {/* Second CTA */}
-        <ZipCTA />
+        <ZipCTA content={content} />
 
         <div style={{ marginTop: 40, paddingTop: 32, borderTop: '1px solid var(--t-border1)' }}>
           <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 13, color: T.inkDim, textDecoration: 'none' }}>
             <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M11 7 H3 M3 7 L6 4 M3 7 L6 10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            Back to WhoUnfollowed
+            {content.backToHome}
           </Link>
         </div>
       </main>
@@ -391,10 +340,6 @@ function NavPath({ steps }: { steps: string[] }) {
       ))}
     </div>
   );
-}
-
-function Kbd({ children }: { children: React.ReactNode }) {
-  return <strong style={{ color: T.ink, fontWeight: 600 }}>{children}</strong>;
 }
 
 // Small, muted secondary text: the "why" or edge case, subordinate to the
