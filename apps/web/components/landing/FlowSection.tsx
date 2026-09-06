@@ -110,55 +110,65 @@ function SettingsList({ items }: { items: string[] }) {
 
 // ─── FlowSection ──────────────────────────────────────────────────────────────
 
-export function FlowSection() {
+interface FlowContent {
+  eyebrow: string;
+  headlinePrefix: string;
+  headlineSuffix: string;
+  step1Title: string;
+  step1Body: string;
+  step1Eta: string;
+  step2Title: string;
+  step2Eta: string;
+  step2Items: string[];
+  step3Title: string;
+  step3Body: string;
+  step3Eta: string;
+  waitNote: string;
+  notSure: string;
+  guideCta: string;
+}
+
+export function FlowSection({ content }: { content: FlowContent }) {
   return (
     <section id="flow" className="px-4 sm:px-12 pb-24 sm:pb-32 relative">
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginBottom: 14 }}>
-          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>HOW IT WORKS</span>
+          <span style={{ fontFamily: T.mono, fontSize: 11, color: T.tealMid, letterSpacing: '0.18em' }}>{content.eyebrow}</span>
           <div style={{ flex: 1, height: 1, background: 'var(--t-border2)' }} />
         </div>
         <h2 style={{ fontFamily: T.serif, fontSize: 'clamp(40px, 6vw, 72px)', fontWeight: 400, lineHeight: 1.0, letterSpacing: '-0.03em', marginBottom: 56, color: T.ink }}>
-          30 seconds to request.{' '}
-          <span style={{ fontStyle: 'italic', color: T.tealLight }}>Minutes to receive. 2 seconds to parse.</span>
+          {content.headlinePrefix}{' '}
+          <span style={{ fontStyle: 'italic', color: T.tealLight }}>{content.headlineSuffix}</span>
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: 18, marginBottom: 24 }}>
           <FlowStep
-            n="01" title="Request your export"
-            body="In Instagram: Accounts Center → Your information and permissions → Export your information → Create export."
-            illustration={<IllRequest />} eta="~30 sec"
+            n="01" title={content.step1Title}
+            body={content.step1Body}
+            illustration={<IllRequest />} eta={content.step1Eta}
           />
           <FlowStep
-            n="02" title="Choose these settings"
-            body={
-              <SettingsList items={[
-                'Select your Instagram account',
-                'Choose Followers and following',
-                'Set date range to All time',
-                'Choose JSON format (recommended, keeps follow timestamps)',
-                'Choose Export to device',
-              ]} />
-            }
-            illustration={<IllEmail />} eta="few min"
+            n="02" title={content.step2Title}
+            body={<SettingsList items={content.step2Items} />}
+            illustration={<IllEmail />} eta={content.step2Eta}
           />
           <FlowStep
-            n="03" title="Download and upload the ZIP"
-            body="Instagram sends a download link by email. Download the ZIP and upload it here without unzipping it."
-            illustration={<IllDrop />} eta="~2 sec" highlight
+            n="03" title={content.step3Title}
+            body={content.step3Body}
+            illustration={<IllDrop />} eta={content.step3Eta} highlight
           />
         </div>
         <div style={{ maxWidth: 600, margin: '0 auto 32px', padding: '14px 18px', borderRadius: 12, background: 'rgba(2,136,143,0.06)', border: '1px solid rgba(2,136,143,0.2)', textAlign: 'center' }}>
           <p style={{ fontSize: 13, color: T.inkDim, margin: 0, lineHeight: 1.5 }}>
-            Instagram may take a few minutes to prepare the download. Once it arrives, come back and upload the ZIP.
+            {content.waitNote}
           </p>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-          <p style={{ fontSize: 13, color: T.terra, margin: 0, fontFamily: T.mono, letterSpacing: '0.04em' }}>Not sure how to get your Instagram export?</p>
+          <p style={{ fontSize: 13, color: T.terra, margin: 0, fontFamily: T.mono, letterSpacing: '0.04em' }}>{content.notSure}</p>
           <Link
             href="/how-to-export"
             style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, fontWeight: 600, color: T.cream, textDecoration: 'none', padding: '13px 24px', borderRadius: 12, background: T.teal, boxShadow: `0 4px 20px ${T.tealGlow}` }}
           >
-            Step-by-step export guide
+            {content.guideCta}
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7 H11 M11 7 L8 4 M11 7 L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </Link>
         </div>

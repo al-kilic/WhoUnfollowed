@@ -12,8 +12,14 @@ import { CompareSection } from './CompareSection';
 import { PricingSection } from './PricingSection';
 import { FAQSection }    from './FAQSection';
 import { FinalCTA, LandingFooter } from './FinalCTA';
+import type { HomeContent } from '@/app/[locale]/homeContent';
 
-export function LandingPage({ userEmail, isPro = false, initialStats }: { userEmail: string | null; isPro?: boolean; initialStats: { snapshots: number; avgNonFollowers: number } }) {
+export function LandingPage({ userEmail, isPro = false, initialStats, content }: {
+  userEmail: string | null;
+  isPro?: boolean;
+  initialStats: { snapshots: number; avgNonFollowers: number };
+  content: HomeContent;
+}) {
   return (
     <div style={{
       width: '100%', minHeight: '100%',
@@ -22,14 +28,14 @@ export function LandingPage({ userEmail, isPro = false, initialStats }: { userEm
     }}>
       <SiteNav userEmail={userEmail} isPro={isPro} />
       <main>
-        <HeroSection isPro={isPro} initialStats={initialStats} />
-        <MarqueeBand />
-        <WhatYouGetSection />
-        <ValueSection />
-        <FlowSection />
-        <CompareSection />
-        <FAQSection />
-        <PricingSection />
+        <HeroSection isPro={isPro} initialStats={initialStats} content={content.hero} />
+        <MarqueeBand items={content.marquee} />
+        <WhatYouGetSection content={content.whatYouGet} />
+        <ValueSection content={content.value} />
+        <FlowSection content={content.flow} />
+        <CompareSection content={content.compare} />
+        <FAQSection content={content.faq} />
+        <PricingSection content={content.pricingTeaser} />
         <FinalCTA />
       </main>
       <LandingFooter />
