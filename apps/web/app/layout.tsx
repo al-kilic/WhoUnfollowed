@@ -1,11 +1,25 @@
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import { ThemeProvider } from 'next-themes';
-import { getLocale } from 'next-intl/server';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages } from 'next-intl/server';
 import { FontLoader } from '@/components/FontLoader';
 import { AuthProvider } from '@/components/AuthProvider';
 import { getAuthState } from '@/lib/auth/getAuthState';
 import './globals.css';
+
+// Sitewide chrome (SiteNav, LandingFooter, FinalCTA) needs useTranslations()
+// on every page, including ones outside app/[locale]. Only these namespaces
+// are sent to the client; per-page prose (much larger) stays server-side in
+// content files like app/[locale]/pricing/content.ts and is never part of
+// this catalog.
+const CHROME_NAMESPACES = ['nav', 'footer', 'cta'] as const;
+
+function pickChromeMessages(messages: Awaited<ReturnType<typeof getMessages>>) {
+  return Object.fromEntries(
+    CHROME_NAMESPACES.filter((ns) => ns in messages).map((ns) => [ns, messages[ns]]),
+  );
+}
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
@@ -110,7 +124,8 @@ const orgJsonLd = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [auth, locale] = await Promise.all([getAuthState(), getLocale()]);
+  const [auth, locale, messages] = await Promise.all([getAuthState(), getLocale(), getMessages()]);
+  const chromeMessages = pickChromeMessages(messages);
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
@@ -178,10 +193,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <AuthProvider value={auth}>
-            <FontLoader />
-            {children}
-          </AuthProvider>
+          <NextIntlClientProvider locale={locale} messages={chromeMessages}>
+            <AuthProvider value={auth}>
+              <FontLoader />
+              {children}
+            </AuthProvider>
+          </NextIntlClientProvider>
         </ThemeProvider>
       </body>
     </html>

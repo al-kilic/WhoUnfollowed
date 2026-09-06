@@ -2,13 +2,16 @@
 
 import React, { useState, useRef } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { T } from './tokens';
 import { Icon } from './atoms';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { AccountMenu } from '@/components/AccountMenu';
 import { useAuth } from '@/components/AuthProvider';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 function WhatIsDropdown() {
+  const t = useTranslations('nav');
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -22,15 +25,15 @@ function WhatIsDropdown() {
 
   const items: { label: string; href: string; desc: string; icon: React.ReactNode }[] = [
     {
-      label: 'What is WhoUnfollowed?', href: '/what-is-whounfollowed', desc: 'How the tool works, and why no password',
+      label: t('whatIsLabel'), href: '/what-is-whounfollowed', desc: t('whatIsDesc'),
       icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>,
     },
     {
-      label: 'Compare',                href: '/compare',               desc: 'WhoUnfollowed vs other trackers',
+      label: t('compare'),             href: '/compare',               desc: t('compareDesc'),
       icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M9 12h6"/></svg>,
     },
     {
-      label: 'Blog',                   href: '/blog',                  desc: 'Guides, tips, privacy takes',
+      label: t('blog'),                href: '/blog',                  desc: t('blogDesc'),
       icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>,
     },
   ];
@@ -42,7 +45,7 @@ function WhatIsDropdown() {
         onClick={e => { e.preventDefault(); setOpen(o => !o); }}
         style={{ cursor: 'pointer', color: open ? T.ink : 'inherit', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4, transition: 'color 0.15s', whiteSpace: 'nowrap' }}
       >
-        Learn
+        {t('learn')}
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ opacity: 0.5, marginTop: 1 }}>
           <path d="M2 3.5 L5 6.5 L8 3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
@@ -80,6 +83,7 @@ function WhatIsDropdown() {
 }
 
 function HowItWorksDropdown() {
+  const t = useTranslations('nav');
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -122,7 +126,7 @@ function HowItWorksDropdown() {
           color: 'transparent',
           animation: 'lightning-shimmer 6s linear infinite',
           display: 'inline-block',
-        }}>How It Works</span>
+        }}>{t('howItWorks')}</span>
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style={{ opacity: 0.5, marginTop: 1 }}>
           <path d="M2 3.5 L5 6.5 L8 3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
@@ -149,7 +153,7 @@ function HowItWorksDropdown() {
               style={{ display: 'block', padding: '9px 12px', borderRadius: 8, fontSize: 13, color: T.inkDim, textDecoration: 'none', transition: 'all 0.15s' }}
               onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.background = T.surface2; e.currentTarget.style.color = T.ink; }}
               onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = T.inkDim; }}>
-              How to Export Your Data
+              {t('howToExport')}
             </Link>
             <a
               href="https://accountscenter.instagram.com/info_and_permissions/dyi/"
@@ -162,7 +166,7 @@ function HowItWorksDropdown() {
               <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
                 <path d="M3 7H11M11 7L8 4M11 7L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              Export on Instagram
+              {t('exportOnInstagram')}
             </a>
           </div>
         </>
@@ -175,6 +179,7 @@ function HowItWorksDropdown() {
 // icon and a teal shimmer on the label. Deliberately different from the amber
 // lightning "How It Works" treatment so the two don't read as the same thing.
 function RadarNavLink({ onClick = () => {}, mobile = false }: { onClick?: () => void; mobile?: boolean }) {
+  const t = useTranslations('nav');
   const size = mobile ? 16 : 13;
   return (
     <Link
@@ -216,7 +221,7 @@ function RadarNavLink({ onClick = () => {}, mobile = false }: { onClick?: () => 
         animation: 'radar-shimmer 5.5s linear infinite',
         fontWeight: 600,
         fontSize: mobile ? 16 : undefined,
-      }}>{mobile ? 'Radar Dashboard' : 'Radar'}</span>
+      }}>{mobile ? t('radarDashboard') : t('radar')}</span>
     </Link>
   );
 }
@@ -232,6 +237,7 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
   const userEmail = props.userEmail !== undefined ? props.userEmail : auth.userEmail;
   const isPro     = auth.isPro;
   const [menuOpen, setMenuOpen] = useState(false);
+  const t = useTranslations('nav');
 
   return (
     <>
@@ -260,12 +266,12 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
           {userEmail && (
             <>
               <RadarNavLink />
-              <Link href="/history" style={{ color: 'inherit', textDecoration: 'none' }}>History</Link>
+              <Link href="/history" style={{ color: 'inherit', textDecoration: 'none' }}>{t('history')}</Link>
             </>
           )}
           <WhatIsDropdown />
           <HowItWorksDropdown />
-          <a href="/privacy" style={{ cursor: 'pointer', color: 'inherit', textDecoration: 'none' }}>Privacy</a>
+          <a href="/privacy" style={{ cursor: 'pointer', color: 'inherit', textDecoration: 'none' }}>{t('privacy')}</a>
           <a
             href="https://github.com/al-kilic/WhoUnfollowed"
             target="_blank"
@@ -274,6 +280,7 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
           >
             <Icon.gh size={13} color={T.ink} />
           </a>
+          <LanguageSwitcher />
           <ThemeToggle />
           <AccountMenu userEmail={userEmail} isPro={isPro} />
         </div>
@@ -283,7 +290,7 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
           <ThemeToggle />
           <button
             onClick={() => setMenuOpen(o => !o)}
-            aria-label="Toggle menu"
+            aria-label={t('toggleMenu')}
             style={{ background: 'none', border: 'none', cursor: 'pointer', color: T.ink, padding: 6, lineHeight: 0 }}
           >
             {menuOpen ? (
@@ -313,16 +320,16 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
           }}
         >
           <RadarNavLink onClick={() => setMenuOpen(false)} mobile />
-          <Link href="/history" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>Snapshot History</Link>
-          <Link href="/what-is-whounfollowed" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>What is WhoUnfollowed?</Link>
-          <Link href="/compare" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>Compare</Link>
-          <Link href="/blog" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>Blog</Link>
-          <Link href="/#flow" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>How It Works</Link>
-          <Link href="/how-to-export" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>How to Export Your Data</Link>
+          <Link href="/history" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('snapshotHistory')}</Link>
+          <Link href="/what-is-whounfollowed" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('whatIsLabel')}</Link>
+          <Link href="/compare" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('compare')}</Link>
+          <Link href="/blog" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('blog')}</Link>
+          <Link href="/#flow" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('howItWorks')}</Link>
+          <Link href="/how-to-export" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('howToExport')}</Link>
           <a href="https://accountscenter.instagram.com/info_and_permissions/dyi/" target="_blank" rel="noopener noreferrer" style={{ fontSize: 16, color: T.tealLight, textDecoration: 'none' }}>
-            Export on Instagram ↗
+            {t('exportOnInstagram')} ↗
           </a>
-          <a href="/privacy" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>Privacy</a>
+          <a href="/privacy" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('privacy')}</a>
           <a
             href="https://github.com/al-kilic/WhoUnfollowed"
             target="_blank"
@@ -330,8 +337,9 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
             style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 16, color: T.ink, textDecoration: 'none' }}
           >
             <Icon.gh size={16} color={T.ink} />
-            GitHub
+            {t('github')}
           </a>
+          <LanguageSwitcher mobile />
           <AccountMenu userEmail={userEmail} isPro={isPro} variant="mobile" />
         </div>
       )}

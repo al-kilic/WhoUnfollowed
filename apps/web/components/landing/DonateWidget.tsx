@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { T } from './tokens';
 
 const SUGGESTED = [3, 5, 10];
 
 export function DonateWidget() {
+  const t = useTranslations('footer');
   const pathname = usePathname();
   const [amount, setAmount] = useState<number | null>(5);
   const [custom, setCustom] = useState('');
@@ -17,7 +19,7 @@ export function DonateWidget() {
 
   async function donate() {
     if (!effectiveAmount || effectiveAmount <= 0) {
-      setError('Pick or enter an amount first.');
+      setError(t('donateErrorAmount'));
       return;
     }
     setPending(true);
@@ -30,13 +32,13 @@ export function DonateWidget() {
       });
       const data = await res.json();
       if (!res.ok || !data.url) {
-        setError(data.error ?? 'Something went wrong. Try again.');
+        setError(data.error ?? t('donateErrorGeneric'));
         setPending(false);
         return;
       }
       window.location.href = data.url;
     } catch {
-      setError('Something went wrong. Try again.');
+      setError(t('donateErrorGeneric'));
       setPending(false);
     }
   }
@@ -44,10 +46,10 @@ export function DonateWidget() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
       <div style={{ fontSize: 11, color: T.inkMute, letterSpacing: '0.16em', textTransform: 'uppercase', fontFamily: T.mono, fontWeight: 600 }}>
-        Support the project
+        {t('donateTitle')}
       </div>
       <p style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5, maxWidth: 260 }}>
-        No pressure, no perks. If this saved you from a shady password-asking app, throw a few dollars our way.
+        {t('donateDesc')}
       </p>
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
         {SUGGESTED.map((n) => (
@@ -74,7 +76,7 @@ export function DonateWidget() {
           type="number"
           min={1}
           max={500}
-          placeholder="Other"
+          placeholder={t('donateOther')}
           value={custom}
           onChange={(e) => { setCustom(e.target.value); setAmount(null); }}
           style={{
@@ -108,7 +110,7 @@ export function DonateWidget() {
           color: T.cream,
         }}
       >
-        {pending ? 'Redirecting...' : 'Donate'}
+        {pending ? t('donateRedirecting') : t('donateButton')}
       </button>
     </div>
   );

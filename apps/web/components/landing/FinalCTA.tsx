@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { T } from './tokens';
 import { Icon } from './atoms';
 import { DonateWidget } from './DonateWidget';
@@ -124,6 +125,7 @@ function PreviewCard({ active }: { active: boolean }) {
 // ─── Final CTA ────────────────────────────────────────────────────────────────
 
 export function FinalCTA() {
+  const t = useTranslations('cta');
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -175,7 +177,7 @@ export function FinalCTA() {
               transition: 'opacity 0.5s 0.1s ease, transform 0.5s 0.1s ease',
             }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#5fc4c8', animation: 'glow-soft 2s ease-in-out infinite' }} />
-              <span style={{ fontSize: 11, color: '#5fc4c8', fontFamily: T.mono, fontWeight: 600, letterSpacing: '0.1em' }}>FREE · NO INSTAGRAM PASSWORD · NO INSTAGRAM LOGIN</span>
+              <span style={{ fontSize: 11, color: '#5fc4c8', fontFamily: T.mono, fontWeight: 600, letterSpacing: '0.1em' }}>{t('eyebrow')}</span>
             </div>
 
             {/* Headline */}
@@ -188,9 +190,9 @@ export function FinalCTA() {
               transform: visible ? 'translateY(0)' : 'translateY(16px)',
               transition: 'opacity 0.55s 0.18s ease, transform 0.55s 0.18s ease',
             }}>
-              Know exactly<br/>
-              who isn&apos;t following<br/>
-              <span style={{ fontStyle: 'italic', color: '#5fc4c8' }}>you back.</span>
+              {t('headlineLine1')}<br/>
+              {t('headlineLine2')}<br/>
+              <span style={{ fontStyle: 'italic', color: '#5fc4c8' }}>{t('headlineLine3')}</span>
             </h3>
 
             {/* Body */}
@@ -201,7 +203,7 @@ export function FinalCTA() {
               transform: visible ? 'translateY(0)' : 'translateY(12px)',
               transition: 'opacity 0.5s 0.28s ease, transform 0.5s 0.28s ease',
             }}>
-              Upload your Instagram ZIP to get your current non-followers list in seconds. Save snapshots over time to see who unfollows you later.
+              {t('body')}
             </p>
 
             {/* CTAs */}
@@ -227,7 +229,7 @@ export function FinalCTA() {
                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(2,136,143,0.55), inset 0 1px 0 rgba(255,255,255,0.12)'; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 32px rgba(2,136,143,0.45), inset 0 1px 0 rgba(255,255,255,0.12)'; }}
               >
-                Upload your export and see the list
+                {t('primaryCta')}
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </a>
               <Link
@@ -244,7 +246,7 @@ export function FinalCTA() {
                 onMouseLeave={e => { e.currentTarget.style.color = 'rgba(244,240,232,0.7)'; e.currentTarget.style.borderColor = 'rgba(244,240,232,0.12)'; }}
               >
                 <Icon.code size={14} color="#5fc4c8" />
-                How to request your Instagram export
+                {t('secondaryCta')}
               </Link>
             </div>
 
@@ -256,11 +258,11 @@ export function FinalCTA() {
               transition: 'opacity 0.5s 0.5s ease',
             }}>
               {[
-                { icon: 'shield', text: 'no login' },
-                { icon: 'bolt',   text: 'runs in browser' },
-                { icon: 'code',   text: 'open source' },
+                { icon: 'shield', text: t('trustNoLogin') },
+                { icon: 'bolt',   text: t('trustRunsInBrowser') },
+                { icon: 'code',   text: t('trustOpenSource') },
               ].map(({ icon, text }) => (
-                <span key={text} style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                <span key={icon} style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
                   {icon === 'shield' && <Icon.shield size={12} color="rgba(2,136,143,0.6)" />}
                   {icon === 'bolt'   && <Icon.bolt   size={12} color="rgba(2,136,143,0.6)" />}
                   {icon === 'code'   && <Icon.code   size={12} color="rgba(2,136,143,0.6)" />}
@@ -287,6 +289,30 @@ export function FinalCTA() {
 // ─── Footer ───────────────────────────────────────────────────────────────────
 
 export function LandingFooter() {
+  const t = useTranslations('footer');
+
+  const columns = [
+    { title: t('product'), items: [
+      { label: t('whatIsLabel'),  href: '/what-is-whounfollowed' },
+      { label: t('howToExport'), href: '/how-to-export' },
+      { label: t('sourceCode'),             href: 'https://github.com/al-kilic/WhoUnfollowed' },
+      { label: t('changelog'),               href: '/changelog' },
+    ]},
+    { title: t('company'), items: [
+      { label: t('about'),   href: '/about' },
+      { label: t('blog'),    href: '/blog' },
+      { label: t('compare'), href: '/compare' },
+      { label: t('contact'), href: '/contact' },
+    ]},
+    { title: t('legal'), items: [
+      { label: t('privacyPolicy'),   href: '/privacy' },
+      { label: t('refundPolicy'),    href: '/refund' },
+      { label: t('cookiePolicy'),    href: '/cookies' },
+      { label: t('termsOfService'), href: '/terms' },
+      { label: t('accessibility'),    href: '/accessibility' },
+    ]},
+  ];
+
   return (
     <footer className="px-4 sm:px-12 pt-14 pb-10" style={{ borderTop: `1px solid ${T.border1}`, position: 'relative' }}>
       <div style={{ maxWidth: 1240, margin: '0 auto' }}>
@@ -297,36 +323,16 @@ export function LandingFooter() {
               <span style={{ fontFamily: T.serif, fontSize: 22, color: T.ink, letterSpacing: '-0.01em' }}>WhoUnfollowed</span>
             </Link>
             <p style={{ fontFamily: T.serif, fontSize: 16, fontStyle: 'italic', color: T.inkDim, lineHeight: 1.4, maxWidth: 320, marginBottom: 20 }}>
-              A simple tool that respects what every other one of these tools quietly violated.
+              {t('tagline')}
             </p>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 12, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.04em', marginBottom: 24 }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#5fbb73' }} />
-              All systems operational
+              {t('status')}
             </div>
             <DonateWidget />
           </div>
 
-          {[
-            { title: 'Product', items: [
-              { label: 'What is WhoUnfollowed?',  href: '/what-is-whounfollowed' },
-              { label: 'How to Export Your Data', href: '/how-to-export' },
-              { label: 'Source Code',             href: 'https://github.com/al-kilic/WhoUnfollowed' },
-              { label: 'Changelog',               href: '/changelog' },
-            ]},
-            { title: 'Company', items: [
-              { label: 'About',   href: '/about' },
-              { label: 'Blog',    href: '/blog' },
-              { label: 'Compare', href: '/compare' },
-              { label: 'Contact', href: '/contact' },
-            ]},
-            { title: 'Legal', items: [
-              { label: 'Privacy Policy',   href: '/privacy' },
-              { label: 'Refund Policy',    href: '/refund' },
-              { label: 'Cookie Policy',    href: '/cookies' },
-              { label: 'Terms of Service', href: '/terms' },
-              { label: 'Accessibility',    href: '/accessibility' },
-            ]},
-          ].map(col => (
+          {columns.map(col => (
             <div key={col.title}>
               <div style={{ fontSize: 11, color: T.inkMute, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 16, fontFamily: T.mono, fontWeight: 600 }}>{col.title}</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
@@ -344,13 +350,13 @@ export function LandingFooter() {
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, paddingTop: 24, borderTop: `1px solid ${T.border1}` }}>
           <div style={{ fontSize: 12, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.04em' }}>
-            © 2026 WhoUnfollowed · Not affiliated with Instagram or Meta
+            {t('copyright')}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             {[
-              { name: 'Prefer us on Google', href: 'https://www.google.com/preferences/source?q=whounfollowed.co', external: true, icon: <Icon.google size={16} color={T.inkDim} /> },
-              { name: 'GitHub', href: 'https://github.com/al-kilic/WhoUnfollowed', icon: <Icon.gh size={16} color={T.inkDim} /> },
-              { name: 'Email',  href: 'mailto:hello@whounfollowed.co', icon: (
+              { name: t('preferGoogle'), href: 'https://www.google.com/preferences/source?q=whounfollowed.co', external: true, icon: <Icon.google size={16} color={T.inkDim} /> },
+              { name: t('github'), href: 'https://github.com/al-kilic/WhoUnfollowed', icon: <Icon.gh size={16} color={T.inkDim} /> },
+              { name: t('email'),  href: 'mailto:hello@whounfollowed.co', icon: (
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="3" width="13" height="10" rx="1.5" stroke={T.inkDim} strokeWidth="1.3"/><path d="M2 4 L8 9 L14 4" stroke={T.inkDim} strokeWidth="1.3" fill="none" strokeLinecap="round"/></svg>
               )},
             ].map(s => (
