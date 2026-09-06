@@ -222,33 +222,44 @@ function RadarTeaser({ isPro, mutualsCount, nonFollowersCount, totalFollowing }:
           Beyond this snapshot
         </div>
         <h2 style={{ fontFamily: T.serif, fontSize: 24, fontWeight: 400, color: T.ink, letterSpacing: '-0.01em', marginBottom: 10, maxWidth: 460 }}>
-          {nonFollowersCount.toLocaleString()} {nonFollowersCount === 1 ? "account doesn't" : "accounts don't"} follow you back right now. Radar tracks the moment that changes.
+          Right now, you won&apos;t know if any of your {mutualsCount.toLocaleString()} {mutualsCount === 1 ? 'mutual quietly unfollows' : 'mutuals quietly unfollow'} you.
         </h2>
         <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.6, marginBottom: 20, maxWidth: 480 }}>
-          This is a one-time check. Radar keeps every export you make, compares them automatically, and turns your numbers into a running health score and growth chart.
+          This is a one-time check, it can&apos;t catch that. Radar keeps every export you make, compares them automatically, and turns your numbers into a running health score and growth chart.
         </p>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 22px', marginBottom: 22 }}>
           <CheckItem label="Compare any two snapshots" />
           <CheckItem label="Follower growth chart" />
           <CheckItem label="Ghost-follower detection" />
+          <CheckItem label="Pending requests, sorted by wait time" />
+          <CheckItem label="Who you recently unfollowed" />
+          <CheckItem label="How long a non-follower has kept you waiting" />
         </div>
-        <UpgradeLink
-          source="results-radar"
-          style={{
-            display: 'inline-block',
-            padding: '12px 24px',
-            borderRadius: 11,
-            background: T.teal,
-            color: T.cream,
-            textDecoration: 'none',
-            fontSize: 14,
-            fontWeight: 600,
-            fontFamily: T.sans,
-            boxShadow: '0 8px 24px rgba(2,136,143,0.35)',
-          }}
-        >
-          See what&apos;s in Radar
-        </UpgradeLink>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap' }}>
+          <UpgradeLink
+            source="results-radar"
+            style={{
+              display: 'inline-block',
+              padding: '12px 24px',
+              borderRadius: 11,
+              background: T.teal,
+              color: T.cream,
+              textDecoration: 'none',
+              fontSize: 14,
+              fontWeight: 600,
+              fontFamily: T.sans,
+              boxShadow: '0 8px 24px rgba(2,136,143,0.35)',
+            }}
+          >
+            See what&apos;s in Radar
+          </UpgradeLink>
+          <Link
+            href="/dashboard"
+            style={{ fontSize: 13, color: T.tealLight, fontWeight: 600, textDecoration: 'none' }}
+          >
+            Preview Radar, no account needed →
+          </Link>
+        </div>
       </div>
 
       <RadarPreviewCard mutualsCount={mutualsCount} nonFollowersCount={nonFollowersCount} totalFollowing={totalFollowing} />
@@ -327,7 +338,7 @@ function RadarPulse({ trigger }: { trigger: boolean }) {
       <span style={{ width: 6, height: 6, borderRadius: '50%', background: T.tealLight, flexShrink: 0, animation: 'glow-soft 2s ease-in-out infinite' }} />
       <span style={{ fontSize: 12, color: '#f4f0e8', fontFamily: T.sans, flex: 1 }}>
         See your account health score in{' '}
-        <a href="/dashboard" onClick={dismiss} style={{ color: T.tealLight, fontWeight: 700, textDecoration: 'none' }}>Radar ↗</a>
+        <Link href="/dashboard" onClick={dismiss} style={{ color: T.tealLight, fontWeight: 700, textDecoration: 'none' }}>Radar ↗</Link>
       </span>
       <button onClick={dismiss} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(244,240,232,0.3)', fontSize: 15, lineHeight: 1, padding: '0 2px', flexShrink: 0 }}>×</button>
     </div>

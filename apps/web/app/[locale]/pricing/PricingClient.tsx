@@ -241,8 +241,11 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, conte
               </span>
               <span style={{ color: T.inkMute, fontSize: 14 }}>{content.oneTime}</span>
             </div>
-            <div style={{ fontSize: 13, color: T.inkDim, marginBottom: 22, minHeight: 18 }}>
+            <div style={{ fontSize: 13, color: T.inkDim, marginBottom: 8, minHeight: 18 }}>
               {duration === 'yearly' ? fillTemplate(content.unlockDescYearlyTemplate, { pct: saving }) : content.unlockDescMonthly}
+            </div>
+            <div style={{ fontSize: 12, color: T.tealMid, marginBottom: 22 }}>
+              {content.competitorAnchor}
             </div>
 
             <div style={{ flex: 1, marginBottom: 22 }}>

@@ -21,6 +21,7 @@ export interface PricingContent {
   oneTime: string;
   unlockDescMonthly: string;
   unlockDescYearlyTemplate: string;
+  competitorAnchor: string;
   proCore: { label: string; note: string }[];
   proMore: { label: string; note: string }[];
   seeEverything: string;
@@ -60,6 +61,7 @@ const EN: PricingContent = {
   oneTime: 'one-time',
   unlockDescMonthly: 'Unlocks Pro for 30 days',
   unlockDescYearlyTemplate: 'Unlocks Pro for 365 days · save {pct}% vs. buying 30 days at a time',
+  competitorAnchor: 'Other Instagram trackers charge $2 to $4.50 a month, every month. This is a one-time payment.',
   proCore: [
     { label: 'Keep every snapshot forever', note: 'unlimited history' },
     { label: 'See exactly who unfollowed you, and when', note: '' },
@@ -117,6 +119,7 @@ const ES: PricingContent = {
   oneTime: 'pago único',
   unlockDescMonthly: 'Desbloquea Pro por 30 días',
   unlockDescYearlyTemplate: 'Desbloquea Pro por 365 días · ahorra {pct}% frente a comprar cada 30 días',
+  competitorAnchor: 'Otros rastreadores de Instagram cobran entre $2 y $4.50 al mes, cada mes. Esto es un pago único.',
   proCore: [
     { label: 'Guarda cada snapshot para siempre', note: 'historial ilimitado' },
     { label: 'Ve exactamente quién te dejó de seguir, y cuándo', note: '' },
@@ -174,6 +177,7 @@ const PT: PricingContent = {
   oneTime: 'pagamento único',
   unlockDescMonthly: 'Libera o Pro por 30 dias',
   unlockDescYearlyTemplate: 'Libera o Pro por 365 dias · economize {pct}% em vez de comprar a cada 30 dias',
+  competitorAnchor: 'Outros rastreadores do Instagram cobram entre $2 e $4.50 por mês, todo mês. Isso é um pagamento único.',
   proCore: [
     { label: 'Guarde cada snapshot para sempre', note: 'histórico ilimitado' },
     { label: 'Veja exatamente quem deixou de te seguir, e quando', note: '' },
