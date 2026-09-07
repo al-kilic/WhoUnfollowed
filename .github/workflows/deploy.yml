@@ -166,15 +166,18 @@ jobs:
             check "/pt$p"
           done
 
+          # Anchored to line start (plus optional indent) and a trailing comma,
+          # so a real `slug: 'foo',` entry matches but the same literal text
+          # inside a // comment (e.g. documenting this exact grep) does not.
           while IFS= read -r slug; do
             check "/blog/$slug"
-          done < <(grep -o "slug: '[^']*'" apps/web/app/blog/posts.ts | sed "s/slug: '//;s/'\$//")
+          done < <(grep -oE "^[[:space:]]*slug: '[^']*'," apps/web/app/blog/posts.ts | sed -E "s/^[[:space:]]*slug: '//; s/',\$//")
 
           while IFS= read -r slug; do
             check "/compare/$slug"
             check "/es/compare/$slug"
             check "/pt/compare/$slug"
-          done < <(grep -o "slug: '[^']*'" apps/web/app/compare/comparisons.ts | sed "s/slug: '//;s/'\$//")
+          done < <(grep -oE "^[[:space:]]*slug: '[^']*'," apps/web/app/compare/comparisons.ts | sed -E "s/^[[:space:]]*slug: '//; s/',\$//")
 
           if [ "$FAIL" = "1" ]; then
             echo ""
