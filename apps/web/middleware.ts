@@ -69,6 +69,10 @@ export const config = {
     '/how-to-export/:path*',
     '/accessibility/:path*',
     '/compare/:path*',
+    '/privacy/:path*',
+    '/terms/:path*',
+    '/cookies/:path*',
+    '/refund/:path*',
     '/(es|pt)/:path*',
   ],
 };
