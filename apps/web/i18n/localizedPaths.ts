@@ -21,4 +21,5 @@ export const LOCALIZED_PATHS: string[] = [
   '/terms',
   '/cookies',
   '/refund',
+  '/changelog',
 ];

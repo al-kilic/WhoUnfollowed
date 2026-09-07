@@ -1,19 +1,7 @@
-import Link from 'next/link';
-import type { Metadata } from 'next';
-import { T } from '@/components/landing/tokens';
-import { SiteNav } from '@/components/landing/SiteNav';
-import { LandingFooter } from '@/components/landing/FinalCTA';
-import { validateRequest } from '@/lib/auth/session';
-import { isProUser } from '@/lib/flags';
+// Changelog entries, kept English-only on purpose (see content.ts).
+export interface ChangelogEntry { version: string; date: string; tag: 'launch' | 'fix' | 'improvement' | 'feature'; items: string[] }
 
-export const metadata: Metadata = {
-  title: 'Changelog',
-  description: 'What\'s new in WhoUnfollowed. Updates, fixes, and improvements.',
-  alternates: { canonical: '/changelog' },
-};
-
-const entries: { version: string; date: string; tag: 'launch' | 'fix' | 'improvement' | 'feature'; items: string[] }[] = [
-  {
+export const CHANGELOG_ENTRIES: ChangelogEntry[] = [  {
     version: '1.6',
     date: 'September 3, 2026',
     tag: 'feature',
@@ -208,81 +196,3 @@ const entries: { version: string; date: string; tag: 'launch' | 'fix' | 'improve
     ],
   },
 ];
-
-const tagStyles: Record<string, { label: string; color: string; bg: string }> = {
-  launch:      { label: 'Launch',      color: T.tealLight,  bg: 'rgba(2,136,143,0.12)' },
-  feature:     { label: 'Feature',     color: '#a8d4b0',    bg: 'rgba(168,212,176,0.1)' },
-  improvement: { label: 'Improvement', color: T.inkDim,     bg: 'var(--t-border1)' },
-  fix:         { label: 'Fix',         color: '#e0a070',    bg: 'rgba(168,75,47,0.1)' },
-};
-
-export default async function ChangelogPage() {
-  const { user } = await validateRequest();
-  const isPro = await isProUser();
-  return (
-    <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <SiteNav userEmail={user?.email ?? null} isPro={isPro} />
-
-      <main style={{ maxWidth: 680, margin: '0 auto', padding: '56px 32px 80px' }}>
-        <div style={{ marginBottom: 56 }}>
-          <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 14 }}>CHANGELOG</div>
-          <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', color: T.ink, marginBottom: 12 }}>
-            What&apos;s new.
-          </h1>
-          <p style={{ fontSize: 15, color: T.inkDim, lineHeight: 1.6 }}>
-            Updates, fixes, and improvements to WhoUnfollowed.
-          </p>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-          {entries.map((entry, i) => {
-            const tag = tagStyles[entry.tag]!;
-            return (
-              <div key={entry.version} style={{ display: 'flex', gap: 24 }}>
-                {/* Timeline */}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0, width: 12 }}>
-                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: T.tealMid, flexShrink: 0, marginTop: 6 }} />
-                  {i < entries.length - 1 && (
-                    <div style={{ flex: 1, width: 1, background: 'var(--t-border2)', minHeight: 32, marginTop: 6 }} />
-                  )}
-                </div>
-
-                {/* Content */}
-                <div style={{ flex: 1, paddingBottom: 48 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
-                    <span style={{ fontFamily: T.serif, fontSize: 22, color: T.ink, letterSpacing: '-0.01em' }}>
-                      v{entry.version}
-                    </span>
-                    <span style={{ fontSize: 10, fontFamily: T.mono, padding: '3px 9px', borderRadius: 20, color: tag.color, background: tag.bg, letterSpacing: '0.06em' }}>
-                      {tag.label.toUpperCase()}
-                    </span>
-                    <span style={{ fontSize: 12, color: T.inkMute, fontFamily: T.mono, marginLeft: 'auto' }}>
-                      {entry.date}
-                    </span>
-                  </div>
-                  <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                    {entry.items.map((item) => (
-                      <li key={item} style={{ display: 'flex', gap: 10, fontSize: 14, color: T.inkDim, lineHeight: 1.6 }}>
-                        <span style={{ color: T.tealMid, flexShrink: 0, marginTop: 2 }}>–</span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        <div style={{ marginTop: 8, paddingTop: 32, borderTop: '1px solid var(--t-border1)' }}>
-          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 13, color: T.inkDim, textDecoration: 'none' }}>
-            <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M11 7 H3 M3 7 L6 4 M3 7 L6 10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            Back to WhoUnfollowed
-          </Link>
-        </div>
-      </main>
-
-      <LandingFooter />
-    </div>
-  );
-}

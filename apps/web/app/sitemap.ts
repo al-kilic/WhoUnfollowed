@@ -28,6 +28,7 @@ const LOCALIZED_STATIC_PAGES: Array<{
   { path: '/terms', priority: 0.3, changeFrequency: 'yearly' },
   { path: '/cookies', priority: 0.3, changeFrequency: 'yearly' },
   { path: '/refund', priority: 0.3, changeFrequency: 'yearly' },
+  { path: '/changelog', priority: 0.4, changeFrequency: 'weekly' },
 ];
 
 // Still English-only: not yet migrated under app/[locale].
@@ -38,7 +39,6 @@ const STATIC_PAGES: Array<{
 }> = [
   { path: '/blog', priority: 0.6, changeFrequency: 'weekly' },
   { path: '/author/alan-kilic', priority: 0.4, changeFrequency: 'monthly' },
-  { path: '/changelog', priority: 0.4, changeFrequency: 'weekly' },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

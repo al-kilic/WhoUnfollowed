@@ -73,6 +73,7 @@ export const config = {
     '/terms/:path*',
     '/cookies/:path*',
     '/refund/:path*',
+    '/changelog/:path*',
     '/(es|pt)/:path*',
   ],
 };
