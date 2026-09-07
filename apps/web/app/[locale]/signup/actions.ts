@@ -21,18 +21,18 @@ export async function signupAction(formData: FormData) {
   const password = formData.get('password') as string;
 
   if (!email || !password) {
-    return { error: 'Email and password are required.' };
+    return { error: 'missing_fields' as const };
   }
 
   if (password.length < 8) {
-    return { error: 'Password must be at least 8 characters.' };
+    return { error: 'password_too_short' as const };
   }
 
   const headersList = await headers();
   const ip = clientIpFromXff(headersList.get('x-forwarded-for'));
   const { allowed } = checkRateLimit(`signup:${ip}`);
   if (!allowed) {
-    return { error: 'Too many attempts. Try again in 15 minutes.' };
+    return { error: 'rate_limited' as const };
   }
 
   const existing = await db.query.users.findFirst({
@@ -40,7 +40,7 @@ export async function signupAction(formData: FormData) {
   });
 
   if (existing) {
-    return { error: 'An account with this email already exists.' };
+    return { error: 'email_taken' as const };
   }
 
   const passwordHash = await hash(password, ARGON2_OPTIONS);
@@ -56,7 +56,7 @@ export async function signupAction(formData: FormData) {
     .returning({ id: users.id });
 
   const user = result[0];
-  if (!user) return { error: 'Failed to create account. Please try again.' };
+  if (!user) return { error: 'create_failed' as const };
 
   // New accounts start on Free. Pro is granted only by a real Stripe
   // subscription (via the webhook) or an explicit grandfather/comp update.

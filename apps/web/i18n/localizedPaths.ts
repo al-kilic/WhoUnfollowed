@@ -22,4 +22,6 @@ export const LOCALIZED_PATHS: string[] = [
   '/cookies',
   '/refund',
   '/changelog',
+  '/login',
+  '/signup',
 ];

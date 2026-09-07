@@ -2,13 +2,17 @@
 
 import { useActionState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import NextLink from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { loginAction } from './actions';
 import { deriveAndStoreSyncKey } from '@/lib/syncKey';
 import { AuthShell, AuthField, AuthError, AuthButton } from '@/components/auth/AuthShell';
 import { T } from '@/components/landing/tokens';
+import { getLoginContent, type LoginErrorCode } from './content';
+import type { AppLocale } from '@/i18n/routing';
 
-export function LoginForm() {
+export function LoginForm({ locale }: { locale: AppLocale }) {
+  const c = getLoginContent(locale);
   const router = useRouter();
   const [state, action, pending] = useActionState(
     async (_prev: unknown, formData: FormData) => {
@@ -34,25 +38,26 @@ export function LoginForm() {
     null,
   );
 
-  const error = state && 'error' in state ? state.error : null;
+  const errorCode = state && 'error' in state ? (state.error as LoginErrorCode) : null;
+  const error = errorCode ? c.errors[errorCode] : null;
 
   return (
     <AuthShell
-      title="Welcome back"
-      subtitle="Log in to your WhoUnfollowed account."
+      title={c.title}
+      subtitle={c.subtitle}
       footer={
         <>
-          No account?{' '}
+          {c.noAccountPre}{' '}
           <Link href="/signup" style={{ color: T.tealMid, fontWeight: 600, textDecoration: 'none' }}>
-            Sign up free
+            {c.signUpFree}
           </Link>
         </>
       }
     >
       <form action={action} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <AuthField label="Email" id="email" name="email" type="email" required autoComplete="email" />
+        <AuthField label={c.emailLabel} id="email" name="email" type="email" required autoComplete="email" />
         <AuthField
-          label="Password"
+          label={c.passwordLabel}
           id="password"
           name="password"
           type="password"
@@ -61,14 +66,16 @@ export function LoginForm() {
         />
 
         <div style={{ marginTop: -6, textAlign: 'right' }}>
-          <Link href="/forgot-password" style={{ fontSize: 12, color: T.tealMid, textDecoration: 'none' }}>
-            Forgot password?
-          </Link>
+          {/* Not migrated under [locale] yet — plain next/link so it isn't
+              incorrectly locale-prefixed (which would 404 for es/pt). */}
+          <NextLink href="/forgot-password" style={{ fontSize: 12, color: T.tealMid, textDecoration: 'none' }}>
+            {c.forgotPassword}
+          </NextLink>
         </div>
 
         {error && <AuthError>{error}</AuthError>}
 
-        <AuthButton pending={pending}>{pending ? 'Logging in...' : 'Log in'}</AuthButton>
+        <AuthButton pending={pending}>{pending ? c.loggingIn : c.logIn}</AuthButton>
       </form>
     </AuthShell>
   );
