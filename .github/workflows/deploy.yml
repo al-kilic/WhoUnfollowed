@@ -151,11 +151,19 @@ jobs:
             fi
           }
 
-          for r in / /about /accessibility /account /author/alan-kilic /blog /changelog /compare /contact \
-                   /cookies /dashboard /diff /forgot-password /history /how-to-export /login \
-                   /pricing /es/pricing /pt/pricing /privacy /refund /reset-password /results /settings /signup /terms \
-                   /verify-email /welcome /what-is-whounfollowed /robots.txt /sitemap.xml; do
+          for r in / /account /author/alan-kilic /blog /changelog \
+                   /cookies /dashboard /diff /forgot-password /history /login \
+                   /privacy /refund /reset-password /results /settings /signup /terms \
+                   /verify-email /welcome /robots.txt /sitemap.xml; do
             check "$r"
+          done
+
+          # Migrated under app/[locale] (mirrors apps/web/i18n/localizedPaths.ts):
+          # crawled unprefixed (English) plus /es and /pt.
+          for p in / /pricing /about /contact /what-is-whounfollowed /how-to-export /accessibility /compare; do
+            check "$p"
+            check "/es$p"
+            check "/pt$p"
           done
 
           while IFS= read -r slug; do
@@ -164,6 +172,8 @@ jobs:
 
           while IFS= read -r slug; do
             check "/compare/$slug"
+            check "/es/compare/$slug"
+            check "/pt/compare/$slug"
           done < <(grep -o "slug: '[^']*'" apps/web/app/compare/comparisons.ts | sed "s/slug: '//;s/'\$//")
 
           if [ "$FAIL" = "1" ]; then

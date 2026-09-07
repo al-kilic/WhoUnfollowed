@@ -32,7 +32,7 @@ function guidesSection(clusterId: ClusterId): string {
 }
 
 function comparisonsSection(): string {
-  const lines = COMPARISONS.map((c) => `- [${c.title}](${SITE_URL}/compare/${c.slug})`);
+  const lines = COMPARISONS.map((c) => `- [${c.title.en}](${SITE_URL}/compare/${c.slug})`);
   return `## Comparisons\n${lines.join('\n')}`;
 }
 
