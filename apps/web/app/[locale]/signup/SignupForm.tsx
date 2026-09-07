@@ -2,13 +2,16 @@
 
 import { useActionState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { signupAction } from './actions';
 import { deriveAndStoreSyncKey } from '@/lib/syncKey';
 import { AuthShell, AuthField, AuthError, AuthButton } from '@/components/auth/AuthShell';
 import { T } from '@/components/landing/tokens';
+import { getSignupContent, type SignupErrorCode } from './content';
+import type { AppLocale } from '@/i18n/routing';
 
-export function SignupForm() {
+export function SignupForm({ locale }: { locale: AppLocale }) {
+  const c = getSignupContent(locale);
   const router = useRouter();
   const [state, action, pending] = useActionState(
     async (_prev: unknown, formData: FormData) => {
@@ -33,17 +36,18 @@ export function SignupForm() {
     null,
   );
 
-  const error = state && 'error' in state ? state.error : null;
+  const errorCode = state && 'error' in state ? (state.error as SignupErrorCode) : null;
+  const error = errorCode ? c.errors[errorCode] : null;
 
   return (
     <AuthShell
-      title="Create your account"
-      subtitle="Takes 10 seconds. No credit card, ever, unless you choose Pro."
+      title={c.title}
+      subtitle={c.subtitle}
       footer={
         <>
-          Already have an account?{' '}
+          {c.alreadyHavePre}{' '}
           <Link href="/login" style={{ color: T.tealMid, fontWeight: 600, textDecoration: 'none' }}>
-            Log in
+            {c.logIn}
           </Link>
         </>
       }
@@ -53,26 +57,26 @@ export function SignupForm() {
           <polyline points="20 6 9 17 4 12" />
         </svg>
         <span style={{ fontSize: 13, color: T.ink, fontWeight: 500, lineHeight: 1.45 }}>
-          Unlimited CSV exports of every list, non-followers, fans, and mutuals
+          {c.csvBullet}
         </span>
       </div>
 
       <form action={action} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <AuthField label="Email" id="email" name="email" type="email" required autoComplete="email" />
+        <AuthField label={c.emailLabel} id="email" name="email" type="email" required autoComplete="email" />
         <AuthField
-          label="Password"
+          label={c.passwordLabel}
           id="password"
           name="password"
           type="password"
           required
           minLength={8}
           autoComplete="new-password"
-          hint="Minimum 8 characters."
+          hint={c.passwordHint}
         />
 
         {error && <AuthError>{error}</AuthError>}
 
-        <AuthButton pending={pending}>{pending ? 'Creating account...' : 'Create account'}</AuthButton>
+        <AuthButton pending={pending}>{pending ? c.creatingAccount : c.createAccount}</AuthButton>
       </form>
     </AuthShell>
   );

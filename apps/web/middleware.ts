@@ -74,6 +74,8 @@ export const config = {
     '/cookies/:path*',
     '/refund/:path*',
     '/changelog/:path*',
+    '/login/:path*',
+    '/signup/:path*',
     '/(es|pt)/:path*',
   ],
 };

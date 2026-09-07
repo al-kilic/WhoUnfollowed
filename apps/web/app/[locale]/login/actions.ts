@@ -2,7 +2,6 @@
 
 import { verify } from '@node-rs/argon2';
 import { db } from '@/lib/db/index';
-import { users } from '@/lib/db/schema';
 import { createSession } from '@/lib/auth/session';
 import { ensureSyncSalt } from '@/lib/sync/salt';
 import { checkRateLimit, clientIpFromXff } from '@/lib/auth/rate-limit';
@@ -21,14 +20,14 @@ export async function loginAction(formData: FormData) {
   const password = formData.get('password') as string;
 
   if (!email || !password) {
-    return { error: 'Email and password are required.' };
+    return { error: 'missing_fields' as const };
   }
 
   const headersList = await headers();
   const ip = clientIpFromXff(headersList.get('x-forwarded-for'));
   const { allowed } = checkRateLimit(`login:${ip}`);
   if (!allowed) {
-    return { error: 'Too many attempts. Try again in 15 minutes.' };
+    return { error: 'rate_limited' as const };
   }
 
   const user = await db.query.users.findFirst({
@@ -37,12 +36,12 @@ export async function loginAction(formData: FormData) {
 
   // Constant-time response — don't reveal if email exists
   if (!user) {
-    return { error: 'Invalid email or password.' };
+    return { error: 'invalid_credentials' as const };
   }
 
   const valid = await verify(user.passwordHash, password, ARGON2_OPTIONS);
   if (!valid) {
-    return { error: 'Invalid email or password.' };
+    return { error: 'invalid_credentials' as const };
   }
 
   await createSession(user.id);
