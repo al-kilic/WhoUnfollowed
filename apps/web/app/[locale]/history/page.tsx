@@ -1,4 +1,5 @@
-import { redirect } from 'next/navigation';
+import { redirect, notFound } from 'next/navigation';
+import { hasLocale } from 'next-intl';
 import { validateRequest } from '@/lib/auth/session';
 import { isProUser, getSubscriptionStatus } from '@/lib/flags';
 import { isUserVerified } from '@/lib/auth/verification';
@@ -8,19 +9,30 @@ import { eq } from 'drizzle-orm';
 import { HistoryClient } from './HistoryClient';
 import type { Metadata } from 'next';
 import { AnalyticsEvent } from '@/components/AnalyticsEvent';
+import { routing, type AppLocale } from '@/i18n/routing';
+import { getHistoryContent } from './content';
+
+// Personalized, auth-gated content (session, snapshots, subscription). Never
+// let this get swept into the [locale] layout's static generation.
+export const dynamic = 'force-dynamic';
+
+interface PageProps {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ welcome?: string }>;
+}
 
 // Private, per-user surface. robots.ts already disallows it, but the meta tag
 // also covers crawlers that fetch the page directly and ignore robots.txt.
-export const metadata: Metadata = {
-  title: 'Snapshot history',
-  robots: { index: false, follow: false },
-};
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
+  return { title: getHistoryContent(locale).metaTitle, robots: { index: false, follow: false } };
+}
 
-export default async function HistoryPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ welcome?: string }>;
-}) {
+export default async function HistoryPage({ params, searchParams }: PageProps) {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
+
   const { welcome } = await searchParams;
   const { user } = await validateRequest();
   if (user && !(await isUserVerified(user.id))) redirect('/verify-email');
@@ -42,6 +54,7 @@ export default async function HistoryPage({
     <>
       {welcome === '1' && <AnalyticsEvent event="signup" />}
       <HistoryClient
+        locale={locale as AppLocale}
         userId={user?.id ?? null}
         userEmail={user?.email ?? null}
         isPro={isPro}

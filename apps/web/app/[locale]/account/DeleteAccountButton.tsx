@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import { T } from '@/components/landing/tokens';
 import { deleteAccountAction } from './actions';
+import type { AccountContent } from './content';
 
-function DeleteAccountDialog({ onClose }: { onClose: () => void }) {
+function DeleteAccountDialog({ onClose, c }: { onClose: () => void; c: AccountContent['deleteAccount'] }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,7 +32,7 @@ function DeleteAccountDialog({ onClose }: { onClose: () => void }) {
       // handled by the framework and never reaches this catch, so any error
       // caught here is a real failure (e.g. Stripe cancellation problem).
       setLoading(false);
-      setError('Something went wrong and your account was not deleted. If you have an active subscription, this can happen if Stripe could not be reached — please try again, or contact support before retrying.');
+      setError(c.errorMessage);
     }
   }
 
@@ -65,12 +66,12 @@ function DeleteAccountDialog({ onClose }: { onClose: () => void }) {
               </svg>
             </div>
             <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.9)', fontFamily: T.mono, textTransform: 'uppercase' }}>
-              Delete account
+              {c.dialogTitle}
             </span>
           </div>
           <button
             onClick={() => !loading && onClose()}
-            aria-label="Close"
+            aria-label={c.closeAria}
             disabled={loading}
             style={{ width: 28, height: 28, borderRadius: 8, border: 'none', background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.7)', cursor: loading ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
@@ -84,16 +85,16 @@ function DeleteAccountDialog({ onClose }: { onClose: () => void }) {
         <div style={{ padding: '24px 24px 20px', display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div>
             <h2 id="delete-account-title" style={{ fontFamily: T.serif, fontSize: 22, fontWeight: 400, color: T.ink, letterSpacing: '-0.01em', marginBottom: 8 }}>
-              Are you sure?
+              {c.areYouSure}
             </h2>
             <p style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.6 }}>
-              This permanently deletes your account and all data, including cloud snapshots. This cannot be undone.
+              {c.permanentWarning}
             </p>
           </div>
 
           <div style={{ padding: '12px 16px', borderRadius: 12, background: 'rgba(168,75,47,0.08)', border: '1px solid rgba(168,75,47,0.25)' }}>
             <p style={{ fontSize: 13, color: T.ink, lineHeight: 1.55, margin: 0 }}>
-              If you have an active Pro subscription, it will be <strong>cancelled immediately</strong> as part of this — you will not be charged again.
+              {c.subCancelWarning}
             </p>
           </div>
 
@@ -109,14 +110,14 @@ function DeleteAccountDialog({ onClose }: { onClose: () => void }) {
               disabled={loading}
               style={{ width: '100%', padding: '14px 16px', borderRadius: 12, border: 'none', background: T.terra, color: T.cream, fontSize: 13, fontWeight: 700, cursor: loading ? 'default' : 'pointer', fontFamily: T.sans, opacity: loading ? 0.7 : 1 }}
             >
-              {loading ? 'Deleting…' : 'Yes, delete everything'}
+              {loading ? c.deleting : c.confirmBtn}
             </button>
             <button
               onClick={() => !loading && onClose()}
               disabled={loading}
               style={{ width: '100%', padding: '12px 16px', borderRadius: 12, border: '1px solid var(--t-border2)', background: 'transparent', color: T.inkDim, fontSize: 13, fontWeight: 500, cursor: loading ? 'default' : 'pointer', fontFamily: T.sans }}
             >
-              Cancel
+              {c.cancelBtn}
             </button>
           </div>
         </div>
@@ -125,7 +126,7 @@ function DeleteAccountDialog({ onClose }: { onClose: () => void }) {
   );
 }
 
-export function DeleteAccountButton() {
+export function DeleteAccountButton({ c }: { c: AccountContent['deleteAccount'] }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -134,9 +135,9 @@ export function DeleteAccountButton() {
         onClick={() => setOpen(true)}
         className="text-sm text-destructive hover:text-destructive/80 font-medium w-fit"
       >
-        Delete account and all data
+        {c.triggerLabel}
       </button>
-      {open && <DeleteAccountDialog onClose={() => setOpen(false)} />}
+      {open && <DeleteAccountDialog onClose={() => setOpen(false)} c={c} />}
     </>
   );
 }

@@ -1,8 +1,8 @@
 'use client';
 
 import { useActionState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Link } from '@/i18n/navigation';
+import { useRouter as useNextRouter } from 'next/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
 import { signupAction } from './actions';
 import { deriveAndStoreSyncKey } from '@/lib/syncKey';
 import { AuthShell, AuthField, AuthError, AuthButton } from '@/components/auth/AuthShell';
@@ -13,6 +13,7 @@ import type { AppLocale } from '@/i18n/routing';
 export function SignupForm({ locale }: { locale: AppLocale }) {
   const c = getSignupContent(locale);
   const router = useRouter();
+  const nextRouter = useNextRouter();
   const [state, action, pending] = useActionState(
     async (_prev: unknown, formData: FormData) => {
       const password = (formData.get('password') as string) ?? '';
@@ -26,7 +27,9 @@ export function SignupForm({ locale }: { locale: AppLocale }) {
         }
         // replace (not push) so Back can't return to the signup form.
         if ('needsVerification' in res && res.needsVerification) {
-          router.replace('/verify-email');
+          // /verify-email isn't migrated under [locale] yet — plain router so
+          // it isn't incorrectly locale-prefixed (which would 404 for es/pt).
+          nextRouter.replace('/verify-email');
         } else {
           router.replace('/history?welcome=1');
         }

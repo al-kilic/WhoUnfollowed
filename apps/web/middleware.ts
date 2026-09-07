@@ -19,14 +19,26 @@ const AUTH_REQUIRED = ['/account', '/settings'];
 // handles user === null and defaults isPro to false.
 const ACTIVE_SUB_REQUIRED = ['/history'];
 
+// /account, /settings, and /history are migrated under app/[locale], so a
+// gated request can arrive locale-prefixed (e.g. /es/account) — strip that
+// prefix before matching against the lists above, or non-English visitors
+// would skip the gate entirely.
+const NON_DEFAULT_LOCALES = routing.locales.filter((l) => l !== routing.defaultLocale);
+const LOCALE_PREFIX_RE = new RegExp(`^/(${NON_DEFAULT_LOCALES.join('|')})(?=/|$)`);
+
+function withoutLocalePrefix(path: string): string {
+  return path.replace(LOCALE_PREFIX_RE, '') || '/';
+}
+
 const intlMiddleware = createIntlMiddleware(routing);
 
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
+  const unprefixedPath = withoutLocalePrefix(path);
 
   const needsGate =
-    AUTH_REQUIRED.some((p) => path.startsWith(p)) ||
-    ACTIVE_SUB_REQUIRED.some((p) => path.startsWith(p));
+    AUTH_REQUIRED.some((p) => unprefixedPath.startsWith(p)) ||
+    ACTIVE_SUB_REQUIRED.some((p) => unprefixedPath.startsWith(p));
 
   if (needsGate) {
     // Edge-safe gate: only check that a session cookie is present. Full
@@ -36,13 +48,14 @@ export function middleware(request: NextRequest) {
     // validateRequest().
     const sessionId = request.cookies.get(SESSION_COOKIE)?.value;
     if (!sessionId) {
-      return NextResponse.redirect(new URL('/login', request.url));
+      const localeMatch = path.match(LOCALE_PREFIX_RE);
+      const loginPath = localeMatch ? `/${localeMatch[1]}/login` : '/login';
+      return NextResponse.redirect(new URL(loginPath, request.url));
     }
-    return NextResponse.next();
+    // Falls through to intlMiddleware below: these routes are migrated under
+    // app/[locale], so the request still needs locale negotiation/rewriting.
   }
 
-  // Only routes actually migrated under app/[locale] need locale negotiation
-  // (currently just /pricing); everything else falls through untouched.
   return intlMiddleware(request);
 }
 

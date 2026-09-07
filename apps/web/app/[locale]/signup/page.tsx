@@ -1,8 +1,8 @@
-import { redirect } from 'next/navigation';
-import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
+import { hasLocale } from 'next-intl';
 import { validateRequest } from '@/lib/auth/session';
 import type { Metadata } from 'next';
+import { redirect } from '@/i18n/navigation';
 import { routing, type AppLocale } from '@/i18n/routing';
 import { SignupForm } from './SignupForm';
 
@@ -26,7 +26,7 @@ export default async function SignupPage({ params }: PageProps) {
   // Already logged in? Skip the signup form.
   const { user } = await validateRequest();
   if (user) {
-    redirect('/history');
+    redirect({ href: '/history', locale: locale as AppLocale });
   }
 
   return <SignupForm locale={locale} />;
