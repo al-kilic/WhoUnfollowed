@@ -188,12 +188,12 @@ function RadarNavLink({ onClick = () => {}, mobile = false }: { onClick?: () => 
   const t = useTranslations('nav');
   const size = mobile ? 16 : 13;
   return (
-    // /dashboard isn't migrated under [locale] yet — plain next/link so it
-    // isn't incorrectly locale-prefixed (which would 404 for es/pt). RadarPulse
-    // on the results page also anchors its popup on this exact selector.
-    <NextLink
+    // RadarPulse on the results page anchors its popup on this exact
+    // data attribute (not the href, which is locale-prefixed for es/pt).
+    <Link
       href="/dashboard"
       onClick={onClick}
+      data-radar-nav-link=""
       style={{ color: 'inherit', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 7, whiteSpace: 'nowrap' }}
     >
       <style>{`
@@ -231,7 +231,7 @@ function RadarNavLink({ onClick = () => {}, mobile = false }: { onClick?: () => 
         fontWeight: 600,
         fontSize: mobile ? 16 : undefined,
       }}>{mobile ? t('radarDashboard') : t('radar')}</span>
-    </NextLink>
+    </Link>
   );
 }
 

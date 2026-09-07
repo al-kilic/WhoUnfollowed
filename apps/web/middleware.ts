@@ -71,10 +71,8 @@ export const config = {
     // entry there needs a matching one here, or its unprefixed English URL
     // 404s (the intl rewrite never runs, so the page under app/[locale]
     // never resolves).
-    // /dashboard is deliberately excluded: it's public (see
-    // ACTIVE_SUB_REQUIRED comment above) and not under [locale], so it must
-    // never reach intlMiddleware — that would 404 it.
     '/',
+    '/dashboard/:path*',
     '/pricing/:path*',
     '/about/:path*',
     '/contact/:path*',
