@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, type CSSProperties } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { T } from '@/components/landing/tokens';
 import { trackLockedView, trackUpgradeClick } from '@/lib/analytics';
+import type { AccountContent } from './content';
 
 interface Props {
   hasSyncSetup: boolean;
@@ -11,6 +12,7 @@ interface Props {
   // Pro feature access. Free users see a locked upgrade card instead of the
   // live sync status, since cloud sync is a Pro feature.
   isPro: boolean;
+  c: AccountContent['syncSetup'];
 }
 
 const card: CSSProperties = {
@@ -33,7 +35,7 @@ function LockIcon() {
 // derived from the account password at login and cached for the session, so for
 // Pro users this is an informational status panel. Free users get a locked
 // upgrade card instead.
-export function SyncSetup({ hasSyncSetup, passphraseSetAt, isPro }: Props) {
+export function SyncSetup({ hasSyncSetup, passphraseSetAt, isPro, c }: Props) {
   useEffect(() => { if (!isPro) trackLockedView('cloud-sync'); }, [isPro]);
 
   if (!isPro) {
@@ -41,14 +43,13 @@ export function SyncSetup({ hasSyncSetup, passphraseSetAt, isPro }: Props) {
       <div style={card}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
           <span style={{ color: T.inkMute, lineHeight: 0 }}><LockIcon /></span>
-          <span style={{ fontFamily: T.serif, fontSize: 18, color: T.ink }}>Cloud sync</span>
+          <span style={{ fontFamily: T.serif, fontSize: 18, color: T.ink }}>{c.cloudSyncTitle}</span>
           <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.08em', padding: '3px 8px', borderRadius: 100, color: T.tealLight, background: T.tealGlow }}>
-            PRO
+            {c.proBadge}
           </span>
         </div>
         <p style={{ fontSize: 13.5, color: T.inkDim, lineHeight: 1.5, marginBottom: 16 }}>
-          Back up your snapshots, encrypted with a key derived from your password,
-          and pick up your history on any device. Included with Pro.
+          {c.lockedDesc}
         </p>
         <Link
           href="/pricing"
@@ -59,7 +60,7 @@ export function SyncSetup({ hasSyncSetup, passphraseSetAt, isPro }: Props) {
             fontSize: 13.5, fontWeight: 600, fontFamily: T.sans,
           }}
         >
-          Upgrade to Pro
+          {c.upgradeToPro}
         </Link>
       </div>
     );
@@ -69,14 +70,12 @@ export function SyncSetup({ hasSyncSetup, passphraseSetAt, isPro }: Props) {
     <div style={card}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 8 }}>
         <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', flexShrink: 0, boxShadow: '0 0 8px rgba(34,197,94,0.6)' }} />
-        <span style={{ fontFamily: T.serif, fontSize: 18, color: T.ink }}>Cloud sync is on</span>
+        <span style={{ fontFamily: T.serif, fontSize: 18, color: T.ink }}>{c.onTitle}</span>
       </div>
       <p style={{ fontSize: 13.5, color: T.inkDim, lineHeight: 1.5 }}>
-        Your snapshots are encrypted in your browser with a key derived from your
-        account password before they are stored. We never see your unencrypted
-        data. Nothing to set up or remember.
+        {c.onDesc}
         {hasSyncSetup && passphraseSetAt
-          ? ` Enabled ${passphraseSetAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}.`
+          ? c.enabledOn(passphraseSetAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }))
           : ''}
       </p>
     </div>

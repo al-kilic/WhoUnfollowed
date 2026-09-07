@@ -1,9 +1,9 @@
 'use client';
 
 import { useActionState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter as useNextRouter } from 'next/navigation';
 import NextLink from 'next/link';
-import { Link } from '@/i18n/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
 import { loginAction } from './actions';
 import { deriveAndStoreSyncKey } from '@/lib/syncKey';
 import { AuthShell, AuthField, AuthError, AuthButton } from '@/components/auth/AuthShell';
@@ -14,6 +14,7 @@ import type { AppLocale } from '@/i18n/routing';
 export function LoginForm({ locale }: { locale: AppLocale }) {
   const c = getLoginContent(locale);
   const router = useRouter();
+  const nextRouter = useNextRouter();
   const [state, action, pending] = useActionState(
     async (_prev: unknown, formData: FormData) => {
       const password = (formData.get('password') as string) ?? '';
@@ -28,7 +29,9 @@ export function LoginForm({ locale }: { locale: AppLocale }) {
         // replace (not push) so the browser Back button can't return to the
         // login form after a successful login.
         if ('needsVerification' in res && res.needsVerification) {
-          router.replace('/verify-email');
+          // /verify-email isn't migrated under [locale] yet — plain router so
+          // it isn't incorrectly locale-prefixed (which would 404 for es/pt).
+          nextRouter.replace('/verify-email');
         } else {
           router.replace('/history');
         }

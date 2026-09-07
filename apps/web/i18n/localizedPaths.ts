@@ -24,4 +24,7 @@ export const LOCALIZED_PATHS: string[] = [
   '/changelog',
   '/login',
   '/signup',
+  '/account',
+  '/settings',
+  '/history',
 ];

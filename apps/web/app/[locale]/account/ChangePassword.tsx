@@ -6,8 +6,9 @@ import { deriveAndStoreSyncKey, loadSyncSalt } from '@/lib/syncKey';
 import { listCloudSnapshots, downloadSnapshot, getUserSyncSalt } from '@/app/api/sync/actions';
 import { changePassword } from './actions';
 import { T } from '@/components/landing/tokens';
+import type { AccountContent } from './content';
 
-export function ChangePassword() {
+export function ChangePassword({ c }: { c: AccountContent['changePassword'] }) {
   const [current, setCurrent] = useState('');
   const [next, setNext] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -19,8 +20,8 @@ export function ChangePassword() {
     setError(null);
     setDone(false);
 
-    if (next.length < 8) { setError('New password must be at least 8 characters.'); return; }
-    if (next !== confirm) { setError('New passwords do not match.'); return; }
+    if (next.length < 8) { setError(c.errors.tooShort); return; }
+    if (next !== confirm) { setError(c.errors.mismatch); return; }
 
     start(async () => {
       try {
@@ -45,7 +46,7 @@ export function ChangePassword() {
                 oldKey,
               );
             } catch {
-              setError('Could not re-encrypt your cloud snapshots. Check your current password.');
+              setError(c.errors.reencryptFailed);
               return;
             }
             const { ciphertext, iv } = await encrypt(data, newKey);
@@ -54,7 +55,17 @@ export function ChangePassword() {
         }
 
         const res = await changePassword({ currentPassword: current, newPassword: next, reEncrypted });
-        if (!res.ok) { setError(res.error ?? 'Could not change your password.'); return; }
+        if (!res.ok) {
+          const code = res.error;
+          setError(
+            code === 'not_authenticated' ? c.errors.notAuthenticated
+            : code === 'too_short' ? c.errors.tooShort
+            : code === 'account_not_found' ? c.errors.accountNotFound
+            : code === 'incorrect_password' ? c.errors.incorrectPassword
+            : c.errors.generic,
+          );
+          return;
+        }
 
         // Refresh the cached sync key so this session stays unlocked.
         if (salt) await deriveAndStoreSyncKey(next, salt);
@@ -62,7 +73,7 @@ export function ChangePassword() {
         setDone(true);
         setCurrent(''); setNext(''); setConfirm('');
       } catch {
-        setError('Something went wrong. Please try again.');
+        setError(c.errors.generic);
       }
     });
   }
@@ -77,23 +88,23 @@ export function ChangePassword() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 360 }}>
       <div>
-        <label style={label} htmlFor="cp-current">Current password</label>
+        <label style={label} htmlFor="cp-current">{c.currentPassword}</label>
         <input id="cp-current" type="password" autoComplete="current-password" style={input}
           value={current} onChange={(e) => setCurrent(e.target.value)} />
       </div>
       <div>
-        <label style={label} htmlFor="cp-new">New password</label>
+        <label style={label} htmlFor="cp-new">{c.newPassword}</label>
         <input id="cp-new" type="password" autoComplete="new-password" minLength={8} style={input}
           value={next} onChange={(e) => setNext(e.target.value)} />
       </div>
       <div>
-        <label style={label} htmlFor="cp-confirm">Confirm new password</label>
+        <label style={label} htmlFor="cp-confirm">{c.confirmNewPassword}</label>
         <input id="cp-confirm" type="password" autoComplete="new-password" minLength={8} style={input}
           value={confirm} onChange={(e) => setConfirm(e.target.value)} />
       </div>
 
       {error && <p style={{ fontSize: 13, color: T.terra, margin: 0 }}>{error}</p>}
-      {done && <p style={{ fontSize: 13, color: T.tealMid, margin: 0 }}>Password updated.</p>}
+      {done && <p style={{ fontSize: 13, color: T.tealMid, margin: 0 }}>{c.passwordUpdated}</p>}
 
       <button
         type="button"
@@ -105,7 +116,7 @@ export function ChangePassword() {
           cursor: pending ? 'default' : 'pointer', opacity: pending || !current || !next || !confirm ? 0.6 : 1,
         }}
       >
-        {pending ? 'Updating...' : 'Change password'}
+        {pending ? c.updating : c.changePasswordBtn}
       </button>
     </div>
   );
