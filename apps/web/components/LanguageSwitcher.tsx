@@ -36,6 +36,18 @@ export function LanguageSwitcher({ mobile = false }: { mobile?: boolean } = {}) 
     return targetPath === '/' ? `/${locale}` : `/${locale}${targetPath}`;
   }
 
+  // Picking a locale must stick even when it's the default: with
+  // localeDetection on, a plain unprefixed URL (what English links to,
+  // under 'as-needed') is re-negotiated by the middleware on every request,
+  // so a stale NEXT_LOCALE cookie or an Accept-Language header that still
+  // says pt/es would immediately redirect the visitor right back. Setting
+  // the cookie here — before the browser follows the link — makes the
+  // explicit choice win on the very next request.
+  function selectLocale(locale: AppLocale) {
+    document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000; SameSite=Lax`;
+    setOpen(false);
+  }
+
   const size = mobile ? 16 : 13;
 
   return (
@@ -74,7 +86,7 @@ export function LanguageSwitcher({ mobile = false }: { mobile?: boolean } = {}) 
               <a
                 key={locale}
                 href={hrefFor(locale)}
-                onClick={() => setOpen(false)}
+                onClick={() => selectLocale(locale)}
                 style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8,
                   padding: '7px 9px', borderRadius: 8, textDecoration: 'none',
