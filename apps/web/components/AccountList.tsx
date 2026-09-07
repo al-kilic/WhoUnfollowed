@@ -8,11 +8,15 @@ import type { Account } from '@ig-tracker/core';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useCsvExport } from '@/hooks/useCsvExport';
+import { EN_LIST_TOOLBAR, type ListToolbarContent } from '@/components/listToolbar.content';
 
 interface AccountListProps {
   accounts: Account[];
   csvFilename: string;
   emptyMessage?: string;
+  // Defaults to English so the unmigrated /diff page (which doesn't pass
+  // this) keeps working unchanged.
+  content?: ListToolbarContent;
 }
 
 const ROW_HEIGHT = 56;
@@ -21,6 +25,7 @@ export function AccountList({
   accounts,
   csvFilename,
   emptyMessage = 'No accounts here.',
+  content: c = EN_LIST_TOOLBAR,
 }: AccountListProps) {
   const [search, setSearch] = useState('');
   const [sortField, setSortField] = useState<'username' | 'date'>('date');
@@ -55,7 +60,7 @@ export function AccountList({
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-foreground/40 pointer-events-none" />
           <input
             type="search"
-            placeholder="Search by username…"
+            placeholder={c.searchPlaceholder}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full rounded-lg border border-foreground/15 bg-background pl-9 pr-4 py-2 text-sm outline-none focus:border-primary/60 focus:ring-2 focus:ring-primary/20 placeholder:text-foreground/40 transition-colors"
@@ -65,10 +70,10 @@ export function AccountList({
           variant="outline"
           size="sm"
           onClick={() => setSortField((f) => (f === 'username' ? 'date' : 'username'))}
-          title={sortField === 'username' ? 'Sorting by name. Click to sort by follow date instead' : 'Sorting by follow date. Click to sort by name instead'}
+          title={sortField === 'username' ? c.sortingByNameTooltip : c.sortingByDateTooltip}
         >
           {sortField === 'username' ? <CaseSensitive className="size-4" /> : <Calendar className="size-4" />}
-          {sortField === 'username' ? 'Name' : 'Date'}
+          {sortField === 'username' ? c.nameLabel : c.dateLabel}
           <ChevronDown className="size-3 -ml-0.5 opacity-50" />
         </Button>
         <Button
@@ -77,14 +82,14 @@ export function AccountList({
           onClick={() => setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))}
           title={
             sortField === 'username'
-              ? (sortDir === 'asc' ? 'A to Z. Click to reverse to Z to A' : 'Z to A. Click to reverse to A to Z')
-              : (sortDir === 'asc' ? 'Oldest first. Click to reverse to newest first' : 'Newest first. Click to reverse to oldest first')
+              ? (sortDir === 'asc' ? c.aToZTooltip : c.zToATooltip)
+              : (sortDir === 'asc' ? c.oldestFirstTooltip : c.newestFirstTooltip)
           }
         >
           <ArrowUpDown className="size-4" />
           {sortField === 'username'
-            ? (sortDir === 'asc' ? 'A→Z' : 'Z→A')
-            : (sortDir === 'asc' ? 'Oldest' : 'Newest')}
+            ? (sortDir === 'asc' ? c.aToZ : c.zToA)
+            : (sortDir === 'asc' ? c.oldest : c.newest)}
           <ChevronDown className="size-3 -ml-0.5 opacity-50" />
         </Button>
         <Button
@@ -94,7 +99,7 @@ export function AccountList({
           disabled={filtered.length === 0}
         >
           <Download className="size-4" />
-          Export CSV
+          {c.exportCsv}
         </Button>
         {modal}
       </div>
@@ -102,14 +107,14 @@ export function AccountList({
       {/* Count */}
       <p className="text-xs text-foreground/40">
         {filtered.length === accounts.length
-          ? `${accounts.length.toLocaleString()} accounts`
-          : `${filtered.length.toLocaleString()} of ${accounts.length.toLocaleString()}`}
+          ? c.accountsCount(accounts.length.toLocaleString())
+          : c.ofTotal(filtered.length.toLocaleString(), accounts.length.toLocaleString())}
       </p>
 
       {/* List */}
       {filtered.length === 0 ? (
         <div className="flex items-center justify-center rounded-xl border border-foreground/10 py-16 text-sm text-foreground/40">
-          {search.trim() ? `No results for "${search}"` : emptyMessage}
+          {search.trim() ? c.noResultsFor(search) : emptyMessage}
         </div>
       ) : (
         <div

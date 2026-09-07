@@ -8,10 +8,12 @@ import type { Account } from '@ig-tracker/core';
 import { Button } from '@/components/ui/button';
 import { useCsvExport } from '@/hooks/useCsvExport';
 import { trackUpgradeClick, trackFunnel } from '@/lib/analytics';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { T } from '@/components/landing/tokens';
 import { useTriage, usePreviousTriage, type TriageState } from '@/hooks/useTriage';
 import { useAuth } from '@/components/AuthProvider';
+import type { ListToolbarContent } from '@/components/listToolbar.content';
+import type { TriageListContent, TriageOptionContent } from './triageList.content';
 
 const ROW_HEIGHT = 64;
 
@@ -29,120 +31,17 @@ function saveVisited(snapshotKey: number, set: Set<string>) {
 
 // ─── Triage config ────────────────────────────────────────────────────────────
 
-interface TriageOption {
-  state: TriageState;
-  label: string;
-  description: string;
-  wittys: string[];
-  color: string;
-  gradient?: string;
-  bg: string;
-  border: string;
-  key: string;
+function stateConfig(options: TriageOptionContent[], state: TriageState): TriageOptionContent {
+  return options.find(o => o.state === state) ?? options[0]!;
 }
 
-const TRIAGE_OPTIONS: TriageOption[] = [
-  {
-    state: 'not_a_fan', label: 'Dropping', key: '1',
-    description: 'You plan to unfollow this account. Marks it for your clean-up run.',
-    color: T.terra, bg: 'rgba(168,75,47,0.12)', border: 'rgba(168,75,47,0.35)',
-    wittys: [
-      'They made their choice. Now make yours.',
-      'Long overdue.',
-      'You already knew.',
-      'No hard feelings. Well, maybe a few.',
-      'The list gets shorter.',
-      'This one was never a surprise.',
-      'Cleaning house.',
-      "It's not personal. Actually, it is.",
-      'Ready when you are.',
-      'They were never really there.',
-      'One less distraction.',
-      'You saw this coming.',
-    ],
-  },
-  {
-    state: 'let_it_slide', label: 'Whitelist', key: '2',
-    description: 'You want to keep following them - hides them from the list permanently.',
-    color: T.ink, bg: 'var(--t-surface2)', border: 'var(--t-border2)',
-    wittys: [
-      'You follow for the content. Fair enough.',
-      "They don't follow back. You don't care. Perfect.",
-      'Not everything needs to be mutual.',
-      'Conscious decision. Respect.',
-      'This one earns their place.',
-      'Content over reciprocity.',
-      'Some follows are just one-way. Fine.',
-      'Quality content forgives a lot.',
-      'You chose this. Intentionally.',
-      'Keeping this one around.',
-      'This one stays.',
-      'No follow-back required.',
-    ],
-  },
-  {
-    state: 'done', label: 'Unfollowed', key: '3',
-    description: "Already unfollowed them outside the app - marks it to keep your count accurate.",
-    color: '#C0392B', gradient: 'linear-gradient(to right, #8B1A1A, #C0392B)',
-    bg: 'rgba(139,26,26,0.1)', border: 'rgba(192,57,43,0.35)',
-    wittys: [
-      'Gone. Next.',
-      'Done and dusted.',
-      'Clean cut.',
-      "Didn't even notice, did they?",
-      'You moved on.',
-      'Already handled.',
-      'One less.',
-      'Lighter already?',
-      "The algorithm won't miss them.",
-      "That one's behind you.",
-      "Didn't linger.",
-      'Handled.',
-    ],
-  },
-  {
-    state: 'check_later', label: 'Skip for now', key: '4',
-    description: "Not sure yet - come back to this one later. Nothing is marked.",
-    color: '#a0956b', bg: 'rgba(160,149,107,0.1)', border: 'rgba(160,149,107,0.3)',
-    wittys: [
-      'Not today. Maybe not ever.',
-      'Still deciding. Fair.',
-      'The jury is still out.',
-      'Come back when you know.',
-      'Parking this one.',
-      'Some decisions take time.',
-      'No rush.',
-      'One for the back burner.',
-      'Complicated. Got it.',
-      "Not ready yet. That's okay.",
-      "We'll revisit.",
-      'Leave it for now.',
-    ],
-  },
-  {
-    state: 'deactivated', label: 'Deactivated', key: '5',
-    description: "This account is deactivated or deleted. Not a real unfollow. Moves them out of the list.",
-    color: '#6b7280', bg: 'rgba(107,114,128,0.1)', border: 'rgba(107,114,128,0.3)',
-    wittys: [
-      "Not their choice. Instagram's.",
-      "The account is gone, not the friendship.",
-      "They didn't leave. They just… disappeared.",
-      'Ghost account. Different kind of ghost.',
-      "Can't unfollow you if they don't exist.",
-      'Collateral damage.',
-      "Instagram made this decision for them.",
-      'Account closed. Case closed.',
-      'Not a snub. Just a casualty.',
-      'The platform got to them first.',
-      'One less active account, one less clean break.',
-      "They're gone. Probably temporary.",
-    ],
-  },
-];
-
-function stateConfig(state: TriageState): TriageOption {
-  return TRIAGE_OPTIONS.find(o => o.state === state) ?? TRIAGE_OPTIONS[0]!;
-}
+const OPTION_STYLE: Record<TriageState, { color: string; gradient?: string; bg: string; border: string }> = {
+  not_a_fan: { color: T.terra, bg: 'rgba(168,75,47,0.12)', border: 'rgba(168,75,47,0.35)' },
+  let_it_slide: { color: T.ink, bg: 'var(--t-surface2)', border: 'var(--t-border2)' },
+  done: { color: '#C0392B', gradient: 'linear-gradient(to right, #8B1A1A, #C0392B)', bg: 'rgba(139,26,26,0.1)', border: 'rgba(192,57,43,0.35)' },
+  check_later: { color: '#a0956b', bg: 'rgba(160,149,107,0.1)', border: 'rgba(160,149,107,0.3)' },
+  deactivated: { color: '#6b7280', bg: 'rgba(107,114,128,0.1)', border: 'rgba(107,114,128,0.3)' },
+};
 
 function pickWitty(wittys: string[], username: string): string {
   let hash = 0;
@@ -191,7 +90,7 @@ function InfoIcon({ text }: { text: string }) {
 
 interface ToastData { id: string; username: string }
 
-function Toast({ toast, onUndo, onDismiss }: { toast: ToastData; onUndo: () => void; onDismiss: () => void }) {
+function Toast({ toast, c, onUndo, onDismiss }: { toast: ToastData; c: TriageListContent; onUndo: () => void; onDismiss: () => void }) {
   useEffect(() => {
     const t = setTimeout(onDismiss, 4000);
     return () => clearTimeout(t);
@@ -209,7 +108,8 @@ function Toast({ toast, onUndo, onDismiss }: { toast: ToastData; onUndo: () => v
       animation: 'toast-in 0.2s ease',
     }}>
       <span>
-        <span style={{ color: T.ink }}>@{toast.username}</span> added to <span style={{ color: T.inkDim, fontStyle: 'italic' }}>Whitelist</span>
+        <span style={{ color: T.ink }}>{c.toast.addedTo(toast.username)}</span>{' '}
+        <span style={{ color: T.inkDim, fontStyle: 'italic' }}>{c.toast.whitelist}</span>
       </span>
       <button
         onClick={onUndo}
@@ -220,7 +120,7 @@ function Toast({ toast, onUndo, onDismiss }: { toast: ToastData; onUndo: () => v
           fontSize: 12, cursor: 'pointer', fontFamily: T.sans, fontWeight: 600,
         }}
       >
-        Undo
+        {c.toast.undo}
       </button>
       <style>{`@keyframes toast-in { from { opacity:0; transform: translateX(-50%) translateY(8px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }`}</style>
     </div>
@@ -234,14 +134,16 @@ interface RowProps {
   triageState: TriageState | undefined;
   isVisited: boolean;
   isFocused: boolean;
+  c: TriageListContent;
   onTriage: (state: TriageState | null) => void;
   onVisit: () => void;
   onFocus: () => void;
 }
 
-function TriageRow({ account, triageState, isVisited, isFocused, onTriage, onVisit, onFocus }: RowProps) {
+function TriageRow({ account, triageState, isVisited, isFocused, c, onTriage, onVisit, onFocus }: RowProps) {
   const [hovered, setHovered] = useState(false);
-  const cfg = triageState ? stateConfig(triageState) : null;
+  const cfg = triageState ? stateConfig(c.options, triageState) : null;
+  const style = triageState ? OPTION_STYLE[triageState] : null;
 
   const isDone        = triageState === 'done';
   const isSlide       = triageState === 'let_it_slide';
@@ -264,8 +166,8 @@ function TriageRow({ account, triageState, isVisited, isFocused, onTriage, onVis
           : isVisited
             ? '3px solid rgba(2,136,143,0.4)'
             : '3px solid transparent',
-        background: cfg
-          ? cfg.bg
+        background: style
+          ? style.bg
           : isFocused
             ? 'rgba(2,136,143,0.04)'
             : hovered
@@ -322,11 +224,11 @@ function TriageRow({ account, triageState, isVisited, isFocused, onTriage, onVis
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 2 }}>
               <span style={{
                 fontSize: 11, fontFamily: 'monospace', padding: '3px 10px',
-                borderRadius: 20, border: `1px solid ${cfg!.border}`,
-                background: cfg!.bg, whiteSpace: 'nowrap',
-                ...(cfg!.gradient
-                  ? { backgroundImage: cfg!.gradient, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }
-                  : { color: cfg!.color }),
+                borderRadius: 20, border: `1px solid ${style!.border}`,
+                background: style!.bg, whiteSpace: 'nowrap',
+                ...(style!.gradient
+                  ? { backgroundImage: style!.gradient, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }
+                  : { color: style!.color }),
               }}>
                 {cfg!.label}
               </span>
@@ -336,7 +238,7 @@ function TriageRow({ account, triageState, isVisited, isFocused, onTriage, onVis
             </div>
             <button
               onClick={() => onTriage(null)}
-              title="Clear"
+              title={c.clear}
               style={{
                 width: 22, height: 22, borderRadius: '50%',
                 border: '1px solid var(--t-border3)',
@@ -350,14 +252,14 @@ function TriageRow({ account, triageState, isVisited, isFocused, onTriage, onVis
           </>
         ) : (
           // Show triage action buttons
-          TRIAGE_OPTIONS.map((opt) => (
+          c.options.map((opt) => (
             <button
               key={opt.state}
               onClick={() => onTriage(opt.state)}
               style={{
                 padding: '4px 10px', borderRadius: 8,
-                border: `1px solid ${opt.border}`,
-                background: opt.bg, color: opt.color,
+                border: `1px solid ${OPTION_STYLE[opt.state].border}`,
+                background: OPTION_STYLE[opt.state].bg, color: OPTION_STYLE[opt.state].color,
                 fontSize: 11, fontFamily: 'monospace',
                 cursor: 'pointer', whiteSpace: 'nowrap',
                 transition: 'opacity 0.1s',
@@ -372,7 +274,7 @@ function TriageRow({ account, triageState, isVisited, isFocused, onTriage, onVis
       {/* Visited badge */}
       {isVisited && !triageState && (
         <span style={{ fontSize: 10, fontFamily: 'monospace', color: 'rgba(2,136,143,0.4)', flexShrink: 0 }}>
-          visited
+          {c.visited}
         </span>
       )}
 
@@ -382,7 +284,7 @@ function TriageRow({ account, triageState, isVisited, isFocused, onTriage, onVis
         href={account.href}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label={`Open @${account.username} on Instagram`}
+        aria-label={c.openOnInstagram(account.username)}
         onClick={onVisit}
         style={{
           flexShrink: 0, padding: 6, borderRadius: 8,
@@ -401,16 +303,16 @@ function TriageRow({ account, triageState, isVisited, isFocused, onTriage, onVis
 
 // ─── Progress bar ─────────────────────────────────────────────────────────────
 
-function ProgressBar({ done, total }: { done: number; total: number }) {
+function ProgressBar({ done, total, c }: { done: number; total: number; c: TriageListContent }) {
   const pct = total === 0 ? 0 : Math.round((done / total) * 100);
   const isComplete = pct === 100;
 
   const message =
     pct === 0   ? null :
-    pct < 25    ? 'Getting started.' :
-    pct < 50    ? "You're getting somewhere." :
-    pct < 100   ? 'Halfway through. Radar is warming up.' :
-                  'List cleared. Suspiciously loyal bunch.';
+    pct < 25    ? c.progress.gettingStarted :
+    pct < 50    ? c.progress.gettingSomewhere :
+    pct < 100   ? c.progress.halfwayThrough :
+                  c.progress.listCleared;
 
   return (
     <div style={{
@@ -421,7 +323,7 @@ function ProgressBar({ done, total }: { done: number; total: number }) {
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
         <span style={{ fontSize: 12, fontFamily: 'monospace', color: T.inkDim }}>
-          Triaged {done.toLocaleString()} of {total.toLocaleString()}
+          {c.progress.triagedOf(done.toLocaleString(), total.toLocaleString())}
         </span>
         <span style={{ fontSize: 12, fontFamily: 'monospace', color: isComplete ? T.tealLight : T.inkMute }}>
           {pct}%
@@ -453,9 +355,11 @@ interface TriageListProps {
   // Pro gates the cross-snapshot carry-over (importing triage from a previous
   // export). Single-snapshot triage itself stays free.
   isPro?: boolean;
+  c: TriageListContent;
+  toolbar: ListToolbarContent;
 }
 
-export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }: TriageListProps) {
+export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, c, toolbar: tb }: TriageListProps) {
   const { userId } = useAuth();
   const { triage, setTriageState, bulkImportTriage } = useTriage(snapshotKey);
 
@@ -506,7 +410,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
       saveVisited(snapshotKey, next);
       return next;
     });
-  }, []);
+  }, [snapshotKey]);
 
   // Split into main queue vs let-it-slide vs deactivated, with search + filter + sort
   const { mainAccounts, slideAccounts, deactivatedAccounts } = useMemo(() => {
@@ -563,7 +467,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
         setFocusedIdx(i => Math.max(i - 1, 0));
       } else if (['1','2','3','4','5'].includes(e.key) && focusedIndex >= 0) {
         const account = mainAccounts[focusedIndex];
-        const opt = TRIAGE_OPTIONS[Number(e.key) - 1];
+        const opt = c.options[Number(e.key) - 1];
         if (account && opt) {
           void setTriageState(account.username, opt.state);
           setFocusedIdx(i => Math.min(i + 1, mainAccounts.length - 1));
@@ -572,7 +476,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [focusedIndex, mainAccounts, setTriageState]);
+  }, [focusedIndex, mainAccounts, setTriageState, c.options]);
 
   // Scroll focused row into view
   useEffect(() => {
@@ -582,7 +486,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       {/* Progress bar */}
-      <ProgressBar done={triaged} total={totalForProgress} />
+      <ProgressBar done={triaged} total={totalForProgress} c={c} />
 
       {/* Pro teaser: carry-over across exports (shown to free users once they've
           actually triaged something, so the value lands at the right moment). */}
@@ -593,25 +497,20 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
           background: 'linear-gradient(180deg, rgba(2,136,143,0.10), rgba(2,136,143,0.03))',
           border: '1px solid rgba(2,136,143,0.25)',
         }}>
-          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>Pro</span>
+          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>{c.proTeaser.pro}</span>
           <span style={{ flex: 1, minWidth: 200, fontSize: 13, color: T.inkDim, lineHeight: 1.5 }}>
-            Upload a new export later and Pro <strong style={{ color: T.ink }}>carries this triage over</strong>, so you never re-triage the same accounts.
+            {c.proTeaser.body}
           </span>
           <Link href="/pricing" onClick={() => { trackUpgradeClick('triage-carryover'); trackFunnel('Upgrade CTA Clicked', { placement: 'results' }); }} style={{ flexShrink: 0, fontSize: 12, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none', padding: '8px 16px', borderRadius: 9, background: T.teal }}>
-            Upgrade to Pro
+            {c.proTeaser.upgradeToPro}
           </Link>
-          <button onClick={() => setImportDismissed(true)} aria-label="Dismiss" style={{ flexShrink: 0, width: 26, height: 26, borderRadius: 7, border: '1px solid var(--t-border2)', background: 'transparent', color: T.inkMute, cursor: 'pointer', fontFamily: T.sans }}>×</button>
+          <button onClick={() => setImportDismissed(true)} aria-label={c.proTeaser.dismissAria} style={{ flexShrink: 0, width: 26, height: 26, borderRadius: 7, border: '1px solid var(--t-border2)', background: 'transparent', color: T.inkMute, cursor: 'pointer', fontFamily: T.sans }}>×</button>
         </div>
       )}
 
       {/* Previous triage import banner (Pro: carry triage across snapshots) */}
       {isPro && !prevLoading && !importDismissed && triage.size === 0 && prevOptions.length > 0 && (() => {
-        const IMPORTABLE: { state: TriageState; label: string; description: string }[] = [
-          { state: 'let_it_slide', label: 'Whitelist',     description: 'accounts you follow for content' },
-          { state: 'check_later',  label: 'Skip for now',  description: 'accounts you were undecided on' },
-          { state: 'not_a_fan',    label: 'Dropping',      description: 'accounts you planned to unfollow' },
-        ];
-        const availableCounts = IMPORTABLE.map(o => ({
+        const availableCounts = c.importBanner.importable.map(o => ({
           ...o,
           count: [...prevMatches.values()].filter(s => s === o.state).length,
         })).filter(o => o.count > 0);
@@ -629,10 +528,10 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <p style={{ fontSize: 13, fontWeight: 600, color: T.ink }}>
-                  Carry over triage from a previous snapshot?
+                  {c.importBanner.carryOverQuestion}
                 </p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 12, color: T.inkDim, flexShrink: 0 }}>From:</span>
+                  <span style={{ fontSize: 12, color: T.inkDim, flexShrink: 0 }}>{c.importBanner.from}</span>
                   <select
                     value={prevSelectedKey ?? ''}
                     onChange={e => setPrevSelectedKey(Number(e.target.value))}
@@ -645,17 +544,18 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
                   >
                     {prevOptions.map(o => (
                       <option key={o.snapshotKey} value={o.snapshotKey}>
-                        {o.label} ({o.matchCount} match{o.matchCount !== 1 ? 'es' : ''})
+                        {o.label} ({o.matchCount} {c.importBanner.match(o.matchCount)})
                       </option>
                     ))}
                   </select>
                   {prevLoadingMatches && (
-                    <span style={{ fontSize: 11, color: T.inkMute, fontStyle: 'italic' }}>loading...</span>
+                    <span style={{ fontSize: 11, color: T.inkMute, fontStyle: 'italic' }}>{c.importBanner.loading}</span>
                   )}
                 </div>
               </div>
               <button
                 onClick={() => setImportDismissed(true)}
+                aria-label={c.importBanner.dismissAria}
                 style={{ background: 'none', border: 'none', color: T.inkMute, cursor: 'pointer', fontSize: 18, lineHeight: 1, padding: 2, flexShrink: 0 }}
               >
                 ×
@@ -709,7 +609,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
                   transition: 'all 0.15s',
                 }}
               >
-                Import {selectedCount > 0 ? `${selectedCount} account${selectedCount !== 1 ? 's' : ''}` : ''}
+                {c.importBanner.importBtn(selectedCount)}
               </button>
               <button
                 onClick={() => setImportDismissed(true)}
@@ -720,7 +620,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
                   color: T.inkDim,
                 }}
               >
-                Start fresh
+                {c.importBanner.startFresh}
               </button>
             </div>
           </div>
@@ -733,7 +633,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
           <Search size={14} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: T.inkMute, pointerEvents: 'none' }} />
           <input
             type="search"
-            placeholder="Search by username…"
+            placeholder={tb.searchPlaceholder}
             value={search}
             onChange={e => setSearch(e.target.value)}
             style={{
@@ -749,10 +649,10 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
           variant="outline"
           size="sm"
           onClick={() => setSortField(f => f === 'username' ? 'date' : 'username')}
-          title={sortField === 'username' ? 'Sorting by name. Click to sort by follow date instead' : 'Sorting by follow date. Click to sort by name instead'}
+          title={sortField === 'username' ? tb.sortingByNameTooltip : tb.sortingByDateTooltip}
         >
           {sortField === 'username' ? <CaseSensitive size={14} /> : <Calendar size={14} />}
-          {sortField === 'username' ? 'Name' : 'Date'}
+          {sortField === 'username' ? tb.nameLabel : tb.dateLabel}
           <ChevronDown size={12} style={{ opacity: 0.5, marginLeft: -2 }} />
         </Button>
         <Button
@@ -761,14 +661,14 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
           onClick={() => setSortDir(d => d === 'asc' ? 'desc' : 'asc')}
           title={
             sortField === 'username'
-              ? (sortDir === 'asc' ? 'A to Z. Click to reverse to Z to A' : 'Z to A. Click to reverse to A to Z')
-              : (sortDir === 'asc' ? 'Oldest first. Click to reverse to newest first' : 'Newest first. Click to reverse to oldest first')
+              ? (sortDir === 'asc' ? tb.aToZTooltip : tb.zToATooltip)
+              : (sortDir === 'asc' ? tb.oldestFirstTooltip : tb.newestFirstTooltip)
           }
         >
           <ArrowUpDown size={14} />
           {sortField === 'username'
-            ? (sortDir === 'asc' ? 'A→Z' : 'Z→A')
-            : (sortDir === 'asc' ? 'Oldest' : 'Newest')}
+            ? (sortDir === 'asc' ? tb.aToZ : tb.zToA)
+            : (sortDir === 'asc' ? tb.oldest : tb.newest)}
           <ChevronDown size={12} style={{ opacity: 0.5, marginLeft: -2 }} />
         </Button>
         <Button
@@ -779,7 +679,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
           disabled={mainAccounts.length === 0}
         >
           <Download size={14} />
-          Export CSV
+          {tb.exportCsv}
         </Button>
       </div>
       {modal}
@@ -789,16 +689,16 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
         const allCount = accounts.filter(a => { const s = triage.get(a.username); return s !== 'let_it_slide' && s !== 'deactivated'; }).length;
         const untriagedColor = '#8b8fa8'; // muted blue-grey, neutral/pending feel
         const filters: { value: TriageState | 'untriaged' | 'all'; label: string; count: number; color: string; gradient?: string; border?: string; isAll?: boolean; info: string }[] = [
-          { value: 'all',       label: 'All',         count: allCount,                                                                            color: T.ink,         isAll: true,  info: 'Everyone in your non-followers list.' },
-          { value: 'untriaged', label: 'Untriaged',   count: accounts.filter(a => !triage.has(a.username)).length,                                color: untriagedColor,              info: "Accounts you haven't reviewed yet." },
-          ...TRIAGE_OPTIONS.filter(o => o.state !== 'let_it_slide').map(o => ({
+          { value: 'all',       label: c.filters.all,       count: allCount,                                                                            color: T.ink,         isAll: true,  info: c.filters.allInfo },
+          { value: 'untriaged', label: c.filters.untriaged, count: accounts.filter(a => !triage.has(a.username)).length,                                color: untriagedColor,              info: c.filters.untriagedInfo },
+          ...c.options.filter(o => o.state !== 'let_it_slide').map(o => ({
             value: o.state as TriageState | 'untriaged' | 'all',
             label: o.label,
             count: accounts.filter(a => triage.get(a.username) === o.state).length,
-            color: o.color,
-            border: o.border,
+            color: OPTION_STYLE[o.state].color,
+            border: OPTION_STYLE[o.state].border,
             info: o.description,
-            ...(o.gradient ? { gradient: o.gradient } : {}),
+            ...(OPTION_STYLE[o.state].gradient ? { gradient: OPTION_STYLE[o.state].gradient } : {}),
           })),
         ];
         return (
@@ -849,8 +749,8 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
       {/* Count */}
       <p style={{ fontSize: 12, color: T.inkMute, fontFamily: 'monospace' }}>
         {mainAccounts.length === accounts.length - slideAccounts.length
-          ? `${mainAccounts.length.toLocaleString()} accounts`
-          : `${mainAccounts.length.toLocaleString()} of ${(accounts.length - slideAccounts.length).toLocaleString()}`}
+          ? c.count.accounts(mainAccounts.length.toLocaleString())
+          : c.count.ofTotal(mainAccounts.length.toLocaleString(), (accounts.length - slideAccounts.length).toLocaleString())}
       </p>
 
       {/* Main list */}
@@ -860,7 +760,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
           borderRadius: 16, border: '1px dashed var(--t-border2)',
           padding: '64px 32px', color: T.inkMute, fontSize: 14,
         }}>
-          {search ? `No results for "${search}"` : "Everyone here earned their spot. Radar’s got nothing."}
+          {search ? tb.noResultsFor(search) : c.everyoneEarnedSpot}
         </div>
       ) : mainAccounts.length === 0 ? (
         <div style={{
@@ -869,7 +769,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
           background: 'rgba(2,136,143,0.04)',
           padding: '48px 32px', color: T.tealLight, fontSize: 14, fontStyle: 'italic',
         }}>
-          List cleared. Suspiciously loyal bunch.
+          {c.progress.listCleared}
         </div>
       ) : (
         <div
@@ -893,6 +793,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
                     triageState={triage.get(account.username)}
                     isVisited={visited.has(account.username)}
                     isFocused={focusedIndex === item.index}
+                    c={c}
                     onTriage={state => handleTriage(account.username, state)}
                     onVisit={() => markVisited(account.username)}
                     onFocus={() => setFocusedIdx(item.index)}
@@ -908,6 +809,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
       {toast && (
         <Toast
           toast={toast}
+          c={c}
           onUndo={() => { void setTriageState(toast.username, null); setToast(null); }}
           onDismiss={() => setToast(null)}
         />
@@ -927,7 +829,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
             }}
           >
             {deactivatedOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-            <span style={{ color: T.inkMute, fontFamily: 'monospace', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Deactivated</span>
+            <span style={{ color: T.inkMute, fontFamily: 'monospace', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{c.deactivatedSection.label}</span>
             <span style={{
               fontSize: 13, fontFamily: 'monospace', fontWeight: 700,
               padding: '2px 9px', borderRadius: 20,
@@ -936,7 +838,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
               {deactivatedAccounts.length}
             </span>
             <span style={{ fontSize: 11, color: T.inkMute, marginLeft: 'auto', fontStyle: 'italic' }}>
-              Accounts that deactivated. Not a real unfollow.
+              {c.deactivatedSection.description}
             </span>
           </button>
           {deactivatedOpen && (
@@ -953,6 +855,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
                   triageState="deactivated"
                   isVisited={visited.has(account.username)}
                   isFocused={false}
+                  c={c}
                   onTriage={state => handleTriage(account.username, state)}
                   onVisit={() => markVisited(account.username)}
                   onFocus={() => {}}
@@ -977,7 +880,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
             }}
           >
             {slideOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-            <span style={{ color: T.inkDim, fontFamily: 'monospace', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Whitelist</span>
+            <span style={{ color: T.inkDim, fontFamily: 'monospace', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{c.whitelistSection.label}</span>
             <span style={{
               fontSize: 13, fontFamily: 'monospace', fontWeight: 700,
               padding: '2px 9px', borderRadius: 20,
@@ -986,7 +889,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
               {slideAccounts.length}
             </span>
             <span style={{ fontSize: 11, color: T.inkMute, marginLeft: 'auto', fontStyle: 'italic' }}>
-              You follow them for the content, not the follow-back.
+              {c.whitelistSection.description}
             </span>
           </button>
 
@@ -1004,6 +907,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false }
                   triageState="let_it_slide"
                   isVisited={visited.has(account.username)}
                   isFocused={false}
+                  c={c}
                   onTriage={state => handleTriage(account.username, state)}
                   onVisit={() => markVisited(account.username)}
                   onFocus={() => {}}

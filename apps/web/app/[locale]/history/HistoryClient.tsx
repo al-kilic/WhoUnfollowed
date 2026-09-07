@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { es, pt } from 'date-fns/locale';
 import type { Locale as DateFnsLocale } from 'date-fns';
 import { useRouter } from 'next/navigation';
-import { Link } from '@/i18n/navigation';
+import { Link, useRouter as useLocaleRouter } from '@/i18n/navigation';
 import type { AppLocale } from '@/i18n/routing';
 import { useSnapshotStore } from '@/lib/store';
 import { useSnapshotList, deleteSnapshot, updateSnapshotLabel, redateSnapshot, setSnapshotCloudId, restoreSnapshot, claimAnonymousSnapshots, FREE_SNAPSHOT_LIMIT, type SnapshotRecord } from '@/hooks/useSnapshots';
@@ -34,6 +34,7 @@ export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionSt
   const c            = getHistoryContent(locale);
   const dateLocale   = DATE_FNS_LOCALES[locale];
   const router       = useRouter();
+  const localeRouter = useLocaleRouter();
   const setSnapshot  = useSnapshotStore(s => s.setSnapshot);
   const snapshots    = useSnapshotList(userId);
   const [deletingId, setDeletingId]     = useState<number | null>(null);
@@ -65,11 +66,9 @@ export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionSt
   const localCloudIds = new Set(snapshots.map(s => s.cloudId).filter(Boolean));
   const cloudOnly = cloudList.filter(c => !localCloudIds.has(c.id));
 
-  // /results and /diff aren't migrated under [locale] yet, so this uses the
-  // plain (non-locale-aware) router — prefixing these would 404 for es/pt.
   function handleView(record: SnapshotRecord) {
     setSnapshot(record.data);
-    router.push('/results');
+    localeRouter.push('/results');
   }
 
   async function handleDelete(id: number) {
@@ -78,6 +77,8 @@ export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionSt
     setDeletingId(null);
   }
 
+  // /diff isn't migrated under [locale] yet — plain router so it isn't
+  // incorrectly locale-prefixed (which would 404 for es/pt).
   function handleCompare(baseId: number, targetId: number) {
     const base   = snapshots.find(s => s.id === baseId);
     const target = snapshots.find(s => s.id === targetId);

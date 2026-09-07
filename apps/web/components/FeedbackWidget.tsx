@@ -6,33 +6,9 @@ import { RadioGroup } from '@base-ui/react/radio-group';
 import { Radio } from '@base-ui/react/radio';
 import { feedbackSchema, type FeedbackSentiment } from '@ig-tracker/core';
 import { T } from '@/components/landing/tokens';
+import { EN_FEEDBACK_WIDGET, type FeedbackWidgetContent } from '@/components/feedbackWidget.content';
 
 const STORAGE_KEY = 'wu_feedback_submitted';
-
-const SENTIMENTS: Array<{ value: FeedbackSentiment; emoji: string; label: string; reasons: string[] }> = [
-  { value: 'angry', emoji: '😠', label: 'Angry', reasons: [
-    "Couldn't get my export to work",
-    'The upload or parsing broke',
-    'Lost my snapshot history',
-  ] },
-  { value: 'sad', emoji: '😞', label: 'Sad', reasons: [
-    'Confusing to use',
-    'Missing a feature I needed',
-    'Pro price feels high',
-  ] },
-  { value: 'neutral', emoji: '😐', label: 'Neutral', reasons: [
-    'Works, but nothing stood out',
-    'Just exploring',
-  ] },
-  { value: 'happy', emoji: '🙂', label: 'Happy', reasons: [
-    'Found exactly who unfollowed me',
-    'Clean and easy to use',
-  ] },
-  { value: 'delighted', emoji: '🤩', label: 'Delighted', reasons: [
-    'Exactly what I needed',
-    'Already recommending it',
-  ] },
-];
 
 type Status = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -40,7 +16,10 @@ function focusRing(el: HTMLElement, on: boolean) {
   el.style.boxShadow = on ? `0 0 0 2px ${T.teal}` : 'none';
 }
 
-export function FeedbackWidget() {
+// Defaults to English so the unmigrated dashboard (which doesn't pass this)
+// keeps working unchanged.
+export function FeedbackWidget({ content: c = EN_FEEDBACK_WIDGET }: { content?: FeedbackWidgetContent } = {}) {
+  const SENTIMENTS = c.sentiments;
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
@@ -97,7 +76,7 @@ export function FeedbackWidget() {
         type="button"
         onClick={() => setOpen(o => !o)}
         aria-expanded={open}
-        aria-label={open ? 'Close feedback form' : 'Give feedback'}
+        aria-label={open ? c.ariaToggleClose : c.ariaToggleOpen}
         style={{
           position: 'fixed', bottom: 20, right: 20, zIndex: 1000,
           width: 48, height: 48, borderRadius: '50%',
@@ -120,7 +99,7 @@ export function FeedbackWidget() {
       {open && (
         <div
           role="dialog"
-          aria-label="Feedback form"
+          aria-label={c.dialogAriaLabel}
           style={{
             position: 'fixed', bottom: 80, right: 20, zIndex: 1000,
             width: 320, maxWidth: 'calc(100vw - 32px)',
@@ -133,17 +112,17 @@ export function FeedbackWidget() {
           {status === 'success' ? (
             <div style={{ textAlign: 'center', padding: '12px 0' }}>
               <div style={{ fontSize: 28, marginBottom: 8 }}>🙏</div>
-              <p style={{ fontFamily: T.serif, fontSize: 17, color: T.ink, margin: 0 }}>Thanks for the feedback.</p>
+              <p style={{ fontFamily: T.serif, fontSize: 17, color: T.ink, margin: 0 }}>{c.thanks}</p>
             </div>
           ) : (
             <>
               <div style={{ fontFamily: T.serif, fontSize: 17, color: T.ink, marginBottom: 12 }}>
-                How&apos;s it going so far?
+                {c.howsItGoing}
               </div>
 
               <RadioGroup
                 name="feedback-sentiment"
-                aria-label="How's your experience been?"
+                aria-label={c.radioGroupAriaLabel}
                 value={sentiment}
                 onValueChange={(value) => { setSentiment(value as FeedbackSentiment); setReason(null); }}
                 style={{ display: 'flex', gap: 6, justifyContent: 'space-between' }}
@@ -196,7 +175,7 @@ export function FeedbackWidget() {
                 <textarea
                   value={comment}
                   onChange={e => setComment(e.target.value)}
-                  placeholder="Anything else? (optional)"
+                  placeholder={c.commentPlaceholder}
                   maxLength={1000}
                   rows={3}
                   style={{
@@ -211,7 +190,7 @@ export function FeedbackWidget() {
 
               {status === 'error' && (
                 <p style={{ fontSize: 12, color: T.terra, marginTop: 10, marginBottom: 0 }}>
-                  Something went wrong. Mind trying again?
+                  {c.errorMessage}
                 </p>
               )}
 
@@ -230,7 +209,7 @@ export function FeedbackWidget() {
                 onFocus={e => focusRing(e.currentTarget, true)}
                 onBlur={e => focusRing(e.currentTarget, false)}
               >
-                {status === 'submitting' ? 'Sending…' : 'Send feedback'}
+                {status === 'submitting' ? c.sending : c.sendFeedback}
               </button>
             </>
           )}

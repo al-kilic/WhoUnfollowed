@@ -2,14 +2,17 @@
 
 import { useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import NextLink from 'next/link';
+import { Link, useRouter as useLocaleRouter } from '@/i18n/navigation';
 import { format } from 'date-fns';
+import { es, pt } from 'date-fns/locale';
+import type { Locale as DateFnsLocale } from 'date-fns';
 import { analyzeSnapshot } from '@ig-tracker/core';
 import type { Account } from '@ig-tracker/core';
 import { useSnapshotStore } from '@/lib/store';
 import { useAuth } from '@/components/AuthProvider';
 import { AccountList } from '@/components/AccountList';
-import { TriageList } from '@/components/TriageList';
+import { TriageList } from './TriageList';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { T } from '@/components/landing/tokens';
 import { useTriage } from '@/hooks/useTriage';
@@ -18,6 +21,13 @@ import { Tutorial } from '@/components/Tutorial';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { UpgradeLink } from '@/app/account/UpgradeLink';
 import { trackLockedView } from '@/lib/analytics';
+import type { AppLocale } from '@/i18n/routing';
+import { getResultsContent, type ResultsContent } from './content';
+import { getListToolbarContent } from '@/components/listToolbar.content';
+import { getTriageListContent } from './triageList.content';
+import { getFeedbackWidgetContent } from '@/components/feedbackWidget.content';
+
+const DATE_FNS_LOCALES: Partial<Record<AppLocale, DateFnsLocale>> = { es, pt };
 
 // ─── Stat card ───────────────────────────────────────────────────────────────
 
@@ -141,10 +151,11 @@ function CheckItem({ label }: { label: string }) {
 
 // Small live "Radar preview" built from the visitor's own numbers, not demo
 // data, so it reads as their report rather than a generic ad.
-function RadarPreviewCard({ mutualsCount, nonFollowersCount, totalFollowing }: {
+function RadarPreviewCard({ mutualsCount, nonFollowersCount, totalFollowing, c }: {
   mutualsCount: number;
   nonFollowersCount: number;
   totalFollowing: number;
+  c: ResultsContent;
 }) {
   const followBackRate = totalFollowing > 0 ? Math.round((mutualsCount / totalFollowing) * 100) : 0;
 
@@ -163,13 +174,13 @@ function RadarPreviewCard({ mutualsCount, nonFollowersCount, totalFollowing }: {
         <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#ff5f57' }} />
         <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'rgba(255,255,255,0.15)' }} />
         <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'rgba(255,255,255,0.15)' }} />
-        <span style={{ marginLeft: 6, fontSize: 10, color: 'rgba(244,240,232,0.35)', fontFamily: T.mono, letterSpacing: '0.06em' }}>your Radar preview · today</span>
+        <span style={{ marginLeft: 6, fontSize: 10, color: 'rgba(244,240,232,0.35)', fontFamily: T.mono, letterSpacing: '0.06em' }}>{c.radarTeaser.previewLabel}</span>
       </div>
 
       <div style={{ marginBottom: 4 }}>
         <span style={{ fontFamily: T.serif, fontSize: 40, lineHeight: 1, letterSpacing: '-0.03em', color: '#5fc4c8' }}>{followBackRate}%</span>
       </div>
-      <div style={{ fontSize: 11, color: 'rgba(244,240,232,0.45)', marginBottom: 14, fontFamily: T.mono }}>of who you follow, follows back</div>
+      <div style={{ fontSize: 11, color: 'rgba(244,240,232,0.45)', marginBottom: 14, fontFamily: T.mono }}>{c.radarTeaser.followBackRate}</div>
 
       {/* Real proportion bar: mutuals vs non-followers, out of everyone you follow */}
       <div style={{ display: 'flex', height: 8, borderRadius: 5, overflow: 'hidden', marginBottom: 8 }}>
@@ -177,8 +188,8 @@ function RadarPreviewCard({ mutualsCount, nonFollowersCount, totalFollowing }: {
         <div style={{ width: `${100 - followBackRate}%`, background: '#a84b2f' }} />
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'rgba(244,240,232,0.5)', fontFamily: T.mono, marginBottom: 18 }}>
-        <span>{mutualsCount.toLocaleString()} mutuals</span>
-        <span>{nonFollowersCount.toLocaleString()} don&apos;t follow back</span>
+        <span>{c.radarTeaser.mutualsLabel(mutualsCount.toLocaleString())}</span>
+        <span>{c.radarTeaser.dontFollowBackLabel(nonFollowersCount.toLocaleString())}</span>
       </div>
 
       {/* Timeline hint: this is the one number we can't show yet, it needs a second export */}
@@ -188,18 +199,19 @@ function RadarPreviewCard({ mutualsCount, nonFollowersCount, totalFollowing }: {
         <span style={{ width: 7, height: 7, borderRadius: '50%', border: '1px dashed rgba(244,240,232,0.35)', flexShrink: 0 }} />
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'rgba(244,240,232,0.35)', fontFamily: T.mono, marginTop: 6 }}>
-        <span>today</span>
-        <span>your next export plots here</span>
+        <span>{c.radarTeaser.today}</span>
+        <span>{c.radarTeaser.nextExport}</span>
       </div>
     </div>
   );
 }
 
-function RadarTeaser({ isPro, mutualsCount, nonFollowersCount, totalFollowing }: {
+function RadarTeaser({ isPro, mutualsCount, nonFollowersCount, totalFollowing, c }: {
   isPro: boolean;
   mutualsCount: number;
   nonFollowersCount: number;
   totalFollowing: number;
+  c: ResultsContent;
 }) {
   useEffect(() => { if (!isPro) trackLockedView('results-radar-teaser'); }, [isPro]);
   if (isPro) return null;
@@ -219,21 +231,16 @@ function RadarTeaser({ isPro, mutualsCount, nonFollowersCount, totalFollowing }:
     >
       <div>
         <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', color: T.tealLight, fontFamily: T.mono, textTransform: 'uppercase', marginBottom: 10 }}>
-          Beyond this snapshot
+          {c.radarTeaser.eyebrow}
         </div>
         <h2 style={{ fontFamily: T.serif, fontSize: 24, fontWeight: 400, color: T.ink, letterSpacing: '-0.01em', marginBottom: 10, maxWidth: 460 }}>
-          Right now, you won&apos;t know if any of your {mutualsCount.toLocaleString()} {mutualsCount === 1 ? 'mutual quietly unfollows' : 'mutuals quietly unfollow'} you.
+          {c.radarTeaser.headline(mutualsCount)}
         </h2>
         <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.6, marginBottom: 20, maxWidth: 480 }}>
-          This is a one-time check, it can&apos;t catch that. Radar keeps every export you make, compares them automatically, and turns your numbers into a running health score and growth chart.
+          {c.radarTeaser.body}
         </p>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 22px', marginBottom: 22 }}>
-          <CheckItem label="Compare any two snapshots" />
-          <CheckItem label="Follower growth chart" />
-          <CheckItem label="Ghost-follower detection" />
-          <CheckItem label="Pending requests, sorted by wait time" />
-          <CheckItem label="Who you recently unfollowed" />
-          <CheckItem label="How long a non-follower has kept you waiting" />
+          {c.radarTeaser.checks.map((label) => <CheckItem key={label} label={label} />)}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap' }}>
           <UpgradeLink
@@ -251,25 +258,27 @@ function RadarTeaser({ isPro, mutualsCount, nonFollowersCount, totalFollowing }:
               boxShadow: '0 8px 24px rgba(2,136,143,0.35)',
             }}
           >
-            See what&apos;s in Radar
+            {c.radarTeaser.ctaPrimary}
           </UpgradeLink>
-          <Link
+          {/* /dashboard isn't migrated under [locale] yet — plain next/link so
+              it isn't incorrectly locale-prefixed (which would 404 for es/pt). */}
+          <NextLink
             href="/dashboard"
             style={{ fontSize: 13, color: T.tealLight, fontWeight: 600, textDecoration: 'none' }}
           >
-            Preview Radar, no account needed →
-          </Link>
+            {c.radarTeaser.ctaSecondary}
+          </NextLink>
         </div>
       </div>
 
-      <RadarPreviewCard mutualsCount={mutualsCount} nonFollowersCount={nonFollowersCount} totalFollowing={totalFollowing} />
+      <RadarPreviewCard mutualsCount={mutualsCount} nonFollowersCount={nonFollowersCount} totalFollowing={totalFollowing} c={c} />
     </section>
   );
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-function RadarPulse({ trigger }: { trigger: boolean }) {
+function RadarPulse({ trigger, c }: { trigger: boolean; c: ResultsContent }) {
   const [phase, setPhase] = useState<'hidden' | 'in' | 'visible' | 'out'>('hidden');
   const [anchor, setAnchor] = useState<{ top: number; left: number; arrowLeft: number } | null>(null);
 
@@ -337,22 +346,30 @@ function RadarPulse({ trigger }: { trigger: boolean }) {
       </div>
       <span style={{ width: 6, height: 6, borderRadius: '50%', background: T.tealLight, flexShrink: 0, animation: 'glow-soft 2s ease-in-out infinite' }} />
       <span style={{ fontSize: 12, color: '#f4f0e8', fontFamily: T.sans, flex: 1 }}>
-        See your account health score in{' '}
-        <Link href="/dashboard" onClick={dismiss} style={{ color: T.tealLight, fontWeight: 700, textDecoration: 'none' }}>Radar ↗</Link>
+        {c.radarPulse.prefix}{' '}
+        <NextLink href="/dashboard" onClick={dismiss} style={{ color: T.tealLight, fontWeight: 700, textDecoration: 'none' }}>{c.radarPulse.linkText}</NextLink>
       </span>
       <button onClick={dismiss} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(244,240,232,0.3)', fontSize: 15, lineHeight: 1, padding: '0 2px', flexShrink: 0 }}>×</button>
     </div>
   );
 }
 
-export default function ResultsPage() {
+export function ResultsClient({ locale }: { locale: AppLocale }) {
+  const c            = getResultsContent(locale);
+  const toolbar      = getListToolbarContent(locale);
+  const triageC       = getTriageListContent(locale);
+  const feedbackC     = getFeedbackWidgetContent(locale);
+  const dateLocale    = DATE_FNS_LOCALES[locale];
   const router       = useRouter();
+  const localeRouter = useLocaleRouter();
   const snapshot     = useSnapshotStore(s => s.currentSnapshot);
   const { isPro }    = useAuth();
   const [activeTabId, setActiveTabId] = useState('non-followers');
   const [tutorialDone, setTutorialDone] = useState(false);
 
-  useEffect(() => { if (!snapshot) router.replace('/'); }, [snapshot, router]);
+  useEffect(() => { if (!snapshot) localeRouter.replace('/'); }, [snapshot, localeRouter]);
+  // /dashboard isn't migrated under [locale] yet — plain router so it isn't
+  // incorrectly locale-prefixed (which would 404 for es/pt).
   useEffect(() => { router.prefetch('/dashboard'); }, [router]);
 
   const analysis = useMemo(() => snapshot ? analyzeSnapshot(snapshot) : null, [snapshot]);
@@ -364,69 +381,37 @@ export default function ResultsPage() {
 
   if (!snapshot || !analysis) return null;
 
-  const exportedDate = format(new Date(snapshot.exportedAt * 1000), 'MMM d, yyyy');
+  const exportedDate = format(new Date(snapshot.exportedAt * 1000), 'MMM d, yyyy', dateLocale && { locale: dateLocale });
 
   const tabs: Tab[] = [
-    { id: 'non-followers', label: "Don't follow back", description: "Accounts you follow that don't follow you back.",       count: analysis.nonFollowers.length, accounts: analysis.nonFollowers, csvFilename: `non-followers-${snapshot.exportedAt}.csv`, emptyMessage: 'Everyone you follow also follows you back.' },
-    { id: 'fans',          label: 'Fans',              description: "Accounts that follow you, but you don't follow back.",  count: analysis.fans.length,         accounts: analysis.fans,         csvFilename: `fans-${snapshot.exportedAt}.csv`,          emptyMessage: 'You follow everyone who follows you.' },
-    { id: 'mutuals',       label: 'Mutuals',           description: "Accounts you both follow each other.",                  count: analysis.mutuals.length,      accounts: analysis.mutuals,      csvFilename: `mutuals-${snapshot.exportedAt}.csv`,       emptyMessage: 'No mutual follows found.' },
+    { id: 'non-followers', label: c.tabs.nonFollowers.label, description: c.tabs.nonFollowers.description, count: analysis.nonFollowers.length, accounts: analysis.nonFollowers, csvFilename: `non-followers-${snapshot.exportedAt}.csv`, emptyMessage: c.tabs.nonFollowers.emptyMessage },
+    { id: 'fans',          label: c.tabs.fans.label,          description: c.tabs.fans.description,          count: analysis.fans.length,         accounts: analysis.fans,         csvFilename: `fans-${snapshot.exportedAt}.csv`,          emptyMessage: c.tabs.fans.emptyMessage },
+    { id: 'mutuals',       label: c.tabs.mutuals.label,       description: c.tabs.mutuals.description,       count: analysis.mutuals.length,      accounts: analysis.mutuals,      csvFilename: `mutuals-${snapshot.exportedAt}.csv`,       emptyMessage: c.tabs.mutuals.emptyMessage },
   ];
 
   const activeTab = tabs.find(t => t.id === activeTabId) ?? tabs[0]!;
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <RadarPulse trigger={tutorialDone} />
+      <RadarPulse trigger={tutorialDone} c={c} />
       <Tutorial
         storageKey="ig-tracker:tutorial-results"
         onDismiss={() => setTutorialDone(true)}
-        steps={[
-          {
-            title: 'Your stats',
-            body: 'Followers, following, mutuals, non-followers - all from your export.',
-            targetSelector: '#tutorial-stats',
-          },
-          {
-            title: 'Fans & Mutuals',
-            body: 'Switch tabs to see who follows you (Fans) and mutual connections.',
-            targetSelector: '#tutorial-tabbar',
-          },
-          {
-            title: 'Export CSV',
-            body: 'Download the current tab\'s list as a spreadsheet anytime.',
-            targetSelector: '#tutorial-export-csv',
-          },
-          {
-            title: 'Open on Instagram',
-            body: 'Tap ↗ on any row to open that account\'s Instagram profile in a new tab.',
-            targetSelector: '#tutorial-ig-link',
-          },
-          {
-            title: 'Triage buttons',
-            body: 'Hover a row to reveal four action buttons. Pick one to label the account.',
-            targetSelector: '#tutorial-triage-buttons',
-          },
-          {
-            title: '"Dropping"',
-            body: 'You plan to unfollow them. Marks it for your clean-up run.',
-            targetSelector: '#tutorial-triage-buttons',
-          },
-          {
-            title: '"Whitelist"',
-            body: 'Keep following them - removes them from the list permanently.',
-            targetSelector: '#tutorial-triage-buttons',
-          },
-          {
-            title: '"Unfollowed"',
-            body: 'Already unfollowed outside the app? Mark it to keep your count accurate.',
-            targetSelector: '#tutorial-triage-buttons',
-          },
-          {
-            title: 'Whitelist section',
-            body: 'Whitelisted accounts collapse here. Expand anytime to review or undo.',
-            targetSelector: '#tutorial-whitelist',
-          },
-        ]}
+        labels={c.tutorialLabels}
+        steps={c.tutorial.map((step, i) => ({
+          ...step,
+          targetSelector: [
+            '#tutorial-stats',
+            '#tutorial-tabbar',
+            '#tutorial-export-csv',
+            '#tutorial-ig-link',
+            '#tutorial-triage-buttons',
+            '#tutorial-triage-buttons',
+            '#tutorial-triage-buttons',
+            '#tutorial-triage-buttons',
+            '#tutorial-whitelist',
+          ][i]!,
+        }))}
       />
       {/* Nav — shared site nav for a consistent experience (animated Radar,
           account menu, dropdowns). RadarPulse below targets [href="/dashboard"]. */}
@@ -436,22 +421,22 @@ export default function ResultsPage() {
         {/* Header */}
         <div style={{ marginBottom: 40 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-            <span style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em' }}>RESULTS</span>
-            <span style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono }}>· Export from {exportedDate}</span>
+            <span style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em' }}>{c.eyebrow}</span>
+            <span style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono }}>{c.exportFrom(exportedDate)}</span>
           </div>
           <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', color: T.ink }}>
             <span style={{ color: T.tealLight }}>{analysis.nonFollowers.length.toLocaleString()}</span>{' '}
-            {analysis.nonFollowers.length === 1 ? "person doesn't" : "people don't"} follow you back.
+            {c.headlineSuffix(analysis.nonFollowers.length)}
           </h1>
           <p style={{ fontSize: 15, color: T.inkDim, marginTop: 10 }}>
-            Out of {analysis.totalFollowing.toLocaleString()} accounts you follow.
+            {c.outOfAccounts(analysis.totalFollowing.toLocaleString())}
           </p>
           {snapshot.format === 'html' && (
             <div style={{ marginTop: 16, padding: '12px 16px', borderRadius: 12, background: 'rgba(2,136,143,0.06)', border: '1px solid rgba(2,136,143,0.2)', display: 'flex', alignItems: 'flex-start', gap: 10, maxWidth: 560 }}>
               <span style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5 }}>
-                This export was in HTML format, so follow dates aren&apos;t available. JSON exports include those timestamps, which power follow age and growth trends in Radar.{' '}
+                {c.htmlFormatNotice}{' '}
                 <Link href="/how-to-export" style={{ color: T.tealLight, fontWeight: 600, textDecoration: 'none' }}>
-                  See how to request a JSON export →
+                  {c.seeHowToRequestJson}
                 </Link>
               </span>
             </div>
@@ -460,17 +445,17 @@ export default function ResultsPage() {
 
         {/* Stats grid */}
         <div id="tutorial-stats" className="grid grid-cols-2 sm:grid-cols-4" style={{ gap: 10, marginBottom: 40 }}>
-          <StatCard label="Followers"     value={analysis.totalFollowers} />
+          <StatCard label={c.statFollowers} value={analysis.totalFollowers} />
           <StatCard
-            label="Following"
+            label={c.statFollowing}
             value={analysis.totalFollowing}
             badge={unfollowedCount > 0 ? {
-              text: `→ now ~${(analysis.totalFollowing - unfollowedCount).toLocaleString()}`,
-              title: `${unfollowedCount} marked as unfollowed`,
+              text: c.nowApprox((analysis.totalFollowing - unfollowedCount).toLocaleString()),
+              title: c.markedAsUnfollowed(unfollowedCount),
             } : undefined}
           />
-          <StatCard label="Mutuals"       value={analysis.mutuals.length} />
-          <StatCard label="Non-followers" value={analysis.nonFollowers.length} accent />
+          <StatCard label={c.statMutuals}       value={analysis.mutuals.length} />
+          <StatCard label={c.statNonFollowers} value={analysis.nonFollowers.length} accent />
         </div>
 
         {/* Tabs + list */}
@@ -484,6 +469,8 @@ export default function ResultsPage() {
               snapshotKey={snapshot.exportedAt}
               csvFilename={activeTab.csvFilename}
               isPro={isPro}
+              c={triageC}
+              toolbar={toolbar}
             />
           ) : (
             <AccountList
@@ -491,6 +478,7 @@ export default function ResultsPage() {
               accounts={activeTab.accounts}
               csvFilename={activeTab.csvFilename}
               emptyMessage={activeTab.emptyMessage}
+              content={toolbar}
             />
           )}
         </div>
@@ -500,11 +488,12 @@ export default function ResultsPage() {
           mutualsCount={analysis.mutuals.length}
           nonFollowersCount={analysis.nonFollowers.length}
           totalFollowing={analysis.totalFollowing}
+          c={c}
         />
       </main>
 
       <LandingFooter />
-      <FeedbackWidget />
+      <FeedbackWidget content={feedbackC} />
     </div>
   );
 }
