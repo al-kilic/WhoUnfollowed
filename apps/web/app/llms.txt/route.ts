@@ -1,6 +1,7 @@
 import { BLOG_POSTS, CLUSTERS, type ClusterId } from '../blog/posts';
 import { COMPARISONS } from '../compare/comparisons';
 import { UNLOCK_PRICE_USD, UNLOCK_DAYS_LABEL, UNLOCK_PRICE_SUMMARY } from '@/lib/pricing';
+import { LOCALIZED_PATHS } from '@/i18n/localizedPaths';
 
 // Generated at request time (cached like any other static route) instead of
 // hand-maintained in public/llms.txt, which drifted out of date every time a
@@ -36,6 +37,30 @@ function comparisonsSection(): string {
   return `## Comparisons\n${lines.join('\n')}`;
 }
 
+// Human labels for the paths in LOCALIZED_PATHS, keyed off that same list so
+// this can't list a path that isn't actually translated (or omit one that
+// is) without a build-time mismatch being obvious.
+const LOCALIZED_PATH_LABEL: Record<string, string> = {
+  '/': 'Home',
+  '/pricing': 'Pricing',
+  '/compare': 'Compare',
+  '/what-is-whounfollowed': 'What is WhoUnfollowed',
+  '/how-to-export': 'How to export your Instagram data',
+  '/about': 'About',
+  '/contact': 'Contact',
+  '/accessibility': 'Accessibility',
+};
+
+function languagesSection(): string {
+  const lines = LOCALIZED_PATHS.map((path) => {
+    const label = LOCALIZED_PATH_LABEL[path] ?? path;
+    const es = path === '/' ? '/es' : `/es${path}`;
+    const pt = path === '/' ? '/pt' : `/pt${path}`;
+    return `- ${label}: ${SITE_URL}${es} (Spanish), ${SITE_URL}${pt} (Portuguese)`;
+  });
+  return `## Languages\nMost of the site is English-only. These pages are also available in Spanish (/es prefix) and Portuguese (/pt prefix), with reciprocal hreflang alternates on every one:\n${lines.join('\n')}`;
+}
+
 export async function GET(): Promise<Response> {
   const body = `# WhoUnfollowed
 
@@ -65,6 +90,8 @@ Author: Alan Kilic, an independent developer building privacy-first software und
 - [Cookie policy](${SITE_URL}/cookies)
 - [Refund policy](${SITE_URL}/refund)
 
+${languagesSection()}
+
 ${CLUSTER_ORDER.map(guidesSection).join('\n\n')}
 
 ${comparisonsSection()}
@@ -76,6 +103,7 @@ ${comparisonsSection()}
 - Pro is a one-time unlock (${UNLOCK_PRICE_SUMMARY}). It never auto-renews.
 - Cloud snapshots, a Pro feature, are encrypted in the browser before they leave the device.
 - TOS-compliant: it does not use the Instagram API and does not scrape Instagram.
+- Core pages (home, pricing, compare, and a few guides) are available in English, Spanish, and Portuguese. See the Languages section above for the full list.
 `;
 
   return new Response(body, {
