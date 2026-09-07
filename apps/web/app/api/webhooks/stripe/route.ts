@@ -2,21 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db/index';
 import { profiles, users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
-import { getStripe, isStripeConfigured, UNLOCK_DURATION_DAYS, type UnlockDuration } from '@/lib/stripe';
+import { getStripe, isStripeConfigured, extendUnlockExpiry, type UnlockDuration } from '@/lib/stripe';
 import { sendTelegramMessage, escapeTelegramHtml } from '@/lib/telegram';
 import { trackServerEvent } from '@/lib/umamiServer';
 import { Events } from '@/lib/analytics';
-
-// Extends from the later of "now" and any unexpired unlock already on the
-// profile, so buying another unlock before the current one runs out stacks
-// instead of resetting the clock.
-function extendUnlockExpiry(currentExpiresAt: Date | null, duration: UnlockDuration): Date {
-  const days = UNLOCK_DURATION_DAYS[duration];
-  const base = currentExpiresAt && currentExpiresAt.getTime() > Date.now() ? currentExpiresAt : new Date();
-  const next = new Date(base);
-  next.setDate(next.getDate() + days);
-  return next;
-}
 
 export async function POST(request: NextRequest) {
   const stripeSecret = process.env.STRIPE_WEBHOOK_SECRET;
