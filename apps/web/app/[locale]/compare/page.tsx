@@ -5,6 +5,7 @@ import { CompareIndexContent } from './CompareIndexContent';
 import { getCompareIndexContent } from './indexContent';
 import { COMPARISONS, resolveComparison } from '@/app/compare/comparisons';
 import { routing, type AppLocale } from '@/i18n/routing';
+import { OG_LOCALE, ogAlternateLocales } from '@/i18n/ogLocale';
 import { getPathname } from '@/i18n/navigation';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
@@ -56,6 +57,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: meta.ogDescription,
       url: `${SITE_URL}${canonical}`,
       siteName: 'WhoUnfollowed',
+      locale: OG_LOCALE[locale],
+      alternateLocale: ogAlternateLocales(locale),
     },
     twitter: {
       card: 'summary_large_image',

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing, type AppLocale } from '@/i18n/routing';
+import { OG_LOCALE, ogAlternateLocales } from '@/i18n/ogLocale';
 import { getPathname } from '@/i18n/navigation';
 import { HowToExportContent } from './HowToExportContent';
 import { getHowToExportContent } from './content';
@@ -70,6 +71,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: meta.title,
       description: meta.description,
       url: `${SITE_URL}${canonical}`,
+      locale: OG_LOCALE[locale],
+      alternateLocale: ogAlternateLocales(locale),
     },
   };
 }

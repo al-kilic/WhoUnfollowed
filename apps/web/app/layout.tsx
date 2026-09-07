@@ -111,6 +111,14 @@ const orgJsonLd = {
       description:
         'Privacy-first, open-source Instagram follower analysis. AGPL-3.0 web app, MPL-2.0 parser, no password required, processed in your browser.',
       sameAs: ['https://github.com/al-kilic/WhoUnfollowed'],
+      // Homepage, /pricing, /compare, and a handful of other marketing pages
+      // (see i18n/localizedPaths.ts) now ship in all three; most of the site
+      // is still English-only, so this is a real but partial signal.
+      availableLanguage: [
+        { '@type': 'Language', name: 'English', alternateName: 'en' },
+        { '@type': 'Language', name: 'Spanish', alternateName: 'es' },
+        { '@type': 'Language', name: 'Portuguese', alternateName: 'pt' },
+      ],
     },
     {
       '@type': 'WebSite',

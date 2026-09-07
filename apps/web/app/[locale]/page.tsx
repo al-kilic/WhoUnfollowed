@@ -8,6 +8,7 @@ import { getStats } from '@/lib/stats';
 import { UNLOCK_PRICE_USD, UNLOCK_PRICE_SUMMARY } from '@/lib/pricing';
 import { routing, type AppLocale } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
+import { OG_LOCALE, ogAlternateLocales } from '@/i18n/ogLocale';
 import { getHomeContent } from './homeContent';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
@@ -60,7 +61,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       title: meta.title,
       description: meta.description,
-      locale,
+      locale: OG_LOCALE[locale],
+      alternateLocale: ogAlternateLocales(locale),
     },
     twitter: {
       title: meta.title,

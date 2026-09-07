@@ -7,7 +7,10 @@ import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { routing, type AppLocale } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
+import { OG_LOCALE, ogAlternateLocales } from '@/i18n/ogLocale';
 import { getAccessibilityContent } from './content';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
 const SEO_META: Record<AppLocale, { title: string; description: string }> = {
   en: {
@@ -41,6 +44,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: meta.title,
     description: meta.description,
     alternates: { canonical, languages: { ...languages, 'x-default': languages.en } },
+    openGraph: {
+      title: meta.title,
+      description: meta.description,
+      url: `${SITE_URL}${canonical}`,
+      locale: OG_LOCALE[locale],
+      alternateLocale: ogAlternateLocales(locale),
+    },
   };
 }
 

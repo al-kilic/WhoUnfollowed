@@ -5,6 +5,7 @@ import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing, type AppLocale } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
+import { OG_LOCALE, ogAlternateLocales } from '@/i18n/ogLocale';
 import { PricingClient } from './PricingClient';
 import { getPricingFaq } from './faq';
 import { getPricingContent } from './content';
@@ -59,7 +60,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: meta.ogDescription,
       url: `${SITE_URL}${canonical}`,
       siteName: 'WhoUnfollowed',
-      locale,
+      locale: OG_LOCALE[locale],
+      alternateLocale: ogAlternateLocales(locale),
     },
   };
 }
