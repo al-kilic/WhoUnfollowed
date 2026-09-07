@@ -17,4 +17,8 @@ export const LOCALIZED_PATHS: string[] = [
   '/how-to-export',
   '/accessibility',
   '/compare',
+  '/privacy',
+  '/terms',
+  '/cookies',
+  '/refund',
 ];
