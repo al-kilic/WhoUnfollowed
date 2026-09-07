@@ -1,52 +1,95 @@
 'use client';
 
-import Link from 'next/link';
+import { useState, useRef, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { usePathname } from '@/i18n/navigation';
 import { routing, type AppLocale } from '@/i18n/routing';
 import { LOCALIZED_PATHS } from '@/i18n/localizedPaths';
+import { Check, ChevronDown } from 'lucide-react';
 import { T } from '@/components/landing/tokens';
 
-const LOCALE_LABEL: Record<AppLocale, string> = { en: 'EN', es: 'ES', pt: 'PT' };
+const LOCALE_FLAG: Record<AppLocale, string> = { en: '🇺🇸', es: '🇪🇸', pt: '🇧🇷' };
 
-// Only rendered on pages that actually exist in all three locales (see
-// LOCALIZED_PATHS) — showing it elsewhere would link to a 404, since most of
-// the site is still English-only during the phased i18n rollout.
-//
-// Builds hrefs by hand with plain next/link rather than the i18n Link's
-// `locale` override: that override always adds a prefix (even for English),
-// which would send visitors to /en/pricing instead of the canonical,
-// unprefixed /pricing that the sitemap and hreflang tags advertise.
+// Always visible, on every page (including ones with no translation yet —
+// most of the site). Flags only, no text labels, per design. When the
+// current page isn't in LOCALIZED_PATHS (not translated), switching locale
+// falls back to that locale's homepage instead of linking to a 404.
 export function LanguageSwitcher({ mobile = false }: { mobile?: boolean } = {}) {
   const pathname = usePathname();
-  const activeLocale = useLocale();
+  const activeLocale = useLocale() as AppLocale;
   const t = useTranslations('nav');
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
-  if (!LOCALIZED_PATHS.includes(pathname)) return null;
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const targetPath = LOCALIZED_PATHS.includes(pathname) ? pathname : '/';
+
+  function hrefFor(locale: AppLocale): string {
+    if (locale === routing.defaultLocale) return targetPath;
+    return targetPath === '/' ? `/${locale}` : `/${locale}${targetPath}`;
+  }
+
+  const size = mobile ? 16 : 13;
 
   return (
-    <div
-      role="group"
-      aria-label={t('language')}
-      style={{ display: 'inline-flex', alignItems: 'center', gap: mobile ? 12 : 4, fontSize: mobile ? 16 : 13 }}
-    >
-      {routing.locales.map((locale) => {
-        const href = locale === routing.defaultLocale ? pathname : `/${locale}${pathname}`;
-        return (
-          <Link
-            key={locale}
-            href={href}
-            hrefLang={locale}
-            style={{
-              color: locale === activeLocale ? T.ink : T.inkMute,
-              fontWeight: locale === activeLocale ? 700 : 400,
-              textDecoration: 'none',
-            }}
-          >
-            {LOCALE_LABEL[locale]}
-          </Link>
-        );
-      })}
+    <div ref={ref} style={{ position: 'relative' }}>
+      <button
+        onClick={() => setOpen((o) => !o)}
+        aria-label={t('language')}
+        aria-expanded={open}
+        style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          padding: mobile ? '6px 10px' : '6px 9px',
+          borderRadius: 9, border: `1px solid ${T.border3}`,
+          background: 'transparent', color: T.ink, cursor: 'pointer',
+          fontSize: size, lineHeight: 1,
+        }}
+      >
+        <span style={{ fontSize: size + 2 }}>{LOCALE_FLAG[activeLocale]}</span>
+        <ChevronDown size={12} style={{ opacity: 0.6, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
+      </button>
+
+      {open && (
+        <div
+          style={{
+            position: 'absolute', top: '100%', marginTop: 6, zIndex: 200,
+            right: mobile ? undefined : 0, left: mobile ? 0 : undefined,
+            display: 'flex', flexDirection: 'column', gap: 2,
+            padding: 6, borderRadius: 12, minWidth: 52,
+            background: T.overlay, border: `1px solid ${T.overlayBorder}`,
+            boxShadow: '0 16px 48px rgba(0,0,0,0.22)',
+            animation: 'fade-in 0.15s ease both',
+          }}
+        >
+          {routing.locales.map((locale) => {
+            const active = locale === activeLocale;
+            return (
+              <a
+                key={locale}
+                href={hrefFor(locale)}
+                onClick={() => setOpen(false)}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8,
+                  padding: '7px 9px', borderRadius: 8, textDecoration: 'none',
+                  background: active ? 'rgba(2,136,143,0.1)' : 'transparent',
+                }}
+                onMouseEnter={(e) => { if (!active) e.currentTarget.style.background = T.surface2; }}
+                onMouseLeave={(e) => { if (!active) e.currentTarget.style.background = 'transparent'; }}
+              >
+                <span style={{ fontSize: size + 2 }}>{LOCALE_FLAG[locale]}</span>
+                {active && <Check size={12} color={T.tealMid} />}
+              </a>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
