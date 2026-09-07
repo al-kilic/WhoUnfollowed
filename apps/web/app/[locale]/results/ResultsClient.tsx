@@ -1,8 +1,6 @@
 'use client';
 
 import { useMemo, useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import NextLink from 'next/link';
 import { Link, useRouter as useLocaleRouter } from '@/i18n/navigation';
 import { format } from 'date-fns';
 import { es, pt } from 'date-fns/locale';
@@ -260,14 +258,12 @@ function RadarTeaser({ isPro, mutualsCount, nonFollowersCount, totalFollowing, c
           >
             {c.radarTeaser.ctaPrimary}
           </UpgradeLink>
-          {/* /dashboard isn't migrated under [locale] yet — plain next/link so
-              it isn't incorrectly locale-prefixed (which would 404 for es/pt). */}
-          <NextLink
+          <Link
             href="/dashboard"
             style={{ fontSize: 13, color: T.tealLight, fontWeight: 600, textDecoration: 'none' }}
           >
             {c.radarTeaser.ctaSecondary}
-          </NextLink>
+          </Link>
         </div>
       </div>
 
@@ -286,8 +282,9 @@ function RadarPulse({ trigger, c }: { trigger: boolean; c: ResultsContent }) {
     if (!trigger) return;
     try { if (sessionStorage.getItem('ig-tracker:radar-pulse')) return; } catch {}
 
-    // Measure Radar button position
-    const radarBtn = document.querySelector<HTMLElement>('[href="/dashboard"]');
+    // Measure Radar button position. Keyed off a data attribute rather than
+    // the href, since that's locale-prefixed for es/pt.
+    const radarBtn = document.querySelector<HTMLElement>('[data-radar-nav-link]');
     if (radarBtn) {
       const r = radarBtn.getBoundingClientRect();
       const popupW = 320;
@@ -347,7 +344,7 @@ function RadarPulse({ trigger, c }: { trigger: boolean; c: ResultsContent }) {
       <span style={{ width: 6, height: 6, borderRadius: '50%', background: T.tealLight, flexShrink: 0, animation: 'glow-soft 2s ease-in-out infinite' }} />
       <span style={{ fontSize: 12, color: '#f4f0e8', fontFamily: T.sans, flex: 1 }}>
         {c.radarPulse.prefix}{' '}
-        <NextLink href="/dashboard" onClick={dismiss} style={{ color: T.tealLight, fontWeight: 700, textDecoration: 'none' }}>{c.radarPulse.linkText}</NextLink>
+        <Link href="/dashboard" onClick={dismiss} style={{ color: T.tealLight, fontWeight: 700, textDecoration: 'none' }}>{c.radarPulse.linkText}</Link>
       </span>
       <button onClick={dismiss} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(244,240,232,0.3)', fontSize: 15, lineHeight: 1, padding: '0 2px', flexShrink: 0 }}>×</button>
     </div>
@@ -360,7 +357,6 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
   const triageC       = getTriageListContent(locale);
   const feedbackC     = getFeedbackWidgetContent(locale);
   const dateLocale    = DATE_FNS_LOCALES[locale];
-  const router       = useRouter();
   const localeRouter = useLocaleRouter();
   const snapshot     = useSnapshotStore(s => s.currentSnapshot);
   const { isPro }    = useAuth();
@@ -368,9 +364,7 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
   const [tutorialDone, setTutorialDone] = useState(false);
 
   useEffect(() => { if (!snapshot) localeRouter.replace('/'); }, [snapshot, localeRouter]);
-  // /dashboard isn't migrated under [locale] yet — plain router so it isn't
-  // incorrectly locale-prefixed (which would 404 for es/pt).
-  useEffect(() => { router.prefetch('/dashboard'); }, [router]);
+  useEffect(() => { localeRouter.prefetch('/dashboard'); }, [localeRouter]);
 
   const analysis = useMemo(() => snapshot ? analyzeSnapshot(snapshot) : null, [snapshot]);
   const { triage } = useTriage(snapshot?.exportedAt ?? 0);
@@ -414,7 +408,7 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
         }))}
       />
       {/* Nav — shared site nav for a consistent experience (animated Radar,
-          account menu, dropdowns). RadarPulse below targets [href="/dashboard"]. */}
+          account menu, dropdowns). RadarPulse below targets its data-radar-nav-link attribute. */}
       <SiteNav />
 
       <main className="px-4 sm:px-8 py-10 sm:py-12" style={{ maxWidth: 900, margin: '0 auto' }}>

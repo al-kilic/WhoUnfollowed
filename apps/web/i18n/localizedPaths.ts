@@ -28,4 +28,5 @@ export const LOCALIZED_PATHS: string[] = [
   '/settings',
   '/history',
   '/results',
+  '/dashboard',
 ];
