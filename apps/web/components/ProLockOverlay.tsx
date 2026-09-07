@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, type CSSProperties } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { T } from '@/components/landing/tokens';
 import { trackLockedView, trackUpgradeClick } from '@/lib/analytics';
 

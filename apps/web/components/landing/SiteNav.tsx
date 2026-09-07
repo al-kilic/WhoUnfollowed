@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import Link from 'next/link';
+import NextLink from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { T } from './tokens';
 import { Icon } from './atoms';
@@ -61,20 +62,25 @@ function WhatIsDropdown() {
             zIndex: 200,
           }}>
             <div style={{ position: 'absolute', top: -5, left: '50%', width: 10, height: 10, background: T.overlay, border: `1px solid ${T.overlayBorder}`, borderBottom: 'none', borderRight: 'none', transform: 'translateX(-50%) rotate(45deg)' }} />
-            {items.map(item => (
-              <Link key={item.href} href={item.href}
-                onClick={() => setOpen(false)}
-                style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '9px 12px', borderRadius: 9, textDecoration: 'none', transition: 'background 0.15s' }}
-                onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.background = T.surface2; }}
-                onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.background = 'transparent'; }}
-              >
-                <span style={{ color: T.tealMid, flexShrink: 0, marginTop: 2, lineHeight: 0 }}>{item.icon}</span>
-                <div>
-                  <div style={{ fontSize: 13, color: T.ink, fontWeight: 500, lineHeight: 1.3, whiteSpace: 'nowrap' }}>{item.label}</div>
-                  <div style={{ fontSize: 11, color: T.inkMute, marginTop: 2, lineHeight: 1.4 }}>{item.desc}</div>
-                </div>
-              </Link>
-            ))}
+            {items.map(item => {
+              // /blog isn't migrated under [locale] yet — plain next/link so
+              // it isn't incorrectly locale-prefixed (which would 404 for es/pt).
+              const ItemLink = item.href === '/blog' ? NextLink : Link;
+              return (
+                <ItemLink key={item.href} href={item.href}
+                  onClick={() => setOpen(false)}
+                  style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '9px 12px', borderRadius: 9, textDecoration: 'none', transition: 'background 0.15s' }}
+                  onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.background = T.surface2; }}
+                  onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.background = 'transparent'; }}
+                >
+                  <span style={{ color: T.tealMid, flexShrink: 0, marginTop: 2, lineHeight: 0 }}>{item.icon}</span>
+                  <div>
+                    <div style={{ fontSize: 13, color: T.ink, fontWeight: 500, lineHeight: 1.3, whiteSpace: 'nowrap' }}>{item.label}</div>
+                    <div style={{ fontSize: 11, color: T.inkMute, marginTop: 2, lineHeight: 1.4 }}>{item.desc}</div>
+                  </div>
+                </ItemLink>
+              );
+            })}
           </div>
         </>
       )}
@@ -182,7 +188,10 @@ function RadarNavLink({ onClick = () => {}, mobile = false }: { onClick?: () => 
   const t = useTranslations('nav');
   const size = mobile ? 16 : 13;
   return (
-    <Link
+    // /dashboard isn't migrated under [locale] yet — plain next/link so it
+    // isn't incorrectly locale-prefixed (which would 404 for es/pt). RadarPulse
+    // on the results page also anchors its popup on this exact selector.
+    <NextLink
       href="/dashboard"
       onClick={onClick}
       style={{ color: 'inherit', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 7, whiteSpace: 'nowrap' }}
@@ -222,7 +231,7 @@ function RadarNavLink({ onClick = () => {}, mobile = false }: { onClick?: () => 
         fontWeight: 600,
         fontSize: mobile ? 16 : undefined,
       }}>{mobile ? t('radarDashboard') : t('radar')}</span>
-    </Link>
+    </NextLink>
   );
 }
 
@@ -323,7 +332,8 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
           <Link href="/history" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('snapshotHistory')}</Link>
           <Link href="/what-is-whounfollowed" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('whatIsLabel')}</Link>
           <Link href="/compare" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('compare')}</Link>
-          <Link href="/blog" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('blog')}</Link>
+          {/* /blog isn't migrated under [locale] yet — plain next/link. */}
+          <NextLink href="/blog" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('blog')}</NextLink>
           <Link href="/#flow" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('howItWorks')}</Link>
           <Link href="/how-to-export" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('howToExport')}</Link>
           <a href="https://accountscenter.instagram.com/info_and_permissions/dyi/" target="_blank" rel="noopener noreferrer" style={{ fontSize: 16, color: T.tealLight, textDecoration: 'none' }}>

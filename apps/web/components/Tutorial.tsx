@@ -18,14 +18,32 @@ interface Layout {
   vh: number;
 }
 
+export interface TutorialLabels {
+  featureTour: string;
+  skipTour: string;
+  next: string;
+  gotIt: string;
+}
+
+const EN_TUTORIAL_LABELS: TutorialLabels = {
+  featureTour: 'Feature tour',
+  skipTour: 'Skip tour',
+  next: 'Next',
+  gotIt: 'Got it',
+};
+
 export function Tutorial({
   storageKey,
   steps,
   onDismiss,
+  labels: l = EN_TUTORIAL_LABELS,
 }: {
   storageKey: string;
   steps: TutorialStep[];
   onDismiss?: () => void;
+  // Defaults to English so the unmigrated dashboard (which doesn't pass
+  // this) keeps working unchanged.
+  labels?: TutorialLabels;
 }) {
   const [mounted,   setMounted]  = useState(false);
   const [visible,   setVisible]  = useState(false);
@@ -167,7 +185,7 @@ export function Tutorial({
       {/* Tooltip card - no backdrop-filter (expensive when overlaid on page) */}
       <div
         role="dialog"
-        aria-label="Feature tour"
+        aria-label={l.featureTour}
         style={{
           position: 'fixed',
           top: tooltipTop, bottom: tooltipBottom, left: tooltipLeft,
@@ -219,7 +237,7 @@ export function Tutorial({
             onMouseEnter={e => (e.currentTarget.style.color = 'rgba(244,240,232,0.65)')}
             onMouseLeave={e => (e.currentTarget.style.color = 'rgba(244,240,232,0.3)')}
           >
-            Skip tour
+            {l.skipTour}
           </button>
         </div>
 
@@ -251,8 +269,8 @@ export function Tutorial({
           onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
         >
           {step < steps.length - 1
-            ? <><span>Next</span><span style={{ fontSize: 15 }}>→</span></>
-            : <><span>Got it</span><span>✓</span></>}
+            ? <><span>{l.next}</span><span style={{ fontSize: 15 }}>→</span></>
+            : <><span>{l.gotIt}</span><span>✓</span></>}
         </button>
       </div>
     </>

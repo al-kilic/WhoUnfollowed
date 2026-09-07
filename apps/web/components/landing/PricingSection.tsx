@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { T } from './tokens';
 import { Icon } from './atoms';
 import { trackUpgradeClick } from '@/lib/analytics';

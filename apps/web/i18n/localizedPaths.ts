@@ -27,4 +27,5 @@ export const LOCALIZED_PATHS: string[] = [
   '/account',
   '/settings',
   '/history',
+  '/results',
 ];

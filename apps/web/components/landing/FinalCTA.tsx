@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import NextLink from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { T } from './tokens';
 import { Icon } from './atoms';
@@ -336,13 +337,34 @@ export function LandingFooter() {
             <div key={col.title}>
               <div style={{ fontSize: 11, color: T.inkMute, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 16, fontFamily: T.mono, fontWeight: 600 }}>{col.title}</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
-                {col.items.map(l => (
-                  <a key={l.label} href={l.href} style={{ fontSize: 14, color: T.inkDim, cursor: 'pointer', textDecoration: 'none', transition: 'color 0.2s', fontFamily: T.sans }}
-                    onMouseEnter={e => { e.currentTarget.style.color = T.ink; }}
-                    onMouseLeave={e => { e.currentTarget.style.color = T.inkDim; }}>
-                    {l.label}
-                  </a>
-                ))}
+                {col.items.map(l => {
+                  const linkStyle = { fontSize: 14, color: T.inkDim, cursor: 'pointer', textDecoration: 'none', transition: 'color 0.2s', fontFamily: T.sans } as const;
+                  const hoverProps = {
+                    onMouseEnter: (e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.color = T.ink; },
+                    onMouseLeave: (e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.color = T.inkDim; },
+                  };
+                  if (l.href.startsWith('http')) {
+                    return (
+                      <a key={l.label} href={l.href} style={linkStyle} {...hoverProps}>
+                        {l.label}
+                      </a>
+                    );
+                  }
+                  // /blog isn't migrated under [locale] yet — plain next/link
+                  // so it isn't incorrectly locale-prefixed.
+                  if (l.href === '/blog') {
+                    return (
+                      <NextLink key={l.label} href={l.href} style={linkStyle} {...hoverProps}>
+                        {l.label}
+                      </NextLink>
+                    );
+                  }
+                  return (
+                    <Link key={l.label} href={l.href} style={linkStyle} {...hoverProps}>
+                      {l.label}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           ))}

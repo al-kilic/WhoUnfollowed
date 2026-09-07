@@ -89,6 +89,7 @@ export const config = {
     '/changelog/:path*',
     '/login/:path*',
     '/signup/:path*',
+    '/results/:path*',
     '/(es|pt)/:path*',
   ],
 };

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, type CSSProperties } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { T } from './landing/tokens';
 import { clearSyncKey } from '@/lib/syncKey';
 
