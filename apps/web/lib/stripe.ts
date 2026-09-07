@@ -39,3 +39,14 @@ export function priceIdForUnlock(duration: UnlockDuration): string | null {
     ? (process.env.STRIPE_PRICE_UNLOCK_YEARLY ?? null)
     : (process.env.STRIPE_PRICE_UNLOCK_MONTHLY ?? null);
 }
+
+// Extends from the later of "now" and any unexpired unlock already on the
+// profile, so buying another unlock before the current one runs out stacks
+// instead of resetting the clock.
+export function extendUnlockExpiry(currentExpiresAt: Date | null, duration: UnlockDuration, now: Date = new Date()): Date {
+  const days = UNLOCK_DURATION_DAYS[duration];
+  const base = currentExpiresAt && currentExpiresAt.getTime() > now.getTime() ? currentExpiresAt : now;
+  const next = new Date(base);
+  next.setDate(next.getDate() + days);
+  return next;
+}
