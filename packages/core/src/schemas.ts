@@ -7,13 +7,20 @@ import { z } from 'zod';
 export const stringListItemSchema = z.object({
   href: z.string(),
   value: z.string().optional(),
-  timestamp: z.number(),
+  // Real exports have shown `null` here (in addition to the documented `0`)
+  // for accounts with no recorded follow time — see entryToAccount in parser.ts.
+  timestamp: z.number().nullable(),
 });
 
 export const relationshipEntrySchema = z.object({
   title: z.string().optional(),
   media_list_data: z.array(z.unknown()).optional(),
-  string_list_data: z.tuple([stringListItemSchema]),
+  // A strict tuple-of-exactly-1 used to be required here, but a real Instagram
+  // export can contain a zero-length string_list_data for an account Instagram
+  // has since removed/deactivated (no resolvable profile info left) — that
+  // used to fail the *entire* file's validation over one placeholder entry.
+  // Accept 0 or 1 items; parser.ts's entryToAccount skips the empty ones.
+  string_list_data: z.array(stringListItemSchema).max(1),
 });
 
 export const followersFileSchema = z.array(relationshipEntrySchema);

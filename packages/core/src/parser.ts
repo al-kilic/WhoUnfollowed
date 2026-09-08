@@ -34,13 +34,17 @@ function labelValuesToAccount(entry: LabelValuesEntry): Account | null {
   };
 }
 
-function entryToAccount(entry: RelationshipEntry): Account {
+// Returns null for a placeholder entry with no string_list_data (a removed
+// or deactivated account Instagram still lists but no longer has profile
+// info for) — nothing usable to build an Account from.
+function entryToAccount(entry: RelationshipEntry): Account | null {
   const item = entry.string_list_data[0];
+  if (!item) return null;
   const username = item.value ?? entry.title ?? '';
   return {
     username,
     href: item.href,
-    followedAt: item.timestamp > 0 ? item.timestamp : null,
+    followedAt: item.timestamp && item.timestamp > 0 ? item.timestamp : null,
   };
 }
 
@@ -58,7 +62,7 @@ async function parseFollowersJson(zip: JSZip, fileNames: string[]): Promise<Acco
     if (!result.success) {
       throw new SchemaValidationError(fname, result.error.issues[0]?.message ?? 'unknown');
     }
-    accounts.push(...result.data.map(entryToAccount));
+    accounts.push(...result.data.map(entryToAccount).filter((a): a is Account => a !== null));
   }
   return accounts;
 }
@@ -75,7 +79,7 @@ async function parseFollowingJson(zip: JSZip, fileName: string): Promise<Account
   if (!result.success) {
     throw new SchemaValidationError(fileName, result.error.issues[0]?.message ?? 'unknown');
   }
-  return result.data.relationships_following.map(entryToAccount);
+  return result.data.relationships_following.map(entryToAccount).filter((a): a is Account => a !== null);
 }
 
 // ─── HTML helpers ─────────────────────────────────────────────────────────────

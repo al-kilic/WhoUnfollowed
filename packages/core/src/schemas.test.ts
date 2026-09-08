@@ -30,6 +30,27 @@ describe('followersFileSchema', () => {
     expect(result.success).toBe(false);
   });
 
+  it('accepts a zero-length string_list_data (removed/deactivated account placeholder)', () => {
+    const placeholder = { title: 'Instagram User', media_list_data: [], string_list_data: [] };
+    const result = followersFileSchema.safeParse([placeholder]);
+    expect(result.success).toBe(true);
+  });
+
+  it('fails when string_list_data has more than one item', () => {
+    const tooMany = { ...validEntry, string_list_data: [validEntry.string_list_data[0], validEntry.string_list_data[0]] };
+    const result = followersFileSchema.safeParse([tooMany]);
+    expect(result.success).toBe(false);
+  });
+
+  it('accepts a null timestamp', () => {
+    const nullTimestamp = {
+      ...validEntry,
+      string_list_data: [{ ...validEntry.string_list_data[0], timestamp: null }],
+    };
+    const result = followersFileSchema.safeParse([nullTimestamp]);
+    expect(result.success).toBe(true);
+  });
+
   it('fails when entry is not an array', () => {
     const result = followersFileSchema.safeParse({ not: 'an array' });
     expect(result.success).toBe(false);

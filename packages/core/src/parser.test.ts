@@ -102,6 +102,56 @@ describe('parseInstagramZip', () => {
     expect(snapshot.followers[0]?.followedAt).toBeNull();
   });
 
+  it('skips a removed/deactivated-account placeholder entry (empty string_list_data) instead of failing the whole file', async () => {
+    const JSZip = (await import('jszip')).default;
+    const z = new JSZip();
+    z.file(
+      'connections/followers_and_following/followers_1.json',
+      JSON.stringify([
+        { title: 'Instagram User', media_list_data: [], string_list_data: [] },
+        {
+          title: 'alice',
+          media_list_data: [],
+          string_list_data: [{ href: 'https://instagram.com/alice', value: 'alice', timestamp: 1700000000 }],
+        },
+      ]),
+    );
+    z.file(
+      'connections/followers_and_following/following.json',
+      JSON.stringify({ relationships_following: [] }),
+    );
+    const buf = await z.generateAsync({ type: 'arraybuffer' });
+    const snapshot = await parseInstagramZip(buf);
+
+    // The placeholder is dropped, not fatal — the rest of the file still parses.
+    expect(snapshot.followers).toHaveLength(1);
+    expect(snapshot.followers[0]?.username).toBe('alice');
+  });
+
+  it('treats a null timestamp the same as no timestamp, instead of failing the whole file', async () => {
+    const JSZip = (await import('jszip')).default;
+    const z = new JSZip();
+    z.file(
+      'connections/followers_and_following/followers_1.json',
+      JSON.stringify([
+        {
+          title: 'oldfollower',
+          media_list_data: [],
+          string_list_data: [{ href: 'https://instagram.com/oldfollower', value: 'oldfollower', timestamp: null }],
+        },
+      ]),
+    );
+    z.file(
+      'connections/followers_and_following/following.json',
+      JSON.stringify({ relationships_following: [] }),
+    );
+    const buf = await z.generateAsync({ type: 'arraybuffer' });
+    const snapshot = await parseInstagramZip(buf);
+
+    expect(snapshot.followers).toHaveLength(1);
+    expect(snapshot.followers[0]?.followedAt).toBeNull();
+  });
+
   it('exportedAt is a recent unix timestamp', async () => {
     const before = Math.floor(Date.now() / 1000) - 1;
     const snapshot = await parseInstagramZip(fixture('valid-export.zip'));
