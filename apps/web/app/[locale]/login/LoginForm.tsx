@@ -1,8 +1,6 @@
 'use client';
 
 import { useActionState } from 'react';
-import { useRouter as useNextRouter } from 'next/navigation';
-import NextLink from 'next/link';
 import { Link, useRouter } from '@/i18n/navigation';
 import { loginAction } from './actions';
 import { deriveAndStoreSyncKey } from '@/lib/syncKey';
@@ -14,7 +12,6 @@ import type { AppLocale } from '@/i18n/routing';
 export function LoginForm({ locale }: { locale: AppLocale }) {
   const c = getLoginContent(locale);
   const router = useRouter();
-  const nextRouter = useNextRouter();
   const [state, action, pending] = useActionState(
     async (_prev: unknown, formData: FormData) => {
       const password = (formData.get('password') as string) ?? '';
@@ -29,9 +26,7 @@ export function LoginForm({ locale }: { locale: AppLocale }) {
         // replace (not push) so the browser Back button can't return to the
         // login form after a successful login.
         if ('needsVerification' in res && res.needsVerification) {
-          // /verify-email isn't migrated under [locale] yet — plain router so
-          // it isn't incorrectly locale-prefixed (which would 404 for es/pt).
-          nextRouter.replace('/verify-email');
+          router.replace('/verify-email');
         } else {
           router.replace('/history');
         }
@@ -69,11 +64,9 @@ export function LoginForm({ locale }: { locale: AppLocale }) {
         />
 
         <div style={{ marginTop: -6, textAlign: 'right' }}>
-          {/* Not migrated under [locale] yet — plain next/link so it isn't
-              incorrectly locale-prefixed (which would 404 for es/pt). */}
-          <NextLink href="/forgot-password" style={{ fontSize: 12, color: T.tealMid, textDecoration: 'none' }}>
+          <Link href="/forgot-password" style={{ fontSize: 12, color: T.tealMid, textDecoration: 'none' }}>
             {c.forgotPassword}
-          </NextLink>
+          </Link>
         </div>
 
         {error && <AuthError>{error}</AuthError>}

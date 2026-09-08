@@ -10,19 +10,19 @@ export async function resetPasswordAction(formData: FormData) {
   const confirm = formData.get('confirm') as string;
 
   if (!password || password.length < 8) {
-    return { error: 'Password must be at least 8 characters.' };
+    return { error: 'weak_password' as const };
   }
   if (password !== confirm) {
-    return { error: 'Passwords do not match.' };
+    return { error: 'password_mismatch' as const };
   }
 
   const ip = clientIpFromXff((await headers()).get('x-forwarded-for'));
   const { allowed } = checkRateLimit(`reset:${ip}`);
   if (!allowed) {
-    return { error: 'Too many attempts. Try again in 15 minutes.' };
+    return { error: 'rate_limited' as const };
   }
 
   const res = await resetPassword(token, password);
-  if (!res.ok) return { error: res.error ?? 'Could not reset your password.' };
+  if (!res.ok) return { error: res.error ?? 'invalid_or_expired_token' as const };
   return { ok: true as const };
 }

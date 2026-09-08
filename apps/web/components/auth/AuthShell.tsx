@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import type { ReactNode, InputHTMLAttributes } from 'react';
 import { T } from '@/components/landing/tokens';
 

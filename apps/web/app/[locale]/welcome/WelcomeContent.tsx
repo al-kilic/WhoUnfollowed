@@ -2,12 +2,15 @@
 
 import { useSearchParams } from 'next/navigation';
 import { useActionState, Suspense } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { setPasswordAction } from './actions';
 import { AuthShell, AuthField, AuthError, AuthButton } from '@/components/auth/AuthShell';
 import { T } from '@/components/landing/tokens';
+import { getWelcomeContent, type WelcomeErrorCode } from './content';
+import type { AppLocale } from '@/i18n/routing';
 
-function WelcomeForm() {
+function WelcomeForm({ locale }: { locale: AppLocale }) {
+  const c = getWelcomeContent(locale);
   const params = useSearchParams();
   const sessionId = params.get('session_id') ?? '';
 
@@ -16,14 +19,17 @@ function WelcomeForm() {
     null,
   );
 
+  const errorCode = state && 'error' in state ? (state.error as WelcomeErrorCode) : null;
+  const error = errorCode ? c.errors[errorCode] : null;
+
   if (!sessionId) {
     return (
       <div style={{ textAlign: 'center' }}>
         <p style={{ fontSize: 14, color: T.inkDim, marginBottom: 14, lineHeight: 1.5 }}>
-          Invalid link. Please check your email or contact support.
+          {c.invalidLink}
         </p>
         <Link href="/pricing" style={{ fontSize: 13, color: T.tealMid, fontWeight: 600, textDecoration: 'none' }}>
-          Back to pricing
+          {c.backToPricing}
         </Link>
       </div>
     );
@@ -33,9 +39,10 @@ function WelcomeForm() {
     <form action={action} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       {/* subscribe-complete is now tracked server-side from the Stripe webhook (lib/umamiServer.ts). */}
       <input type="hidden" name="sessionId" value={sessionId} />
+      <input type="hidden" name="locale" value={locale} />
 
       <AuthField
-        label="Choose a password"
+        label={c.newPasswordLabel}
         id="password"
         name="password"
         type="password"
@@ -44,7 +51,7 @@ function WelcomeForm() {
         autoComplete="new-password"
       />
       <AuthField
-        label="Confirm password"
+        label={c.confirmPasswordLabel}
         id="confirmPassword"
         name="confirmPassword"
         type="password"
@@ -53,31 +60,32 @@ function WelcomeForm() {
         autoComplete="new-password"
       />
 
-      {state?.error && <AuthError>{state.error}</AuthError>}
+      {error && <AuthError>{error}</AuthError>}
 
       <AuthButton pending={pending}>
-        {pending ? 'Setting up your account...' : 'Set password and get started'}
+        {pending ? c.settingUp : c.setPasswordAndStart}
       </AuthButton>
     </form>
   );
 }
 
-export default function WelcomePage() {
+export function WelcomeContent({ locale }: { locale: AppLocale }) {
+  const c = getWelcomeContent(locale);
   return (
     <AuthShell
-      title="Welcome to WhoUnfollowed"
-      subtitle="Your payment is confirmed. Set a password to access your account."
+      title={c.title}
+      subtitle={c.subtitle}
       footer={
         <>
-          Already set your password?{' '}
+          {c.alreadySetPre}{' '}
           <Link href="/login" style={{ color: T.tealMid, fontWeight: 600, textDecoration: 'none' }}>
-            Log in
+            {c.logIn}
           </Link>
         </>
       }
     >
-      <Suspense fallback={<p style={{ fontSize: 14, color: T.inkDim }}>Loading...</p>}>
-        <WelcomeForm />
+      <Suspense fallback={<p style={{ fontSize: 14, color: T.inkDim }}>{c.loading}</p>}>
+        <WelcomeForm locale={locale} />
       </Suspense>
     </AuthShell>
   );

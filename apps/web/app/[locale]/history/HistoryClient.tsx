@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { es, pt } from 'date-fns/locale';
 import type { Locale as DateFnsLocale } from 'date-fns';
-import { useRouter } from 'next/navigation';
 import { Link, useRouter as useLocaleRouter } from '@/i18n/navigation';
 import type { AppLocale } from '@/i18n/routing';
 import { useSnapshotStore } from '@/lib/store';
@@ -33,7 +32,6 @@ interface HistoryClientProps {
 export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionStatus, gracePeriodEndsAt }: HistoryClientProps) {
   const c            = getHistoryContent(locale);
   const dateLocale   = DATE_FNS_LOCALES[locale];
-  const router       = useRouter();
   const localeRouter = useLocaleRouter();
   const setSnapshot  = useSnapshotStore(s => s.setSnapshot);
   const snapshots    = useSnapshotList(userId);
@@ -77,14 +75,12 @@ export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionSt
     setDeletingId(null);
   }
 
-  // /diff isn't migrated under [locale] yet — plain router so it isn't
-  // incorrectly locale-prefixed (which would 404 for es/pt).
   function handleCompare(baseId: number, targetId: number) {
     const base   = snapshots.find(s => s.id === baseId);
     const target = snapshots.find(s => s.id === targetId);
     if (!base || !target) return;
     const [old, cur] = base.exportedAt <= target.exportedAt ? [base, target] : [target, base];
-    router.push(`/diff?old=${old.id}&current=${cur.id}`);
+    localeRouter.push(`/diff?old=${old.id}&current=${cur.id}`);
   }
 
   async function handleSync(record: SnapshotRecord) {

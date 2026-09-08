@@ -1,9 +1,10 @@
-import { redirect, notFound } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { hasLocale } from 'next-intl';
 import { validateRequest } from '@/lib/auth/session';
 import { isProUser } from '@/lib/flags';
 import { isUserVerified } from '@/lib/auth/verification';
 import type { Metadata } from 'next';
+import { redirect } from '@/i18n/navigation';
 import { routing, type AppLocale } from '@/i18n/routing';
 import { getDashboardContent } from './content';
 import { DashboardClient } from './DashboardClient';
@@ -31,9 +32,7 @@ export default async function DashboardPage({ params }: PageProps) {
   if (!hasLocale(routing.locales, locale)) notFound();
 
   const { user } = await validateRequest();
-  // /verify-email isn't migrated under [locale] yet — plain redirect so it
-  // isn't incorrectly locale-prefixed (which would 404 for es/pt).
-  if (user && !(await isUserVerified(user.id))) redirect('/verify-email');
+  if (user && !(await isUserVerified(user.id))) redirect({ href: '/verify-email', locale: locale as AppLocale });
   const isPro = await isProUser();
   return (
     <DashboardClient

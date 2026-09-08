@@ -7,35 +7,35 @@ import { verifyEmailCode, generateAndSendVerification } from '@/lib/auth/verific
 
 export async function verifyEmailAction(formData: FormData) {
   const { user } = await validateRequest();
-  if (!user) return { error: 'Your session expired. Please log in again.' };
+  if (!user) return { error: 'session_expired' as const };
 
   const code = (formData.get('code') as string)?.replace(/\D/g, '').trim();
   if (!code || code.length !== 6) {
-    return { error: 'Enter the 6-digit code from your email.' };
+    return { error: 'invalid_code_format' as const };
   }
 
   const ip = clientIpFromXff((await headers()).get('x-forwarded-for'));
   const { allowed } = checkRateLimit(`verify:${ip}`);
   if (!allowed) {
-    return { error: 'Too many attempts. Try again in 15 minutes.' };
+    return { error: 'rate_limited' as const };
   }
 
   const res = await verifyEmailCode(user.id, code);
-  if (!res.ok) return { error: res.error ?? 'That code is invalid or has expired.' };
+  if (!res.ok) return { error: 'invalid_or_expired_code' as const };
   return { ok: true as const };
 }
 
 export async function resendVerificationAction() {
   const { user } = await validateRequest();
-  if (!user) return { error: 'Your session expired. Please log in again.' };
+  if (!user) return { error: 'session_expired' as const };
 
   const ip = clientIpFromXff((await headers()).get('x-forwarded-for'));
   const { allowed } = checkRateLimit(`resend:${ip}`);
   if (!allowed) {
-    return { error: 'Too many requests. Try again in 15 minutes.' };
+    return { error: 'rate_limited' as const };
   }
 
   const res = await generateAndSendVerification(user.id, user.email);
-  if (!res.ok) return { error: res.error ?? 'Could not send the email. Try again shortly.' };
+  if (!res.ok) return { error: 'send_failed' as const };
   return { ok: true as const };
 }

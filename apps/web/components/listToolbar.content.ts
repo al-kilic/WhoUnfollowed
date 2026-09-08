@@ -1,7 +1,6 @@
 // Shared toolbar copy for AccountList and TriageList (search/sort/export
-// controls both lists have in common). AccountList is still used by the
-// unmigrated /diff page, so every consumer must default to EN when no
-// locale-specific content is supplied.
+// controls both lists have in common). Every consumer defaults to EN when
+// no locale-specific content is supplied.
 export interface ListToolbarContent {
   searchPlaceholder: string;
   sortingByNameTooltip: string;

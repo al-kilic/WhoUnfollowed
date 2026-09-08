@@ -7,6 +7,8 @@ import { users, passwordResets, syncSettings, cloudSnapshots } from '@/lib/db/sc
 import { lucia } from '@/lib/auth/lucia';
 import { sendEmail } from '@/lib/email/send';
 import { passwordResetEmail } from '@/lib/email/templates';
+import { localizedPathname } from '@/i18n/localizedPathname';
+import type { AppLocale } from '@/i18n/routing';
 
 const TOKEN_TTL_MS = 60 * 60 * 1000; // 1 hour
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://whounfollowed.co';
@@ -20,7 +22,7 @@ function hashToken(token: string): string {
 
 // Always behaves the same whether or not the email exists, so the endpoint does
 // not leak which addresses have accounts. Emails the reset link when it does.
-export async function requestPasswordReset(email: string): Promise<void> {
+export async function requestPasswordReset(email: string, locale: AppLocale = 'en'): Promise<void> {
   const user = await db.query.users.findFirst({
     where: eq(users.email, email),
     columns: { id: true },
@@ -38,7 +40,8 @@ export async function requestPasswordReset(email: string): Promise<void> {
       set: { tokenHash: hashToken(token), expiresAt, createdAt: new Date() },
     });
 
-  const resetUrl = `${APP_URL}/reset-password?token=${token}`;
+  const resetPath = localizedPathname('/reset-password', locale);
+  const resetUrl = `${APP_URL}${resetPath}?token=${token}`;
   const { subject, html, text } = passwordResetEmail(resetUrl);
   await sendEmail({ to: email, subject, html, text });
 }
@@ -50,15 +53,15 @@ export async function requestPasswordReset(email: string): Promise<void> {
 export async function resetPassword(
   token: string,
   newPassword: string,
-): Promise<{ ok: boolean; error?: string }> {
-  if (!token) return { ok: false, error: 'Invalid or expired reset link.' };
-  if (newPassword.length < 8) return { ok: false, error: 'Password must be at least 8 characters.' };
+): Promise<{ ok: boolean; error?: 'invalid_or_expired_token' | 'weak_password' }> {
+  if (!token) return { ok: false, error: 'invalid_or_expired_token' };
+  if (newPassword.length < 8) return { ok: false, error: 'weak_password' };
 
   const row = await db.query.passwordResets.findFirst({
     where: eq(passwordResets.tokenHash, hashToken(token)),
   });
   if (!row || row.expiresAt.getTime() < Date.now()) {
-    return { ok: false, error: 'This reset link is invalid or has expired. Request a new one.' };
+    return { ok: false, error: 'invalid_or_expired_token' };
   }
 
   const userId = row.userId;
