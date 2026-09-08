@@ -1,12 +1,14 @@
 'use server';
 
-import { redirect } from 'next/navigation';
 import { hash } from '@node-rs/argon2';
 import { db } from '@/lib/db/index';
 import { users } from '@/lib/db/schema';
 import { createSession } from '@/lib/auth/session';
 import { getStripe, isStripeConfigured } from '@/lib/stripe';
 import { eq } from 'drizzle-orm';
+import { hasLocale } from 'next-intl';
+import { routing } from '@/i18n/routing';
+import { redirect } from '@/i18n/navigation';
 
 const ARGON2_OPTIONS = {
   memoryCost: 19456,
@@ -19,12 +21,17 @@ export async function setPasswordAction(formData: FormData) {
   const password = formData.get('password') as string;
   const confirmPassword = formData.get('confirmPassword') as string;
 
-  if (!sessionId) return { error: 'Invalid link.' };
-  if (!password || password.length < 8) return { error: 'Password must be at least 8 characters.' };
-  if (password !== confirmPassword) return { error: 'Passwords do not match.' };
+  // Hidden form field (see WelcomeContent), so a successful setup redirects
+  // to the visitor's own locale's /history page.
+  const localeField = formData.get('locale');
+  const locale = hasLocale(routing.locales, localeField) ? localeField : routing.defaultLocale;
+
+  if (!sessionId) return { error: 'invalid_link' as const };
+  if (!password || password.length < 8) return { error: 'weak_password' as const };
+  if (password !== confirmPassword) return { error: 'password_mismatch' as const };
 
   // Verify the Stripe checkout session and find the user's email
-  if (!isStripeConfigured()) return { error: 'Payments not configured.' };
+  if (!isStripeConfigured()) return { error: 'payments_not_configured' as const };
 
   const stripe = getStripe();
 
@@ -32,10 +39,10 @@ export async function setPasswordAction(formData: FormData) {
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     const resolvedEmail = session.customer_email ?? session.customer_details?.email;
-    if (!resolvedEmail) return { error: 'Could not find your account. Please contact support.' };
+    if (!resolvedEmail) return { error: 'account_not_found_stripe' as const };
     email = resolvedEmail.toLowerCase();
   } catch {
-    return { error: 'Invalid or expired session. Please contact support.' };
+    return { error: 'invalid_or_expired_session' as const };
   }
 
   const user = await db.query.users.findFirst({
@@ -43,13 +50,14 @@ export async function setPasswordAction(formData: FormData) {
   });
 
   if (!user) {
-    return { error: 'Account not found. The webhook may still be processing — wait a moment and try again.' };
+    return { error: 'account_not_found_webhook_pending' as const };
   }
 
   if (user.passwordHash && user.passwordHash !== '') {
     // Password already set — just log them in
     await createSession(user.id);
-    redirect('/history');
+    redirect({ href: '/history', locale });
+    return;
   }
 
   const passwordHash = await hash(password, ARGON2_OPTIONS);
@@ -60,5 +68,6 @@ export async function setPasswordAction(formData: FormData) {
     .where(eq(users.id, user.id));
 
   await createSession(user.id);
-  redirect('/history');
+  redirect({ href: '/history', locale });
+  return;
 }

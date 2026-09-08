@@ -14,8 +14,8 @@ interface AccountListProps {
   accounts: Account[];
   csvFilename: string;
   emptyMessage?: string;
-  // Defaults to English so the unmigrated /diff page (which doesn't pass
-  // this) keeps working unchanged.
+  // Optional — defaults to English if a caller doesn't pass locale-specific
+  // content.
   content?: ListToolbarContent;
 }
 

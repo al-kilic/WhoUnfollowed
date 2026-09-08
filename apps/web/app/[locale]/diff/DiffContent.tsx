@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { format } from 'date-fns';
 import { compareSnapshots } from '@ig-tracker/core';
 import type { Account, SnapshotComparison } from '@ig-tracker/core';
@@ -13,13 +13,17 @@ import { T } from '@/components/landing/tokens';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { AccountList } from '@/components/AccountList';
 import { LandingFooter } from '@/components/landing/FinalCTA';
+import { getDiffContent } from './content';
+import { getListToolbarContent } from '@/components/listToolbar.content';
+import type { AppLocale } from '@/i18n/routing';
 
 // ─── Simple collapsible section ───────────────────────────────────────────────
 
 function DiffSection({
-  title, label, count, accounts, csvFilename, emptyMessage, accent = false, defaultOpen = false,
+  title, label, count, accounts, csvFilename, emptyMessage, toolbarContent, accent = false, defaultOpen = false,
 }: {
-  title: string; label: string; count: number; accounts: Account[]; csvFilename: string; emptyMessage: string; accent?: boolean; defaultOpen?: boolean;
+  title: string; label: string; count: number; accounts: Account[]; csvFilename: string; emptyMessage: string;
+  toolbarContent: ReturnType<typeof getListToolbarContent>; accent?: boolean; defaultOpen?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);
 
@@ -69,7 +73,7 @@ function DiffSection({
               {emptyMessage}
             </div>
           ) : (
-            <AccountList accounts={accounts} csvFilename={csvFilename} emptyMessage={emptyMessage} />
+            <AccountList accounts={accounts} csvFilename={csvFilename} emptyMessage={emptyMessage} content={toolbarContent} />
           )}
         </div>
       )}
@@ -101,7 +105,9 @@ function StatChip({ label, value, positive }: { label: string; value: number; po
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-function DiffPageInner() {
+function DiffPageInner({ locale }: { locale: AppLocale }) {
+  const c = getDiffContent(locale);
+  const toolbarContent = getListToolbarContent(locale);
   const searchParams = useSearchParams();
   const { userId } = useAuth();
 
@@ -114,24 +120,25 @@ function DiffPageInner() {
   const [error, setError]                 = useState<string | null>(null);
 
   useEffect(() => {
-    if (!oldId || !currentId) { setError('Missing snapshot IDs.'); return; }
+    if (!oldId || !currentId) { setError(c.missingIds); return; }
 
     // getSnapshot verifies ownership, not just existence — a guessed or
     // reused id belonging to someone else on this browser returns undefined
     // rather than their data.
-    Promise.all([getSnapshot(oldId, userId), getSnapshot(currentId, userId)]).then(([o, c]) => {
-      if (!o || !c) { setError('One or both snapshots not found.'); return; }
+    Promise.all([getSnapshot(oldId, userId), getSnapshot(currentId, userId)]).then(([o, cur]) => {
+      if (!o || !cur) { setError(c.notFound); return; }
       setOldRecord(o);
-      setCurrentRecord(c);
-      setDiff(compareSnapshots(o.data, c.data));
-    }).catch(() => setError('Failed to load snapshots.'));
+      setCurrentRecord(cur);
+      setDiff(compareSnapshots(o.data, cur.data));
+    }).catch(() => setError(c.failedToLoad));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [oldId, currentId, userId]);
 
   if (error) {
     return (
       <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16 }}>
         <p style={{ color: T.terra, fontFamily: T.mono, fontSize: 14 }}>{error}</p>
-        <Link href="/history" style={{ color: T.tealLight, fontSize: 13, fontFamily: T.sans }}>← Back to history</Link>
+        <Link href="/history" style={{ color: T.tealLight, fontSize: 13, fontFamily: T.sans }}>{c.backToHistory}</Link>
       </div>
     );
   }
@@ -139,7 +146,7 @@ function DiffPageInner() {
   if (!diff || !oldRecord || !currentRecord) {
     return (
       <div style={{ minHeight: '100vh', background: T.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontFamily: T.mono, fontSize: 13, color: T.inkMute }}>Loading snapshots…</span>
+        <span style={{ fontFamily: T.mono, fontSize: 13, color: T.inkMute }}>{c.loadingSnapshots}</span>
       </div>
     );
   }
@@ -161,7 +168,7 @@ function DiffPageInner() {
           <span style={{ fontFamily: T.serif, fontSize: 17, color: T.ink }}>WhoUnfollowed</span>
         </Link>
         <div className="flex items-center gap-3 sm:gap-6" style={{ fontSize: 13 }}>
-          <Link href="/history" style={{ color: T.inkDim, textDecoration: 'none' }}>← History</Link>
+          <Link href="/history" style={{ color: T.inkDim, textDecoration: 'none' }}>{c.historyNav}</Link>
           <ThemeToggle />
         </div>
       </nav>
@@ -169,9 +176,9 @@ function DiffPageInner() {
       <main className="px-4 sm:px-8 py-10 sm:py-12" style={{ maxWidth: 860, margin: '0 auto' }}>
         {/* Header */}
         <div style={{ marginBottom: 40 }}>
-          <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 12 }}>SNAPSHOT COMPARISON</div>
+          <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 12 }}>{c.eyebrow}</div>
           <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(28px, 5vw, 48px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', color: T.ink, marginBottom: 12 }}>
-            {periodDays} day{periodDays !== 1 ? 's' : ''} of changes.
+            {c.headlineTemplate(periodDays)}
           </h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
             <span style={{ padding: '5px 12px', borderRadius: 8, background: 'var(--t-surface2)', border: '1px solid var(--t-border2)', fontSize: 12, color: T.inkDim, fontFamily: T.mono }}>
@@ -186,48 +193,52 @@ function DiffPageInner() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4" style={{ gap: 10, marginBottom: 40 }}>
-          <StatChip label="Unfollowed you"    value={-diff.lostFollowers.length}  positive={false} />
-          <StatChip label="New followers"     value={diff.newFollowers.length}    positive={true}  />
-          <StatChip label="You unfollowed"    value={-diff.unfollowed.length}     positive={false} />
-          <StatChip label="Net change"        value={netFollowers}                positive={netFollowers >= 0} />
+          <StatChip label={c.statUnfollowedYou}  value={-diff.lostFollowers.length} positive={false} />
+          <StatChip label={c.statNewFollowers}   value={diff.newFollowers.length}   positive={true}  />
+          <StatChip label={c.statYouUnfollowed}  value={-diff.unfollowed.length}    positive={false} />
+          <StatChip label={c.statNetChange}      value={netFollowers}               positive={netFollowers >= 0} />
         </div>
 
         {/* Sections */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <DiffSection
-            title="Who unfollowed you"
-            label="Lost followers"
+            title={c.lostFollowersTitle}
+            label={c.lostFollowersLabel}
             count={diff.lostFollowers.length}
             accounts={diff.lostFollowers}
             csvFilename={`unfollowers-${oldRecord.exportedAt}-${currentRecord.exportedAt}.csv`}
-            emptyMessage="Nobody unfollowed you in this period."
+            emptyMessage={c.lostFollowersEmpty}
+            toolbarContent={toolbarContent}
             accent={true}
             defaultOpen={true}
           />
           <DiffSection
-            title="New followers"
-            label="Gained"
+            title={c.newFollowersTitle}
+            label={c.newFollowersLabel}
             count={diff.newFollowers.length}
             accounts={diff.newFollowers}
             csvFilename={`new-followers-${oldRecord.exportedAt}-${currentRecord.exportedAt}.csv`}
-            emptyMessage="No new followers in this period."
+            emptyMessage={c.newFollowersEmpty}
+            toolbarContent={toolbarContent}
             defaultOpen={diff.lostFollowers.length === 0}
           />
           <DiffSection
-            title="You unfollowed"
-            label="You dropped"
+            title={c.youUnfollowedTitle}
+            label={c.youUnfollowedLabel}
             count={diff.unfollowed.length}
             accounts={diff.unfollowed}
             csvFilename={`you-unfollowed-${oldRecord.exportedAt}-${currentRecord.exportedAt}.csv`}
-            emptyMessage="You didn't unfollow anyone in this period."
+            emptyMessage={c.youUnfollowedEmpty}
+            toolbarContent={toolbarContent}
           />
           <DiffSection
-            title="You started following"
-            label="New following"
+            title={c.newFollowingTitle}
+            label={c.newFollowingLabel}
             count={diff.newFollowing.length}
             accounts={diff.newFollowing}
             csvFilename={`new-following-${oldRecord.exportedAt}-${currentRecord.exportedAt}.csv`}
-            emptyMessage="You didn't follow anyone new in this period."
+            emptyMessage={c.newFollowingEmpty}
+            toolbarContent={toolbarContent}
           />
         </div>
       </main>
@@ -237,14 +248,15 @@ function DiffPageInner() {
   );
 }
 
-export default function DiffPage() {
+export function DiffContent({ locale }: { locale: AppLocale }) {
+  const c = getDiffContent(locale);
   return (
     <Suspense fallback={
       <div style={{ minHeight: '100vh', background: 'var(--t-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontFamily: 'monospace', fontSize: 13, color: 'var(--t-ink-mute)' }}>Loading…</span>
+        <span style={{ fontFamily: 'monospace', fontSize: 13, color: 'var(--t-ink-mute)' }}>{c.loading}</span>
       </div>
     }>
-      <DiffPageInner />
+      <DiffPageInner locale={locale} />
     </Suspense>
   );
 }

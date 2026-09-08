@@ -115,6 +115,7 @@ export default async function PricingPage({ params }: PageProps) {
         isPro={isPro}
         content={content}
         faq={faq}
+        locale={locale}
       />
     </>
   );

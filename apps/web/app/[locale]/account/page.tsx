@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 import type { Metadata } from 'next';
-import { redirect as nextRedirect, notFound } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { hasLocale } from 'next-intl';
 import { eq } from 'drizzle-orm';
 import { validateRequest } from '@/lib/auth/session';
@@ -61,9 +61,7 @@ export default async function AccountPage({ params }: PageProps) {
     redirect({ href: '/login', locale: locale as AppLocale });
     return;
   }
-  // /verify-email isn't migrated under [locale] yet — plain redirect so it
-  // isn't incorrectly locale-prefixed (which would 404 for es/pt).
-  if (!(await isUserVerified(user.id))) nextRedirect('/verify-email');
+  if (!(await isUserVerified(user.id))) redirect({ href: '/verify-email', locale: locale as AppLocale });
 
   // hasProAccess = real Pro (active subscription: paid or grandfathered). Drives
   // the plan card, badge, and Pro-feature gating (cloud sync etc.).

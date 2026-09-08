@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
+import { hasLocale } from 'next-intl';
 import { validateRequest } from '@/lib/auth/session';
 import { isPaidFeaturesEnabled } from '@/lib/flags';
 import { getStripe, isStripeConfigured, priceIdForUnlock, type UnlockDuration } from '@/lib/stripe';
 import { db } from '@/lib/db/index';
 import { profiles } from '@/lib/db/schema';
+import { routing } from '@/i18n/routing';
+import { localizedPathname } from '@/i18n/localizedPathname';
 
 // Every purchase here is a one-time unlock (30 or 365 days), never a
 // recurring subscription.
@@ -22,6 +25,7 @@ export async function POST(request: NextRequest) {
   // control, so a missing or tampered value is harmless.
   const acquisitionSource: string | undefined =
     typeof body.acquisitionSource === 'string' ? body.acquisitionSource.slice(0, 100) : undefined;
+  const locale = hasLocale(routing.locales, body.locale) ? body.locale : routing.defaultLocale;
 
   const price = priceIdForUnlock(unlockDuration);
   if (!price) {
@@ -31,12 +35,14 @@ export async function POST(request: NextRequest) {
   const stripe = getStripe();
   const { user } = await validateRequest();
   const origin = request.headers.get('origin') ?? process.env.NEXT_PUBLIC_APP_URL ?? '';
+  const welcomePath = localizedPathname('/welcome', locale);
+  const pricingPath = localizedPathname('/pricing', locale);
 
   const sessionParams: Parameters<typeof stripe.checkout.sessions.create>[0] = {
     mode: 'payment',
     line_items: [{ price, quantity: 1 }],
-    success_url: `${origin}/welcome?session_id={CHECKOUT_SESSION_ID}&plan=unlock`,
-    cancel_url: `${origin}/pricing`,
+    success_url: `${origin}${welcomePath}?session_id={CHECKOUT_SESSION_ID}&plan=unlock`,
+    cancel_url: `${origin}${pricingPath}`,
     allow_promotion_codes: true,
     billing_address_collection: 'auto',
   };

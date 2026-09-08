@@ -29,4 +29,9 @@ export const LOCALIZED_PATHS: string[] = [
   '/history',
   '/results',
   '/dashboard',
+  '/forgot-password',
+  '/reset-password',
+  '/verify-email',
+  '/welcome',
+  '/diff',
 ];

@@ -88,6 +88,11 @@ export const config = {
     '/login/:path*',
     '/signup/:path*',
     '/results/:path*',
+    '/forgot-password/:path*',
+    '/reset-password/:path*',
+    '/verify-email/:path*',
+    '/welcome/:path*',
+    '/diff/:path*',
     '/(es|pt)/:path*',
   ],
 };

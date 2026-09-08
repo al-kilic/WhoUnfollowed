@@ -7,6 +7,8 @@ import { GridBg, ProfileCard } from '@/components/landing/atoms';
 import { T } from '@/components/landing/tokens';
 import { track, Events, trackFunnel } from '@/lib/analytics';
 import { UNLOCK_PRICE_USD } from '@/lib/pricing';
+import { getPathname } from '@/i18n/navigation';
+import type { AppLocale } from '@/i18n/routing';
 import type { PricingFaqItem } from './faq';
 import type { PricingContent } from './content';
 
@@ -16,6 +18,7 @@ interface Props {
   isPro?: boolean;
   content: PricingContent;
   faq: PricingFaqItem[];
+  locale: AppLocale;
 }
 
 function fillTemplate(template: string, values: Record<string, string | number>): string {
@@ -39,7 +42,7 @@ function Perk({ label, note }: { label: string; note: string }) {
   );
 }
 
-export function PricingClient({ userEmail, paymentsEnabled, isPro = false, content, faq }: Props) {
+export function PricingClient({ userEmail, paymentsEnabled, isPro = false, content, faq, locale }: Props) {
   const [duration, setDuration] = useState<'monthly' | 'yearly'>('monthly');
   const [showAll, setShowAll] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -48,7 +51,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, conte
   async function handleUnlock() {
     trackFunnel('Upgrade CTA Clicked', { placement: 'pricing' });
     if (!paymentsEnabled) {
-      window.location.href = userEmail ? '/history' : '/signup';
+      window.location.href = getPathname({ href: userEmail ? '/history' : '/signup', locale });
       return;
     }
     track(Events.checkoutStart, { billing: `unlock-${duration}` });
@@ -61,7 +64,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, conte
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mode: 'unlock', billing: duration, acquisitionSource }),
+        body: JSON.stringify({ mode: 'unlock', billing: duration, acquisitionSource, locale }),
       });
       const data = await res.json();
       if (data.url) {
