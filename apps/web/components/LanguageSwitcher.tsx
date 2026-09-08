@@ -57,8 +57,9 @@ export function LanguageSwitcher({ mobile = false }: { mobile?: boolean } = {}) 
         aria-label={t('language')}
         aria-expanded={open}
         style={{
-          display: 'inline-flex', alignItems: 'center', gap: 6,
-          padding: mobile ? '6px 10px' : '6px 9px',
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+          height: mobile ? undefined : 32, flexShrink: 0,
+          padding: mobile ? '6px 10px' : '0 10px',
           borderRadius: 9, border: `1px solid ${T.border3}`,
           background: 'transparent', color: T.ink, cursor: 'pointer',
           fontSize: size, lineHeight: 1,
