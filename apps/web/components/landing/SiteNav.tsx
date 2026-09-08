@@ -285,7 +285,8 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
             href="https://github.com/al-kilic/WhoUnfollowed"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: T.ink, padding: '7px 14px', border: `1px solid ${T.border3}`, borderRadius: 9, textDecoration: 'none' }}
+            aria-label="View source on GitHub"
+            style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, flexShrink: 0, color: T.ink, border: `1px solid ${T.border3}`, borderRadius: '50%', textDecoration: 'none' }}
           >
             <Icon.gh size={13} color={T.ink} />
           </a>
