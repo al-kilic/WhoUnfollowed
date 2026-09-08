@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     billing_address_collection: 'auto',
   };
 
-  const metadata: Record<string, string> = { type: 'unlock', unlockDuration };
+  const metadata: Record<string, string> = { type: 'unlock', unlockDuration, locale };
   if (acquisitionSource) metadata.acquisitionSource = acquisitionSource;
 
   if (user) {

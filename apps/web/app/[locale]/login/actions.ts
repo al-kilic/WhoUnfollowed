@@ -8,6 +8,8 @@ import { checkRateLimit, clientIpFromXff } from '@/lib/auth/rate-limit';
 import { isEmailConfigured } from '@/lib/email/send';
 import { generateAndSendVerification } from '@/lib/auth/verification';
 import { headers } from 'next/headers';
+import { hasLocale } from 'next-intl';
+import { routing } from '@/i18n/routing';
 
 const ARGON2_OPTIONS = {
   memoryCost: 19456,
@@ -22,6 +24,11 @@ export async function loginAction(formData: FormData) {
   if (!email || !password) {
     return { error: 'missing_fields' as const };
   }
+
+  // Hidden form field (see LoginForm), used only if this login needs to
+  // re-send a verification code.
+  const localeField = formData.get('locale');
+  const locale = hasLocale(routing.locales, localeField) ? localeField : routing.defaultLocale;
 
   const headersList = await headers();
   const ip = clientIpFromXff(headersList.get('x-forwarded-for'));
@@ -53,7 +60,7 @@ export async function loginAction(formData: FormData) {
   // Unverified account (signed up while email was on, never confirmed): send a
   // fresh code and route to verification instead of the app.
   if (isEmailConfigured() && !user.emailVerifiedAt) {
-    await generateAndSendVerification(user.id, user.email);
+    await generateAndSendVerification(user.id, user.email, locale);
     return { ok: true as const, saltB64, needsVerification: true as const };
   }
 

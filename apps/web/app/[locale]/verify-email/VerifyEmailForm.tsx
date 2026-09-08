@@ -31,7 +31,7 @@ export function VerifyEmailForm({ email, locale }: { email: string; locale: AppL
   function handleResend() {
     setResendMsg(null);
     startResend(async () => {
-      const res = await resendVerificationAction();
+      const res = await resendVerificationAction(locale);
       setResendMsg(
         res && 'ok' in res && res.ok
           ? c.resendSuccess

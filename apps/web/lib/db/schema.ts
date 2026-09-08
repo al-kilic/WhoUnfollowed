@@ -83,6 +83,17 @@ export const profiles = pgTable('profiles', {
   // webhooks flip subscriptionStatus instead. isProUser() treats a non-null,
   // past-dated value as no longer active.
   subscriptionExpiresAt: timestamp('subscription_expires_at'),
+  // Last known UI locale ('en' | 'es' | 'pt'), captured at signup/checkout so
+  // the cron-triggered unlock-expiry emails (no request context to read it
+  // from) can still be sent in the right language. Null falls back to 'en'.
+  locale: text('locale'),
+  // Idempotency markers for the cron-triggered unlock-expiry emails: since an
+  // expired unlock's subscriptionStatus row is never flipped (getSubscriptionStatus
+  // computes "expired" at read time from subscriptionExpiresAt), the daily cron
+  // needs its own record of which emails already went out, or it would resend
+  // them every day forever.
+  expiryReminderSentAt: timestamp('expiry_reminder_sent_at'),
+  expiredEmailSentAt: timestamp('expired_email_sent_at'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 

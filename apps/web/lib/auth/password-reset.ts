@@ -42,7 +42,7 @@ export async function requestPasswordReset(email: string, locale: AppLocale = 'e
 
   const resetPath = localizedPathname('/reset-password', locale);
   const resetUrl = `${APP_URL}${resetPath}?token=${token}`;
-  const { subject, html, text } = passwordResetEmail(resetUrl);
+  const { subject, html, text } = passwordResetEmail(resetUrl, locale);
   await sendEmail({ to: email, subject, html, text });
 }
 

@@ -9,6 +9,8 @@ import { checkRateLimit, clientIpFromXff } from '@/lib/auth/rate-limit';
 import { isEmailConfigured } from '@/lib/email/send';
 import { generateAndSendVerification } from '@/lib/auth/verification';
 import { headers } from 'next/headers';
+import { hasLocale } from 'next-intl';
+import { routing } from '@/i18n/routing';
 
 const ARGON2_OPTIONS = {
   memoryCost: 19456,
@@ -27,6 +29,11 @@ export async function signupAction(formData: FormData) {
   if (password.length < 8) {
     return { error: 'password_too_short' as const };
   }
+
+  // Hidden form field (see SignupForm), so the verification-code email is
+  // sent in the visitor's own locale.
+  const localeField = formData.get('locale');
+  const locale = hasLocale(routing.locales, localeField) ? localeField : routing.defaultLocale;
 
   const headersList = await headers();
   const ip = clientIpFromXff(headersList.get('x-forwarded-for'));
@@ -70,7 +77,7 @@ export async function signupAction(formData: FormData) {
 
   if (emailConfigured) {
     // Best-effort send; the verify page also offers a resend if it didn't arrive.
-    await generateAndSendVerification(user.id, email);
+    await generateAndSendVerification(user.id, email, locale);
     return { ok: true as const, saltB64, needsVerification: true as const };
   }
 

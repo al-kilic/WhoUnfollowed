@@ -4,6 +4,7 @@ import { headers } from 'next/headers';
 import { validateRequest } from '@/lib/auth/session';
 import { checkRateLimit, clientIpFromXff } from '@/lib/auth/rate-limit';
 import { verifyEmailCode, generateAndSendVerification } from '@/lib/auth/verification';
+import type { AppLocale } from '@/i18n/routing';
 
 export async function verifyEmailAction(formData: FormData) {
   const { user } = await validateRequest();
@@ -25,7 +26,7 @@ export async function verifyEmailAction(formData: FormData) {
   return { ok: true as const };
 }
 
-export async function resendVerificationAction() {
+export async function resendVerificationAction(locale: AppLocale) {
   const { user } = await validateRequest();
   if (!user) return { error: 'session_expired' as const };
 
@@ -35,7 +36,7 @@ export async function resendVerificationAction() {
     return { error: 'rate_limited' as const };
   }
 
-  const res = await generateAndSendVerification(user.id, user.email);
+  const res = await generateAndSendVerification(user.id, user.email, locale);
   if (!res.ok) return { error: 'send_failed' as const };
   return { ok: true as const };
 }

@@ -1,4 +1,14 @@
 import 'server-only';
+import type { AppLocale } from '@/i18n/routing';
+import { localizedPathname } from '@/i18n/localizedPathname';
+import {
+  getVerificationEmailContent,
+  getPasswordResetEmailContent,
+  getPurchaseEmailContent,
+  getExpiringSoonEmailContent,
+  getExpiredEmailContent,
+} from './content';
+import type { UnlockDuration } from '@/lib/stripe';
 
 // Inline-styled, table-based HTML for broad email-client compatibility (no React
 // Email dependency). Brand: warm teal (#01696F), cream (#F4F0E8), terra accent
@@ -23,9 +33,9 @@ function preheader(text: string): string {
 }
 
 // Shared branded shell: logo header, content slot, legal footer.
-function emailLayout(opts: { preview: string; contentHtml: string }): string {
+function emailLayout(opts: { locale: AppLocale; preview: string; contentHtml: string }): string {
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="${opts.locale}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -65,62 +75,63 @@ function emailLayout(opts: { preview: string; contentHtml: string }): string {
 </html>`;
 }
 
-export function verificationCodeEmail(code: string): {
+// Locale-aware date formatting for the (English-brand, translated-copy) emails.
+function formatDate(date: Date, locale: AppLocale): string {
+  return new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', day: 'numeric' }).format(date);
+}
+
+interface EmailResult {
   subject: string;
   html: string;
   text: string;
-} {
-  const subject = `${code} is your WhoUnfollowed verification code`;
-  const text = `Your WhoUnfollowed verification code is ${code}. It expires in 15 minutes. If you did not create an account, you can ignore this email.`;
+}
+
+export function verificationCodeEmail(code: string, locale: AppLocale = 'en'): EmailResult {
+  const c = getVerificationEmailContent(locale);
+  const subject = c.subject(code);
+  const text = `${c.body} ${code}. ${c.note}`;
 
   const content = `
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
       <tr><td style="padding:30px 30px 0;">
-        <h1 style="margin:0 0 8px;font-size:21px;font-weight:600;color:${C.ink};">Confirm your email</h1>
-        <p style="margin:0 0 22px;font-size:14px;line-height:1.6;color:${C.dim};">Enter this code to finish creating your account. It expires in 15 minutes.</p>
+        <h1 style="margin:0 0 8px;font-size:21px;font-weight:600;color:${C.ink};">${c.title}</h1>
+        <p style="margin:0 0 22px;font-size:14px;line-height:1.6;color:${C.dim};">${c.body}</p>
       </td></tr>
       <tr><td style="padding:0 30px;">
         <div style="background:${C.bg};border:1px solid ${C.border};border-radius:12px;padding:18px;text-align:center;font-size:34px;font-weight:700;letter-spacing:10px;color:${C.teal};font-family:'SF Mono',Menlo,Consolas,monospace;">${code}</div>
       </td></tr>
       <tr><td style="padding:20px 30px 30px;">
-        <p style="margin:0;font-size:12px;line-height:1.6;color:${C.mute};">If you did not create a WhoUnfollowed account, you can safely ignore this email. Nothing happens until the code is used.</p>
+        <p style="margin:0;font-size:12px;line-height:1.6;color:${C.mute};">${c.note}</p>
       </td></tr>
     </table>`;
 
-  return { subject, html: emailLayout({ preview: `Your verification code is ${code}`, contentHtml: content }), text };
+  return { subject, html: emailLayout({ locale, preview: c.preview(code), contentHtml: content }), text };
 }
 
-export function passwordResetEmail(resetUrl: string): {
-  subject: string;
-  html: string;
-  text: string;
-} {
-  const subject = 'Reset your WhoUnfollowed password';
-  const text = `Reset your WhoUnfollowed password using this link (valid for 1 hour): ${resetUrl}. If you did not request this, you can ignore this email. Note: resetting your password makes any existing encrypted cloud snapshots unreadable.`;
+export function passwordResetEmail(resetUrl: string, locale: AppLocale = 'en'): EmailResult {
+  const c = getPasswordResetEmailContent(locale);
+  const subject = c.subject;
+  const text = `${c.body} ${resetUrl} ${c.note1} ${c.note2Strong} ${c.note2Rest}`;
 
   const content = `
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
       <tr><td style="padding:30px 30px 0;">
-        <h1 style="margin:0 0 8px;font-size:21px;font-weight:600;color:${C.ink};">Reset your password</h1>
-        <p style="margin:0 0 22px;font-size:14px;line-height:1.6;color:${C.dim};">Click the button below to set a new password. This link is valid for 1 hour.</p>
+        <h1 style="margin:0 0 8px;font-size:21px;font-weight:600;color:${C.ink};">${c.title}</h1>
+        <p style="margin:0 0 22px;font-size:14px;line-height:1.6;color:${C.dim};">${c.body}</p>
       </td></tr>
       <tr><td style="padding:0 30px;">
-        <a href="${resetUrl}" style="display:inline-block;background:${C.teal};color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 22px;border-radius:10px;">Reset password</a>
+        <a href="${resetUrl}" style="display:inline-block;background:${C.teal};color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 22px;border-radius:10px;">${c.button}</a>
       </td></tr>
       <tr><td style="padding:22px 30px 30px;">
-        <p style="margin:0 0 12px;font-size:12px;line-height:1.6;color:${C.mute};">If you did not request a password reset, you can safely ignore this email. Your password stays the same.</p>
-        <p style="margin:0;font-size:12px;line-height:1.6;color:${C.mute};"><strong style="color:${C.dim};">Heads up:</strong> for your privacy, cloud snapshots are encrypted with a key derived from your password. Resetting it means any existing cloud snapshots can no longer be decrypted and will be removed.</p>
+        <p style="margin:0 0 12px;font-size:12px;line-height:1.6;color:${C.mute};">${c.note1}</p>
+        <p style="margin:0;font-size:12px;line-height:1.6;color:${C.mute};"><strong style="color:${C.dim};">${c.note2Strong}</strong> ${c.note2Rest}</p>
       </td></tr>
     </table>`;
 
-  return { subject, html: emailLayout({ preview: 'Reset your WhoUnfollowed password (link valid 1 hour).', contentHtml: content }), text };
+  return { subject, html: emailLayout({ locale, preview: c.preview, contentHtml: content }), text };
 }
 
-export function exportConfirmationEmail(csvFilename: string): {
-  subject: string;
-  html: string;
-  text: string;
-} {
+export function exportConfirmationEmail(csvFilename: string): EmailResult {
   const subject = `You exported: ${csvFilename}`;
   const text = `Thanks for using WhoUnfollowed. Your CSV (${csvFilename}) was downloaded directly to your device. We do not store your follower data on our servers.`;
 
@@ -135,5 +146,90 @@ export function exportConfirmationEmail(csvFilename: string): {
       </td></tr>
     </table>`;
 
-  return { subject, html: emailLayout({ preview: 'Your export is ready on your device.', contentHtml: content }), text };
+  return { subject, html: emailLayout({ locale: 'en', preview: 'Your export is ready on your device.', contentHtml: content }), text };
+}
+
+// Sent from the Stripe webhook after a one-time unlock purchase (30 or 365
+// days) completes, whether that's a brand-new customer or an existing one
+// stacking more time on an unexpired unlock.
+export function purchaseConfirmationEmail(opts: {
+  kind: 'new_customer' | 'renewal';
+  unlockDuration: UnlockDuration;
+  expiresAt: Date;
+  locale?: AppLocale;
+}): EmailResult {
+  const locale = opts.locale ?? 'en';
+  const c = getPurchaseEmailContent(locale);
+  const planLabel = opts.unlockDuration === 'yearly' ? c.planYearly : c.planMonthly;
+  const expiresOn = formatDate(opts.expiresAt, locale);
+  const isNew = opts.kind === 'new_customer';
+
+  const subject = isNew ? c.subjectNew : c.subjectRenewal;
+  const preview = isNew ? c.previewNew : c.previewRenewal;
+  const title = isNew ? c.titleNew : c.titleRenewal;
+  const body = isNew ? c.bodyNew(planLabel, expiresOn) : c.bodyRenewal(planLabel, expiresOn);
+  const historyUrl = `${APP_URL}${localizedPathname('/history', locale)}`;
+  const text = `${body} ${c.footerNote} ${historyUrl}`;
+
+  const content = `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      <tr><td style="padding:30px 30px 0;">
+        <h1 style="margin:0 0 8px;font-size:21px;font-weight:600;color:${C.ink};">${title}</h1>
+        <p style="margin:0 0 22px;font-size:14px;line-height:1.6;color:${C.dim};">${body}</p>
+      </td></tr>
+      <tr><td style="padding:0 30px;">
+        <a href="${historyUrl}" style="display:inline-block;background:${C.teal};color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 22px;border-radius:10px;">${c.button}</a>
+      </td></tr>
+      <tr><td style="padding:20px 30px 30px;">
+        <p style="margin:0;font-size:12px;line-height:1.6;color:${C.mute};">${c.footerNote}</p>
+      </td></tr>
+    </table>`;
+
+  return { subject, html: emailLayout({ locale, preview, contentHtml: content }), text };
+}
+
+// Reminder cron: sent once (see profiles.expiryReminderSentAt) a few days
+// before an unlock's subscriptionExpiresAt.
+export function unlockExpiringSoonEmail(opts: { daysLeft: number; expiresAt: Date; locale?: AppLocale }): EmailResult {
+  const locale = opts.locale ?? 'en';
+  const c = getExpiringSoonEmailContent(locale);
+  const expiresOn = formatDate(opts.expiresAt, locale);
+  const body = c.body(opts.daysLeft, expiresOn);
+  const pricingUrl = `${APP_URL}${localizedPathname('/pricing', locale)}`;
+  const text = `${body} ${pricingUrl}`;
+
+  const content = `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      <tr><td style="padding:30px 30px 0;">
+        <h1 style="margin:0 0 8px;font-size:21px;font-weight:600;color:${C.ink};">${c.title}</h1>
+        <p style="margin:0 0 22px;font-size:14px;line-height:1.6;color:${C.dim};">${body}</p>
+      </td></tr>
+      <tr><td style="padding:0 30px 30px;">
+        <a href="${pricingUrl}" style="display:inline-block;background:${C.teal};color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 22px;border-radius:10px;">${c.button}</a>
+      </td></tr>
+    </table>`;
+
+  return { subject: c.subject, html: emailLayout({ locale, preview: c.preview(opts.daysLeft), contentHtml: content }), text };
+}
+
+// Expiry cron: sent once (see profiles.expiredEmailSentAt) the day an
+// unlock's subscriptionExpiresAt passes.
+export function unlockExpiredEmail(opts: { locale?: AppLocale } = {}): EmailResult {
+  const locale = opts.locale ?? 'en';
+  const c = getExpiredEmailContent(locale);
+  const pricingUrl = `${APP_URL}${localizedPathname('/pricing', locale)}`;
+  const text = `${c.body} ${pricingUrl}`;
+
+  const content = `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      <tr><td style="padding:30px 30px 0;">
+        <h1 style="margin:0 0 8px;font-size:21px;font-weight:600;color:${C.ink};">${c.title}</h1>
+        <p style="margin:0 0 22px;font-size:14px;line-height:1.6;color:${C.dim};">${c.body}</p>
+      </td></tr>
+      <tr><td style="padding:0 30px 30px;">
+        <a href="${pricingUrl}" style="display:inline-block;background:${C.teal};color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 22px;border-radius:10px;">${c.button}</a>
+      </td></tr>
+    </table>`;
+
+  return { subject: c.subject, html: emailLayout({ locale, preview: c.preview, contentHtml: content }), text };
 }

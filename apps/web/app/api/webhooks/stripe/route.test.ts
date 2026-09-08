@@ -29,10 +29,11 @@ vi.mock('@/lib/db/index', () => ({
   },
 }));
 
-const { constructEvent, sendTelegramMessage, trackServerEvent } = vi.hoisted(() => ({
+const { constructEvent, sendTelegramMessage, trackServerEvent, sendEmail } = vi.hoisted(() => ({
   constructEvent: vi.fn(),
   sendTelegramMessage: vi.fn().mockResolvedValue({ ok: true }),
   trackServerEvent: vi.fn().mockResolvedValue(undefined),
+  sendEmail: vi.fn().mockResolvedValue({ ok: true }),
 }));
 
 vi.mock('@/lib/stripe', async () => {
@@ -48,6 +49,7 @@ vi.mock('@/lib/telegram', async () => {
   return { ...actual, sendTelegramMessage };
 });
 vi.mock('@/lib/umamiServer', () => ({ trackServerEvent }));
+vi.mock('@/lib/email/send', () => ({ sendEmail }));
 
 import { POST } from './route';
 
@@ -114,6 +116,7 @@ describe('POST /api/webhooks/stripe', () => {
     expect(update).not.toHaveBeenCalled();
     expect(insert).not.toHaveBeenCalled();
     expect(sendTelegramMessage).not.toHaveBeenCalled();
+    expect(sendEmail).not.toHaveBeenCalled();
   });
 
   it('extends an existing logged-in user\'s unlock and notifies as a renewal', async () => {
@@ -124,7 +127,7 @@ describe('POST /api/webhooks/stripe', () => {
       data: {
         object: {
           mode: 'payment',
-          metadata: { type: 'unlock', unlockDuration: 'monthly', userId: 'user_42' },
+          metadata: { type: 'unlock', unlockDuration: 'monthly', userId: 'user_42', locale: 'es' },
           customer: 'cus_42',
           customer_email: 'existing@example.com',
           amount_total: 199,
@@ -140,6 +143,10 @@ describe('POST /api/webhooks/stripe', () => {
     expect(updateSet).toHaveBeenCalledWith(expect.objectContaining({
       subscriptionStatus: 'active',
       stripeCustomerId: 'cus_42',
+      locale: 'es',
+      // A fresh purchase resets the expiry-email cycle for the new expiry date.
+      expiryReminderSentAt: null,
+      expiredEmailSentAt: null,
     }));
     // Stacked on top of the existing expiry, not reset to "today + 30"
     const setArg = updateSet.mock.calls[0]![0];
@@ -147,6 +154,11 @@ describe('POST /api/webhooks/stripe', () => {
     expect(insert).not.toHaveBeenCalled();
     expect(sendTelegramMessage).toHaveBeenCalledWith(expect.stringContaining('renewed'));
     expect(trackServerEvent).toHaveBeenCalled();
+    // Locale from Stripe metadata flows into the confirmation email's copy.
+    expect(sendEmail).toHaveBeenCalledWith(expect.objectContaining({
+      to: 'existing@example.com',
+      subject: expect.stringContaining('renovó'),
+    }));
   });
 
   it('creates a brand new account for a first-time unlock buyer with no prior user', async () => {
@@ -172,10 +184,18 @@ describe('POST /api/webhooks/stripe', () => {
     expect(insertReturning).toHaveBeenCalled();
     expect(update).not.toHaveBeenCalled();
     expect(sendTelegramMessage).toHaveBeenCalledWith(expect.stringContaining('New Pro customer'));
+    expect(sendEmail).toHaveBeenCalledWith(expect.objectContaining({
+      to: 'brandnew@example.com',
+      subject: expect.stringContaining('Welcome to WhoUnfollowed Pro'),
+    }));
   });
 
-  it('updates the matching existing (logged-out) account when the email is already registered', async () => {
+  it('updates the matching existing (logged-out) account when the email is already registered, and sends the "welcome" (not "renewed") email for their first unlock', async () => {
     usersFindFirst.mockResolvedValue({ id: 'existing_user_id' });
+    // No prior unlock on this account (a free signup buying Pro for the first
+    // time) — the purchase-confirmation email should read "Welcome to Pro",
+    // even though the Telegram alert still says "renewed" (account already
+    // existed, which is all that heading distinguishes).
     profilesFindFirst.mockResolvedValue({ subscriptionExpiresAt: null });
     constructEvent.mockReturnValue({
       type: 'checkout.session.completed',
@@ -195,5 +215,31 @@ describe('POST /api/webhooks/stripe', () => {
     expect(insert).not.toHaveBeenCalled();
     expect(update).toHaveBeenCalledTimes(1);
     expect(sendTelegramMessage).toHaveBeenCalledWith(expect.stringContaining('renewed'));
+    expect(sendEmail).toHaveBeenCalledWith(expect.objectContaining({
+      to: 'already-has-account@example.com',
+      subject: expect.stringContaining('Welcome to WhoUnfollowed Pro'),
+    }));
+  });
+
+  it('does not email or crash when Stripe sends no customer email at all', async () => {
+    usersFindFirst.mockResolvedValue({ id: 'existing_user_id' });
+    profilesFindFirst.mockResolvedValue({ subscriptionExpiresAt: null });
+    constructEvent.mockReturnValue({
+      type: 'checkout.session.completed',
+      data: {
+        object: {
+          mode: 'payment',
+          metadata: { type: 'unlock', unlockDuration: 'monthly', userId: 'user_99' },
+          customer: 'cus_99',
+          customer_email: null,
+        },
+      },
+    });
+
+    const res = await POST(makeRequest('{}'));
+
+    expect(res.status).toBe(200);
+    expect(update).toHaveBeenCalledTimes(1);
+    expect(sendEmail).not.toHaveBeenCalled();
   });
 });
