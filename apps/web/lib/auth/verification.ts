@@ -5,6 +5,7 @@ import { db } from '@/lib/db/index';
 import { users, emailVerifications } from '@/lib/db/schema';
 import { sendEmail, isEmailConfigured } from '@/lib/email/send';
 import { verificationCodeEmail } from '@/lib/email/templates';
+import type { AppLocale } from '@/i18n/routing';
 
 const CODE_TTL_MS = 15 * 60 * 1000; // 15 minutes
 
@@ -21,6 +22,7 @@ function generateCode(): string {
 export async function generateAndSendVerification(
   userId: string,
   email: string,
+  locale: AppLocale = 'en',
 ): Promise<{ ok: boolean; error?: string }> {
   const code = generateCode();
   const expiresAt = new Date(Date.now() + CODE_TTL_MS);
@@ -33,7 +35,7 @@ export async function generateAndSendVerification(
       set: { codeHash: hashCode(code), expiresAt, createdAt: new Date() },
     });
 
-  const { subject, html, text } = verificationCodeEmail(code);
+  const { subject, html, text } = verificationCodeEmail(code, locale);
   const res = await sendEmail({ to: email, subject, html, text });
   if (!res.ok) return { ok: false, error: res.error };
   return { ok: true };

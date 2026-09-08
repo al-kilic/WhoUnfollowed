@@ -53,6 +53,7 @@ export function LoginForm({ locale }: { locale: AppLocale }) {
       }
     >
       <form action={action} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <input type="hidden" name="locale" value={locale} />
         <AuthField label={c.emailLabel} id="email" name="email" type="email" required autoComplete="email" />
         <AuthField
           label={c.passwordLabel}
