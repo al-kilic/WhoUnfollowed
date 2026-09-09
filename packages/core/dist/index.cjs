@@ -36,6 +36,8 @@ __export(index_exports, {
   SchemaValidationError: () => SchemaValidationError,
   analyzeSnapshot: () => analyzeSnapshot,
   compareSnapshots: () => compareSnapshots,
+  contactMessageSchema: () => contactMessageSchema,
+  contactSources: () => contactSources,
   detectDeltaExport: () => detectDeltaExport,
   feedbackSchema: () => feedbackSchema,
   feedbackSentiments: () => feedbackSentiments,
@@ -89,12 +91,19 @@ var import_zod = require("zod");
 var stringListItemSchema = import_zod.z.object({
   href: import_zod.z.string(),
   value: import_zod.z.string().optional(),
-  timestamp: import_zod.z.number()
+  // Real exports have shown `null` here (in addition to the documented `0`)
+  // for accounts with no recorded follow time — see entryToAccount in parser.ts.
+  timestamp: import_zod.z.number().nullable()
 });
 var relationshipEntrySchema = import_zod.z.object({
   title: import_zod.z.string().optional(),
   media_list_data: import_zod.z.array(import_zod.z.unknown()).optional(),
-  string_list_data: import_zod.z.tuple([stringListItemSchema])
+  // A strict tuple-of-exactly-1 used to be required here, but a real Instagram
+  // export can contain a zero-length string_list_data for an account Instagram
+  // has since removed/deactivated (no resolvable profile info left) — that
+  // used to fail the *entire* file's validation over one placeholder entry.
+  // Accept 0 or 1 items; parser.ts's entryToAccount skips the empty ones.
+  string_list_data: import_zod.z.array(stringListItemSchema).max(1)
 });
 var followersFileSchema = import_zod.z.array(relationshipEntrySchema);
 var followingFileSchema = import_zod.z.object({
@@ -137,6 +146,18 @@ var feedbackSchema = import_zod.z.object({
   comment: import_zod.z.string().trim().max(1e3).optional(),
   page: import_zod.z.string().trim().max(200)
 });
+var contactSources = ["contact_page", "homepage_widget"];
+var contactMessageSchema = import_zod.z.object({
+  name: import_zod.z.string().trim().max(120).optional(),
+  // Optional here: the homepage widget allows an anonymous note with no
+  // reply expected. The /contact page's own form makes it required in its
+  // client-side validation before the request is even sent.
+  email: import_zod.z.string().trim().toLowerCase().email().max(320).optional(),
+  message: import_zod.z.string().trim().min(1).max(2e3),
+  topic: import_zod.z.string().trim().max(60).optional(),
+  source: import_zod.z.enum(contactSources),
+  page: import_zod.z.string().trim().max(200).optional()
+});
 
 // src/parser.ts
 function labelValuesToAccount(entry) {
@@ -153,11 +174,12 @@ function labelValuesToAccount(entry) {
 }
 function entryToAccount(entry) {
   const item = entry.string_list_data[0];
+  if (!item) return null;
   const username = item.value ?? entry.title ?? "";
   return {
     username,
     href: item.href,
-    followedAt: item.timestamp > 0 ? item.timestamp : null
+    followedAt: item.timestamp && item.timestamp > 0 ? item.timestamp : null
   };
 }
 async function parseFollowersJson(zip, fileNames) {
@@ -174,7 +196,7 @@ async function parseFollowersJson(zip, fileNames) {
     if (!result.success) {
       throw new SchemaValidationError(fname, result.error.issues[0]?.message ?? "unknown");
     }
-    accounts.push(...result.data.map(entryToAccount));
+    accounts.push(...result.data.map(entryToAccount).filter((a) => a !== null));
   }
   return accounts;
 }
@@ -190,7 +212,7 @@ async function parseFollowingJson(zip, fileName) {
   if (!result.success) {
     throw new SchemaValidationError(fileName, result.error.issues[0]?.message ?? "unknown");
   }
-  return result.data.relationships_following.map(entryToAccount);
+  return result.data.relationships_following.map(entryToAccount).filter((a) => a !== null);
 }
 var IG_LINK_RE = /href="(https:\/\/www\.instagram\.com\/(?:_u\/)?([^"/?#]+)[^"]*)"/gi;
 function parseAccountsFromHtml(html) {
@@ -446,6 +468,8 @@ function findGhostFollowers(snapshot, options) {
   SchemaValidationError,
   analyzeSnapshot,
   compareSnapshots,
+  contactMessageSchema,
+  contactSources,
   detectDeltaExport,
   feedbackSchema,
   feedbackSentiments,

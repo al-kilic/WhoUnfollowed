@@ -12,13 +12,17 @@ import { CompareSection } from './CompareSection';
 import { PricingSection } from './PricingSection';
 import { FAQSection }    from './FAQSection';
 import { FinalCTA, LandingFooter } from './FinalCTA';
+import { QuickFeedbackWidget } from '@/components/QuickFeedbackWidget';
+import { getQuickFeedbackWidgetContent } from '@/components/quickFeedbackWidget.content';
 import type { HomeContent } from '@/app/[locale]/homeContent';
+import type { AppLocale } from '@/i18n/routing';
 
-export function LandingPage({ userEmail, isPro = false, initialStats, content }: {
+export function LandingPage({ userEmail, isPro = false, initialStats, content, locale = 'en' }: {
   userEmail: string | null;
   isPro?: boolean;
   initialStats: { snapshots: number; avgNonFollowers: number };
   content: HomeContent;
+  locale?: AppLocale;
 }) {
   return (
     <div style={{
@@ -39,6 +43,7 @@ export function LandingPage({ userEmail, isPro = false, initialStats, content }:
         <FinalCTA />
       </main>
       <LandingFooter />
+      <QuickFeedbackWidget content={getQuickFeedbackWidgetContent(locale)} />
     </div>
   );
 }

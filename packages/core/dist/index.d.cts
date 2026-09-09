@@ -3,21 +3,21 @@ import { z } from 'zod';
 declare const followersFileSchema: z.ZodArray<z.ZodObject<{
     title: z.ZodOptional<z.ZodString>;
     media_list_data: z.ZodOptional<z.ZodArray<z.ZodUnknown>>;
-    string_list_data: z.ZodTuple<[z.ZodObject<{
+    string_list_data: z.ZodArray<z.ZodObject<{
         href: z.ZodString;
         value: z.ZodOptional<z.ZodString>;
-        timestamp: z.ZodNumber;
-    }, z.core.$strip>], null>;
+        timestamp: z.ZodNullable<z.ZodNumber>;
+    }, z.core.$strip>>;
 }, z.core.$strip>>;
 declare const followingFileSchema: z.ZodObject<{
     relationships_following: z.ZodArray<z.ZodObject<{
         title: z.ZodOptional<z.ZodString>;
         media_list_data: z.ZodOptional<z.ZodArray<z.ZodUnknown>>;
-        string_list_data: z.ZodTuple<[z.ZodObject<{
+        string_list_data: z.ZodArray<z.ZodObject<{
             href: z.ZodString;
             value: z.ZodOptional<z.ZodString>;
-            timestamp: z.ZodNumber;
-        }, z.core.$strip>], null>;
+            timestamp: z.ZodNullable<z.ZodNumber>;
+        }, z.core.$strip>>;
     }, z.core.$strip>>;
 }, z.core.$strip>;
 declare const accountSchema: z.ZodObject<{
@@ -67,6 +67,20 @@ declare const feedbackSchema: z.ZodObject<{
 }, z.core.$strip>;
 type FeedbackSentiment = (typeof feedbackSentiments)[number];
 type FeedbackInput = z.infer<typeof feedbackSchema>;
+declare const contactSources: readonly ["contact_page", "homepage_widget"];
+declare const contactMessageSchema: z.ZodObject<{
+    name: z.ZodOptional<z.ZodString>;
+    email: z.ZodOptional<z.ZodString>;
+    message: z.ZodString;
+    topic: z.ZodOptional<z.ZodString>;
+    source: z.ZodEnum<{
+        contact_page: "contact_page";
+        homepage_widget: "homepage_widget";
+    }>;
+    page: z.ZodOptional<z.ZodString>;
+}, z.core.$strip>;
+type ContactSource = (typeof contactSources)[number];
+type ContactMessageInput = z.infer<typeof contactMessageSchema>;
 type FollowersFile = z.infer<typeof followersFileSchema>;
 type FollowingFile = z.infer<typeof followingFileSchema>;
 type Account = z.infer<typeof accountSchema>;
@@ -119,4 +133,4 @@ declare class SchemaValidationError extends Error {
     constructor(filename: string, detail: string);
 }
 
-export { type Account, type DeltaDetectionResult, type DeltaReason, type FeedbackInput, type FeedbackSentiment, type FollowersFile, type FollowingFile, InvalidZipError, MissingFilesError, MixedFormatError, type ParsedSnapshot, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, analyzeSnapshot, compareSnapshots, detectDeltaExport, feedbackSchema, feedbackSentiments, findGhostFollowers, parseInstagramZip };
+export { type Account, type ContactMessageInput, type ContactSource, type DeltaDetectionResult, type DeltaReason, type FeedbackInput, type FeedbackSentiment, type FollowersFile, type FollowingFile, InvalidZipError, MissingFilesError, MixedFormatError, type ParsedSnapshot, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, analyzeSnapshot, compareSnapshots, contactMessageSchema, contactSources, detectDeltaExport, feedbackSchema, feedbackSentiments, findGhostFollowers, parseInstagramZip };

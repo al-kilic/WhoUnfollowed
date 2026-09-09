@@ -2,14 +2,24 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { T } from '@/components/landing/tokens';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import type { ContactContent as ContactContentData } from './content';
 
+type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
+
 export function ContactContent({ content }: { content: ContactContentData }) {
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const pathname = usePathname();
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [status, setStatus] = useState<FormStatus>('idle');
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const EMAIL = 'hello@whounfollowed.co';
 
@@ -23,6 +33,56 @@ export function ContactContent({ content }: { content: ContactContentData }) {
   const subject = selectedTopic
     ? `[${content.topics.find(t => t.id === selectedTopic)?.label}] WhoUnfollowed`
     : 'WhoUnfollowed';
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setErrorMsg(null);
+
+    const trimmedEmail = email.trim();
+    const trimmedMessage = message.trim();
+
+    if (!trimmedEmail) {
+      setErrorMsg(content.form.errorMissingEmail);
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      setErrorMsg(content.form.errorInvalidEmail);
+      return;
+    }
+    if (!trimmedMessage) {
+      setErrorMsg(content.form.errorMissingMessage);
+      return;
+    }
+
+    setStatus('submitting');
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name.trim() || undefined,
+          email: trimmedEmail,
+          message: trimmedMessage,
+          topic: selectedTopic ? content.topics.find(t => t.id === selectedTopic)?.label : undefined,
+          source: 'contact_page',
+          page: pathname,
+        }),
+      });
+      if (!res.ok) throw new Error('request failed');
+      setStatus('success');
+    } catch {
+      setStatus('error');
+      setErrorMsg(content.form.errorGeneric);
+    }
+  }
+
+  function resetForm() {
+    setName('');
+    setEmail('');
+    setMessage('');
+    setStatus('idle');
+    setErrorMsg(null);
+  }
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
@@ -78,10 +138,90 @@ export function ContactContent({ content }: { content: ContactContentData }) {
           </div>
         </div>
 
-        {/* Email card */}
+        {/* Direct-message form */}
+        <div style={{ borderRadius: 16, background: T.bgCard, border: `1px solid ${T.border1}`, padding: '22px 22px 20px', marginBottom: 24 }}>
+          {status === 'success' ? (
+            <div style={{ textAlign: 'center', padding: '16px 0' }}>
+              <div style={{ fontSize: 28, marginBottom: 10 }}>✓</div>
+              <div style={{ fontFamily: T.serif, fontSize: 19, color: T.ink, marginBottom: 8 }}>{content.form.successTitle}</div>
+              <p style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.6, marginBottom: 16 }}>{content.form.successBody}</p>
+              <button
+                type="button"
+                onClick={resetForm}
+                style={{ fontSize: 12, color: T.tealMid, background: 'none', border: 'none', cursor: 'pointer', fontFamily: T.sans, textDecoration: 'underline' }}
+              >
+                {content.form.sendAnother}
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit}>
+              <div style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 16 }}>{content.form.heading}</div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <label style={{ display: 'block' }}>
+                  <span style={{ display: 'block', fontSize: 12, color: T.inkDim, marginBottom: 6 }}>
+                    {content.form.nameLabel} <span style={{ color: T.inkMute }}>({content.form.nameOptional})</span>
+                  </span>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    maxLength={120}
+                    style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: `1px solid ${T.border2}`, background: T.bg, color: T.ink, fontFamily: T.sans, fontSize: 14, outline: 'none' }}
+                  />
+                </label>
+
+                <label style={{ display: 'block' }}>
+                  <span style={{ display: 'block', fontSize: 12, color: T.inkDim, marginBottom: 6 }}>{content.form.emailLabel}</span>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    required
+                    maxLength={320}
+                    style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: `1px solid ${T.border2}`, background: T.bg, color: T.ink, fontFamily: T.sans, fontSize: 14, outline: 'none' }}
+                  />
+                </label>
+
+                <label style={{ display: 'block' }}>
+                  <span style={{ display: 'block', fontSize: 12, color: T.inkDim, marginBottom: 6 }}>{content.form.messageLabel}</span>
+                  <textarea
+                    value={message}
+                    onChange={e => setMessage(e.target.value)}
+                    placeholder={content.form.messagePlaceholder}
+                    required
+                    maxLength={2000}
+                    rows={5}
+                    style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: `1px solid ${T.border2}`, background: T.bg, color: T.ink, fontFamily: T.sans, fontSize: 14, outline: 'none', resize: 'vertical' }}
+                  />
+                </label>
+              </div>
+
+              {errorMsg && (
+                <p style={{ fontSize: 12, color: T.terra, marginTop: 12, marginBottom: 0 }}>{errorMsg}</p>
+              )}
+
+              <button
+                type="submit"
+                disabled={status === 'submitting'}
+                style={{
+                  width: '100%', marginTop: 16, padding: '12px 16px', borderRadius: 12,
+                  border: 'none', cursor: status === 'submitting' ? 'default' : 'pointer',
+                  background: T.teal, color: T.cream, fontFamily: T.sans, fontSize: 14, fontWeight: 600,
+                  opacity: status === 'submitting' ? 0.7 : 1,
+                  boxShadow: `0 4px 16px ${T.tealGlow}`,
+                }}
+              >
+                {status === 'submitting' ? content.form.sending : content.form.send}
+              </button>
+            </form>
+          )}
+        </div>
+
+        {/* Email card (fallback) */}
         <div style={{ borderRadius: 16, background: T.bgCard, border: `1px solid ${T.border1}`, overflow: 'hidden', marginBottom: 32 }}>
           <div style={{ padding: '20px 22px 16px' }}>
-            <div style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>{content.emailLabel}</div>
+            <div style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>{content.form.orEmailDirectly}</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
               <span style={{ fontFamily: T.mono, fontSize: 16, color: T.ink }}>{EMAIL}</span>
               <button
