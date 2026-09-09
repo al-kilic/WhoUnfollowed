@@ -2271,7 +2271,8 @@ A quick unfollow and refollow is not something Instagram announces to the other 
     tag: 'Growth',
     primaryKeyword: 'instagram unfollow tracking for business accounts',
     art: 'bell',
-    imageAlt: 'Abstract geometric illustration representing a business account tracking who unfollows it on Instagram',
+    image: '/blog/audience-connections-hero.jpg',
+    imageAlt: 'A tablet displaying analytics charts on a desk beside a smartphone, representing a business account tracking who unfollows it on Instagram',
     cta: {
       heading: 'See which customers walked away.',
       body: 'A follower drop after a launch or a price change has names attached to it. Upload your Instagram export and WhoUnfollowed shows exactly who left, in your browser, whether you run one account or ten.',
@@ -2330,7 +2331,8 @@ A business account has more reason to know who's leaving than almost any other k
     tag: 'Guide',
     primaryKeyword: 'did they unfollow me or make a new instagram account',
     art: 'ghost',
-    imageAlt: 'Abstract geometric illustration representing the uncertainty of whether someone unfollowed you or moved to a new Instagram account',
+    image: '/blog/follow-unfollow-method-hero.jpg',
+    imageAlt: 'A hand holding a smartphone showing social media apps, representing the uncertainty of whether someone unfollowed you or moved to a new Instagram account',
     cta: {
       heading: 'Confirm what you can actually know.',
       body: 'Whatever the reason, your export shows the one fact that matters right now: whether they are following the account you actually have. Upload it to WhoUnfollowed and see for yourself, in your browser, no password required.',
@@ -2391,7 +2393,8 @@ Chasing certainty here usually isn't worth the energy. Instead of trying to reve
     tag: 'Growth',
     primaryKeyword: 'why do I lose followers when I change my instagram niche',
     art: 'split',
-    imageAlt: 'Abstract geometric illustration representing an Instagram audience splitting after a content or niche change',
+    image: '/blog/follower-count-mismatch-hero.jpg',
+    imageAlt: 'A smartphone resting on printed charts and graphs, representing an Instagram audience splitting after a content or niche change',
     cta: {
       heading: 'See who left after the pivot.',
       body: 'A content or niche change has a real list of names behind it. Upload two exports, one from before the shift and one after, and WhoUnfollowed shows you exactly who dropped off, in your browser, no password needed.',
@@ -2451,7 +2454,8 @@ Some follower loss after a pivot is expected and even healthy. It becomes a real
     tag: 'Guide',
     primaryKeyword: 'mute vs restrict vs unfollow instagram',
     art: 'split',
-    imageAlt: 'Abstract geometric illustration representing the choice between muting, restricting, and unfollowing someone on Instagram',
+    image: '/blog/block-vs-unfollow-hero.jpg',
+    imageAlt: 'A hand raised in a stop gesture, representing the choice between muting, restricting, and unfollowing someone on Instagram',
     cta: {
       heading: 'Stop guessing. Get the actual list.',
       body: 'Muting and restricting are settings you control. Unfollowing is something only they control, and it happens silently. If you want to know who has actually stopped following you instead of just wondering, upload your Instagram export and WhoUnfollowed shows you the real names, in your browser, with no password.',
@@ -2509,7 +2513,8 @@ That's the entire premise behind [WhoUnfollowed](/). You export your own followe
     tag: 'Guide',
     primaryKeyword: 'why do I still see someone\'s posts after unfollowing them on instagram',
     art: 'ghost',
-    imageAlt: 'Abstract geometric illustration representing content from an unfollowed account still appearing in Instagram recommendations',
+    image: '/blog/unfollow-vs-remove-hero.jpg',
+    imageAlt: 'A close-up of hands using a smartphone touchscreen, representing content from an unfollowed account still appearing in Instagram recommendations',
     cta: {
       heading: 'The algorithm showing them doesn\'t mean anything about your list.',
       body: 'Seeing someone\'s content in Explore after you unfollowed them doesn\'t mean the unfollow failed, and it doesn\'t mean they\'re still following you either. If you want to know who is actually on your followers list right now, and who has dropped off since last time, upload your Instagram export and WhoUnfollowed reads it in your browser and shows you the real names.',
@@ -2571,7 +2576,8 @@ None of this matters much if what you actually want is a simple, accurate answer
     tag: 'Guide',
     primaryKeyword: 'accidentally unfollowed someone on instagram',
     art: 'bell',
-    imageAlt: 'Abstract geometric illustration representing the moment of realizing you accidentally unfollowed someone on Instagram',
+    image: '/blog/apps-actually-work-hero.jpg',
+    imageAlt: 'A close-up of a smartphone displaying an alert notification, representing the moment of realizing you accidentally unfollowed someone on Instagram',
     cta: {
       heading: 'Never lose track of who you actually follow.',
       body: 'One mis-tap during a cleanup and you could lose a follow you meant to keep, with no way to prove it happened. Upload your Instagram export and WhoUnfollowed shows you exactly who dropped off your following list since your last one, so an accidental unfollow does not just vanish.',
@@ -2615,6 +2621,193 @@ The real fix is slowing down during any cleanup session. Work through a followin
 **How far back can I check if I don't remember when it happened?** As far back as your oldest saved export goes. If you don't have one from around the time you suspect, you can't reconstruct it retroactively, which is why keeping a recent export on hand matters more than it seems like it should.
 
 **Can I tell the difference between someone I accidentally unfollowed and someone who deactivated their account?** Not from the fact that they're missing alone. A deactivated account disappears from your following list the same way an unfollow does. Checking whether their profile still loads at all is the fastest way to tell the two apart.`,
+  },
+  {
+    slug: 'instagram-reach-dropped-but-follower-count-stayed-the-same',
+    cluster: 'account-health',
+    title: 'My Instagram Reach Dropped, But My Follower Count Didn\'t Move',
+    metaTitle: 'Instagram Reach Dropped But Followers Stayed Same?',
+    metaDescription: 'Your Instagram reach fell but your follower count barely moved. Here\'s why those are separate signals, and how to check whether anyone actually left.',
+    excerpt: 'A Reel that used to reach a couple thousand accounts is now landing in front of a few hundred. Your follower count barely twitched. The two numbers feel like they should move together. They don\'t.',
+    date: 'October 12, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'instagram reach dropped but follower count stayed the same',
+    art: 'ratio',
+    image: '/blog/follow-ratio-hero.jpg',
+    imageAlt: 'An analytics dashboard on a screen showing user metrics and charts, representing the gap between Instagram reach and a stable follower count',
+    cta: {
+      heading: 'Check the list, not just the number.',
+      body: 'A flat follower count doesn\'t mean nobody left. It can be hiding real churn that canceled itself out. Upload your Instagram export and WhoUnfollowed shows exactly who was added and who dropped off between two snapshots, in your browser, with no password required.',
+      buttonLabel: 'Compare your follower lists',
+      proNudge: 'Pro keeps a running history of every export, so you can watch reach dips against real follower churn over months instead of guessing from two snapshots.',
+    },
+    body: `A Reel that used to land in front of a couple thousand accounts is now reaching a few hundred. Story views are down by half. Comments have thinned out. You check your profile expecting to see why, and the follower count is basically where it was last month. That's the confusing part. If people were the problem, shouldn't the number have moved?
+
+Reach and follower count aren't the same measurement, and in 2026 they've drifted further apart than they used to.
+
+## Two Different Systems, Not One Number in Disguise
+
+Follower count is a list: everyone currently connected to your account. Reach is a decision Instagram's ranking system makes fresh for every single post, about how many accounts, followers and non-followers both, actually get shown that piece of content. One is a roster. The other is a distribution choice made post by post. They can move in opposite directions at the same time, and most of the time neither one tells you anything about the other.
+
+## Following Someone Doesn't Guarantee They See You
+
+This is the part that trips people up. [Meta's own Transparency Center explains how Instagram ranks feed content](https://transparency.meta.com/features/explaining-ranking/ig-feed-recommendations/), and it says plainly that following an account does not guarantee its posts show up in that follower's feed. The main feed is an AI-ranked prediction of what someone is likely to engage with, built from watch time, saves, shares, comments, and how often they visit a profile, not a chronological list of everyone they follow. Instagram does keep a literal "Following" tab that shows posts in order with no ranking applied, but almost nobody switches to it by default. So a real chunk of your followers can go a week without your content ever reaching their main feed, and nothing about the follow relationship changed at all.
+
+## What Actually Shifted
+
+The signals doing the ranking have moved too. Instagram's head of product, Adam Mosseri, has said publicly that shares sent through DMs and watch time now carry more weight than likes, with saves outranking simple engagement as well. Practically, that means a post that used to coast on a decent like count can reach fewer people than it did a year ago, even among your own followers, because it isn't earning the newer, heavier-weighted signals. None of that touches who follows you. It only touches who gets shown what you post.
+
+## The Overlap That's Actually Worth Checking
+
+Here's the part worth taking seriously instead of assuming away. A follower count is a net number. If 60 people unfollowed you this month and 55 new people followed, the total at the top of your profile moves by 5, not by 115. A flat-looking follower count can be sitting on top of real churn you'd never notice by watching the total alone. So "reach dropped, follower count didn't move" isn't proof that nobody left. It's proof that whoever left was roughly offset by whoever arrived.
+
+## How to Get an Actual Answer
+
+The only way to separate an algorithm-driven reach dip from real churn is to stop reading the single number and look at the two lists behind it. [Export your Instagram data](/blog/how-to-download-your-instagram-data) now, and export it again in three or four weeks. Upload both to [WhoUnfollowed](/) and it reads them in your browser, no password, and shows you exactly who was added and who dropped off in between, even if the totals land close to where they started. If the two lists come back nearly identical, you've confirmed it: the drop is algorithmic, not personal, and cleaning up your follower list won't move your reach. If a real chunk of people left, [that's a different problem worth understanding on its own](/blog/why-did-i-lose-followers-overnight-on-instagram), and now you know exactly who.
+
+## What Actually Helps a Reach Drop
+
+Assuming the churn check comes back clean, the fix isn't in your follower list at all. It's in the content: fewer posts built to chase a like, more built to give someone a reason to save it or send it to a friend. That's a content strategy question a follower tracker can't answer for you. What it can do is rule out the scarier explanation, that people are actually leaving, so you're not solving a problem you don't have.
+
+## Quick Answers
+
+**Does a reach drop mean I'm shadowbanned?** Rarely. Instagram does apply real, documented restrictions for policy violations, but a ranking shift that reduced how heavily your usual posting pattern gets weighted is the far more common cause. [Meta's Transparency Center](https://transparency.meta.com/features/explaining-ranking/ig-feed-recommendations/) is the authoritative source on how the ranking system actually decides what to show.
+
+**Can I see reach history the way I can see my followers?** Instagram's [Insights dashboard](https://help.instagram.com/257516379077270) shows reach per post and rolling averages, but it never connects that number to specific accounts the way an exported followers list does. Reach tells you how many accounts saw something. It never tells you which ones.
+
+**If my follower count is flat, can I safely assume nobody unfollowed me?** No. A flat count can be hiding equal amounts of loss and gain. The only way to see the real churn is comparing two exports of your own data over time, not watching the single number on your profile.
+
+**Will switching to the chronological "Following" feed fix my own reach?** No. That setting only changes what you see in your feed. It has no effect on how Instagram ranks and distributes your posts to other people's feeds.
+
+A dropping number with no name attached to it will always feel worse than it is. Reach and follower count are different systems measuring different things, and the fastest way out of the guessing is to check the one list Instagram will actually hand you.`,
+  },
+  {
+    slug: 'how-to-check-if-your-instagram-followers-are-real-before-a-brand-deal',
+    cluster: 'account-health',
+    title: 'How to Check If Your Instagram Followers Are Real Before You Pitch a Brand',
+    metaTitle: 'Check Your Instagram Followers Before a Brand Deal',
+    metaDescription: 'Brands increasingly vet influencer audiences before signing. Here\'s how to check your own Instagram follower quality first, for free, in your browser.',
+    excerpt: 'A brand slides into your DMs about a paid post, and somewhere between the excitement and the contract, you remember that brands run their own audits now. Better to know what yours would find first.',
+    date: 'October 14, 2026',
+    readTime: '5 min',
+    tag: 'Growth',
+    primaryKeyword: 'how to check if your instagram followers are real',
+    art: 'search',
+    image: '/blog/ghost-followers-hero.jpg',
+    imageAlt: 'Glowing 3D social media app logos including Instagram on a dark background, representing auditing an Instagram follower list for authenticity before a brand deal',
+    cta: {
+      heading: 'Know your numbers before a brand asks.',
+      body: 'Upload two Instagram exports and WhoUnfollowed shows exactly when your followers arrived and who never engaged, so you walk into a brand conversation already knowing what your audience actually looks like. No password, nothing leaves your browser.',
+      buttonLabel: 'Audit your own audience',
+      proNudge: 'Pro keeps your snapshot history, so you can show a brand a steady growth trend instead of reconstructing one from memory the night before a pitch.',
+    },
+    body: `A brand slides into your DMs about a paid post. You're excited, you start drafting a reply, and somewhere in there a less fun thought shows up: brands run their own audits before they sign anything now. You don't actually know what a stranger's audit tool would say about your follower list. Better to find out yourself, on your own terms, before someone else does.
+
+## Why This Is Worth Doing Before They Ask
+
+Nobody signs a five-figure influencer contract off a follower count alone anymore. Agencies and in-house marketing teams routinely run their own checks on an audience before money changes hands, and a chunk of them build a fraud audit into the contract terms directly. You may already have some visibility into your own audience through Instagram's [Professional Dashboard](https://help.instagram.com/257516379077270), which surfaces where your followers are located and when they're active. That's a useful start, but it wasn't built to answer the specific question a brand is actually asking: is this growth real, or did some of it come from somewhere it shouldn't have.
+
+## What "Real" Actually Means Here
+
+Not every quiet, non-engaging follower is a problem. Plenty of real people follow an account and never like or comment; they read and scroll on. That's normal and it isn't what a fraud audit is hunting for. What actually raises flags is a specific pattern: a batch of accounts that all followed within the same day or two, unconnected to anything you posted, especially if that batch happens to land right before your numbers would have looked good for a pitch. Old [follow-for-follow swaps](/blog/what-is-the-follow-unfollow-method-on-instagram) from an earlier growth phase leave exactly this kind of fingerprint, even years later.
+
+## The Self-Audit, Step by Step
+
+The pattern you're looking for shows up in timing, not just in who's on the list.
+
+| Signal | What it suggests |
+|---|---|
+| A large cluster of follows on the same day, unconnected to a viral post | Possible bought or swapped batch |
+| A long list of non-reciprocal follows that never engaged, spread across your history | [Ghost followers](/blog/instagram-ghost-followers-how-to-find-and-remove-them), inactive rather than fake |
+| A steady trickle of new followers spread across weeks, roughly tracking your posting | Organic growth, the healthiest pattern |
+
+You can only see this by looking at timestamps, and Instagram's own app doesn't hand you a dated followers list anywhere in the interface. Under [GDPR Article 20](https://gdpr-info.eu/art-20-gdpr/), Instagram is required to give you a full copy of your own data on request, including exactly when each follow happened. [Export it](/blog/how-to-download-your-instagram-data), do it again a few weeks later, and upload both to [WhoUnfollowed](/). It reads the files in your browser and lays out your new followers by date, so a cluster from three years ago is as visible as one from last week.
+
+## Do It Yourself Before a Brand Does
+
+The upside of running this check on your own terms is catching a problem while it's still just information, not a stalled deal you never get an explanation for. A brand that quietly walks away after their own audit rarely tells you why. Handing your login to a third-party "audience audit" tool to find out isn't a great trade either, since [that's the exact same risk password-based follower trackers already carry](/blog/why-instagram-follower-trackers-ask-for-your-password). The export-based version answers the same question without giving anyone your credentials.
+
+## What a Clean Audit Actually Looks Like
+
+A healthy pattern isn't a perfect one. It's a following curve that roughly tracks your posting activity, occasional spikes tied to something that actually went out (a collab, a shoutout, a post that traveled), and no unexplained clusters sitting in the middle of a quiet month. If that's what your export shows, you're not hiding anything from a brand's audit. You already know what it's going to find.
+
+## Quick Answers
+
+**Do I need thousands of followers before this matters?** No. A brand working with a smaller creator on a smaller budget still checks, because the math on fraud risk doesn't change with account size, only the dollar amount at stake does.
+
+**Will removing bought or bot followers hurt my numbers in the audit?** No, the opposite. A smaller, cleaner list with a plausible growth history reads better to anyone checking than a larger one with an unexplained spike sitting in it.
+
+**Can I fix an old follow-for-follow batch without hurting my current relationships?** Yes. Removing followers who never engaged and joined in a suspicious cluster doesn't touch your real, active audience at all. They're two entirely separate groups.
+
+**Is there a faster way than checking manually?** [WhoUnfollowed](/) does the sorting for you once you've uploaded an export: new followers by date, non-reciprocal follows, and mutuals, all in one view instead of scrolling your followers list by hand.
+
+Know what your list looks like before someone with a budget decides to check for you.`,
+  },
+  {
+    slug: 'why-am-i-suddenly-getting-followed-by-bot-accounts-on-instagram',
+    cluster: 'privacy-safety',
+    title: 'Why Am I Suddenly Getting Followed by Bot Accounts on Instagram?',
+    metaTitle: 'Why Bot Accounts Suddenly Follow You on Instagram',
+    metaDescription: 'A wave of empty, spammy new followers overnight isn\'t random. Here\'s why bot waves happen, how to spot one, and what to actually do about it.',
+    excerpt: 'A pile of new follower notifications overnight looks like a good morning until you open the list. Empty grids, no bios, usernames ending in a string of numbers. That\'s not a compliment.',
+    date: 'October 16, 2026',
+    readTime: '5 min',
+    tag: 'Privacy',
+    primaryKeyword: 'why am I getting followed by bot accounts on instagram',
+    art: 'lock',
+    image: '/blog/banned-tracker-hero.jpg',
+    imageAlt: 'A risk gauge cube resting on a keyboard, representing a wave of bot accounts following an Instagram profile',
+    cta: {
+      heading: 'See the batch, not just the vibe.',
+      body: 'A wave of bot followers looks obvious once the arrival dates are lined up in front of you. Upload your Instagram export and WhoUnfollowed shows exactly who followed you and when, in your browser, with no password handed to anyone.',
+      buttonLabel: 'See who\'s really following you',
+      proNudge: 'Pro can email you the next time a batch like this shows up, instead of you noticing it days later scrolling past the notifications.',
+    },
+    body: `A pile of new follower notifications overnight looks like a good morning until you actually open the list. Empty grids. No bio, or a bio with a crypto symbol and a link. Usernames ending in a long string of numbers, like they were generated rather than picked. That's not organic growth. It's a bot wave, and it's more common in 2026 than most people realize.
+
+## What's Actually Happening
+
+Bot networks mass-follow real accounts for a few reasons, and none of them involve genuinely liking your content. The most common is reciprocity bait: follow enough accounts and a percentage will follow back automatically, out of habit or courtesy, which is exactly what the network is counting on. The darker version is a precursor to a scam, where the follow is just the opener before a DM pushing a crypto scheme, a fake modeling offer, or a phishing link disguised as an account-verification warning. Instagram [documents this pattern directly](https://help.instagram.com/340413218365867) and gives accounts a way to flag and remove batches it identifies as spam.
+
+## Why It Comes in a Wave, Not a Trickle
+
+Bot networks run in scripted batches, not one account deciding to follow you at a time. Crossing a follower threshold, getting mentioned or reposted by a larger account, or simply showing up in a scraped list can trigger a run against your account within hours. It feels sudden because it is: a batch job executing, not a slow accumulation of interest.
+
+## Telling a Bot Wave From Real Growth
+
+The tell isn't any single account, it's the pattern across several.
+
+| Signal | Bot-like | Real follower |
+|---|---|---|
+| Posts | Zero, or reposted spam | Some personal content, even if sparse |
+| Bio | Crypto symbol, suspicious link, or empty with a generic name | Normal, or genuinely empty |
+| Follow ratio | Follows thousands, has almost no followers itself | Roughly balanced for the account type |
+| Arrival pattern | Dozens within hours | Spread across days or weeks |
+
+Any one of these alone isn't proof of anything. All four together, arriving at the same time, usually is.
+
+## What to Actually Do About It
+
+Instagram's own tools handle a chunk of this automatically now: it can [flag a batch of suspicious followers for you to review and remove in a few taps](https://help.instagram.com/340413218365867), and individual accounts can be [removed manually](https://help.instagram.com/413012278753813) from your followers list, three dots next to a username, then Remove. The one thing worth being genuinely careful about is the accounts it doesn't catch: don't tap a link in a new follower's bio or reply to an unsolicited DM, since that's the actual risk here, not the follower count itself.
+
+These accounts also aren't free to ignore. Like any inactive or fake follower, they [drag down your real engagement rate](/blog/instagram-ghost-followers-how-to-find-and-remove-them) even while doing nothing else. And if you're a creator who ever [runs your own audience check before a brand deal](/blog/how-to-check-if-your-instagram-followers-are-real-before-a-brand-deal), a pile of obvious bots sitting in your follower list is exactly the kind of thing that check exists to catch.
+
+## Seeing the Wave for What It Is
+
+The clearest way to confirm a bot wave, instead of just suspecting one, is to compare your follower list before and after it hit. [Export your Instagram data](/blog/how-to-download-your-instagram-data) and upload it to [WhoUnfollowed](/). The new-followers view sorts by date, so a batch that arrived within a few hours shows up as exactly that, a cluster on a single day, instead of a vague feeling that a lot of strange accounts followed you lately.
+
+## Quick Answers
+
+**Does a bot wave hurt my account's standing with Instagram?** Not directly. You didn't do anything, the bots did. It only becomes a real problem if you engage back, follow them, or tap a link in their bio.
+
+**Should I report every bot follower or just remove them?** Removing is usually enough. Reporting is worth doing for accounts that DM you something scammy, since that gives Instagram a reason to act on the account, not just your follower list.
+
+**Will removing bot followers lower my follower count in a way that looks bad?** No one who matters is counting your raw follower total against a specific number. A smaller, real audience reads better than a larger one padded with accounts that never post.
+
+**Can I stop bot waves from happening again?** Not entirely, since the trigger is often just crossing a size threshold or getting shared somewhere public. What you can control is catching the next one quickly instead of letting it sit unnoticed in your follower list.
+
+The count going up overnight isn't always a good morning. Check who actually showed up before you assume it is.`,
   },
 ];
 
