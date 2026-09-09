@@ -129,3 +129,20 @@ export const feedback = pgTable('feedback', {
   page: text('page').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
+
+// Free-text contact messages: the /contact page's form, and the lightweight
+// "quick feedback" widget on the homepage. No userId column - these come
+// from logged-out visitors just as often as logged-in ones.
+export const contactMessages = pgTable('contact_messages', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name'),
+  // Required by /contact's own form (client-side), but genuinely optional
+  // here: the homepage widget allows an anonymous note with no reply expected.
+  email: text('email'),
+  message: text('message').notNull(),
+  topic: text('topic'),
+  // 'contact_page' | 'homepage_widget' — see ContactSource in packages/core.
+  source: text('source').notNull(),
+  page: text('page'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+});

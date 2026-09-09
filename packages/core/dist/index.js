@@ -43,12 +43,19 @@ import { z } from "zod";
 var stringListItemSchema = z.object({
   href: z.string(),
   value: z.string().optional(),
-  timestamp: z.number()
+  // Real exports have shown `null` here (in addition to the documented `0`)
+  // for accounts with no recorded follow time — see entryToAccount in parser.ts.
+  timestamp: z.number().nullable()
 });
 var relationshipEntrySchema = z.object({
   title: z.string().optional(),
   media_list_data: z.array(z.unknown()).optional(),
-  string_list_data: z.tuple([stringListItemSchema])
+  // A strict tuple-of-exactly-1 used to be required here, but a real Instagram
+  // export can contain a zero-length string_list_data for an account Instagram
+  // has since removed/deactivated (no resolvable profile info left) — that
+  // used to fail the *entire* file's validation over one placeholder entry.
+  // Accept 0 or 1 items; parser.ts's entryToAccount skips the empty ones.
+  string_list_data: z.array(stringListItemSchema).max(1)
 });
 var followersFileSchema = z.array(relationshipEntrySchema);
 var followingFileSchema = z.object({
@@ -91,6 +98,18 @@ var feedbackSchema = z.object({
   comment: z.string().trim().max(1e3).optional(),
   page: z.string().trim().max(200)
 });
+var contactSources = ["contact_page", "homepage_widget"];
+var contactMessageSchema = z.object({
+  name: z.string().trim().max(120).optional(),
+  // Optional here: the homepage widget allows an anonymous note with no
+  // reply expected. The /contact page's own form makes it required in its
+  // client-side validation before the request is even sent.
+  email: z.string().trim().toLowerCase().email().max(320).optional(),
+  message: z.string().trim().min(1).max(2e3),
+  topic: z.string().trim().max(60).optional(),
+  source: z.enum(contactSources),
+  page: z.string().trim().max(200).optional()
+});
 
 // src/parser.ts
 function labelValuesToAccount(entry) {
@@ -107,11 +126,12 @@ function labelValuesToAccount(entry) {
 }
 function entryToAccount(entry) {
   const item = entry.string_list_data[0];
+  if (!item) return null;
   const username = item.value ?? entry.title ?? "";
   return {
     username,
     href: item.href,
-    followedAt: item.timestamp > 0 ? item.timestamp : null
+    followedAt: item.timestamp && item.timestamp > 0 ? item.timestamp : null
   };
 }
 async function parseFollowersJson(zip, fileNames) {
@@ -128,7 +148,7 @@ async function parseFollowersJson(zip, fileNames) {
     if (!result.success) {
       throw new SchemaValidationError(fname, result.error.issues[0]?.message ?? "unknown");
     }
-    accounts.push(...result.data.map(entryToAccount));
+    accounts.push(...result.data.map(entryToAccount).filter((a) => a !== null));
   }
   return accounts;
 }
@@ -144,7 +164,7 @@ async function parseFollowingJson(zip, fileName) {
   if (!result.success) {
     throw new SchemaValidationError(fileName, result.error.issues[0]?.message ?? "unknown");
   }
-  return result.data.relationships_following.map(entryToAccount);
+  return result.data.relationships_following.map(entryToAccount).filter((a) => a !== null);
 }
 var IG_LINK_RE = /href="(https:\/\/www\.instagram\.com\/(?:_u\/)?([^"/?#]+)[^"]*)"/gi;
 function parseAccountsFromHtml(html) {
@@ -399,6 +419,8 @@ export {
   SchemaValidationError,
   analyzeSnapshot,
   compareSnapshots,
+  contactMessageSchema,
+  contactSources,
   detectDeltaExport,
   feedbackSchema,
   feedbackSentiments,

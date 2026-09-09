@@ -14,6 +14,9 @@ export type {
   FollowingFile,
   FeedbackInput,
   FeedbackSentiment,
+  ContactMessageInput,
+  ContactSource,
 } from './schemas.js';
 export { feedbackSchema, feedbackSentiments } from './schemas.js';
+export { contactMessageSchema, contactSources } from './schemas.js';
 export type { SingleSnapshotAnalysis, SnapshotComparison } from './diff.js';

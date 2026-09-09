@@ -79,6 +79,25 @@ export const feedbackSchema = z.object({
 export type FeedbackSentiment = (typeof feedbackSentiments)[number];
 export type FeedbackInput = z.infer<typeof feedbackSchema>;
 
+// Which surface a contact/quick-feedback message came from: the dedicated
+// /contact page's form, or the lightweight floating widget on the homepage.
+export const contactSources = ['contact_page', 'homepage_widget'] as const;
+
+export const contactMessageSchema = z.object({
+  name: z.string().trim().max(120).optional(),
+  // Optional here: the homepage widget allows an anonymous note with no
+  // reply expected. The /contact page's own form makes it required in its
+  // client-side validation before the request is even sent.
+  email: z.string().trim().toLowerCase().email().max(320).optional(),
+  message: z.string().trim().min(1).max(2000),
+  topic: z.string().trim().max(60).optional(),
+  source: z.enum(contactSources),
+  page: z.string().trim().max(200).optional(),
+});
+
+export type ContactSource = (typeof contactSources)[number];
+export type ContactMessageInput = z.infer<typeof contactMessageSchema>;
+
 export type StringListItem = z.infer<typeof stringListItemSchema>;
 export type RelationshipEntry = z.infer<typeof relationshipEntrySchema>;
 export type FollowersFile = z.infer<typeof followersFileSchema>;

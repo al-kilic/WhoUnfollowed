@@ -32,6 +32,17 @@ function preheader(text: string): string {
   return `<div style="display:none;max-height:0;overflow:hidden;opacity:0;mso-hide:all;">${text}</div>`;
 }
 
+// Every other template here only interpolates copy this file wrote itself.
+// contactNotificationEmail below is the first to embed raw visitor input, so
+// it's the first that actually needs this.
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 // Shared branded shell: logo header, content slot, legal footer.
 function emailLayout(opts: { locale: AppLocale; preview: string; contentHtml: string }): string {
   return `<!DOCTYPE html>
@@ -232,4 +243,65 @@ export function unlockExpiredEmail(opts: { locale?: AppLocale } = {}): EmailResu
     </table>`;
 
   return { subject: c.subject, html: emailLayout({ locale, preview: c.preview, contentHtml: content }), text };
+}
+
+// Internal notification, sent to the founder's own inbox (not the visitor)
+// whenever the /contact form or the homepage quick-feedback widget gets a
+// submission. Always English (this is admin-facing, not user-facing site
+// copy) and always escapes the visitor-supplied fields, since this is the
+// first template in this file to embed raw user input rather than copy this
+// file wrote itself.
+export function contactNotificationEmail(opts: {
+  // `| undefined` (not just `?:`) since the caller passes a Zod-parsed
+  // object through directly under exactOptionalPropertyTypes, which keeps
+  // the key present with an undefined value rather than omitting it.
+  name?: string | undefined;
+  email?: string | undefined;
+  message: string;
+  topic?: string | undefined;
+  source: 'contact_page' | 'homepage_widget';
+  page?: string | undefined;
+}): EmailResult {
+  const sourceLabel = opts.source === 'contact_page' ? 'Contact page' : 'Homepage widget';
+  const whoLabel = opts.name || opts.email || 'an anonymous visitor';
+  const subject = opts.topic ? `[${opts.topic}] New message from ${whoLabel}` : `New message from ${whoLabel}`;
+
+  const fromValue = opts.name
+    ? `${opts.name}${opts.email ? ` <${opts.email}>` : ''}`
+    : (opts.email ?? '(no email given)');
+  const rows: [string, string][] = [
+    ['From', fromValue],
+    ['Source', sourceLabel],
+  ];
+  if (opts.topic) rows.push(['Topic', opts.topic]);
+  if (opts.page) rows.push(['Page', opts.page]);
+
+  const metaHtml = rows
+    .map(
+      ([label, value]) =>
+        `<tr><td style="padding:3px 10px 3px 0;font-size:12px;color:${C.mute};white-space:nowrap;">${escapeHtml(label)}</td><td style="padding:3px 0;font-size:12px;color:${C.dim};">${escapeHtml(value)}</td></tr>`,
+    )
+    .join('');
+  const metaText = rows.map(([label, value]) => `${label}: ${value}`).join('\n');
+
+  const messageHtml = escapeHtml(opts.message).replace(/\n/g, '<br />');
+
+  const content = `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      <tr><td style="padding:30px 30px 0;">
+        <h1 style="margin:0 0 14px;font-size:21px;font-weight:600;color:${C.ink};">New contact message</h1>
+        <table role="presentation" cellpadding="0" cellspacing="0" style="margin-bottom:18px;">${metaHtml}</table>
+      </td></tr>
+      <tr><td style="padding:0 30px 30px;">
+        <div style="background:${C.bg};border:1px solid ${C.border};border-radius:12px;padding:16px 18px;font-size:14px;line-height:1.6;color:${C.ink};white-space:pre-wrap;">${messageHtml}</div>
+      </td></tr>
+    </table>`;
+
+  const text = `New contact message\n\n${metaText}\n\n${opts.message}`;
+
+  return {
+    subject,
+    html: emailLayout({ locale: 'en', preview: opts.message.slice(0, 120), contentHtml: content }),
+    text,
+  };
 }

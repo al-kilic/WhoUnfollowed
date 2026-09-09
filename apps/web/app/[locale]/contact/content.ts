@@ -18,6 +18,25 @@ export interface ContactContent {
   subjectPrefilled: string;
   responseRows: { label: string; detail: string }[];
   backToHome: string;
+  // Direct-message form (sends to the team, not a mailto link).
+  form: {
+    heading: string;
+    nameLabel: string;
+    nameOptional: string;
+    emailLabel: string;
+    messageLabel: string;
+    messagePlaceholder: string;
+    send: string;
+    sending: string;
+    successTitle: string;
+    successBody: string;
+    sendAnother: string;
+    errorMissingEmail: string;
+    errorInvalidEmail: string;
+    errorMissingMessage: string;
+    errorGeneric: string;
+    orEmailDirectly: string;
+  };
 }
 
 const EN: ContactContent = {
@@ -49,6 +68,24 @@ const EN: ContactContent = {
     { label: 'Press inquiries', detail: 'Happy to respond. Please include publication name.' },
   ],
   backToHome: 'Back to WhoUnfollowed',
+  form: {
+    heading: 'Send a message',
+    nameLabel: 'Name',
+    nameOptional: 'optional',
+    emailLabel: 'Your email',
+    messageLabel: 'Message',
+    messagePlaceholder: 'What\'s going on?',
+    send: 'Send message',
+    sending: 'Sending…',
+    successTitle: 'Message sent',
+    successBody: 'Thanks. One person reads every message, usually within 24 hours.',
+    sendAnother: 'Send another message',
+    errorMissingEmail: 'Enter your email so we can reply.',
+    errorInvalidEmail: 'That email address doesn\'t look right.',
+    errorMissingMessage: 'Write a message before sending.',
+    errorGeneric: 'Something went wrong sending that. Try again, or use the email address below.',
+    orEmailDirectly: 'Prefer email directly?',
+  },
 };
 
 const ES: ContactContent = {
@@ -80,6 +117,24 @@ const ES: ContactContent = {
     { label: 'Consultas de prensa', detail: 'Encantados de responder. Por favor incluye el nombre de la publicación.' },
   ],
   backToHome: 'Volver a WhoUnfollowed',
+  form: {
+    heading: 'Envía un mensaje',
+    nameLabel: 'Nombre',
+    nameOptional: 'opcional',
+    emailLabel: 'Tu correo',
+    messageLabel: 'Mensaje',
+    messagePlaceholder: '¿Qué está pasando?',
+    send: 'Enviar mensaje',
+    sending: 'Enviando…',
+    successTitle: 'Mensaje enviado',
+    successBody: 'Gracias. Una sola persona lee cada mensaje, normalmente en menos de 24 horas.',
+    sendAnother: 'Enviar otro mensaje',
+    errorMissingEmail: 'Ingresa tu correo para poder responderte.',
+    errorInvalidEmail: 'Esa dirección de correo no parece válida.',
+    errorMissingMessage: 'Escribe un mensaje antes de enviar.',
+    errorGeneric: 'Algo salió mal al enviar esto. Intenta de nuevo, o usa la dirección de correo de abajo.',
+    orEmailDirectly: '¿Prefieres escribir por correo directamente?',
+  },
 };
 
 const PT: ContactContent = {
@@ -111,6 +166,24 @@ const PT: ContactContent = {
     { label: 'Consultas de imprensa', detail: 'Teremos prazer em responder. Inclua o nome da publicação.' },
   ],
   backToHome: 'Voltar ao WhoUnfollowed',
+  form: {
+    heading: 'Envie uma mensagem',
+    nameLabel: 'Nome',
+    nameOptional: 'opcional',
+    emailLabel: 'Seu email',
+    messageLabel: 'Mensagem',
+    messagePlaceholder: 'O que está acontecendo?',
+    send: 'Enviar mensagem',
+    sending: 'Enviando…',
+    successTitle: 'Mensagem enviada',
+    successBody: 'Obrigado. Uma só pessoa lê cada mensagem, geralmente em até 24 horas.',
+    sendAnother: 'Enviar outra mensagem',
+    errorMissingEmail: 'Digite seu email para que possamos responder.',
+    errorInvalidEmail: 'Esse endereço de email não parece válido.',
+    errorMissingMessage: 'Escreva uma mensagem antes de enviar.',
+    errorGeneric: 'Algo deu errado ao enviar isso. Tente novamente, ou use o endereço de email abaixo.',
+    orEmailDirectly: 'Prefere escrever por email diretamente?',
+  },
 };
 
 export function getContactContent(locale: AppLocale): ContactContent {

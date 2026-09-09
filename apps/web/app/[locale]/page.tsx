@@ -128,7 +128,7 @@ export default async function HomePage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <LandingPage userEmail={user?.email ?? null} isPro={isPro} initialStats={initialStats} content={content} />
+      <LandingPage userEmail={user?.email ?? null} isPro={isPro} initialStats={initialStats} content={content} locale={locale} />
     </>
   );
 }
