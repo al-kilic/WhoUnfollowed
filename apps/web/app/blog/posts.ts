@@ -2809,6 +2809,195 @@ The clearest way to confirm a bot wave, instead of just suspecting one, is to co
 
 The count going up overnight isn't always a good morning. Check who actually showed up before you assume it is.`,
   },
+  {
+    slug: 'did-they-unfollow-you-or-get-banned-on-instagram',
+    cluster: 'unfollowers',
+    title: 'Did They Unfollow You, or Did Instagram Ban Their Account?',
+    metaTitle: 'Unfollowed You, or Did Instagram Ban Their Account?',
+    metaDescription: 'Someone vanished from your followers list and it might not be an unfollow at all. Here is how to tell a plain unfollow apart from Instagram\'s 2026 ban wave.',
+    excerpt: 'They\'re gone from your followers list, their old profile loads fine one day and returns nothing the next. That pattern isn\'t always an unfollow. In 2026 it\'s often something else entirely.',
+    date: 'September 8, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'did they unfollow me or get banned on instagram',
+    art: 'ghost',
+    image: '/blog/deactivated-or-blocked-hero.jpg',
+    imageAlt: 'A hand holding a phone showing a folder of social media apps including Instagram, representing the uncertainty of whether a missing follower unfollowed or had their account disabled',
+    cta: {
+      heading: 'Stop guessing which one it was.',
+      body: 'Whatever took them off your list, your export shows the one fact you can actually verify: they\'re no longer following you as of this date. Upload two of your own exports and WhoUnfollowed shows exactly who\'s gone, in your browser, no password required.',
+      buttonLabel: 'See who\'s actually gone',
+      proNudge: 'Pro keeps a running history of your exports, so the next time a name drops off you already have a recent snapshot to compare it against.',
+    },
+    body: `Someone drops off your followers list, and the usual detective work doesn't add up. Their profile isn't marked unavailable to you specifically, so it's probably not a block. It hasn't vanished from search entirely either, at least not yet, so deactivation doesn't quite fit. Then a day or two later, their profile is gone for everyone. Not deactivated, not deleted by choice. Disabled. In 2026, that's a more common ending than it used to be, and it has nothing to do with anything you did.
+
+## The ban wave behind a lot of these disappearances
+
+Meta has been running aggressive AI-driven moderation against Facebook and Instagram accounts through 2026, and a meaningful share of it has been hitting accounts that never violated anything. Meta's own Oversight Board, the body Meta created to review its content decisions, published findings in June 2026 concluding that account bans suffer from a [lack of transparency and consistency](https://techcrunch.com/2026/06/04/metas-oversight-board-says-account-bans-lack-due-process-transparency/) in how the two-tier system of strikes versus permanent disabling actually gets applied. The board's report specifically flagged that even paying Meta Verified subscribers, promised real support, often get little meaningful help appealing a disabled account.
+
+None of this shows up anywhere in your followers list. Instagram doesn't tag a missing follower as "banned" versus "unfollowed you." They're both just gone.
+
+## How a ban actually looks different from an unfollow
+
+A plain unfollow leaves the other person's account completely untouched. Full profile, working posts, searchable by name, nothing changed except your specific relationship to them. A ban is different, and once you know what to check for, it's fairly identifiable:
+
+- Their profile returns "Sorry, this page isn't available" for everyone who looks, not just for you. Test this from a browser where you're logged out, or ask a mutual friend to check.
+- It happens suddenly, often with no posting gap beforehand. Deactivations and burnout-driven disappearances usually follow weeks of dwindling activity first. A ban frequently lands mid-stride, on an account that was posting normally days earlier.
+- Their comments and tags on other people's posts, including yours, often go with them, the username replaced or the content pulled entirely, rather than persisting the way a deactivated account's old comments usually do.
+- If you search directly by their exact username, nothing comes up at all, for anyone, on any account.
+
+## Why this matters more than it sounds like it should
+
+If a real chunk of your followers got swept up in a ban wave rather than deliberately unfollowing you, that's a completely different story than losing an audience. Nobody decided your content wasn't worth following anymore. An enforcement system made a call, sometimes a wrong one, about their account, unrelated to you entirely. Conflating the two leads to the wrong conclusion: doubting your content when the actual cause was outside anyone's control.
+
+This sits alongside a couple of related mysteries worth knowing about. If the account looks abandoned rather than outright gone, that's usually [deactivation, deletion, or a block](/blog/deactivated-or-blocked-on-instagram-how-to-tell) instead. If it reappears later under a completely different username, that's the [fresh-start scenario](/blog/did-they-unfollow-you-or-start-a-new-instagram-account) we've covered separately. And if a chunk of your list disappeared all at once and none of the above quite fits, check whether it lines up with [Instagram's May 2026 spam purge](/blog/instagram-great-purge-2026-follower-drop), a related but distinct event driven by bot cleanup rather than account bans.
+
+## What you can actually confirm, and what you can't
+
+Your own export tells you one hard fact with total accuracy: a specific username was in your followers list on one date and isn't on a later one. That's real, checkable data. What it can't tell you is why, whether it was a ban, a deactivation, or a genuine unfollow. Instagram doesn't expose that distinction anywhere, including inside your own data export, and no tool that reads your export honestly can manufacture information Instagram never provides. If you need to know the reason and not just the fact, the profile-checking steps above are the closest you can get from outside their account.
+
+## Getting the actual list
+
+[Export your Instagram data](/blog/how-to-download-your-instagram-data), and export it again a few weeks later. Upload both to [WhoUnfollowed](/) and it reads them locally in your browser, no password involved, and shows you exactly who dropped off between the two dates. If your appeal process, someone else's ban, or a wave of them has you wondering how many people you actually lost versus how many just had a rough month with Meta's moderation systems, that comparison is the only way to see the real number instead of guessing from memory.
+
+## Quick Answers
+
+**Can I tell from my export alone whether someone was banned or unfollowed me?** No. The export shows they're gone, not why. Checking whether their profile still loads for other people is the only way to narrow it down from outside.
+
+**If Instagram reinstates a wrongly banned account, will they automatically follow me again?** No. A reinstated account returns to whatever state it was in when it was disabled, but the follow relationship as it existed at that moment is what comes back, nothing is re-added retroactively beyond that.
+
+**Is the 2026 ban wave the same thing as the Great Purge?** No, they're separate events. [The Great Purge](/blog/instagram-great-purge-2026-follower-drop) was a targeted removal of bot and spam accounts in May 2026. The ban wave covered here is ongoing AI moderation catching real accounts, including legitimate ones, in its enforcement net.
+
+**Does Instagram notify me when someone I follow gets banned?** No. There's no notification for this, the same way there's [no notification for a plain unfollow](/blog/does-instagram-notify-when-you-unfollow-someone). You only find out by noticing the profile is gone.
+
+A missing name isn't always a verdict on your content. Sometimes it's an enforcement system making a call about someone else's account entirely. Either way, the only way to know exactly who's missing is to check the list, not the feeling.`,
+  },
+  {
+    slug: 'why-did-my-ex-unfollow-me-on-instagram',
+    cluster: 'unfollowers',
+    title: 'Why Did My Ex Unfollow Me on Instagram? What the Timing Tells You',
+    metaTitle: 'Why Did My Ex Unfollow Me on Instagram?',
+    metaDescription: 'An ex disappearing from your followers list hits differently. Here is what the timing usually means, and how to confirm exactly when it happened.',
+    excerpt: 'A stranger unfollowing you is nothing. An ex unfollowing you is a whole afternoon gone. Here is what the timing of it usually means, and the one way to actually confirm when it happened.',
+    date: 'September 9, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'why did my ex unfollow me on instagram',
+    art: 'bell',
+    image: '/blog/invisible-check-hero.jpg',
+    imageAlt: 'An overhead view of a person quietly holding a smartphone at a table, representing checking privately whether an ex unfollowed you on Instagram',
+    cta: {
+      heading: 'Get the fact, skip the spiral.',
+      body: 'You don\'t need to keep opening their profile to check. Upload your own Instagram export and WhoUnfollowed shows you exactly when they left your followers list, in your browser, with nobody notified on either end.',
+      buttonLabel: 'Check quietly',
+      proNudge: 'Pro can alert you the moment it happens instead of you finding out days later mid-scroll.',
+    },
+    body: `A stranger unfollowing you registers as nothing. An ex unfollowing you can derail an entire afternoon. You notice the follower count first, then go looking for the specific name, and there it is, gone, no message, no warning, no explanation Instagram will ever hand you. The urge that follows, checking their profile again, then again, refreshing a number that isn't going to change, is a genuinely common response, not a personal failing.
+
+## This is a documented pattern, not just you being dramatic
+
+A 2026 study on post-breakup Instagram behavior, [published in the peer-reviewed literature on social media and breakup distress](https://pubmed.ncbi.nlm.nih.gov/42388174/), examined exactly this kind of surveillance, checking an ex's activity, followers, and posts after a relationship ends, and its connection to attachment style and how much distress someone reports. It builds on older, equally well-established research: a widely cited 2012 study on [Facebook surveillance of former partners](https://journals.sagepub.com/doi/full/10.1089/cyber.2012.0125) found that people who monitored an ex's activity after a breakup reported more distress, more longing, and slower emotional recovery than people who didn't. The compulsion to check is real and studied. It also, per the same research, tends to make things worse, not better.
+
+## What the timing of an unfollow usually signals
+
+Instagram gives you no context for an unfollow, but the timing relative to the breakup itself tends to sort into a few recognizable patterns:
+
+| Timing | What it usually means |
+|---|---|
+| Immediately after the breakup | A clean break, often protective. They don't want your content, or reminders of you, showing up in their feed while it's still raw. |
+| Weeks or months later, out of nowhere | Often unrelated to you directly. A broader following-list cleanup, a new relationship, or simply moving on and trimming who they follow. |
+| Right after you posted something | Could be reactive to that specific post, but could just as easily be coincidence. One data point isn't a pattern. |
+| Never happens at all | Plenty of exes stay following each other indefinitely. It says less about lingering feelings than people assume, and more about neither person bothering to clean up. |
+
+None of these are certainties. They're the most common explanations behind each pattern, not proof of what's actually happening in someone else's head.
+
+## Why checking their profile over and over doesn't actually help
+
+Opening their profile repeatedly to see if anything changed keeps the wound active without producing new information. If they unfollowed you, their profile will look completely normal otherwise, same posts, same activity, nothing that explains the decision. You're not going to find the answer by looking harder. You're going to find the same absence, over and over, which is precisely the pattern the [2026 surveillance study](https://pubmed.ncbi.nlm.nih.gov/42388174/) linked to worse breakup recovery.
+
+## The one thing worth actually confirming
+
+There's a real difference between obsessively re-checking and confirming a single fact once, closing the tab, and moving on. If you want to know exactly when an unfollow happened rather than continuing to wonder, that's something you can settle with data instead of vigilance.
+
+[Export your Instagram data](/blog/how-to-download-your-instagram-data), which Instagram is required to hand over under data portability rules, no special access needed. If you have an older export from before things ended, even better. Upload it alongside a fresh one to [WhoUnfollowed](/) and it compares the two locally in your browser, no login to anyone's account, no password, nothing sent anywhere. You get the fact: gone as of this date, or still there. Either way, you have an actual answer instead of a running total of profile visits.
+
+## What comes after the answer
+
+Whatever the export shows, it's worth remembering it's a follow status, not a verdict on the relationship or what either of you feels. People clean up following lists for reasons that have nothing to do with anyone specific. If the certainty helps you stop checking, it did its job. If it doesn't, that's a sign the checking was never really about the data in the first place.
+
+## Quick Answers
+
+**Will they know if I check whether they unfollowed me?** No. Comparing your own exports never touches their account or notifies anyone. It's the same privacy guarantee covered in [how to see who unfollowed you without them knowing](/blog/how-to-see-who-unfollowed-you-without-them-knowing).
+
+**Should I unfollow them first?** That's a personal call the data can't make for you. Some people find a clean break easier; others prefer staying connected. Neither is more emotionally healthy on its own, per the research above, it's the compulsive checking that correlates with worse recovery, not the follow status itself.
+
+**Can I find out if they blocked me instead of unfollowing?** Yes, and it's a different check. If their profile shows unavailable to you specifically, but a mutual friend can still see it fine, that's a block, not an unfollow. See [deactivated, deleted, or blocked](/blog/deactivated-or-blocked-on-instagram-how-to-tell) for the full breakdown.
+
+**Is it normal to still think about this months later?** Checking activity that far out is common enough to have its own research literature, as cited above. Common doesn't mean it's helping. If it's a daily habit rather than something you settled once, that's worth being honest with yourself about.
+
+You don't need to keep watching to know. You need one honest comparison and the discipline to stop after you have it.`,
+  },
+  {
+    slug: 'why-followers-from-a-viral-post-unfollow-you-later',
+    cluster: 'account-health',
+    title: 'Why Half the Followers From a Viral Post Unfollow You Later',
+    metaTitle: 'Why Viral-Post Followers Unfollow You Later',
+    metaDescription: 'A Reel went viral, followers spiked, and now they are leaving just as fast. Here is why viral-post followers churn, and how to see who actually stuck around.',
+    excerpt: 'One Reel did huge numbers and your follower count jumped overnight. Weeks later, a chunk of that jump is gone. It is not personal, and it is not random. Here is the actual mechanism.',
+    date: 'September 10, 2026',
+    readTime: '5 min',
+    tag: 'Growth',
+    primaryKeyword: 'why do followers from a viral post unfollow later',
+    art: 'ratio',
+    image: '/blog/follow-ratio-hero.jpg',
+    imageAlt: 'An analytics dashboard on a screen showing user metrics and charts, representing tracking which followers gained from a viral post actually stayed',
+    cta: {
+      heading: 'See who actually stayed.',
+      body: 'A viral spike is easy to celebrate and hard to audit from memory. Upload two Instagram exports, one from before the post and one a few weeks after, and WhoUnfollowed shows exactly who stuck around and who left. In your browser, no password.',
+      buttonLabel: 'Check who stuck around',
+      proNudge: 'Pro keeps a running history of your exports, so you can watch exactly how each spike settles over time instead of comparing two snapshots after the fact.',
+    },
+    body: `One Reel does numbers nothing else you've posted has ever come close to. The follower count jumps hundreds, maybe thousands, in a single day. It feels like the moment everything changes. Then two or three weeks pass, and a chunk of those new names is already gone. Not all of them, but enough that the count you were celebrating has quietly given some of it back. It's not a glitch, and it's not a sign the post was somehow fake. It's the most predictable outcome a viral spike has.
+
+## Why a viral post pulls in the wrong audience, on purpose
+
+A single piece of content going viral almost never means your whole account suddenly resonates with a new audience. It usually means one specific post, often an outlier from what you normally make, got pushed to people who have no context for anything else on your profile. [Meta's Transparency Center explains how Instagram's ranking systems decide what to recommend](https://transparency.meta.com/features/explaining-ranking/ig-feed-recommendations/), and non-follower distribution is driven by signals on that individual post, watch time, shares, comments, not by an evaluation of your account as a whole. The algorithm found people likely to engage with that one video. It said nothing about whether they'd want the rest of what you post.
+
+Someone follows off the strength of a single Reel, checks your grid a few days later expecting more of the same, and finds your usual content instead: different format, different topic, different tone. A real portion of them leave, not out of malice, just a mismatch between what got them there and what's actually on offer.
+
+## The two waves this produces
+
+Viral-spike churn tends to arrive in a pattern that looks different depending on when you check it:
+
+1. **The immediate bounce.** A slice of new followers unfollow within days, often after opening your profile once, seeing content unrelated to the viral post, and deciding on the spot it's not for them.
+2. **The slow fade.** Others stick around longer, sometimes weeks, quietly disengaging before eventually unfollowing during an unrelated cleanup of their own following list. This wave is easy to miss because it doesn't happen on any single day you'd think to check.
+
+Both waves are real, and both are normal. A spike that retains 100% of its followers is the exception, not the expectation.
+
+## Why the follower count alone hides the story
+
+If you're only watching the total, a viral spike followed by churn can look confusing: the number went up fast, then drifted down slowly, landing somewhere in between where you started and where you peaked. What that single number can't tell you is which specific accounts from the spike stayed and which left, or whether your regular audience, the people who followed before the viral post existed, was affected at all. Those are two completely different signals a raw count flattens into one.
+
+## How to actually see what happened
+
+[Export your Instagram data](/blog/how-to-download-your-instagram-data) right before or right after a post takes off, then export again three or four weeks later once the initial spike has had time to settle. Upload both to [WhoUnfollowed](/) and it reads them in your browser, no password required, and shows you exactly who was added during the spike and who's already gone. That comparison tells you two useful things at once: your actual retention rate from that specific post, and confirmation that your regular audience, the people who followed you before any of this happened, stayed put. It's a very different question from the one covered in [why you lose followers after changing your content or niche](/blog/why-you-lose-followers-when-you-change-your-instagram-content-or-niche), since this churn comes from one outlier post pulling in a mismatched crowd, not from a deliberate, lasting shift in what you post.
+
+## What's actually worth doing about it
+
+Chasing 100% retention from a viral spike isn't realistic, and treating the churn as a failure misreads what happened. The follower count was never really the point, the useful number is how many of those new people are still watching your content weeks later, engaging with what you actually make rather than the one outlier that brought them in. A smaller, retained audience from a viral moment is worth more going forward than a larger one that only ever wanted the single post that got them there.
+
+## Quick Answers
+
+**Should I try to make more content like the viral post to keep those followers?** Only if it's something you'd want to keep making anyway. Chasing one outlier's format to retain followers who only wanted that format tends to trade your regular audience for a crowd that leaves the moment you stop.
+
+**How long should I wait before checking who stuck around?** Three to four weeks gives the initial bounce and most of the slower fade time to happen. Checking the day after the spike only catches the fastest, most reactive unfollows.
+
+**Does a viral post hurt my account if a lot of people unfollow afterward?** No. Instagram doesn't penalize accounts for follower churn. What matters for future reach is ongoing engagement from your current audience, not a stable total headcount.
+
+**Is this the same thing as ghost followers?** No. [Ghost followers](/blog/instagram-ghost-followers-how-to-find-and-remove-them) are accounts that stuck around without engaging. Viral-spike churn is the opposite pattern, people who followed briefly and then actually left.
+
+A follower count that gives some of a spike back isn't a loss. It's the audience sorting itself into the people who actually wanted to be there.`,
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
