@@ -14,12 +14,18 @@ dist/
 .claude/
 .agents/
 
-# Environment variables — never commit these
+# Environment variables — never commit these. The specific patterns below
+# predate this catch-all and are kept for clarity, but .env* is what actually
+# covers every variant (.env.test, .env.staging, .env.ci, ...) — only the
+# example files are meant to be tracked.
 .env
 .env.local
 .env.*.local
 .env.production
 .env.development
+.env*
+!.env.example
+!ops/.env.example
 
 # Private docs — local only, never push
 CLAUDE.md

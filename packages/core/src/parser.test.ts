@@ -152,6 +152,57 @@ describe('parseInstagramZip', () => {
     expect(snapshot.followers[0]?.followedAt).toBeNull();
   });
 
+  it('sanitizes a non-instagram.com href in follower/following JSON to a safe profile URL (security: prevents javascript: URL injection from a crafted export)', async () => {
+    const JSZip = (await import('jszip')).default;
+    const z = new JSZip();
+    z.file(
+      'connections/followers_and_following/followers_1.json',
+      JSON.stringify([
+        {
+          title: 'attacker',
+          media_list_data: [],
+          string_list_data: [{ href: "javascript:alert(document.cookie)", value: 'attacker', timestamp: 1700000000 }],
+        },
+      ]),
+    );
+    z.file(
+      'connections/followers_and_following/following.json',
+      JSON.stringify({ relationships_following: [] }),
+    );
+    const buf = await z.generateAsync({ type: 'arraybuffer' });
+    const snapshot = await parseInstagramZip(buf);
+
+    expect(snapshot.followers[0]?.href).toBe('https://www.instagram.com/attacker');
+  });
+
+  it('sanitizes a non-instagram.com URL in pending_follow_requests.json to a safe profile URL', async () => {
+    const JSZip = (await import('jszip')).default;
+    const z = new JSZip();
+    z.file(
+      'connections/followers_and_following/followers_1.json',
+      JSON.stringify([]),
+    );
+    z.file(
+      'connections/followers_and_following/following.json',
+      JSON.stringify({ relationships_following: [] }),
+    );
+    z.file(
+      'connections/followers_and_following/pending_follow_requests.json',
+      JSON.stringify([
+        {
+          label_values: [
+            { label: 'Username', value: 'pending_user' },
+            { label: 'URL', value: 'data:text/html,<script>alert(1)</script>' },
+          ],
+        },
+      ]),
+    );
+    const buf = await z.generateAsync({ type: 'arraybuffer' });
+    const snapshot = await parseInstagramZip(buf);
+
+    expect(snapshot.pendingRequests?.[0]?.href).toBe('https://www.instagram.com/pending_user');
+  });
+
   it('exportedAt is a recent unix timestamp', async () => {
     const before = Math.floor(Date.now() / 1000) - 1;
     const snapshot = await parseInstagramZip(fixture('valid-export.zip'));

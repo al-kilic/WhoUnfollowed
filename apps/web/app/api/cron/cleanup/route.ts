@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db/index';
 import { profiles, users } from '@/lib/db/schema';
 import { and, eq, lte, isNotNull } from 'drizzle-orm';
+import { isAuthorizedBySecretHeader } from '@/lib/auth/secretHeader';
 
 // Called daily by a server cron (e.g. `curl https://yourdomain.com/api/cron/cleanup`)
 // Deletes accounts whose grace period has expired.
 export async function POST(request: NextRequest) {
-  const secret = request.headers.get('x-cron-secret');
-  if (secret !== process.env.CRON_SECRET) {
+  if (!isAuthorizedBySecretHeader(request, 'x-cron-secret', process.env.CRON_SECRET)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

@@ -17,14 +17,24 @@ const TAG_COLORS: Record<string, { color: string; bg: string }> = {
   Privacy: { color: T.terra, bg: 'rgba(168,75,47,0.1)' },
 };
 
-// Inline formatting: [text](url) links and **bold**.
+function escapeHtml(value: string): string {
+  return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// Inline formatting: [text](url) links and **bold**. This is the sole HTML-
+// injection point for every post body (rendered via dangerouslySetInnerHTML
+// below) — post content is static developer-authored TypeScript today, not
+// user input, but a `url` of `javascript:...` would still execute if one
+// ever slipped into posts.ts, so only http(s) and site-relative links render
+// as real hrefs, and `label` is HTML-escaped before interpolation.
 function inline(text: string): string {
   return text
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, url) => {
-      const ext = String(url).startsWith('http');
-      return `<a href="${url}" style="color:${T.tealLight};text-decoration:none;font-weight:500"${ext ? ' target="_blank" rel="noopener noreferrer"' : ''}>${label}</a>`;
+      const safeUrl = /^https?:\/\//i.test(url) || url.startsWith('/') || url === '#' ? url : '#';
+      const ext = safeUrl.startsWith('http');
+      return `<a href="${safeUrl}" style="color:${T.tealLight};text-decoration:none;font-weight:500"${ext ? ' target="_blank" rel="noopener noreferrer"' : ''}>${escapeHtml(label)}</a>`;
     })
-    .replace(/\*\*([^*]+)\*\*/g, (_, b) => `<strong style="color:${T.ink};font-weight:600">${b}</strong>`);
+    .replace(/\*\*([^*]+)\*\*/g, (_, b) => `<strong style="color:${T.ink};font-weight:600">${escapeHtml(b)}</strong>`);
 }
 
 // `post.body` is NOT full markdown, it's a small hand-rolled subset. Only the

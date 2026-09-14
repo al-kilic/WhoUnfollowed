@@ -6,6 +6,7 @@ import { hasLocale } from 'next-intl';
 import { routing, type AppLocale } from '@/i18n/routing';
 import { sendEmail, isEmailConfigured } from '@/lib/email/send';
 import { unlockExpiringSoonEmail, unlockExpiredEmail } from '@/lib/email/templates';
+import { isAuthorizedBySecretHeader } from '@/lib/auth/secretHeader';
 
 // Called daily by a server cron (e.g. `curl -X POST -H "x-cron-secret: $CRON_SECRET"
 // https://yourdomain.com/api/cron/unlock-expiry`). POST-only, unlike a plain
@@ -24,8 +25,7 @@ import { unlockExpiringSoonEmail, unlockExpiredEmail } from '@/lib/email/templat
 const REMINDER_WINDOW_DAYS = 3;
 
 export async function POST(request: NextRequest) {
-  const secret = request.headers.get('x-cron-secret');
-  if (secret !== process.env.CRON_SECRET) {
+  if (!isAuthorizedBySecretHeader(request, 'x-cron-secret', process.env.CRON_SECRET)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

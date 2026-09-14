@@ -21,15 +21,28 @@ import {
 
 // ─── JSON helpers ─────────────────────────────────────────────────────────────
 
+// Both JSON account-builders below read an `href`/`URL` field straight out of
+// the uploaded export file, and the app renders it as a clickable <a href>
+// (dashboard/results/triage link-outs). A crafted or corrupted export could
+// put a `javascript:`/`data:` URL there instead of a real profile link;
+// clicking it would then execute in the page origin, with access to this
+// user's own IndexedDB follower history. Constrain every href to a real
+// instagram.com profile URL, falling back to one built from the username
+// otherwise — mirrors the strict IG_LINK_RE regex already used on the
+// HTML-export path below, which only ever matches instagram.com hrefs.
+function sanitizeIgHref(href: string | undefined, username: string): string {
+  if (href && /^https:\/\/www\.instagram\.com\//i.test(href)) return href;
+  return `https://www.instagram.com/${username}`;
+}
+
 function labelValuesToAccount(entry: LabelValuesEntry): Account | null {
   const get = (label: string) => entry.label_values.find(lv => lv.label === label)?.value ?? '';
   const username = get('Username');
   if (!username) return null;
   const url = get('URL');
-  const href = url || `https://www.instagram.com/${username}`;
   return {
     username,
-    href,
+    href: sanitizeIgHref(url, username),
     followedAt: entry.timestamp && entry.timestamp > 0 ? entry.timestamp : null,
   };
 }
@@ -43,7 +56,7 @@ function entryToAccount(entry: RelationshipEntry): Account | null {
   const username = item.value ?? entry.title ?? '';
   return {
     username,
-    href: item.href,
+    href: sanitizeIgHref(item.href, username),
     followedAt: item.timestamp && item.timestamp > 0 ? item.timestamp : null,
   };
 }
