@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getStripe, isStripeConfigured } from '@/lib/stripe';
+import { checkRateLimit, clientIpFromXff } from '@/lib/auth/rate-limit';
 
 const MIN_USD = 1;
 const MAX_USD = 500;
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://whounfollowed.co';
 
 // Fully anonymous one-off payment. No account, no profile row, no webhook
 // side effect beyond Stripe's own record — see the 'donation' branch in
@@ -10,6 +12,11 @@ const MAX_USD = 500;
 export async function POST(request: NextRequest) {
   if (!isStripeConfigured()) {
     return NextResponse.json({ error: 'Payments not enabled' }, { status: 404 });
+  }
+
+  const ip = clientIpFromXff(request.headers.get('x-forwarded-for'));
+  if (!checkRateLimit(`stripe-donate:${ip}`).allowed) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
   }
 
   const body = await request.json().catch(() => ({}));
@@ -21,7 +28,6 @@ export async function POST(request: NextRequest) {
   }
 
   const stripe = getStripe();
-  const origin = request.headers.get('origin') ?? process.env.NEXT_PUBLIC_APP_URL ?? '';
 
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',
@@ -35,8 +41,8 @@ export async function POST(request: NextRequest) {
         quantity: 1,
       },
     ],
-    success_url: `${origin}${returnPath}${returnPath.includes('?') ? '&' : '?'}donated=1`,
-    cancel_url: `${origin}${returnPath}`,
+    success_url: `${APP_URL}${returnPath}${returnPath.includes('?') ? '&' : '?'}donated=1`,
+    cancel_url: `${APP_URL}${returnPath}`,
     metadata: { type: 'donation' },
   });
 

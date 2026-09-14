@@ -8,12 +8,20 @@ import { db } from '@/lib/db/index';
 import { profiles } from '@/lib/db/schema';
 import { routing } from '@/i18n/routing';
 import { localizedPathname } from '@/i18n/localizedPathname';
+import { checkRateLimit, clientIpFromXff } from '@/lib/auth/rate-limit';
+
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://whounfollowed.co';
 
 // Every purchase here is a one-time unlock (30 or 365 days), never a
 // recurring subscription.
 export async function POST(request: NextRequest) {
   if (!isPaidFeaturesEnabled() || !isStripeConfigured()) {
     return NextResponse.json({ error: 'Payments not enabled' }, { status: 404 });
+  }
+
+  const ip = clientIpFromXff(request.headers.get('x-forwarded-for'));
+  if (!checkRateLimit(`stripe-checkout:${ip}`).allowed) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
   }
 
   const body = await request.json().catch(() => ({}));
@@ -34,15 +42,18 @@ export async function POST(request: NextRequest) {
 
   const stripe = getStripe();
   const { user } = await validateRequest();
-  const origin = request.headers.get('origin') ?? process.env.NEXT_PUBLIC_APP_URL ?? '';
+  // Never trust the request's Origin header for a Stripe redirect target: a
+  // forged header would send a paying customer's session_id (usable to claim
+  // their new account, see welcome/actions.ts) to an attacker-controlled
+  // domain after checkout completes.
   const welcomePath = localizedPathname('/welcome', locale);
   const pricingPath = localizedPathname('/pricing', locale);
 
   const sessionParams: Parameters<typeof stripe.checkout.sessions.create>[0] = {
     mode: 'payment',
     line_items: [{ price, quantity: 1 }],
-    success_url: `${origin}${welcomePath}?session_id={CHECKOUT_SESSION_ID}&plan=unlock`,
-    cancel_url: `${origin}${pricingPath}`,
+    success_url: `${APP_URL}${welcomePath}?session_id={CHECKOUT_SESSION_ID}&plan=unlock`,
+    cancel_url: `${APP_URL}${pricingPath}`,
     allow_promotion_codes: true,
     billing_address_collection: 'auto',
   };
