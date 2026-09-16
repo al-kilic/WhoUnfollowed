@@ -34,6 +34,7 @@ export interface HomeContent {
       invalidZip: string;
       schemaChanged: string;
       unsupportedFormat: string;
+      fileRead: string;
       unknown: string;
     };
     trustOpenSourcePrefix: string;
@@ -178,6 +179,7 @@ const EN: HomeContent = {
       invalidZip: 'We could not read this ZIP. Download the original file from Instagram again and upload it without unzipping it.',
       schemaChanged: 'Instagram may have changed their export format, so we could not read part of this file. Try requesting a fresh export.',
       unsupportedFormat: 'Please upload the original ZIP file Instagram provided.',
+      fileRead: 'Your browser could not read this file. If it is synced via iCloud, Google Drive, or another cloud service, make sure it has fully downloaded to your device, then try again.',
       unknown: 'Something went wrong. Make sure you uploaded the correct Instagram ZIP.',
     },
     trustOpenSourcePrefix: 'open source,',
@@ -377,6 +379,7 @@ const ES: HomeContent = {
       invalidZip: 'No pudimos leer este ZIP. Descarga de nuevo el archivo original de Instagram y súbelo sin descomprimirlo.',
       schemaChanged: 'Es posible que Instagram haya cambiado el formato del export, así que no pudimos leer parte de este archivo. Intenta solicitar un export nuevo.',
       unsupportedFormat: 'Sube el archivo ZIP original que te dio Instagram.',
+      fileRead: 'Tu navegador no pudo leer este archivo. Si se sincroniza con iCloud, Google Drive u otro servicio en la nube, asegúrate de que se haya descargado por completo en tu dispositivo y vuelve a intentarlo.',
       unknown: 'Algo salió mal. Asegúrate de haber subido el ZIP correcto de Instagram.',
     },
     trustOpenSourcePrefix: 'código abierto,',
@@ -576,6 +579,7 @@ const PT: HomeContent = {
       invalidZip: 'Não conseguimos ler este ZIP. Baixe o arquivo original do Instagram novamente e envie sem descompactar.',
       schemaChanged: 'O Instagram pode ter mudado o formato do export, então não conseguimos ler parte deste arquivo. Tente solicitar um export novo.',
       unsupportedFormat: 'Envie o arquivo ZIP original fornecido pelo Instagram.',
+      fileRead: 'Seu navegador não conseguiu ler este arquivo. Se ele estiver sincronizado com iCloud, Google Drive ou outro serviço em nuvem, verifique se o download foi concluído no seu dispositivo e tente novamente.',
       unknown: 'Algo deu errado. Confira se você enviou o ZIP correto do Instagram.',
     },
     trustOpenSourcePrefix: 'código aberto,',

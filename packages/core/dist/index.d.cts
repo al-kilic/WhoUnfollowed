@@ -116,6 +116,10 @@ declare function findGhostFollowers(snapshot: ParsedSnapshot, options?: {
     minTenureDays?: number;
 }): Account[];
 
+declare class FileReadError extends Error {
+    readonly code: "FILE_READ";
+    constructor(cause?: unknown);
+}
 declare class InvalidZipError extends Error {
     readonly code: "INVALID_ZIP";
     constructor(cause?: unknown);
@@ -133,4 +137,4 @@ declare class SchemaValidationError extends Error {
     constructor(filename: string, detail: string);
 }
 
-export { type Account, type ContactMessageInput, type ContactSource, type DeltaDetectionResult, type DeltaReason, type FeedbackInput, type FeedbackSentiment, type FollowersFile, type FollowingFile, InvalidZipError, MissingFilesError, MixedFormatError, type ParsedSnapshot, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, analyzeSnapshot, compareSnapshots, contactMessageSchema, contactSources, detectDeltaExport, feedbackSchema, feedbackSentiments, findGhostFollowers, parseInstagramZip };
+export { type Account, type ContactMessageInput, type ContactSource, type DeltaDetectionResult, type DeltaReason, type FeedbackInput, type FeedbackSentiment, FileReadError, type FollowersFile, type FollowingFile, InvalidZipError, MissingFilesError, MixedFormatError, type ParsedSnapshot, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, analyzeSnapshot, compareSnapshots, contactMessageSchema, contactSources, detectDeltaExport, feedbackSchema, feedbackSentiments, findGhostFollowers, parseInstagramZip };

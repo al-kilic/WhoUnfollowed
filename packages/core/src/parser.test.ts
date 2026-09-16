@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { InvalidZipError, MissingFilesError, MixedFormatError, SchemaValidationError } from './errors.js';
+import { FileReadError, InvalidZipError, MissingFilesError, MixedFormatError, SchemaValidationError } from './errors.js';
 import { parseInstagramZip, extractExportDateFromFilename } from './parser.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -65,6 +65,16 @@ describe('parseInstagramZip', () => {
     await expect(parseInstagramZip(notAZip)).rejects.toThrow(InvalidZipError);
     await expect(parseInstagramZip(notAZip)).rejects.toMatchObject({
       code: 'INVALID_ZIP',
+    });
+  });
+
+  it('throws FileReadError when the File/Blob cannot be read (e.g. stale iOS Safari reference)', async () => {
+    const unreadable = {
+      arrayBuffer: () => Promise.reject(new DOMException('The file could not be read', 'NotReadableError')),
+    } as unknown as Blob;
+    await expect(parseInstagramZip(unreadable)).rejects.toThrow(FileReadError);
+    await expect(parseInstagramZip(unreadable)).rejects.toMatchObject({
+      code: 'FILE_READ',
     });
   });
 

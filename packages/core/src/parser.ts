@@ -4,6 +4,7 @@
 
 import JSZip from 'jszip';
 import {
+  FileReadError,
   InvalidZipError,
   MissingFilesError,
   MixedFormatError,
@@ -209,8 +210,20 @@ export async function parseInstagramZip(
 ): Promise<ParsedSnapshot> {
   const filenameDate = zipFile instanceof File ? extractExportDateFromFilename(zipFile.name) : null;
 
-  // Normalize File/Blob → ArrayBuffer so jszip works consistently across envs
-  const input = zipFile instanceof ArrayBuffer ? zipFile : await (zipFile as Blob).arrayBuffer();
+  // Normalize File/Blob → ArrayBuffer so jszip works consistently across envs.
+  // On mobile Safari, .arrayBuffer() throws NotReadableError near-instantly for
+  // a stale File reference or an iCloud file that hasn't finished downloading
+  // to the device. That's a distinct failure from a corrupt/invalid ZIP.
+  let input: ArrayBuffer;
+  if (zipFile instanceof ArrayBuffer) {
+    input = zipFile;
+  } else {
+    try {
+      input = await (zipFile as Blob).arrayBuffer();
+    } catch (err) {
+      throw new FileReadError(err);
+    }
+  }
 
   let zip: JSZip;
   try {

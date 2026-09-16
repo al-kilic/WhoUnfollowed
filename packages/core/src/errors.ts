@@ -2,6 +2,18 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
+export class FileReadError extends Error {
+  readonly code = 'FILE_READ' as const;
+  constructor(cause?: unknown) {
+    super(
+      'Your browser could not read this file. If it is synced via iCloud, Google Drive, or ' +
+        'another cloud service, make sure it has fully downloaded to your device, then try again.',
+    );
+    this.name = 'FileReadError';
+    if (cause instanceof Error) this.cause = cause;
+  }
+}
+
 export class InvalidZipError extends Error {
   readonly code = 'INVALID_ZIP' as const;
   constructor(cause?: unknown) {
