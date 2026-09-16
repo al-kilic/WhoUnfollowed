@@ -39,6 +39,13 @@ export interface BlogPost {
     buttonLabel: string;
     proNudge?: string;
   };
+  /**
+   * Optional short Q&A list rendered as a visible "Frequently asked
+   * questions" section and emitted as FAQPage JSON-LD (see [slug]/page.tsx).
+   * Answers must stand alone if quoted out of context by an AI answer
+   * engine: one or two plain sentences, no "as mentioned above."
+   */
+  faq?: { q: string; a: string }[];
   body: string;
 }
 
@@ -2997,6 +3004,171 @@ Chasing 100% retention from a viral spike isn't realistic, and treating the chur
 **Is this the same thing as ghost followers?** No. [Ghost followers](/blog/instagram-ghost-followers-how-to-find-and-remove-them) are accounts that stuck around without engaging. Viral-spike churn is the opposite pattern, people who followed briefly and then actually left.
 
 A follower count that gives some of a spike back isn't a loss. It's the audience sorting itself into the people who actually wanted to be there.`,
+  },
+  {
+    slug: 'is-it-normal-to-lose-followers-every-day-on-instagram',
+    cluster: 'unfollowers',
+    title: 'Is It Normal to Lose Followers Every Day on Instagram?',
+    metaTitle: 'Is It Normal to Lose Followers Daily on Instagram?',
+    metaDescription: 'Yes, losing a few followers daily on Instagram is normal. Here\'s exactly why it happens and how to tell background churn from a real, targeted drop.',
+    excerpt: 'A few followers vanish most days and it rarely means anything. Here is why that happens, and the one way to tell normal background churn from an actual problem.',
+    date: 'September 16, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'is it normal to lose followers every day on instagram',
+    art: 'search',
+    image: '/blog/how-often-check-hero.jpg',
+    imageAlt: 'A person checking their phone at a cafe table, representing the daily habit of checking an Instagram follower count',
+    cta: {
+      heading: 'Stop guessing whether it\'s normal.',
+      body: 'A few followers vanishing here and there feels alarming with no way to tell if it is ordinary churn or a real drop. Upload your Instagram export and WhoUnfollowed shows the exact list, spread across weeks or clustered in a single day, so you know which one you are actually looking at.',
+      buttonLabel: 'Check your follower trend',
+      proNudge: 'Pro keeps a running history of every export, so ordinary daily churn and a real spike are obvious at a glance instead of something you have to piece together manually.',
+    },
+    faq: [
+      { q: 'Is it normal to lose a few followers on Instagram every day?', a: 'Yes. Small daily losses are normal for almost every active account and usually come from dormant accounts being deleted or spam being removed, not from anything wrong with your content.' },
+      { q: 'How many followers is too many to lose in one day?', a: 'There is no fixed number that applies to every account; what matters is whether a loss is a small, steady trickle or a sudden spike well above your normal daily pattern.' },
+      { q: 'Does Instagram remove followers on its own?', a: 'Yes. Instagram periodically removes spam, bot, and fake accounts from your followers count as part of its own platform cleanup, which can show up as a follower drop you did not cause.' },
+      { q: 'How can I tell if my daily follower loss is normal or a sign of a real problem?', a: 'Compare two dated exports of your own Instagram data taken a few weeks apart; small, evenly spread losses point to background churn, while losses clustered into one sudden spike point to a specific cause.' },
+      { q: 'Should I check who unfollowed me every day?', a: 'Checking daily usually just shows normal background noise; a weekly or monthly comparison gives a clearer, less anxiety-inducing picture of your real follower trend.' },
+    ],
+    body: `Yes, losing a small number of followers every day is normal for almost every active Instagram account, including ones doing nothing wrong. Dead accounts get deleted, people quietly trim who they follow, and Instagram periodically removes spam and bot accounts from your follower count on its own. A slow, steady trickle is not a red flag by itself. What matters is whether that trickle stays small and steady, or suddenly turns into a spike.
+
+## Why Small Daily Losses Happen
+
+Most accounts of any real size lose a few followers most days, and it rarely has anything to do with your last post. Some of your followers close their accounts, get suspended, or just stop using Instagram altogether, and once an account is gone it drops out of your follower count the same way an active unfollow does. Other people go through their own following list, probably about as often as you go through yours, and quietly trim accounts they have lost interest in, yours included sometimes, without it meaning anything specific about you.
+
+## Instagram Removes Some Followers For You
+
+A chunk of daily churn is not even about people choosing to leave. Instagram runs its own ongoing cleanup of spam, bot, and fake accounts, and periodically strips them from your followers count without asking. [Instagram's Help Center documents this directly](https://help.instagram.com/340413218365867): the platform can flag and remove batches of suspicious followers on its own, current as of September 2026. If a wave of bot accounts followed you at some point, watching a chunk of them disappear later is not a sign anyone rejected you. It is Instagram cleaning its own platform.
+
+## When Daily Loss Stops Being Background Noise
+
+The distinction that actually matters is not the number, it is the shape. A handful of losses spread evenly across most days is ordinary churn. A sudden cluster, losing in one day roughly what you would normally lose across two or three weeks, points to something specific: a post that did not land with part of your audience, a platform-wide event like [the 2026 Great Purge](/blog/instagram-great-purge-2026-follower-drop), or [an overnight drop](/blog/why-did-i-lose-followers-overnight-on-instagram) worth digging into on its own.
+
+## In Short
+
+- Small daily follower losses are normal background churn for almost every active account, not a sign your content is failing.
+- Instagram periodically removes spam and bot accounts from your followers count on its own, which can look like an unfollow you did not cause.
+- A loss that stays small and spread out over time is ordinary; a sudden single-day spike usually has a specific cause worth checking.
+- Comparing two dated exports of your own data, a right guaranteed under [GDPR Article 20](https://gdpr-info.eu/art-20-gdpr/), is the only way to tell steady background churn apart from a real, targeted drop.
+
+## How to Tell the Difference for Your Own Account
+
+Guessing from memory does not hold up here, since a normal trickle and the start of a real problem look identical from inside the app in the moment. [Export your Instagram data](/blog/how-to-download-your-instagram-data) now, and export it again in two or three weeks. Upload both to [WhoUnfollowed](/) and it reads them in your browser, no password required, and shows you exactly who unfollowed you in that window. If the names are spread across the whole period in small numbers, that matches the normal churn described above. If most of them cluster into a day or two, that is worth a closer look, covered in full in [how to see who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram).
+
+A number on a screen cannot tell you which one you are looking at. A list, checked over time, can.`,
+  },
+  {
+    slug: 'will-someone-unfollow-me-back-if-i-unfollow-them-on-instagram',
+    cluster: 'unfollowers',
+    title: 'Will Someone Unfollow Me Back If I Unfollow Them on Instagram?',
+    metaTitle: 'Will Someone Unfollow Me Back on Instagram If I Do?',
+    metaDescription: 'Unfollowing someone on Instagram won\'t automatically make them unfollow you back. Here\'s what really happens, and how to find out if it did.',
+    excerpt: 'Unfollowing someone will not trigger anything on their end automatically. Here is how the two follow relationships actually work, and the only way to know if they unfollowed you back.',
+    date: 'September 16, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'will someone unfollow me back if i unfollow them on instagram',
+    art: 'bell',
+    image: '/blog/no-follow-back-hero.jpg',
+    imageAlt: 'Two smartphones shown side by side displaying Instagram profiles, representing the back and forth of unfollowing and being unfollowed',
+    cta: {
+      heading: 'Know for sure, don\'t guess.',
+      body: 'Wondering whether a cleanup cost you a follower in return is worse than just checking. Upload your Instagram export from before and after and WhoUnfollowed shows exactly who dropped off your followers list, in your browser, with no password required.',
+      buttonLabel: 'Check who unfollowed you back',
+      proNudge: 'Pro keeps a running history of every export, so a before-and-after comparison around any following-list cleanup is already sitting there when you need it.',
+    },
+    faq: [
+      { q: 'Does unfollowing someone on Instagram make them unfollow me back?', a: 'No. Unfollowing someone has no automatic effect on whether they follow you; the two follow relationships are tracked independently by Instagram.' },
+      { q: 'Will Instagram tell someone I unfollowed them?', a: 'No. Instagram does not send a notification to either person when a follow relationship changes, so the other person can only find out by checking their own followers list or your profile.' },
+      { q: 'How would someone know I unfollowed them if there is no notification?', a: 'They would have to notice passively, either by seeing your name drop off their followers list or by visiting your profile and seeing a Follow button where Following used to be.' },
+      { q: 'If I unfollow someone and they unfollow me back, will I get notified?', a: 'No, the same lack of notifications applies in both directions, so the only way to catch it is by checking your own followers list or comparing two exports from before and after.' },
+      { q: 'Is it common for people to unfollow back after being unfollowed?', a: 'It varies by relationship and how closely someone tracks their followers; some people never notice at all, while others who check their list regularly may unfollow back once they see the change.' },
+    ],
+    body: `Unfollowing someone on Instagram does not automatically make them unfollow you back. Instagram treats the two follow relationships as completely independent, so your side of the connection changing has zero direct effect on theirs. Whether they notice and unfollow you in response is a decision they would have to make on their own, not something the platform triggers for them.
+
+## Does Unfollowing Someone Automatically Unfollow You Back?
+
+No. Instagram's follow system runs each direction separately. You following someone and them following you are two different records, not one shared connection that breaks in both directions at once. Unfollowing them removes only your side. If they still follow you, they keep following you until they take their own action to stop, which is a different question from [whether unfollowing someone removes them as your follower](/blog/does-unfollowing-someone-remove-them-as-your-follower).
+
+## Will They Even Notice You Unfollowed Them?
+
+Maybe not right away, and maybe not at all. [Instagram's own Help Center confirms that unfollowing sends no notification](https://help.instagram.com/286340048138725) in either direction, a point covered in more depth in [does Instagram notify when you unfollow someone](/blog/does-instagram-notify-when-you-unfollow-someone). They would have to notice passively: seeing your name missing from their followers list if they check it, or landing on your profile and seeing a Follow button where Following used to sit. Plenty of people never look closely enough to catch it. Some check their followers list often enough that they will.
+
+## What Actually Happens When People "Unfollow Back"
+
+If someone does notice, unfollowing you back is their own choice, shaped by whatever they read into the situation, not anything Instagram nudges them toward. It runs on the same basic mechanic as [the classic follow-unfollow growth tactic](/blog/what-is-the-follow-unfollow-method-on-instagram), just playing out as a personal, unplanned reaction instead of a deliberate strategy. Some people unfollow back on principle the moment they notice. Others never act on it at all, even after seeing the change.
+
+## In Short
+
+- Unfollowing someone on Instagram never automatically removes their follow of you; the two relationships are tracked independently.
+- Instagram sends no notification to either person when a follow relationship changes, so any reaction depends entirely on the other person noticing.
+- Whether someone unfollows you back after you unfollow them is a personal choice, not something the platform causes or suggests.
+- Instagram is required under [GDPR Article 20](https://gdpr-info.eu/art-20-gdpr/) to hand over your own data on request, and comparing two exports from before and after, the same method covered in [how to see who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram), is the only reliable way to see if it actually happened.
+
+## How to Find Out If It Happened
+
+If you unfollowed a batch of people during [a following-list cleanup](/blog/how-to-clean-up-who-you-follow-on-instagram) and want to know whether anyone unfollowed you back afterward, the app itself will not tell you directly. [Export your Instagram data](/blog/how-to-download-your-instagram-data) before you start cleaning up, then export again after. Upload both to [WhoUnfollowed](/) and it reads them locally in your browser and shows you exactly who dropped off your followers list in that window, no password, nothing sent anywhere. It will not tell you who unfollowed you because of your cleanup specifically versus for an unrelated reason. Only they know that. But it turns a vague worry into an actual, checkable list.
+
+Not knowing is worse than most answers you would actually find. A dated export turns the guess into something you can look at.`,
+  },
+  {
+    slug: 'will-i-lose-followers-if-i-switch-my-instagram-account-to-private',
+    cluster: 'account-health',
+    title: 'Will I Lose Followers If I Switch My Instagram Account to Private?',
+    metaTitle: 'Will Going Private on Instagram Cost You Followers?',
+    metaDescription: 'No, switching your Instagram account to private doesn\'t remove your followers. Here\'s exactly what changes when you go private, and what stays.',
+    excerpt: 'Flipping your account to private feels like it might cost you followers. It does not. Here is exactly what changes when you go private, and what stays exactly the same.',
+    date: 'September 16, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'will i lose followers if i switch my instagram account to private',
+    art: 'lock',
+    image: '/blog/private-account-hero.jpg',
+    imageAlt: 'A padlock resting on a smartphone screen, representing switching an Instagram account from public to private',
+    cta: {
+      heading: 'See for yourself, nothing moved.',
+      body: 'Worried a privacy change might have shifted your numbers? Upload your Instagram export from before and after and WhoUnfollowed shows your real followers and following lists side by side, in your browser, with no password required.',
+      buttonLabel: 'Check your follower list',
+    },
+    faq: [
+      { q: 'Will I lose followers if I make my Instagram private?', a: 'No. Existing followers stay exactly as they are when you switch to a private account; nothing about your current follower list changes.' },
+      { q: 'What happens to people who already follow me when I go private?', a: 'Nothing changes for them. They keep seeing your posts and remain your follower without having to send a new request.' },
+      { q: 'Do pending follow requests get approved automatically when I switch to private?', a: 'No. Any follow requests that were already pending before you switched stay pending, and you still have to approve or deny each one yourself.' },
+      { q: 'Can a business account on Instagram be set to private?', a: 'No. Business accounts cannot be switched to private; you would need to convert to a personal account first if you want that option.' },
+      { q: 'Will switching back to public later undo anything about my current followers?', a: 'No. Switching back to public only changes how new people can follow you going forward, not the followers you already have.' },
+    ],
+    body: `No, switching your Instagram account to private does not remove or unfollow any of your existing followers. Everyone who already follows you stays exactly as they are, with no action needed from you or from them. The only real change is what happens next: anyone who wants to follow you for the first time now has to send a request that you approve or deny.
+
+## What Actually Changes When You Go Private
+
+Going private changes visibility going forward, not your existing connections. [Meta's own help documentation on account privacy](https://www.facebook.com/help/448523408565555) walks through the toggle itself: Settings, then Account Privacy, then Switch to Private Account. Nowhere in that process does Instagram touch your current followers list. The people who followed you while your account was public keep following you, keep seeing your posts, and keep showing up in your followers count exactly as before.
+
+## What Happens to Pending Follow Requests
+
+If you had follow requests waiting for a decision before you switched, they do not get automatically approved or denied just because your account status changed. They sit exactly where they were, pending, until you personally act on each one. [Instagram's Help Center covers approving or denying requests directly](https://help.instagram.com/207917546007234) if the process is unfamiliar.
+
+## Will People Unfollow You Because You Went Private?
+
+Not automatically, and this runs on the same basic mechanic covered in [whether unfollowing someone affects your relationship](/blog/does-unfollowing-someone-remove-them-as-your-follower): a privacy setting change is not an unfollow, for you or for anyone else. Some people may choose to unfollow you afterward if they would rather not need approval to see private content going forward, but that is their own decision made after the fact, not something the switch itself causes.
+
+## In Short
+
+- Switching an Instagram account to private does not remove, unfollow, or notify any of your current followers.
+- After going private, new followers must send a request that you personally approve or deny.
+- Follow requests already pending before you switched stay pending; they are not automatically approved or denied.
+- Business accounts on Instagram cannot be set to private; that account type would need to switch to personal first.
+
+## Can You Switch Back to Public Later?
+
+Yes, and switching back does not touch your existing followers either. It only changes how new people can follow you going forward, instantly again instead of by request. Nothing about the followers you already had, before, during, or after either switch, gets altered by toggling the setting in either direction. If you are cleaning up [who you follow](/blog/how-to-clean-up-who-you-follow-on-instagram) or working on your [follow ratio](/blog/instagram-follow-ratio-what-it-means-how-to-improve-it) around the same time, that work carries over untouched too.
+
+## If You Want to Be Sure Nothing Moved
+
+If you are switching to private around a moment where you would rather not lose track of your numbers, [export your Instagram data](/blog/how-to-download-your-instagram-data) right before you flip the setting, then again a week or two later. Upload both to [WhoUnfollowed](/) and it reads them in your browser, no password required, and shows your exact followers and following lists on both dates side by side. If nothing changed except your privacy setting, the two lists will match, and you will have confirmed it yourself instead of taking it on faith.
+
+Switching to private is a visibility decision, not a following decision. Your list stays yours either way.`,
   },
 ];
 

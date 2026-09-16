@@ -216,6 +216,24 @@ export function BlogArticle({ post, otherPosts }: { post: BlogPost; otherPosts: 
           {renderBody(post.body)}
         </article>
 
+        {/* FAQ: visible Q&A matching the FAQPage JSON-LD emitted in page.tsx,
+            so AI answer engines can extract and cite each answer directly. */}
+        {post.faq && post.faq.length > 0 && (
+          <section style={{ marginTop: 40, paddingTop: 32, borderTop: `1px solid ${T.border1}` }}>
+            <h2 style={{ fontFamily: T.serif, fontSize: 26, fontWeight: 400, color: T.ink, marginBottom: 20, letterSpacing: '-0.01em' }}>
+              Frequently asked questions
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
+              {post.faq.map((item, i) => (
+                <div key={i}>
+                  <h3 style={{ fontSize: 16, fontWeight: 600, color: T.ink, marginBottom: 6, lineHeight: 1.4 }}>{item.q}</h3>
+                  <p style={{ fontSize: 15, color: T.inkDim, lineHeight: 1.65 }}>{item.a}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* CTA: topic-specific when the post defines one (post.cta), generic
             fallback otherwise. Bridges the post's pain straight to the tool. */}
         <div style={{ marginTop: 48, padding: '30px 28px', borderRadius: 16, background: T.surface1, border: `1px solid ${T.border1}`, textAlign: 'center' }}>
