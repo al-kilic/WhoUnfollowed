@@ -61,7 +61,7 @@ type FunnelEventMap = {
   'Export Guide Opened': { entry: 'hero' | 'upload_error' };
   'Upload Started': undefined;
   'Analysis Completed': { analysis_type: 'non_followers' | 'comparison' };
-  'Analysis Failed': { error_type: 'html_export' | 'missing_data' | 'invalid_zip' | 'unsupported_format' | 'unknown' };
+  'Analysis Failed': { error_type: 'html_export' | 'missing_data' | 'invalid_zip' | 'unsupported_format' | 'file_read' | 'unknown' };
   'Snapshot Saved': { storage: 'local' | 'cloud' };
   'Upgrade CTA Clicked': { placement: 'results' | 'pricing' };
 };

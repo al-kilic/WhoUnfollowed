@@ -4,6 +4,7 @@ import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { Link, useRouter } from '@/i18n/navigation';
 import {
   parseInstagramZip,
+  FileReadError,
   InvalidZipError,
   MissingFilesError,
   SchemaValidationError,
@@ -32,7 +33,7 @@ type UploadPhase = 'idle' | 'dragging' | 'parsing' | 'error' | 'success';
 // 'html_export' has no real code path today (HTML exports parse successfully,
 // see the results-page notice instead) but stays in the union since Analysis
 // Failed's allowlist is fixed by the analytics contract, not by this mapper.
-type ErrorKind = 'missing_data' | 'invalid_zip' | 'unsupported_format' | 'html_export' | 'unknown';
+type ErrorKind = 'missing_data' | 'invalid_zip' | 'unsupported_format' | 'html_export' | 'file_read' | 'unknown';
 
 interface HeroContent {
   headlineSeeWho: string;
@@ -60,6 +61,7 @@ interface HeroContent {
     invalidZip: string;
     schemaChanged: string;
     unsupportedFormat: string;
+    fileRead: string;
     unknown: string;
   };
   trustOpenSourcePrefix: string;
@@ -99,6 +101,13 @@ function classifyError(err: unknown, content: HeroContent): { message: string; k
     return {
       message: content.errors.schemaChanged,
       kind: 'unknown',
+      showGuideCta: false,
+    };
+  }
+  if (err instanceof FileReadError) {
+    return {
+      message: content.errors.fileRead,
+      kind: 'file_read',
       showGuideCta: false,
     };
   }

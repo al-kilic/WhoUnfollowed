@@ -30,6 +30,7 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/index.ts
 var index_exports = {};
 __export(index_exports, {
+  FileReadError: () => FileReadError,
   InvalidZipError: () => InvalidZipError,
   MissingFilesError: () => MissingFilesError,
   MixedFormatError: () => MixedFormatError,
@@ -50,6 +51,16 @@ module.exports = __toCommonJS(index_exports);
 var import_jszip = __toESM(require("jszip"), 1);
 
 // src/errors.ts
+var FileReadError = class extends Error {
+  code = "FILE_READ";
+  constructor(cause) {
+    super(
+      "Your browser could not read this file. If it is synced via iCloud, Google Drive, or another cloud service, make sure it has fully downloaded to your device, then try again."
+    );
+    this.name = "FileReadError";
+    if (cause instanceof Error) this.cause = cause;
+  }
+};
 var InvalidZipError = class extends Error {
   code = "INVALID_ZIP";
   constructor(cause) {
@@ -287,7 +298,16 @@ function extractExportDateFromFilename(filename) {
 }
 async function parseInstagramZip(zipFile) {
   const filenameDate = zipFile instanceof File ? extractExportDateFromFilename(zipFile.name) : null;
-  const input = zipFile instanceof ArrayBuffer ? zipFile : await zipFile.arrayBuffer();
+  let input;
+  if (zipFile instanceof ArrayBuffer) {
+    input = zipFile;
+  } else {
+    try {
+      input = await zipFile.arrayBuffer();
+    } catch (err) {
+      throw new FileReadError(err);
+    }
+  }
   let zip;
   try {
     zip = await import_jszip.default.loadAsync(input);
@@ -465,6 +485,7 @@ function findGhostFollowers(snapshot, options) {
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  FileReadError,
   InvalidZipError,
   MissingFilesError,
   MixedFormatError,
