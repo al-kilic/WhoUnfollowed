@@ -3170,6 +3170,164 @@ If you are switching to private around a moment where you would rather not lose 
 
 Switching to private is a visibility decision, not a following decision. Your list stays yours either way.`,
   },
+  {
+    slug: 'how-to-compare-two-instagram-follower-lists-manually',
+    cluster: 'unfollowers',
+    title: 'How to Compare Two Instagram Follower Lists Manually',
+    metaTitle: 'How to Compare Two Instagram Follower Lists Manually',
+    metaDescription: 'Compare two Instagram follower exports by hand or automatically to see who unfollowed you. Here\'s the manual method, and the faster way to do it.',
+    excerpt: 'You can compare two Instagram follower exports by hand, line by line in a spreadsheet. It works. It also takes an afternoon and is easy to get wrong. Here is the manual method, and the faster one.',
+    date: 'September 22, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'compare two instagram follower lists',
+    art: 'split',
+    image: '/blog/json-vs-html-hero.jpg',
+    imageAlt: 'A laptop screen showing a spreadsheet-style grid of rows and columns, representing manually comparing two Instagram follower export files',
+    cta: {
+      heading: 'Skip the spreadsheet.',
+      body: 'Matching two follower lists by eye is slow and easy to get wrong. Upload both of your Instagram exports to WhoUnfollowed and see exactly who unfollowed you, by name, in your browser, in under a second. No password, nothing uploaded.',
+      buttonLabel: 'Compare your lists',
+      proNudge: 'Pro keeps every export you upload in one running history, so you never have to go hunting for your last saved ZIP before you can compare again.',
+    },
+    faq: [
+      { q: 'Can I compare two Instagram follower lists without an app?', a: 'Yes, by manually cross-checking the usernames in two dated data exports, though it is slow and error-prone past a few hundred followers.' },
+      { q: 'What file do I need to compare Instagram followers?', a: 'The followers_1.json file (or followers_2.json, followers_3.json if you have over 5,000 followers) inside the connections/followers_and_following folder of your Instagram data export.' },
+      { q: 'Why don\'t two exports match up even when nothing seems to have changed?', a: 'Small formatting differences, like extra spaces, capitalization, or how an emoji in a username gets rendered, can make an identical username look like a mismatch during a manual comparison.' },
+      { q: 'Is there a faster way to compare two Instagram follower lists?', a: 'Yes, a tool that reads the export files directly, such as WhoUnfollowed, compares two dated exports and lists every unfollow by name in under a second, without any manual spreadsheet work.' },
+      { q: 'Do I need my Instagram password to compare my follower lists?', a: 'No, comparing two of your own data exports only requires files Instagram already gave you; no password or login is needed for either the manual or automated method.' },
+    ],
+    body: `Yes, you can compare two Instagram follower lists by hand. Export your data twice a few weeks apart, open both files, and check which names are missing from the newer one. It works on paper. Past a few hundred followers, matching two long lists by eye turns into an afternoon of squinting and easy-to-miss mistakes.
+
+## What You Need Before You Can Compare Anything
+
+Comparing lists only works if you actually have two lists to compare, taken at different points in time. [Request your Instagram data export](/blog/how-to-download-your-instagram-data), wait for Instagram to prepare it, and save the ZIP somewhere you will find again. A single export only tells you who follows you right now, not who left, a distinction covered in more detail in [can you see who unfollowed you on Instagram](/blog/can-you-see-who-unfollowed-you-on-instagram). You need a second export, taken a few weeks or months later, before there is anything to compare at all.
+
+## The Manual Method, Step by Step
+
+1. Unzip both exports and open connections/followers_and_following/followers_1.json from each one in a text editor or spreadsheet tool.
+2. Pull just the usernames out of each file. Every entry stores the username inside string_list_data[0].value, buried under a layer of JSON structure you have to skip past by hand.
+3. Paste the older list's usernames into one spreadsheet column and the newer list's into another.
+4. Sort both columns alphabetically, then scroll down both at the same time, line by line, looking for a name in the old column with no match in the new one.
+5. Every name you find that way, present in the old export and missing from the new one, unfollowed you sometime in between.
+
+## Why This Breaks Down at Any Real Size
+
+This works, technically, on an account with 40 followers. It falls apart fast past a few hundred. Instagram's export format is not a clean list of names, it is nested JSON built for machines to parse, not people to read, so step two alone can take longer than the actual comparison. Sort a spreadsheet wrong, and a genuine unfollow hides behind a formatting mismatch (an extra space, a capitalization difference, an emoji Instagram renders slightly differently between exports) that makes two identical usernames look like they do not match. On an account with a few thousand followers, matching two columns by eye is close to a full afternoon spent staring at a spreadsheet, with no guarantee you caught every name.
+
+## In Short
+
+- Comparing two Instagram exports by hand works in theory: line up the usernames and look for what is missing.
+- The Instagram export format buries each username inside nested JSON, so pulling clean names out is the slowest part of the manual method.
+- Formatting mismatches (spacing, capitalization, emoji rendering) can hide a real unfollow inside a spreadsheet that looks like it matches.
+- A tool built to parse the export format directly skips the manual extraction step and compares both lists in seconds, not hours.
+
+## The Faster Way to Compare Two Lists
+
+[WhoUnfollowed](/) does the exact same comparison described above, reading the export's JSON structure directly instead of asking you to untangle it by hand. Upload your first export, then your second when you have it, and it lines up both lists in your browser and shows you exactly who is missing, by name, in under a second. Nothing is uploaded to a server, the file never leaves your device. If you have not pulled your first export yet, the full walkthrough is in [how to see who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram). If you are wondering whether a tool like this is trustworthy before you upload anything, [how an unfollow checker actually works](/blog/instagram-unfollow-checker) breaks down exactly what it does with your data and why it does not need your password to do it.`,
+  },
+  {
+    slug: 'close-friends-stories-disappeared-did-they-unfollow-you-instagram',
+    cluster: 'unfollowers',
+    title: 'If Someone\'s Close Friends Stories Disappeared, Did They Unfollow You?',
+    metaTitle: 'Close Friends Removed You? That\'s Not an Instagram Unfollow',
+    metaDescription: 'Your green-ring Close Friends stories disappearing doesn\'t mean someone unfollowed you. Here\'s the real difference, and how to check for certain.',
+    excerpt: 'Your green-ring Close Friends stories disappearing feels like an unfollow. It usually is not. Here is what actually changes when someone removes you from Close Friends, and how to tell the two apart for real.',
+    date: 'September 22, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'did they unfollow me or remove me from close friends instagram',
+    art: 'ghost',
+    image: '/blog/notify-unfollow-hero.jpg',
+    imageAlt: 'A phone screen showing an empty Instagram story tray, representing someone\'s Close Friends stories no longer appearing for a viewer',
+    cta: {
+      heading: 'Stop guessing what disappeared.',
+      body: 'A missing green-ring story and a real unfollow look the same from the outside. Upload two dated Instagram exports to WhoUnfollowed and see, by name, exactly who actually unfollowed you, separate from any Close Friends list change.',
+      buttonLabel: 'See who really unfollowed you',
+    },
+    faq: [
+      { q: 'Does removing someone from Close Friends on Instagram unfollow them?', a: 'No. Removing someone from your Close Friends list only stops them from seeing the stories you mark for that list; you still follow each other and they still see your regular posts.' },
+      { q: 'Does Instagram notify someone when you remove them from Close Friends?', a: 'No, Instagram sends no notification in either direction when you add or remove someone from your Close Friends list.' },
+      { q: 'How can I tell if someone unfollowed me instead of just removing me from Close Friends?', a: 'Check whether their regular feed posts and normal stories are still visible and whether their profile shows Following or Follow; if only their green-ring stories disappeared, that is a Close Friends change, not an unfollow.' },
+      { q: 'Can I remove myself from someone else\'s Close Friends list on Instagram?', a: 'Not yet as a built-in setting; Meta confirmed to TechCrunch in January 2026 that it is developing this feature, but it was still in early, non-public testing as of September 2026.' },
+      { q: 'What is the only reliable way to know if someone unfollowed me?', a: 'Comparing two dated exports of your own Instagram data and checking which usernames from the older export are missing from the newer one, since Instagram never sends an unfollow notification.' },
+    ],
+    body: `No, not by itself. If someone's green-ring Close Friends stories stopped showing up for you, the most likely explanation is that they removed you from their Close Friends list, a separate setting from unfollowing entirely. You still follow each other. You just lost access to the stories they only share with that private list.
+
+## Close Friends and Unfollowing Are Two Different Switches
+
+Instagram treats these as two unrelated controls. [Close Friends](https://help.instagram.com/476003390920140) is a private list you build yourself, and it only decides who can see the stories and posts you specifically mark for that list, the ones with the green ring instead of the usual purple-and-orange one. Unfollowing is a completely different action: it breaks the follow relationship itself and removes everything you post from that person's main feed, not just your Close Friends content. Being taken off someone's Close Friends list changes nothing about whether they still follow you or whether you still follow them.
+
+## What Actually Happens When You're Removed From Close Friends
+
+You keep seeing their regular feed posts, their normal stories, and their Reels exactly as before. The only thing that changes is the green-ring content: it stops appearing in your story tray, with no announcement to either side. [Instagram sends no notification when a Close Friends list changes](https://buffer.com/resources/instagram-close-friends/), whether someone is added or removed. The only clue is the content itself quietly going away, which is exactly why it gets mistaken for an unfollow.
+
+## So How Do You Tell the Difference?
+
+A real unfollow and a Close Friends removal look identical from the outside at first glance: content from that person just stops showing up somewhere. The difference is in how much stops. If you can still see their regular posts, comments, and normal stories and only the green-ring content is gone, that is a Close Friends change, not an unfollow. If their posts have vanished from your feed entirely and their profile shows a **Follow** button instead of **Following**, that is an actual unfollow. [Does unfollowing someone remove them as your follower](/blog/does-unfollowing-someone-remove-them-as-your-follower) covers what that flips on both sides of the relationship.
+
+## In Short
+
+- Being removed from someone's Close Friends list only hides their green-ring stories, it does not unfollow you or hide their regular posts.
+- Instagram sends no notification in either direction when a Close Friends list changes, so a quiet drop in green-ring stories is the only visible clue.
+- A real unfollow removes that person's posts from your main feed entirely and changes their profile button from Following to Follow; Close Friends removal changes neither.
+- [Meta has confirmed it is developing a feature](https://techcrunch.com/2026/01/30/instagram-might-soon-let-you-remove-yourself-from-someones-close-friends-list/) letting people opt out of someone else's Close Friends list entirely, still unreleased as of September 2026 and a third, distinct action from unfollowing.
+
+## If You Want a Real Answer, Not a Guess
+
+Neither the app nor your memory can reliably tell you which of these happened after the fact. [Export your Instagram data](/blog/how-to-download-your-instagram-data) now, and export it again in a few weeks. Upload both to [WhoUnfollowed](/) and it reads them in your browser, no password required, and shows you the actual list of anyone who unfollowed you in that window, separate from anything that happened to your Close Friends list. That is the only way to know for certain, covered in full in [how to see who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram).`,
+  },
+  {
+    slug: 'can-instagram-follower-list-order-show-who-unfollowed-you',
+    cluster: 'unfollowers',
+    title: 'Can Your Instagram Follower List Order Show Who Unfollowed You?',
+    metaTitle: 'Can Your Instagram Follower List Order Show Unfollows?',
+    metaDescription: 'Instagram\'s follower list order can\'t reveal who unfollowed you, on any sort setting, by date or otherwise. Here\'s why, and the only method that works.',
+    excerpt: 'Scrolling your follower list looking for who moved or vanished will not tell you who unfollowed you, no matter how you sort it. Here is why the list itself can never show that, and what actually will.',
+    date: 'September 22, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'does instagram follower list order show who unfollowed you',
+    art: 'search',
+    image: '/blog/following-categories-hero.jpg',
+    imageAlt: 'A close-up of a smartphone screen showing a scrollable list of profile icons, representing browsing an Instagram follower list',
+    cta: {
+      heading: 'The list won\'t show you. A comparison will.',
+      body: 'No sort or filter inside Instagram\'s follower list can surface someone who left. Upload two dated exports to WhoUnfollowed and see exactly who is missing, by name, in your browser.',
+      buttonLabel: 'Find out who\'s missing',
+    },
+    faq: [
+      { q: 'Is Instagram\'s follower list sorted by date?', a: 'No, not by default; Instagram replaced chronological sorting with a relevance-based order in 2021, built from interaction signals rather than follow date.' },
+      { q: 'Can I sort my Instagram followers by date followed?', a: 'Yes, using the sort or filter option at the top of the followers or following list, which offers Date followed: latest first and earliest first as manual sort choices.' },
+      { q: 'Does the Instagram followers list show people who unfollowed me?', a: 'No, the list only ever includes people who currently follow you; someone who unfollows you is removed from it entirely and cannot be found by changing the sort order.' },
+      { q: 'Why does my follower list look different when I check it again?', a: 'The default order is personalized and based on ongoing interaction signals, so it can reshuffle over time even without anyone following or unfollowing you.' },
+      { q: 'What is the only way to see who actually unfollowed me on Instagram?', a: 'Comparing two dated exports of your own Instagram data and checking which usernames from the older export are missing from the newer one is the only reliable method.' },
+    ],
+    body: `No. Instagram's follower and following lists are not sorted by follow date by default, and even when you switch to a date-based sort, the list only ever shows people who currently follow you. Someone who unfollowed you does not appear anywhere in it, no matter how you sort it. Watching list order will not tell you who left.
+
+## Your Follower List Isn't Sorted by Date by Default
+
+Instagram removed chronological ordering as the default view for followers and following lists back in 2021. What replaced it is a relevance-based order built from your interactions (things like profile visits, DMs, and engagement patterns) rather than when someone followed you. Instagram has never published the exact ranking logic behind it, and the order is personalized: two different people looking at the same account's follower list can see two different sequences, because it is built around each viewer's own activity, not one fixed ranking that applies to everyone.
+
+## You Can Switch to a Date-Based Sort, But It Still Won't Show Unfollows
+
+Instagram does let you change the sort. Open your followers or following list, tap the sort or filter option at the top, and choose **Date followed: latest first** or **earliest first** to see the list ordered chronologically instead of by relevance. That setting genuinely reorders the people currently on the list by when they followed you. It does not add a single name to it. Whether you are looking at the default relevance order or the manual date sort, the list is built from your current followers only. Someone who unfollowed you is removed from the list entirely the moment they do it, not moved to the bottom or flagged in any way.
+
+## Why This Confuses People Trying to Spot an Unfollow
+
+It is a reasonable thing to try: if a name used to sit near the top of your list and now the list looks different, it feels like tracking movement should reveal something. But a list that only contains current followers cannot, by definition, show you someone who is no longer on it. There is no order, sort, or filter inside Instagram's own follower list that surfaces a name that left. [Instagram never sends a notification for an unfollow either](/blog/does-instagram-notify-when-you-unfollow-someone), so the app genuinely gives you nothing to go on beyond what is currently listed.
+
+## In Short
+
+- Instagram's followers and following lists are sorted by a relevance-based algorithm by default, not by follow date, and the order is personalized to whoever is viewing it.
+- A manual "Date followed" sort option exists and does reorder the list chronologically, but only among people who currently follow you.
+- No sort, filter, or order inside Instagram's follower list can surface someone who unfollowed you; the moment they unfollow, they are removed from the list entirely.
+- Comparing two dated exports of your own Instagram data is the only way to see exactly who is missing from your current list that was present before.
+
+## The Only Way to Actually See Who's Missing
+
+Since the list itself cannot show you a name that left, the only working method is a comparison outside of it. [Export your Instagram data](/blog/how-to-download-your-instagram-data), save it, then export again a few weeks later. Upload both to [WhoUnfollowed](/) and it reads them in your browser, no password required, and shows you exactly who was on the first list and missing from the second, which is the actual definition of an unfollow. The full method is covered in [how to see who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram), and if you are also trying to separate this from other look-alike causes, [why doesn't your Instagram follower count match what a tracker shows](/blog/why-follower-count-doesnt-match-tracker) covers a related, common point of confusion.`,
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
