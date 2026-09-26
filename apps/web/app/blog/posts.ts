@@ -3328,6 +3328,179 @@ It is a reasonable thing to try: if a name used to sit near the top of your list
 
 Since the list itself cannot show you a name that left, the only working method is a comparison outside of it. [Export your Instagram data](/blog/how-to-download-your-instagram-data), save it, then export again a few weeks later. Upload both to [WhoUnfollowed](/) and it reads them in your browser, no password required, and shows you exactly who was on the first list and missing from the second, which is the actual definition of an unfollow. The full method is covered in [how to see who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram), and if you are also trying to separate this from other look-alike causes, [why doesn't your Instagram follower count match what a tracker shows](/blog/why-follower-count-doesnt-match-tracker) covers a related, common point of confusion.`,
   },
+  {
+    slug: 'does-instagram-data-export-show-who-unfollowed-you',
+    cluster: 'data-export',
+    title: 'Does Your Instagram Data Export Show Who Unfollowed You?',
+    metaTitle: 'Does Your Instagram Data Export Show Your Unfollowers?',
+    metaDescription: 'No, your Instagram data export has no built-in unfollowers list. Here is what one easily-confused file actually tracks, and the method that does work.',
+    excerpt: 'Your Instagram data export has no list of the people who unfollowed you, and one file inside it looks like exactly that until you check what it actually records. Here is the difference, and the method that works instead.',
+    date: 'September 26, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'does instagram data export show who unfollowed you',
+    art: 'search',
+    image: '/blog/download-instagram-data-2.jpg',
+    imageAlt: 'A person at a desk reviewing files on a laptop screen, representing checking exactly what an Instagram data export contains',
+    cta: {
+      heading: 'Turn two exports into the real list.',
+      body: 'The export alone will not name your unfollowers, but a second one taken later will. Upload both to WhoUnfollowed and it compares them in your browser and shows exactly who left, in about two minutes. No password, nothing uploaded.',
+      buttonLabel: 'Compare your exports',
+      proNudge: 'Pro keeps every export you have taken, so a comparison is already sitting there instead of something you have to remember to do yourself.',
+    },
+    faq: [
+      { q: 'Does my Instagram data export show who unfollowed me?', a: 'No, a single Instagram data export only lists your current followers and following, with no record of anyone who left in the past.' },
+      { q: 'What is recently_unfollowed_profiles.json in my Instagram export?', a: 'It is a short, Instagram-maintained log of accounts you yourself recently unfollowed, not a list of people who unfollowed you.' },
+      { q: 'Why does Instagram not include a list of who unfollowed me in the export?', a: 'The export is a snapshot of your account at the moment you requested it, and it does not include a history of past follower changes.' },
+      { q: 'How can I find out who unfollowed me if the export does not show it?', a: 'Request two exports a few weeks apart and compare the follower lists; anyone present in the first export but missing from the second unfollowed you in between.' },
+      { q: 'Does choosing JSON instead of HTML change what the export shows about unfollowers?', a: 'No, the format does not add unfollow history either way; JSON is still the better choice because it preserves the follow timestamps HTML often drops.' },
+    ],
+    body: `No, the ZIP file Instagram sends you does not include a list of people who unfollowed you. It has no history of your incoming follows at all, only a record of who follows you right now, at the moment you requested it. One file inside the export sounds like it should answer the question and gets mistaken for exactly that, but it tracks something else entirely.
+
+## The File That Gets Mistaken for an Unfollowers List
+
+Inside the export sits **recently_unfollowed_profiles.json**, right next to your followers and following files, and the name matches what most people are searching for almost exactly. It is easy to open it expecting a list of who left you. What it actually contains is a short, Instagram-maintained log of accounts **you** unfollowed, not accounts that unfollowed you. It records your own outbound actions, and it says nothing about anyone else's.
+
+## What's Actually Inside the Export
+
+The full picture, covered in more depth in [what's actually inside your Instagram data download](/blog/whats-inside-your-instagram-data-download), is a small handful of files, current as of September 2026:
+
+- **followers_1.json**: everyone who currently follows you
+- **following.json**: everyone you currently follow
+- **pending_follow_requests.json**: requests you have sent that have not been accepted
+- **recently_unfollowed_profiles.json**: a short log of who you recently unfollowed, not who unfollowed you
+
+None of these is a change log of your incoming followers over time. Each one is a snapshot of the current state, taken the moment you requested the export.
+
+## Why the Export Doesn't Include Incoming Unfollows
+
+This isn't a missing feature so much as a consistent pattern. [Instagram's own Help Center confirms unfollowing sends no notification](https://help.instagram.com/286340048138725) to either person, current as of September 2026, and the data export follows the same pattern: it hands you your current state, not a change log of what happened to get there. Not including a retrievable history of incoming unfollows in the export lines up with the same quiet-by-default approach Instagram takes to unfollowing everywhere else in the product.
+
+## The Method That Actually Shows Who Unfollowed You
+
+Since no single export contains the answer, the fix is to take two of them. [Request your Instagram data](/blog/how-to-download-your-instagram-data) (Instagram's [Help Center walks through the export request itself](https://help.instagram.com/181231772500920)), choose JSON over HTML so the [follow timestamps come through](/blog/instagram-data-export-json-vs-html), and save the file as a baseline. A few weeks later, request a second export. Anyone whose username appears in the first followers file but is missing from the second unfollowed you somewhere in between.
+
+You do not have to compare the two files by hand. Upload both to [WhoUnfollowed](/) and it reads them locally in your browser, matches the two lists, and shows you the exact names that dropped off, in about two seconds. No password, nothing sent to a server, the same standard covered in [how to see who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram).
+
+## In Short
+
+- A single Instagram data export never contains a list of people who unfollowed you, only your current followers and following at the moment you requested it.
+- **recently_unfollowed_profiles.json** tracks accounts you unfollowed, not accounts that unfollowed you, despite the name suggesting otherwise.
+- The export does not include a retrievable history of incoming unfollows anywhere in it, matching Instagram's refusal to notify anyone in-app when an unfollow happens.
+- Comparing two dated exports, a method grounded in your right to your own data under [GDPR Article 20](https://gdpr-info.eu/art-20-gdpr/), is the only reliable way to see exactly who left.`,
+  },
+  {
+    slug: 'does-whounfollowed-store-or-sell-your-instagram-data',
+    cluster: 'privacy-safety',
+    title: 'Does WhoUnfollowed Store or Sell Your Instagram Data?',
+    metaTitle: 'Does WhoUnfollowed Store or Sell Your Instagram Data?',
+    metaDescription: 'No, WhoUnfollowed never receives your Instagram export at all. Parsing happens in your browser, and the code is open source, so you can verify it.',
+    excerpt: 'No, and the reason is structural, not a policy promise: WhoUnfollowed never receives your Instagram export in the first place. Here is exactly what happens to the file instead, and how to check it yourself.',
+    date: 'September 26, 2026',
+    readTime: '5 min',
+    tag: 'Privacy',
+    primaryKeyword: 'does whounfollowed store or sell your instagram data',
+    art: 'lock',
+    image: '/blog/trackers-password-inline.jpg',
+    imageAlt: 'A sign-in screen offering third-party login options, representing the account login step WhoUnfollowed never asks for',
+    cta: {
+      heading: 'Verify it instead of trusting it.',
+      body: 'The parsing code that reads your Instagram export is public. Upload your export to WhoUnfollowed and see your non-followers and unfollowers in your browser, or check the source on GitHub first if you would rather confirm it yourself.',
+      buttonLabel: 'Try it in your browser',
+    },
+    faq: [
+      { q: 'Does WhoUnfollowed store my Instagram data?', a: 'By default, no; the free tier processes your export entirely inside your browser and never transmits it to any server.' },
+      { q: 'Does WhoUnfollowed sell user data?', a: 'No, there is no advertising network, data broker relationship, or data-based monetization anywhere in the product.' },
+      { q: 'Does WhoUnfollowed need my Instagram password?', a: 'No, it only reads the data export ZIP that Instagram itself emails you, and never asks for account login credentials.' },
+      { q: 'What does WhoUnfollowed store if I use the paid Pro tier?', a: 'Only an email address, a hashed password, an encrypted snapshot of your export data, and a billing reference, the minimum needed to provide cloud snapshot history.' },
+      { q: 'How can I verify what WhoUnfollowed does with my data instead of just trusting the claim?', a: 'The parsing code that reads your export is open source under the MPL-2.0 license and published on GitHub, so anyone can inspect exactly what it does.' },
+    ],
+    body: `No. WhoUnfollowed never receives your Instagram data export in the first place, so there is nothing on our end to store or sell. The ZIP file you upload is read entirely by your own browser using client-side JavaScript, and its contents, your followers, your following, your usernames, never reach our servers during analysis.
+
+## What Actually Happens to the File You Upload
+
+When you drop your Instagram export into WhoUnfollowed, the parsing happens locally, inside the browser tab you are already looking at. No part of that file is transmitted anywhere as a step in producing your results. This is not a setting you have to enable. It is the only way the free tier works, described in full in our [privacy policy](/privacy).
+
+## What About the Snapshots You Save for Later?
+
+If you save a snapshot on the free tier so you can compare it against a later export, that snapshot stays in your browser's own local storage (IndexedDB) on your device. We have no copy of it and no way to read it, because it never leaves your browser to begin with.
+
+## What Does the Paid Pro Tier Store, and Why?
+
+Pro adds optional cloud snapshot history so your export record survives a cleared browser or a new device. To provide that, we store an email address, an argon2id-hashed password, an encrypted snapshot blob, and a Stripe billing reference marking when your access expires. That is the complete list. Full card numbers never reach us; Stripe handles that directly. Nothing beyond what running the feature requires gets collected, and the exact handling is spelled out in the [privacy policy](/privacy), not just summarized here.
+
+## Does WhoUnfollowed Sell Data?
+
+No. There is no advertising network built into the product, no data broker relationship, and no business model anywhere that depends on monetizing what a user uploads. The reason the free tier cannot leak your Instagram data to a third party is the same reason it cannot sell it: the data never arrives at a server we control to begin with.
+
+## How to Verify This Instead of Taking Our Word for It
+
+A privacy claim on a landing page is easy to write and hard to check. The parsing code that reads your export, the exact logic that decides what happens to your data, is [open source under the MPL-2.0 license](https://mozilla.org/MPL/2.0/) and published on [GitHub](https://github.com/al-kilic/WhoUnfollowed). You do not have to trust a sentence on this page. You can read the code that runs when you upload a file, the same way you would check a claim from any [other follower tracker that says it is safe](/blog/are-instagram-follower-trackers-safe).
+
+## In Short
+
+- WhoUnfollowed's free tier never transmits your Instagram export to a server; parsing happens entirely inside your browser.
+- Free-tier snapshots are stored only in your browser's own local storage (IndexedDB), which we cannot access.
+- The paid Pro tier stores the minimum needed for cloud history: an email, a hashed password, an encrypted snapshot, and a billing reference, nothing more.
+- There is no data-selling business model in the product, and the parsing code is open source so the claim can be checked directly rather than taken on trust.
+
+If you are comparing this against a tool that [asks for your Instagram password instead](/blog/why-instagram-follower-trackers-ask-for-your-password), or wondering whether [unfollow apps in general actually deliver what they promise](/blog/do-instagram-unfollow-apps-actually-work), the structural difference is the same one covered here: what a tool never receives, it cannot store, sell, or leak.`,
+  },
+  {
+    slug: 'will-you-still-catch-a-quick-unfollow-and-refollow-on-instagram',
+    cluster: 'unfollowers',
+    title: 'If Someone Unfollows You and Refollows Fast, Will You Still Catch It?',
+    metaTitle: 'Will a Fast Instagram Unfollow-Refollow Still Show Up?',
+    metaDescription: 'No, a quick unfollow and refollow between your two exports will not show up as an unfollow. Here is why, and the only way to actually catch one.',
+    excerpt: 'If someone unfollows you and follows again before your next export, the comparison will show nothing happened, even though it did. Here is why that gap exists, and the only way to actually catch one.',
+    date: 'September 26, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'does a quick unfollow and refollow show up on instagram',
+    art: 'ghost',
+    image: '/blog/notify-unfollow-inline1.jpg',
+    imageAlt: 'A phone lock screen showing push notifications from messaging and social apps, representing the alert Instagram never sends for a follow change',
+    cta: {
+      heading: 'Close the gap between exports.',
+      body: 'A quick unfollow and refollow only slips past a comparison that is spaced too far apart. Keep a fresher pair of exports on hand and WhoUnfollowed will catch more of what happens in between, in your browser, with no password.',
+      buttonLabel: 'Check your follower history',
+      proNudge: 'Pro keeps a running history of every export you take, so shortening the gap between snapshots does not mean remembering to do it manually.',
+    },
+    faq: [
+      { q: 'If someone unfollows me and refollows quickly, will a follower tracker catch it?', a: 'Not reliably; if they follow again before your next export, they will appear in both snapshots and the comparison will show no change at all.' },
+      { q: 'Why does a fast unfollow and refollow not show up in an export comparison?', a: 'A comparison only checks whether a username is present in each snapshot, so anyone who left and came back before the second snapshot looks identical to someone who never left.' },
+      { q: 'Does Instagram keep any record of a quick unfollow and refollow?', a: 'No, Instagram does not expose a history of past follow changes anywhere, including inside the data export it gives you.' },
+      { q: 'How can I actually catch a quick unfollow and refollow on Instagram?', a: 'Take exports more often, so the two snapshots you compare are closer together and more likely to straddle the exact moment it happened.' },
+      { q: 'Is this a limitation specific to one tracker, or true of any method?', a: 'It is true of any method based on comparing two point-in-time snapshots, including manual comparison, not a limitation specific to one app.' },
+    ],
+    body: `No, not reliably. If someone unfollows you and follows again before you take your next export, they will be present in both snapshots, and a comparison between the two will show nothing happened, even though it did. This is a real blind spot in any snapshot-based method, including comparing two Instagram data exports by hand.
+
+## Why a Fast Unfollow-Refollow Disappears From Any Comparison
+
+Comparing two exports works by checking which usernames appear in one list but not the other. That is genuinely all it can check, because a data export is a snapshot of your current followers at the exact moment you requested it, not a timestamped log of every change since your last one. If a name is on both lists, the comparison has no way to know whether that person followed you continuously the whole time or briefly left and came back. Both look identical from the outside.
+
+## How Is This Different From a Regular Unfollow?
+
+A regular, lasting unfollow works because the person is missing from your most recent export. That absence is exactly what the comparison is built to detect, covered in full in [how to see who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram). A quick unfollow-and-refollow never creates that absence in the first place, since by the time you take your next export, they are back on the list. The method only sees what is missing at the moment you check, not what happened in between.
+
+## Does Instagram Track This Somewhere Else?
+
+No. Instagram does not expose a history of past follow changes anywhere in the product, as of September 2026, whether that is a notification, an activity log, or a field inside the data export itself. [Instagram's own Help Center confirms unfollowing sends no notification](https://help.instagram.com/286340048138725) in either direction, and the export contains only your current state, not a change log, the same gap covered in [does your Instagram data export show who unfollowed you](/blog/does-instagram-data-export-show-who-unfollowed-you). If it is quick enough, it can pass by unnoticed on both ends. That is also true in the other direction: if you are the one doing the unfollowing and refollowing, [whether the other person could tell is its own separate question](/blog/can-someone-tell-you-unfollowed-and-refollowed-them-instagram).
+
+## Is There Any Way to Actually Catch It?
+
+The only lever that helps is shortening the gap between your exports. The less time between two snapshots, the smaller the window during which a quick unfollow-refollow can hide entirely. Checking [more often](/blog/how-often-should-you-check-who-unfollowed-you-on-instagram) narrows that window, though it cannot close it completely unless you happen to export at the exact right moment. A passive signal can sometimes hint at it too. If someone briefly drops off your [Close Friends story views](/blog/close-friends-stories-disappeared-did-they-unfollow-you-instagram) and then reappears, that is one of the few outside clues that something happened between your checks, even without an export to prove it.
+
+## In Short
+
+- A quick unfollow and refollow between two exports will not show up as an unfollow, because the person is present in both snapshots you are comparing.
+- This is a structural limitation of any snapshot-based comparison, not a bug specific to one tool or method.
+- Instagram exposes no record of past follow changes anywhere, including inside the data export itself, so there is no alternate source to check.
+- Taking exports more often narrows the window in which a fast unfollow-refollow can hide, even though it cannot guarantee catching every case.
+- Your right to request that export in the first place comes from [GDPR Article 20](https://gdpr-info.eu/art-20-gdpr/), the same legal basis every snapshot-comparison method relies on.
+
+The honest answer is that no export-based method, including this one, can promise to catch everything that happens between two checks. What it can do is shrink that gap until it barely matters. [Upload your export to WhoUnfollowed](/) and it compares your snapshots in your browser, no password required, and shows you everything the gap between them can actually reveal.`,
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
