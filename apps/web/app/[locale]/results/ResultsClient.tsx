@@ -2,6 +2,9 @@
 
 import { useMemo, useState, useEffect } from 'react';
 import { Link, useRouter as useLocaleRouter } from '@/i18n/navigation';
+import { PLATFORM_NAME, snapshotPlatform, triageKeyOf, withApp, type Platform } from '@/lib/platform';
+import { PlatformHero } from './PlatformHero';
+import { usePlatformTheme } from '@/hooks/usePlatformTheme';
 import { format } from 'date-fns';
 import { es, pt } from 'date-fns/locale';
 import type { Locale as DateFnsLocale } from 'date-fns';
@@ -38,8 +41,8 @@ function StatCard({ label, value, badge, accent = false }: {
   return (
     <div style={{
       padding: '16px 18px', borderRadius: 14,
-      background: accent ? 'rgba(2,136,143,0.08)' : 'var(--t-surface1)',
-      border: `1px solid ${accent ? 'rgba(2,136,143,0.25)' : 'var(--t-border1)'}`,
+      background: accent ? 'rgba(var(--t-accent-rgb),0.08)' : 'var(--t-surface1)',
+      border: `1px solid ${accent ? 'rgba(var(--t-accent-rgb),0.25)' : 'var(--t-border1)'}`,
       display: 'flex', flexDirection: 'column', gap: 6,
     }}>
       <div style={{ fontSize: 12, color: accent ? T.tealMid : T.inkDim, fontFamily: T.mono, letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 500 }}>
@@ -107,8 +110,8 @@ function TabBar({ tabs, activeId, onChange }: { tabs: Tab[]; activeId: string; o
             style={{
               flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
               padding: '10px 16px', borderRadius: 10,
-              background: active ? 'rgba(2,136,143,0.12)' : 'transparent',
-              border: `1px solid ${active ? 'rgba(2,136,143,0.3)' : 'transparent'}`,
+              background: active ? 'rgba(var(--t-accent-rgb),0.12)' : 'transparent',
+              border: `1px solid ${active ? 'rgba(var(--t-accent-rgb),0.3)' : 'transparent'}`,
               color: active ? T.ink : T.inkDim,
               fontSize: 13, fontWeight: active ? 600 : 400,
               fontFamily: T.sans, cursor: 'pointer',
@@ -159,7 +162,7 @@ function RadarPreviewCard({ mutualsCount, nonFollowersCount, totalFollowing, c }
 
   return (
     <div style={{
-      background: '#060e10',
+      background: 'var(--t-previewBg)',
       border: `1px solid ${T.tealMid}`,
       borderRadius: 16,
       padding: '18px 20px',
@@ -176,13 +179,13 @@ function RadarPreviewCard({ mutualsCount, nonFollowersCount, totalFollowing, c }
       </div>
 
       <div style={{ marginBottom: 4 }}>
-        <span style={{ fontFamily: T.serif, fontSize: 40, lineHeight: 1, letterSpacing: '-0.03em', color: '#5fc4c8' }}>{followBackRate}%</span>
+        <span style={{ fontFamily: T.serif, fontSize: 40, lineHeight: 1, letterSpacing: '-0.03em', color: 'rgb(var(--t-previewAccent-rgb))' }}>{followBackRate}%</span>
       </div>
       <div style={{ fontSize: 11, color: 'rgba(244,240,232,0.45)', marginBottom: 14, fontFamily: T.mono }}>{c.radarTeaser.followBackRate}</div>
 
       {/* Real proportion bar: mutuals vs non-followers, out of everyone you follow */}
       <div style={{ display: 'flex', height: 8, borderRadius: 5, overflow: 'hidden', marginBottom: 8 }}>
-        <div style={{ width: `${followBackRate}%`, background: '#5fc4c8' }} />
+        <div style={{ width: `${followBackRate}%`, background: 'rgb(var(--t-previewAccent-rgb))' }} />
         <div style={{ width: `${100 - followBackRate}%`, background: '#a84b2f' }} />
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'rgba(244,240,232,0.5)', fontFamily: T.mono, marginBottom: 18 }}>
@@ -192,8 +195,8 @@ function RadarPreviewCard({ mutualsCount, nonFollowersCount, totalFollowing, c }
 
       {/* Timeline hint: this is the one number we can't show yet, it needs a second export */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, paddingTop: 14, borderTop: '1px solid rgba(244,240,232,0.08)' }}>
-        <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#5fc4c8', flexShrink: 0 }} />
-        <div style={{ flex: 1, height: 1, background: 'repeating-linear-gradient(90deg, rgba(95,196,200,0.4) 0 4px, transparent 4px 8px)' }} />
+        <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'rgb(var(--t-previewAccent-rgb))', flexShrink: 0 }} />
+        <div style={{ flex: 1, height: 1, background: 'repeating-linear-gradient(90deg, rgba(var(--t-previewAccent-rgb),0.4) 0 4px, transparent 4px 8px)' }} />
         <span style={{ width: 7, height: 7, borderRadius: '50%', border: '1px dashed rgba(244,240,232,0.35)', flexShrink: 0 }} />
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'rgba(244,240,232,0.35)', fontFamily: T.mono, marginTop: 6 }}>
@@ -204,7 +207,8 @@ function RadarPreviewCard({ mutualsCount, nonFollowersCount, totalFollowing, c }
   );
 }
 
-function RadarTeaser({ isPro, mutualsCount, nonFollowersCount, totalFollowing, c }: {
+function RadarTeaser({ isPro, mutualsCount, nonFollowersCount, totalFollowing, platform, c }: {
+  platform: Platform;
   isPro: boolean;
   mutualsCount: number;
   nonFollowersCount: number;
@@ -223,7 +227,7 @@ function RadarTeaser({ isPro, mutualsCount, nonFollowersCount, totalFollowing, c
         alignItems: 'center',
         padding: '28px 26px',
         borderRadius: 20,
-        background: 'linear-gradient(180deg, rgba(2,136,143,0.10) 0%, rgba(2,136,143,0.02) 100%)',
+        background: 'linear-gradient(180deg, rgba(var(--t-accent-rgb),0.10) 0%, rgba(var(--t-accent-rgb),0.02) 100%)',
         border: `1px solid ${T.tealMid}`,
       }}
     >
@@ -238,7 +242,9 @@ function RadarTeaser({ isPro, mutualsCount, nonFollowersCount, totalFollowing, c
           {c.radarTeaser.body}
         </p>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px 22px', marginBottom: 22 }}>
-          {c.radarTeaser.checks.map((label) => <CheckItem key={label} label={label} />)}
+          {c.radarTeaser.checks
+            .filter(label => platform === 'instagram' || !c.radarTeaser.instagramOnlyChecks.includes(label))
+            .map((label) => <CheckItem key={label} label={label} />)}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap' }}>
           <UpgradeLink
@@ -253,7 +259,7 @@ function RadarTeaser({ isPro, mutualsCount, nonFollowersCount, totalFollowing, c
               fontSize: 14,
               fontWeight: 600,
               fontFamily: T.sans,
-              boxShadow: '0 8px 24px rgba(2,136,143,0.35)',
+              boxShadow: '0 8px 24px rgba(var(--t-accent-rgb),0.35)',
             }}
           >
             {c.radarTeaser.ctaPrimary}
@@ -317,11 +323,11 @@ function RadarPulse({ trigger, c }: { trigger: boolean; c: ResultsContent }) {
       left: pos.left,
       width: 320,
       zIndex: 500,
-      background: '#060e10',
+      background: 'var(--t-previewBg)',
       border: `1px solid ${T.tealMid}`,
       borderRadius: 12,
       padding: '10px 14px',
-      boxShadow: `0 8px 32px rgba(0,0,0,0.55), 0 0 20px rgba(2,136,143,0.2)`,
+      boxShadow: `0 8px 32px rgba(0,0,0,0.55), 0 0 20px rgba(var(--t-accent-rgb),0.2)`,
       display: 'flex', alignItems: 'center', gap: 10,
       opacity: phase === 'visible' ? 1 : 0,
       transform: `translateY(${phase === 'visible' ? '0' : '-6px'})`,
@@ -335,7 +341,7 @@ function RadarPulse({ trigger, c }: { trigger: boolean; c: ResultsContent }) {
         <div style={{
           position: 'absolute', top: 2, left: 1,
           width: 12, height: 12,
-          background: '#060e10',
+          background: 'var(--t-previewBg)',
           border: `1px solid ${T.tealMid}`,
           transform: 'rotate(45deg)',
           transformOrigin: 'center',
@@ -365,15 +371,19 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
 
   useEffect(() => { if (!snapshot) localeRouter.replace('/'); }, [snapshot, localeRouter]);
   useEffect(() => { localeRouter.prefetch('/dashboard'); }, [localeRouter]);
+  usePlatformTheme(snapshot ? snapshotPlatform(snapshot) : null);
 
   const analysis = useMemo(() => snapshot ? analyzeSnapshot(snapshot) : null, [snapshot]);
-  const { triage } = useTriage(snapshot?.exportedAt ?? 0);
+  const triageKey = snapshot ? triageKeyOf(snapshot) : 0;
+  const { triage } = useTriage(triageKey);
   const unfollowedCount = useMemo(
     () => [...triage.values()].filter(s => s === 'done').length,
     [triage],
   );
 
   if (!snapshot || !analysis) return null;
+
+  const platform = snapshotPlatform(snapshot);
 
   const exportedDate = format(new Date(snapshot.exportedAt * 1000), 'MMM d, yyyy', dateLocale && { locale: dateLocale });
 
@@ -393,7 +403,8 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
         onDismiss={() => setTutorialDone(true)}
         labels={c.tutorialLabels}
         steps={c.tutorial.map((step, i) => ({
-          ...step,
+          title: withApp(step.title, platform),
+          body: withApp(step.body, platform),
           targetSelector: [
             '#tutorial-stats',
             '#tutorial-tabbar',
@@ -414,19 +425,16 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
       <main className="px-4 sm:px-8 py-10 sm:py-12" style={{ maxWidth: 900, margin: '0 auto' }}>
         {/* Header */}
         <div style={{ marginBottom: 40 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-            <span style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em' }}>{c.eyebrow}</span>
-            <span style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono }}>{c.exportFrom(exportedDate)}</span>
-          </div>
+          <PlatformHero platform={platform} eyebrow={c.eyebrow} exportFrom={c.exportFrom(exportedDate)} />
           <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', color: T.ink }}>
             <span style={{ color: T.tealLight }}>{analysis.nonFollowers.length.toLocaleString()}</span>{' '}
-            {c.headlineSuffix(analysis.nonFollowers.length)}
+            {c.headlineSuffix(analysis.nonFollowers.length, PLATFORM_NAME[platform])}
           </h1>
           <p style={{ fontSize: 15, color: T.inkDim, marginTop: 10 }}>
             {c.outOfAccounts(analysis.totalFollowing.toLocaleString())}
           </p>
           {snapshot.format === 'html' && (
-            <div style={{ marginTop: 16, padding: '12px 16px', borderRadius: 12, background: 'rgba(2,136,143,0.06)', border: '1px solid rgba(2,136,143,0.2)', display: 'flex', alignItems: 'flex-start', gap: 10, maxWidth: 560 }}>
+            <div style={{ marginTop: 16, padding: '12px 16px', borderRadius: 12, background: 'rgba(var(--t-accent-rgb),0.06)', border: '1px solid rgba(var(--t-accent-rgb),0.2)', display: 'flex', alignItems: 'flex-start', gap: 10, maxWidth: 560 }}>
               <span style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5 }}>
                 {c.htmlFormatNotice}{' '}
                 <Link href="/how-to-export" style={{ color: T.tealLight, fontWeight: 600, textDecoration: 'none' }}>
@@ -460,7 +468,7 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
           {activeTabId === 'non-followers' ? (
             <TriageList
               accounts={analysis.nonFollowers}
-              snapshotKey={snapshot.exportedAt}
+              snapshotKey={triageKey}
               csvFilename={activeTab.csvFilename}
               isPro={isPro}
               c={triageC}
@@ -482,6 +490,7 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
           mutualsCount={analysis.mutuals.length}
           nonFollowersCount={analysis.nonFollowers.length}
           totalFollowing={analysis.totalFollowing}
+          platform={platform}
           c={c}
         />
       </main>

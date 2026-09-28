@@ -2,7 +2,7 @@ export interface ResultsContent {
   metaTitle: string;
   eyebrow: string;
   exportFrom: (date: string) => string;
-  headlineSuffix: (n: number) => string;
+  headlineSuffix: (n: number, app: string) => string;
   outOfAccounts: (n: string) => string;
   htmlFormatNotice: string;
   seeHowToRequestJson: string;
@@ -24,6 +24,8 @@ export interface ResultsContent {
     headline: (mutualsCount: number) => string;
     body: string;
     checks: string[];
+    // Entries of `checks` that only apply to Instagram (hidden for Threads).
+    instagramOnlyChecks: string[];
     ctaPrimary: string;
     ctaSecondary: string;
     previewLabel: string;
@@ -43,7 +45,7 @@ const EN: ResultsContent = {
   metaTitle: 'Results',
   eyebrow: 'RESULTS',
   exportFrom: (date) => `· Export from ${date}`,
-  headlineSuffix: (n) => (n === 1 ? "person doesn't follow you back." : "people don't follow you back."),
+  headlineSuffix: (n, app) => (n === 1 ? `person doesn't follow you back on ${app}.` : `people don't follow you back on ${app}.`),
   outOfAccounts: (n) => `Out of ${n} accounts you follow.`,
   htmlFormatNotice:
     "This export was in HTML format, so follow dates aren't available. JSON exports include those timestamps, which power follow age and growth trends in Radar.",
@@ -75,7 +77,7 @@ const EN: ResultsContent = {
     { title: 'Your stats', body: 'Followers, following, mutuals, non-followers - all from your export.' },
     { title: 'Fans & Mutuals', body: 'Switch tabs to see who follows you (Fans) and mutual connections.' },
     { title: 'Export CSV', body: "Download the current tab's list as a spreadsheet anytime." },
-    { title: 'Open on Instagram', body: "Tap ↗ on any row to open that account's Instagram profile in a new tab." },
+    { title: 'Open on {app}', body: "Tap ↗ on any row to open that account's {app} profile in a new tab." },
     { title: 'Triage buttons', body: 'Hover a row to reveal four action buttons. Pick one to label the account.' },
     { title: '"Dropping"', body: 'You plan to unfollow them. Marks it for your clean-up run.' },
     { title: '"Whitelist"', body: 'Keep following them - removes them from the list permanently.' },
@@ -96,6 +98,7 @@ const EN: ResultsContent = {
       'Who you recently unfollowed',
       'How long a non-follower has kept you waiting',
     ],
+    instagramOnlyChecks: ['Pending requests, sorted by wait time'],
     ctaPrimary: "See what's in Radar",
     ctaSecondary: 'Preview Radar, no account needed →',
     previewLabel: 'your Radar preview · today',
@@ -115,7 +118,7 @@ const ES: ResultsContent = {
   metaTitle: 'Resultados',
   eyebrow: 'RESULTADOS',
   exportFrom: (date) => `· Exportado el ${date}`,
-  headlineSuffix: (n) => (n === 1 ? 'persona no te sigue de vuelta.' : 'personas no te siguen de vuelta.'),
+  headlineSuffix: (n, app) => (n === 1 ? `persona no te sigue de vuelta en ${app}.` : `personas no te siguen de vuelta en ${app}.`),
   outOfAccounts: (n) => `De ${n} cuentas que sigues.`,
   htmlFormatNotice:
     'Esta exportación estaba en formato HTML, así que las fechas de seguimiento no están disponibles. Las exportaciones JSON incluyen esas marcas de tiempo, que alimentan la antigüedad de seguimiento y las tendencias de crecimiento en Radar.',
@@ -147,7 +150,7 @@ const ES: ResultsContent = {
     { title: 'Tus estadísticas', body: 'Seguidores, seguidos, mutuos, no seguidores: todo desde tu exportación.' },
     { title: 'Fans y Mutuos', body: 'Cambia de pestaña para ver quién te sigue (Fans) y las conexiones mutuas.' },
     { title: 'Exportar CSV', body: 'Descarga la lista de la pestaña actual como una hoja de cálculo en cualquier momento.' },
-    { title: 'Abrir en Instagram', body: 'Toca ↗ en cualquier fila para abrir el perfil de Instagram de esa cuenta en una pestaña nueva.' },
+    { title: 'Abrir en {app}', body: 'Toca ↗ en cualquier fila para abrir el perfil de {app} de esa cuenta en una pestaña nueva.' },
     { title: 'Botones de triaje', body: 'Pasa el cursor sobre una fila para ver cuatro botones de acción. Elige uno para etiquetar la cuenta.' },
     { title: '"Dejar de seguir"', body: 'Planeas dejar de seguirlos. Lo marca para tu limpieza.' },
     { title: '"Lista blanca"', body: 'Sigue siguiéndolos: los elimina de la lista de forma permanente.' },
@@ -168,6 +171,7 @@ const ES: ResultsContent = {
       'A quién dejaste de seguir recientemente',
       'Cuánto tiempo te ha hecho esperar un no seguidor',
     ],
+    instagramOnlyChecks: ['Solicitudes pendientes, ordenadas por tiempo de espera'],
     ctaPrimary: 'Ver qué incluye Radar',
     ctaSecondary: 'Prueba Radar, sin necesidad de cuenta →',
     previewLabel: 'tu vista previa de Radar · hoy',
@@ -187,7 +191,7 @@ const PT: ResultsContent = {
   metaTitle: 'Resultados',
   eyebrow: 'RESULTADOS',
   exportFrom: (date) => `· Exportado em ${date}`,
-  headlineSuffix: (n) => (n === 1 ? 'pessoa não te segue de volta.' : 'pessoas não te seguem de volta.'),
+  headlineSuffix: (n, app) => (n === 1 ? `pessoa não te segue de volta no ${app}.` : `pessoas não te seguem de volta no ${app}.`),
   outOfAccounts: (n) => `De ${n} contas que você segue.`,
   htmlFormatNotice:
     'Esta exportação estava em formato HTML, então as datas de seguimento não estão disponíveis. As exportações JSON incluem esses registros de data e hora, que alimentam o tempo de seguimento e as tendências de crescimento no Radar.',
@@ -219,7 +223,7 @@ const PT: ResultsContent = {
     { title: 'Suas estatísticas', body: 'Seguidores, seguindo, mútuos, não seguidores - tudo da sua exportação.' },
     { title: 'Fãs e Mútuos', body: 'Alterne as abas para ver quem te segue (Fãs) e as conexões mútuas.' },
     { title: 'Exportar CSV', body: 'Baixe a lista da aba atual como uma planilha a qualquer momento.' },
-    { title: 'Abrir no Instagram', body: 'Toque em ↗ em qualquer linha para abrir o perfil do Instagram dessa conta em uma nova aba.' },
+    { title: 'Abrir no {app}', body: 'Toque em ↗ em qualquer linha para abrir o perfil do {app} dessa conta em uma nova aba.' },
     { title: 'Botões de triagem', body: 'Passe o cursor sobre uma linha para revelar quatro botões de ação. Escolha um para rotular a conta.' },
     { title: '"Deixar de seguir"', body: 'Você planeja deixar de segui-los. Marca para sua limpeza.' },
     { title: '"Lista branca"', body: 'Continue seguindo-os: remove-os da lista permanentemente.' },
@@ -240,6 +244,7 @@ const PT: ResultsContent = {
       'Quem você deixou de seguir recentemente',
       'Há quanto tempo um não seguidor te faz esperar',
     ],
+    instagramOnlyChecks: ['Solicitações pendentes, ordenadas por tempo de espera'],
     ctaPrimary: 'Veja o que tem no Radar',
     ctaSecondary: 'Experimente o Radar, sem precisar de conta →',
     previewLabel: 'sua prévia do Radar · hoje',

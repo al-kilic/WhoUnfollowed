@@ -3,7 +3,8 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { Link, useRouter } from '@/i18n/navigation';
 import {
-  parseInstagramZip,
+  parseExportZip,
+  snapshotPlatform,
   FileReadError,
   InvalidZipError,
   MissingFilesError,
@@ -18,6 +19,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { track, trackFunnel } from '@/lib/analytics';
 import { recordParse as recordParseAction } from '@/app/actions/stats';
 import { DeltaWarning } from '@/components/DeltaWarning';
+import { CombinedExportNotice } from '@/components/CombinedExportNotice';
 import { UpgradeDialog } from '@/components/UpgradeDialog';
 import { createPortal } from 'react-dom';
 import { T } from './tokens';
@@ -55,8 +57,14 @@ interface HeroContent {
   tryAgain: string;
   guideCtaMissingData: string;
   guideCtaDefault: string;
+  combinedExport: {
+    title: string;
+    body: string;
+    continueCta: string;
+  };
   errors: {
     missingData: string;
+    missingThreadsData: string;
     mixedFormat: string;
     invalidZip: string;
     schemaChanged: string;
@@ -78,7 +86,7 @@ interface HeroContent {
 function classifyError(err: unknown, content: HeroContent): { message: string; kind: ErrorKind; showGuideCta: boolean } {
   if (err instanceof MissingFilesError) {
     return {
-      message: content.errors.missingData,
+      message: err.platform === 'threads' ? content.errors.missingThreadsData : content.errors.missingData,
       kind: 'missing_data',
       showGuideCta: true,
     };
@@ -132,6 +140,9 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
   const [pending, setPending] = useState<ParsedSnapshot | null>(null);
   const [mounted, setMounted] = useState(false);
   const [deltaWarning, setDeltaWarning] = useState<{ snapshot: ParsedSnapshot; reasons: DeltaReason[] } | null>(null);
+  // Set when the ZIP also held Threads data we didn't parse: tell the user
+  // before continuing with the Instagram snapshot.
+  const [combinedNotice, setCombinedNotice] = useState<ParsedSnapshot | null>(null);
 
   // Stats are server-rendered (always the true global value, no blockable fetch,
   // no seed flash). The count-up animates once per session, then snaps.
@@ -197,7 +208,7 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
     }, 80);
 
     try {
-      const snap = await parseInstagramZip(file);
+      const { snapshot: snap, skippedPlatforms } = await parseExportZip(file);
       clearInterval(iv);
       setProgress(100);
 
@@ -207,28 +218,40 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
 
       await new Promise(r => setTimeout(r, 300));
 
-      // Delta detection against the current viewer's own most recent snapshot
-      // only (snapshots is already scoped to this account/anonymous session).
-      const latestSaved = snapshots[0];
-      const detection = detectDeltaExport(snap, latestSaved?.data);
-      if (detection.isDelta) {
+      if (skippedPlatforms.includes('threads')) {
         setPhase('idle');
-        setDeltaWarning({ snapshot: snap, reasons: detection.reasons });
+        setCombinedNotice(snap);
         return;
       }
-
-      if (!isPro && snapshots.length >= FREE_SNAPSHOT_LIMIT) {
-        setPhase('idle');
-        setPending(snap);
-      } else {
-        await commit(snap);
-      }
+      await continueAfterParse(snap);
     } catch (err) {
       clearInterval(iv);
       const info = classifyError(err, content);
       setErrInfo(info);
       setPhase('error');
       trackFunnel('Analysis Failed', { error_type: info.kind });
+    }
+  };
+
+  // ── Post-parse checks: delta warning, then free snapshot limit ───────────
+  const continueAfterParse = async (snap: ParsedSnapshot) => {
+    // Delta detection against the current viewer's own most recent snapshot
+    // of the same platform (snapshots is already scoped to this
+    // account/anonymous session; comparing Threads to Instagram is meaningless).
+    const platform = snapshotPlatform(snap);
+    const latestSaved = snapshots.find(s => snapshotPlatform(s.data) === platform);
+    const detection = detectDeltaExport(snap, latestSaved?.data);
+    if (detection.isDelta) {
+      setPhase('idle');
+      setDeltaWarning({ snapshot: snap, reasons: detection.reasons });
+      return;
+    }
+
+    if (!isPro && snapshots.length >= FREE_SNAPSHOT_LIMIT) {
+      setPhase('idle');
+      setPending(snap);
+    } else {
+      await commit(snap);
     }
   };
 
@@ -277,6 +300,22 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
     : phase === 'error'
     ? `linear-gradient(135deg, rgba(168,75,47,0.8), rgba(168,75,47,0.3))`
     : `linear-gradient(135deg, rgba(2,136,143,0.5), var(--t-border2), rgba(168,75,47,0.3))`;
+
+  if (combinedNotice) {
+    return (
+      <>
+        <section id="upload" className="relative px-4 sm:px-12 pb-12" style={{ filter: 'blur(2px)', pointerEvents: 'none', userSelect: 'none' }} />
+        <CombinedExportNotice
+          content={content.combinedExport}
+          onContinue={() => {
+            const snap = combinedNotice;
+            setCombinedNotice(null);
+            void continueAfterParse(snap);
+          }}
+        />
+      </>
+    );
+  }
 
   if (deltaWarning) {
     const dismissAndProceed = async () => {
@@ -474,13 +513,13 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
                   <div style={{ fontFamily: T.serif, fontSize: 28, lineHeight: 1.1, letterSpacing: '-0.02em', marginBottom: 6, color: T.ink }}>
                     {phase === 'dragging' ? content.dropDraggingTitle : content.dropIdleTitle}
                   </div>
-                  <div style={{ fontSize: 13, color: T.inkDim, fontFamily: T.sans, maxWidth: 360, lineHeight: 1.5 }}>
+                  <div style={{ fontSize: 13, color: T.inkDim, fontFamily: T.sans, maxWidth: 360, lineHeight: 1.5, margin: '0 auto' }}>
                     {content.dropIdleBody}
                   </div>
                 </div>
                 {phase !== 'dragging' && (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
                       <div onClick={e => e.stopPropagation()} style={{ display: 'inline-flex' }}>
                         <MagneticCTA primary onClick={() => inputRef.current?.click()}>{content.chooseFile}</MagneticCTA>
                       </div>
@@ -493,10 +532,13 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
                     >
                       {content.noExportYetLink}
                     </Link>
-                    <Link href="/history" style={{ fontSize: 11, color: T.inkMute, textDecoration: 'none' }}
-                      onClick={e => e.stopPropagation()}>
-                      {content.alreadyUsingLink}
-                    </Link>
+                    {/* Only for returning visitors: first-timers have no history yet. */}
+                    {snapshots.length > 0 && (
+                      <Link href="/history" style={{ fontSize: 11, color: T.inkMute, textDecoration: 'none' }}
+                        onClick={e => e.stopPropagation()}>
+                        {content.alreadyUsingLink}
+                      </Link>
+                    )}
                   </div>
                 )}
               </div>

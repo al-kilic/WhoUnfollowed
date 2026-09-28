@@ -6,6 +6,7 @@ export interface DiffContent {
   missingIds: string;
   notFound: string;
   failedToLoad: string;
+  platformMismatch: string;
   backToHistory: string;
   historyNav: string;
   eyebrow: string;
@@ -34,6 +35,7 @@ const EN: DiffContent = {
   missingIds: 'Missing snapshot IDs.',
   notFound: 'One or both snapshots not found.',
   failedToLoad: 'Failed to load snapshots.',
+  platformMismatch: 'These snapshots are from different apps (Instagram and Threads). Pick two from the same one to compare.',
   backToHistory: '← Back to history',
   historyNav: '← History',
   eyebrow: 'SNAPSHOT COMPARISON',
@@ -62,6 +64,7 @@ const ES: DiffContent = {
   missingIds: 'Faltan los IDs de los snapshots.',
   notFound: 'No se encontró uno o ambos snapshots.',
   failedToLoad: 'Error al cargar los snapshots.',
+  platformMismatch: 'Estos snapshots son de apps distintas (Instagram y Threads). Elige dos de la misma para compararlos.',
   backToHistory: '← Volver al historial',
   historyNav: '← Historial',
   eyebrow: 'COMPARACIÓN DE SNAPSHOTS',
@@ -90,6 +93,7 @@ const PT: DiffContent = {
   missingIds: 'IDs de snapshot ausentes.',
   notFound: 'Um ou ambos os snapshots não foram encontrados.',
   failedToLoad: 'Falha ao carregar os snapshots.',
+  platformMismatch: 'Esses snapshots são de apps diferentes (Instagram e Threads). Escolha dois do mesmo app para comparar.',
   backToHistory: '← Voltar ao histórico',
   historyNav: '← Histórico',
   eyebrow: 'COMPARAÇÃO DE SNAPSHOTS',

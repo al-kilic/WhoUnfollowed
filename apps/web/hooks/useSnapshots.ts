@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import type { ParsedSnapshot } from '@ig-tracker/core';
 import { db, type SnapshotRecord } from '@/lib/db';
 import { getOrCreateAnonSessionId, isOwnedByCurrentViewer } from '@/lib/localOwnership';
+import { PLATFORM_NAME, snapshotPlatform, triageKeyOf } from '@/lib/platform';
 export type { SnapshotRecord };
 
 export const FREE_SNAPSHOT_LIMIT = 1;
@@ -93,7 +94,8 @@ export function useSnapshotsLoaded(currentUserId: string | null): boolean {
 }
 
 export async function saveSnapshot(data: ParsedSnapshot, currentUserId: string | null, label?: string): Promise<number> {
-  const autoLabel = `Upload ${format(new Date(data.exportedAt * 1000), 'MMM d, yyyy HH:mm')}`;
+  const date = format(new Date(data.exportedAt * 1000), 'MMM d, yyyy HH:mm');
+  const autoLabel = snapshotPlatform(data) === 'threads' ? `${PLATFORM_NAME.threads} upload ${date}` : `Upload ${date}`;
   return db.snapshots.add({
     label: label ?? autoLabel,
     exportedAt: data.exportedAt,
@@ -128,11 +130,13 @@ export async function updateSnapshotLabel(id: number, label: string, currentUser
 export async function redateSnapshot(id: number, oldExportedAt: number, newExportedAt: number, currentUserId: string | null): Promise<void> {
   const record = await db.snapshots.get(id);
   if (!record || !isOwnedByCurrentViewer(record, currentUserId)) return;
+  const oldKey = triageKeyOf({ ...record.data, exportedAt: oldExportedAt });
+  const newKey = triageKeyOf({ ...record.data, exportedAt: newExportedAt });
   await db.transaction('rw', db.snapshots, db.triageStates, async () => {
     await db.snapshots.update(id, { exportedAt: newExportedAt });
-    const records = await db.triageStates.where('snapshotKey').equals(oldExportedAt).toArray();
+    const records = await db.triageStates.where('snapshotKey').equals(oldKey).toArray();
     for (const r of records) {
-      if (r.id != null) await db.triageStates.update(r.id, { snapshotKey: newExportedAt });
+      if (r.id != null) await db.triageStates.update(r.id, { snapshotKey: newKey });
     }
   });
 }

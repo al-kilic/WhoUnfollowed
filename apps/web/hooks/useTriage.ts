@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, type TriageState, type TriageRecord } from '@/lib/db';
 import { isOwnedByCurrentViewer } from '@/lib/localOwnership';
+import { platformOfTriageKey, snapshotPlatform, triageKeyOf } from '@/lib/platform';
 
 export type { TriageState };
 
@@ -95,14 +96,20 @@ export function usePreviousTriage(
     async function loadOptions() {
       const allSnapshots = await db.snapshots.orderBy('exportedAt').reverse().toArray();
       const owned = allSnapshots.filter(s => isOwnedByCurrentViewer(s, currentUserId));
-      const priors = owned.filter(s => s.exportedAt !== currentSnapshotKey);
+      // Only offer snapshots from the same platform: Instagram and Threads
+      // share usernames, but triage decisions don't carry over between them.
+      const platform = platformOfTriageKey(currentSnapshotKey);
+      const priors = owned.filter(
+        s => snapshotPlatform(s.data) === platform && triageKeyOf(s.data) !== currentSnapshotKey,
+      );
       if (!priors.length) { setLoading(false); return; }
 
       const opts: PriorSnapshotOption[] = await Promise.all(
         priors.map(async s => {
-          const records = await db.triageStates.where('snapshotKey').equals(s.exportedAt).toArray();
+          const key = triageKeyOf(s.data);
+          const records = await db.triageStates.where('snapshotKey').equals(key).toArray();
           const matchCount = records.filter(r => usernames.has(r.username)).length;
-          return { snapshotKey: s.exportedAt, label: s.label, matchCount };
+          return { snapshotKey: key, label: s.label, matchCount };
         }),
       );
 
