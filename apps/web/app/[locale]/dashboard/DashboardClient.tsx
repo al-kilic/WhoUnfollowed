@@ -1048,7 +1048,7 @@ function RadarModal({ c, onClose }: { c: DashboardContent; onClose: () => void }
     >
       <div
         style={{
-          background: 'rgba(14,18,18,0.98)', border: '1px solid var(--t-border2)',
+          background: T.bgCard, border: '1px solid var(--t-border2)',
           borderRadius: 24, padding: '40px 44px', maxWidth: 680, width: '100%',
           maxHeight: '85vh', overflowY: 'auto',
           boxShadow: '0 40px 120px rgba(0,0,0,0.7)',
