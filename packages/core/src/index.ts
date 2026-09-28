@@ -8,6 +8,7 @@ export { detectDeltaExport } from './delta.js';
 export type { DeltaDetectionResult, DeltaReason } from './delta.js';
 export { analyzeSnapshot, compareSnapshots, findGhostFollowers } from './diff.js';
 export { FileReadError, InvalidZipError, MissingFilesError, MixedFormatError, SchemaValidationError } from './errors.js';
+export type { ZipShape } from './errors.js';
 export type {
   Account,
   ParsedSnapshot,

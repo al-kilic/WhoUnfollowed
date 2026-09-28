@@ -21,6 +21,8 @@ import { recordParse as recordParseAction } from '@/app/actions/stats';
 import { DeltaWarning } from '@/components/DeltaWarning';
 import type { DeltaWarningContent } from '@/components/deltaWarning.content';
 import { CombinedExportNotice } from '@/components/CombinedExportNotice';
+import { LargeFileNotice, type LargeFileNoticeContent } from '@/components/LargeFileNotice';
+import { errorName, fileExt, isLikelyMobile, largeFileThreshold, shapeProps, sizeBucket } from '@/lib/uploadDiagnostics';
 import { UpgradeDialog, type UpgradeDialogContent } from '@/components/UpgradeDialog';
 import { createPortal } from 'react-dom';
 import { T } from './tokens';
@@ -36,7 +38,10 @@ type UploadPhase = 'idle' | 'dragging' | 'parsing' | 'error' | 'success';
 // 'html_export' has no real code path today (HTML exports parse successfully,
 // see the results-page notice instead) but stays in the union since Analysis
 // Failed's allowlist is fixed by the analytics contract, not by this mapper.
-type ErrorKind = 'missing_data' | 'invalid_zip' | 'unsupported_format' | 'html_export' | 'file_read' | 'unknown';
+type ErrorKind = 'missing_data' | 'invalid_zip' | 'unsupported_format' | 'unzipped_file' | 'html_export' | 'file_read' | 'unknown';
+
+// Closed-set diagnostics attached to 'Analysis Failed' (lib/uploadDiagnostics.ts).
+type FailProps = Omit<Parameters<typeof trackFunnel<'Analysis Failed'>>[1], 'error_type'>;
 
 interface HeroContent {
   headlineSeeWho: string;
@@ -65,7 +70,9 @@ interface HeroContent {
   };
   upgradeDialog: UpgradeDialogContent;
   deltaWarning: DeltaWarningContent;
+  largeFile: LargeFileNoticeContent;
   errors: {
+    unzippedFile: string;
     missingData: string;
     missingThreadsData: string;
     mixedFormat: string;
@@ -86,12 +93,13 @@ interface HeroContent {
   statPasswords: string;
 }
 
-function classifyError(err: unknown, content: HeroContent): { message: string; kind: ErrorKind; showGuideCta: boolean } {
+function classifyError(err: unknown, content: HeroContent): { message: string; kind: ErrorKind; showGuideCta: boolean; props?: FailProps } {
   if (err instanceof MissingFilesError) {
     return {
       message: err.platform === 'threads' ? content.errors.missingThreadsData : content.errors.missingData,
       kind: 'missing_data',
       showGuideCta: true,
+      ...(err.shape ? { props: shapeProps(err.shape) } : {}),
     };
   }
   if (err instanceof MixedFormatError) {
@@ -126,6 +134,7 @@ function classifyError(err: unknown, content: HeroContent): { message: string; k
     message: content.errors.unknown,
     kind: 'unknown',
     showGuideCta: false,
+    props: { error_name: errorName(err) },
   };
 }
 
@@ -146,6 +155,8 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
   // Set when the ZIP also held Threads data we didn't parse: tell the user
   // before continuing with the Instagram snapshot.
   const [combinedNotice, setCombinedNotice] = useState<ParsedSnapshot | null>(null);
+  // A ZIP big enough to crash the tab: ask before reading it.
+  const [largeFile, setLargeFile] = useState<File | null>(null);
 
   // Stats are server-rendered (always the true global value, no blockable fetch,
   // no seed flash). The count-up animates once per session, then snaps.
@@ -189,17 +200,36 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
   }, [router, setSnapshot, userId]);
 
   // ── Process a dropped / selected file ────────────────────────────────────
-  const processFile = async (file: File) => {
+  const showUnzipped = (ext: 'json' | 'html' | 'folder') => {
+    setErrInfo({ message: content.errors.unzippedFile, kind: 'unzipped_file', showGuideCta: true });
+    setPhase('error');
+    trackFunnel('Analysis Failed', { error_type: 'unzipped_file', file_ext: ext });
+  };
+
+  const processFile = async (file: File, { skipSizeCheck = false } = {}) => {
+    const size = sizeBucket(file.size);
+    const ext = fileExt(file.name);
     if (!file.name.toLowerCase().endsWith('.zip') &&
         file.type !== 'application/zip' &&
         file.type !== 'application/x-zip-compressed') {
+      // A single JSON/HTML file is almost always a file from inside an export
+      // that was unzipped (Mac Safari does this automatically).
+      if (ext === 'json' || ext === 'html') { showUnzipped(ext); return; }
       setErrInfo({ message: content.errors.unsupportedFormat, kind: 'unsupported_format', showGuideCta: false });
       setPhase('error');
-      trackFunnel('Analysis Failed', { error_type: 'unsupported_format' });
+      trackFunnel('Analysis Failed', { error_type: 'unsupported_format', file_ext: ext, size });
       return;
     }
 
-    trackFunnel('Upload Started');
+    const mobile = isLikelyMobile();
+    if (!skipSizeCheck && file.size > largeFileThreshold(mobile)) {
+      setPhase('idle');
+      setLargeFile(file);
+      trackFunnel('Large File Warning', { size, device: mobile ? 'mobile' : 'desktop' });
+      return;
+    }
+
+    trackFunnel('Upload Started', { size });
 
     setPhase('parsing');
     setProgress(0);
@@ -232,7 +262,7 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
       const info = classifyError(err, content);
       setErrInfo(info);
       setPhase('error');
-      trackFunnel('Analysis Failed', { error_type: info.kind });
+      trackFunnel('Analysis Failed', { error_type: info.kind, size, ...info.props });
     }
   };
 
@@ -247,6 +277,7 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
     if (detection.isDelta) {
       setPhase('idle');
       setDeltaWarning({ snapshot: snap, reasons: detection.reasons });
+      trackFunnel('Export Warning Shown', { reason: detection.reasons.length === 1 ? detection.reasons[0]! : 'multiple' });
       return;
     }
 
@@ -274,6 +305,9 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
   // ── Drag / drop handlers ──────────────────────────────────────────────────
   const onDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
+    // A dropped folder means the export was already unzipped.
+    const entry = e.dataTransfer.items?.[0]?.webkitGetAsEntry?.();
+    if (entry?.isDirectory) { showUnzipped('folder'); return; }
     const file = e.dataTransfer.files[0];
     if (file) processFile(file);
     else setPhase('idle');
@@ -303,6 +337,35 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
     : phase === 'error'
     ? `linear-gradient(135deg, rgba(168,75,47,0.8), rgba(168,75,47,0.3))`
     : `linear-gradient(135deg, rgba(2,136,143,0.5), var(--t-border2), rgba(168,75,47,0.3))`;
+
+  if (largeFile) {
+    const mb = largeFile.size / (1024 * 1024);
+    const sizeLabel = mb >= 1024 ? `${(mb / 1024).toFixed(1)} GB` : `${Math.round(mb)} MB`;
+    return (
+      <>
+        <section id="upload" className="relative px-4 sm:px-12 pb-12" style={{ filter: 'blur(2px)', pointerEvents: 'none', userSelect: 'none' }} />
+        <LargeFileNotice
+          sizeLabel={sizeLabel}
+          content={content.largeFile}
+          onSmallerExport={() => {
+            trackFunnel('Large File Choice', { choice: 'smaller_export' });
+            setLargeFile(null);
+            router.push('/how-to-export');
+          }}
+          onContinue={() => {
+            trackFunnel('Large File Choice', { choice: 'continue' });
+            const f = largeFile;
+            setLargeFile(null);
+            void processFile(f, { skipSizeCheck: true });
+          }}
+          onCancel={() => {
+            trackFunnel('Large File Choice', { choice: 'cancel' });
+            setLargeFile(null);
+          }}
+        />
+      </>
+    );
+  }
 
   if (combinedNotice) {
     return (
@@ -338,9 +401,9 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
           reasons={deltaWarning.reasons}
           followerCount={deltaWarning.snapshot.followers.length}
           followingCount={deltaWarning.snapshot.following.length}
-          onReExport={() => setDeltaWarning(null)}
-          onNewAccount={dismissAndProceed}
-          onProceedAnyway={dismissAndProceed}
+          onReExport={() => { trackFunnel('Export Warning Choice', { choice: 're_export' }); setDeltaWarning(null); }}
+          onNewAccount={() => { trackFunnel('Export Warning Choice', { choice: 'new_account' }); void dismissAndProceed(); }}
+          onProceedAnyway={() => { trackFunnel('Export Warning Choice', { choice: 'proceed_anyway' }); void dismissAndProceed(); }}
           content={content.deltaWarning}
         />
       </>
