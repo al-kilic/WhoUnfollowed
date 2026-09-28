@@ -25,13 +25,15 @@ export class InvalidZipError extends Error {
 
 export class MissingFilesError extends Error {
   readonly code = 'MISSING_FILES' as const;
-  constructor(missing: string[]) {
+  readonly platform: 'instagram' | 'threads';
+  constructor(missing: string[], platform: 'instagram' | 'threads' = 'instagram') {
     super(
-      `Your Instagram export is missing required files: ${missing.join(', ')}. ` +
+      `Your ${platform === 'threads' ? 'Threads' : 'Instagram'} export is missing required files: ${missing.join(', ')}. ` +
         'Make sure you selected "Followers and Following" when requesting your data, ' +
         'and that you chose JSON format.',
     );
     this.name = 'MissingFilesError';
+    this.platform = platform;
   }
 }
 

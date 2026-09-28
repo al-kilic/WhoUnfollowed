@@ -20,6 +20,11 @@ declare const followingFileSchema: z.ZodObject<{
         }, z.core.$strip>>;
     }, z.core.$strip>>;
 }, z.core.$strip>;
+declare const platforms: readonly ["instagram", "threads"];
+declare const platformSchema: z.ZodEnum<{
+    instagram: "instagram";
+    threads: "threads";
+}>;
 declare const accountSchema: z.ZodObject<{
     username: z.ZodString;
     href: z.ZodString;
@@ -51,7 +56,12 @@ declare const parsedSnapshotSchema: z.ZodObject<{
         json: "json";
         html: "html";
     }>>;
+    platform: z.ZodOptional<z.ZodEnum<{
+        instagram: "instagram";
+        threads: "threads";
+    }>>;
 }, z.core.$strip>;
+declare function snapshotPlatform(snapshot: Pick<ParsedSnapshot, 'platform'>): Platform;
 declare const feedbackSentiments: readonly ["angry", "sad", "neutral", "happy", "delighted"];
 declare const feedbackSchema: z.ZodObject<{
     sentiment: z.ZodEnum<{
@@ -85,8 +95,14 @@ type FollowersFile = z.infer<typeof followersFileSchema>;
 type FollowingFile = z.infer<typeof followingFileSchema>;
 type Account = z.infer<typeof accountSchema>;
 type ParsedSnapshot = z.infer<typeof parsedSnapshotSchema>;
+type Platform = z.infer<typeof platformSchema>;
 
+interface ParseExportResult {
+    snapshot: ParsedSnapshot;
+    skippedPlatforms: Platform[];
+}
 declare function parseInstagramZip(zipFile: File | Blob | ArrayBuffer): Promise<ParsedSnapshot>;
+declare function parseExportZip(zipFile: File | Blob | ArrayBuffer): Promise<ParseExportResult>;
 
 type DeltaReason = 'small_counts' | 'all_recent_timestamps' | 'massive_count_drop';
 interface DeltaDetectionResult {
@@ -126,7 +142,8 @@ declare class InvalidZipError extends Error {
 }
 declare class MissingFilesError extends Error {
     readonly code: "MISSING_FILES";
-    constructor(missing: string[]);
+    readonly platform: 'instagram' | 'threads';
+    constructor(missing: string[], platform?: 'instagram' | 'threads');
 }
 declare class MixedFormatError extends Error {
     readonly code: "MIXED_FORMAT";
@@ -137,4 +154,4 @@ declare class SchemaValidationError extends Error {
     constructor(filename: string, detail: string);
 }
 
-export { type Account, type ContactMessageInput, type ContactSource, type DeltaDetectionResult, type DeltaReason, type FeedbackInput, type FeedbackSentiment, FileReadError, type FollowersFile, type FollowingFile, InvalidZipError, MissingFilesError, MixedFormatError, type ParsedSnapshot, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, analyzeSnapshot, compareSnapshots, contactMessageSchema, contactSources, detectDeltaExport, feedbackSchema, feedbackSentiments, findGhostFollowers, parseInstagramZip };
+export { type Account, type ContactMessageInput, type ContactSource, type DeltaDetectionResult, type DeltaReason, type FeedbackInput, type FeedbackSentiment, FileReadError, type FollowersFile, type FollowingFile, InvalidZipError, MissingFilesError, MixedFormatError, type ParseExportResult, type ParsedSnapshot, type Platform, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, analyzeSnapshot, compareSnapshots, contactMessageSchema, contactSources, detectDeltaExport, feedbackSchema, feedbackSentiments, findGhostFollowers, parseExportZip, parseInstagramZip, platforms, snapshotPlatform };

@@ -43,7 +43,10 @@ __export(index_exports, {
   feedbackSchema: () => feedbackSchema,
   feedbackSentiments: () => feedbackSentiments,
   findGhostFollowers: () => findGhostFollowers,
-  parseInstagramZip: () => parseInstagramZip
+  parseExportZip: () => parseExportZip,
+  parseInstagramZip: () => parseInstagramZip,
+  platforms: () => platforms,
+  snapshotPlatform: () => snapshotPlatform
 });
 module.exports = __toCommonJS(index_exports);
 
@@ -71,11 +74,13 @@ var InvalidZipError = class extends Error {
 };
 var MissingFilesError = class extends Error {
   code = "MISSING_FILES";
-  constructor(missing) {
+  platform;
+  constructor(missing, platform = "instagram") {
     super(
-      `Your Instagram export is missing required files: ${missing.join(", ")}. Make sure you selected "Followers and Following" when requesting your data, and that you chose JSON format.`
+      `Your ${platform === "threads" ? "Threads" : "Instagram"} export is missing required files: ${missing.join(", ")}. Make sure you selected "Followers and Following" when requesting your data, and that you chose JSON format.`
     );
     this.name = "MissingFilesError";
+    this.platform = platform;
   }
 };
 var MixedFormatError = class extends Error {
@@ -120,6 +125,17 @@ var followersFileSchema = import_zod.z.array(relationshipEntrySchema);
 var followingFileSchema = import_zod.z.object({
   relationships_following: import_zod.z.array(relationshipEntrySchema)
 });
+var threadsFollowersFileSchema = import_zod.z.object({
+  text_post_app_text_post_app_followers: import_zod.z.array(relationshipEntrySchema)
+});
+var threadsFollowingFileSchema = import_zod.z.object({
+  text_post_app_text_post_app_following: import_zod.z.array(relationshipEntrySchema)
+});
+var threadsRecentlyUnfollowedFileSchema = import_zod.z.object({
+  text_post_app_text_post_app_unfollowed_users: import_zod.z.array(relationshipEntrySchema)
+});
+var platforms = ["instagram", "threads"];
+var platformSchema = import_zod.z.enum(platforms);
 var accountSchema = import_zod.z.object({
   username: import_zod.z.string(),
   href: import_zod.z.string(),
@@ -148,8 +164,15 @@ var parsedSnapshotSchema = import_zod.z.object({
   // data (follow age, growth trends) may be missing. Optional so older
   // snapshots already saved in a user's IndexedDB (from before this field
   // existed) still validate.
-  format: import_zod.z.enum(["json", "html"]).optional()
+  format: import_zod.z.enum(["json", "html"]).optional(),
+  // Which app the export came from. Optional for the same reason as `format`:
+  // snapshots saved before Threads support existed have no value and are
+  // always Instagram. Read it through snapshotPlatform(), never directly.
+  platform: platformSchema.optional()
 });
+function snapshotPlatform(snapshot) {
+  return snapshot.platform ?? "instagram";
+}
 var feedbackSentiments = ["angry", "sad", "neutral", "happy", "delighted"];
 var feedbackSchema = import_zod.z.object({
   sentiment: import_zod.z.enum(feedbackSentiments),
@@ -175,6 +198,10 @@ function sanitizeIgHref(href, username) {
   if (href && /^https:\/\/www\.instagram\.com\//i.test(href)) return href;
   return `https://www.instagram.com/${username}`;
 }
+function sanitizeThreadsHref(href, username) {
+  if (href && /^https:\/\/www\.threads\.(?:com|net)\//i.test(href)) return href;
+  return `https://www.threads.com/${username}`;
+}
 function labelValuesToAccount(entry) {
   const get = (label) => entry.label_values.find((lv) => lv.label === label)?.value ?? "";
   const username = get("Username");
@@ -186,13 +213,13 @@ function labelValuesToAccount(entry) {
     followedAt: entry.timestamp && entry.timestamp > 0 ? entry.timestamp : null
   };
 }
-function entryToAccount(entry) {
+function entryToAccount(entry, platform = "instagram") {
   const item = entry.string_list_data[0];
   if (!item) return null;
   const username = item.value ?? entry.title ?? "";
   return {
     username,
-    href: sanitizeIgHref(item.href, username),
+    href: platform === "threads" ? sanitizeThreadsHref(item.href, username) : sanitizeIgHref(item.href, username),
     followedAt: item.timestamp && item.timestamp > 0 ? item.timestamp : null
   };
 }
@@ -210,7 +237,7 @@ async function parseFollowersJson(zip, fileNames) {
     if (!result.success) {
       throw new SchemaValidationError(fname, result.error.issues[0]?.message ?? "unknown");
     }
-    accounts.push(...result.data.map(entryToAccount).filter((a) => a !== null));
+    accounts.push(...result.data.map((e) => entryToAccount(e)).filter((a) => a !== null));
   }
   return accounts;
 }
@@ -226,7 +253,35 @@ async function parseFollowingJson(zip, fileName) {
   if (!result.success) {
     throw new SchemaValidationError(fileName, result.error.issues[0]?.message ?? "unknown");
   }
-  return result.data.relationships_following.map(entryToAccount).filter((a) => a !== null);
+  return result.data.relationships_following.map((e) => entryToAccount(e)).filter((a) => a !== null);
+}
+async function readJson(zip, fileName) {
+  const raw = await zip.files[fileName].async("string");
+  try {
+    return JSON.parse(raw);
+  } catch {
+    throw new SchemaValidationError(fileName, "File is not valid JSON");
+  }
+}
+async function parseThreadsFollowers(zip, fileNames) {
+  const accounts = [];
+  for (const fname of fileNames) {
+    const result = threadsFollowersFileSchema.safeParse(await readJson(zip, fname));
+    if (!result.success) {
+      throw new SchemaValidationError(fname, result.error.issues[0]?.message ?? "unknown");
+    }
+    accounts.push(
+      ...result.data.text_post_app_text_post_app_followers.map((e) => entryToAccount(e, "threads")).filter((a) => a !== null)
+    );
+  }
+  return accounts;
+}
+async function parseThreadsFollowing(zip, fileName) {
+  const result = threadsFollowingFileSchema.safeParse(await readJson(zip, fileName));
+  if (!result.success) {
+    throw new SchemaValidationError(fileName, result.error.issues[0]?.message ?? "unknown");
+  }
+  return result.data.text_post_app_text_post_app_following.map((e) => entryToAccount(e, "threads")).filter((a) => a !== null);
 }
 var IG_LINK_RE = /href="(https:\/\/www\.instagram\.com\/(?:_u\/)?([^"/?#]+)[^"]*)"/gi;
 function parseAccountsFromHtml(html) {
@@ -253,6 +308,22 @@ async function parseFollowersHtml(zip, fileNames) {
 async function parseFollowingHtml(zip, fileName) {
   const html = await zip.files[fileName].async("string");
   return parseAccountsFromHtml(html);
+}
+var THREADS_DIR_RE = /(?:^|\/)threads\//i;
+function isThreadsPath(name) {
+  return THREADS_DIR_RE.test(name);
+}
+function detectThreadsFiles(fileNames) {
+  const inThreads = fileNames.filter(isThreadsPath);
+  return {
+    // One file today; accept a paginated followers_N.json too, in case Threads
+    // splits large lists the way Instagram does.
+    followerFileNames: inThreads.filter((n) => /\/followers(?:_\d+)?\.json$/i.test(n)).sort(),
+    followingFileName: inThreads.find((n) => /\/following\.json$/i.test(n))
+  };
+}
+function hasInstagramRelationshipFiles(fileNames) {
+  return fileNames.some((n) => /(?:followers_\d+|following)\.(?:json|html?)$/i.test(n));
 }
 function detectFiles(fileNames) {
   const followerJson = fileNames.filter((n) => /followers_\d+\.json$/i.test(n)).sort();
@@ -297,6 +368,9 @@ function extractExportDateFromFilename(filename) {
   return null;
 }
 async function parseInstagramZip(zipFile) {
+  return (await parseExportZip(zipFile)).snapshot;
+}
+async function parseExportZip(zipFile) {
   const filenameDate = zipFile instanceof File ? extractExportDateFromFilename(zipFile.name) : null;
   let input;
   if (zipFile instanceof ArrayBuffer) {
@@ -314,7 +388,15 @@ async function parseInstagramZip(zipFile) {
   } catch (err) {
     throw new InvalidZipError(err);
   }
-  const fileNames = Object.keys(zip.files);
+  const allFileNames = Object.keys(zip.files);
+  const instagramFileNames = allFileNames.filter((n) => !isThreadsPath(n));
+  const threadsFiles = detectThreadsFiles(allFileNames);
+  const hasThreads = threadsFiles.followerFileNames.length > 0 || !!threadsFiles.followingFileName;
+  if (hasThreads && !hasInstagramRelationshipFiles(instagramFileNames)) {
+    const snapshot = await parseThreads(zip, allFileNames, threadsFiles, filenameDate);
+    return { snapshot, skippedPlatforms: [] };
+  }
+  const fileNames = instagramFileNames;
   const { format, followerFileNames, followingFileName } = detectFiles(fileNames);
   let followers;
   let following;
@@ -346,12 +428,42 @@ async function parseInstagramZip(zipFile) {
     }
   );
   return {
+    snapshot: {
+      exportedAt: filenameDate ?? Math.floor(Date.now() / 1e3),
+      followers,
+      following,
+      ...pendingRequests ? { pendingRequests } : {},
+      ...recentlyUnfollowed ? { recentlyUnfollowed } : {},
+      format,
+      platform: "instagram"
+    },
+    skippedPlatforms: hasThreads ? ["threads"] : []
+  };
+}
+async function parseThreads(zip, allFileNames, files, filenameDate) {
+  const missing = [];
+  if (files.followerFileNames.length === 0) missing.push("threads/followers.json");
+  if (!files.followingFileName) missing.push("threads/following.json");
+  if (missing.length > 0) throw new MissingFilesError(missing, "threads");
+  const followers = await parseThreadsFollowers(zip, files.followerFileNames);
+  const following = await parseThreadsFollowing(zip, files.followingFileName);
+  const recentlyUnfollowed = await parseOptionalRelationships(
+    zip,
+    allFileNames.filter(isThreadsPath),
+    /\/recently_unfollowed_profiles\.json$/i,
+    (data) => {
+      const r = threadsRecentlyUnfollowedFileSchema.safeParse(data);
+      if (!r.success) return null;
+      return r.data.text_post_app_text_post_app_unfollowed_users.map((e) => entryToAccount(e, "threads")).filter((a) => a !== null);
+    }
+  );
+  return {
     exportedAt: filenameDate ?? Math.floor(Date.now() / 1e3),
     followers,
     following,
-    ...pendingRequests ? { pendingRequests } : {},
     ...recentlyUnfollowed ? { recentlyUnfollowed } : {},
-    format
+    format: "json",
+    platform: "threads"
   };
 }
 async function parseOptionalRelationships(zip, fileNames, pattern, parse) {
@@ -373,7 +485,7 @@ function detectDeltaExport(snapshot, previousSnapshot) {
   const reasons = [];
   const now = Math.floor(Date.now() / 1e3);
   const recentCutoff = now - RECENT_WINDOW_DAYS * 86400;
-  if (snapshot.followers.length < SMALL_COUNT_THRESHOLD) {
+  if (snapshotPlatform(snapshot) === "instagram" && snapshot.followers.length < SMALL_COUNT_THRESHOLD) {
     reasons.push("small_counts");
   }
   const withTimestamp = [
@@ -498,5 +610,8 @@ function findGhostFollowers(snapshot, options) {
   feedbackSchema,
   feedbackSentiments,
   findGhostFollowers,
-  parseInstagramZip
+  parseExportZip,
+  parseInstagramZip,
+  platforms,
+  snapshotPlatform
 });
