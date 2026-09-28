@@ -9,6 +9,7 @@ import {
   MissingFilesError,
   MixedFormatError,
   SchemaValidationError,
+  type ZipShape,
 } from './errors.js';
 import {
   followersFileSchema,
@@ -257,12 +258,12 @@ function detectFiles(fileNames: string[]): DetectedFiles {
 // L6iOOC8w.zip" (current format) or an older "username_20260831.zip" style.
 // Falls back to null (caller uses "now") when nothing plausible is found.
 export function extractExportDateFromFilename(filename: string): number | null {
+  // RegExp.exec loops instead of String.matchAll, which old mobile browsers
+  // (iOS 12 Safari) lack.
   const candidates: [string, string, string][] = [];
-  for (const m of filename.matchAll(/(\d{4})-(\d{2})-(\d{2})/g)) {
-    candidates.push([m[1]!, m[2]!, m[3]!]);
-  }
-  for (const m of filename.matchAll(/(\d{4})(\d{2})(\d{2})/g)) {
-    candidates.push([m[1]!, m[2]!, m[3]!]);
+  for (const re of [/(\d{4})-(\d{2})-(\d{2})/g, /(\d{4})(\d{2})(\d{2})/g]) {
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(filename)) !== null) candidates.push([m[1]!, m[2]!, m[3]!]);
   }
 
   const now = Date.now();
@@ -297,7 +298,13 @@ export async function parseInstagramZip(zipFile: File | Blob | ArrayBuffer): Pro
 // Parses a Meta "Download your information" ZIP from Instagram or Threads,
 // detecting which one it is from the folder layout.
 export async function parseExportZip(zipFile: File | Blob | ArrayBuffer): Promise<ParseExportResult> {
-  const filenameDate = zipFile instanceof File ? extractExportDateFromFilename(zipFile.name) : null;
+  // The filename date is optional metadata: it must never fail an upload.
+  let filenameDate: number | null = null;
+  try {
+    filenameDate = zipFile instanceof File ? extractExportDateFromFilename(zipFile.name) : null;
+  } catch {
+    filenameDate = null;
+  }
 
   // Normalize File/Blob → ArrayBuffer so jszip works consistently across envs.
   // On mobile Safari, .arrayBuffer() throws NotReadableError near-instantly for
@@ -322,6 +329,26 @@ export async function parseExportZip(zipFile: File | Blob | ArrayBuffer): Promis
   }
 
   const allFileNames = Object.keys(zip.files);
+  try {
+    return await parseZipContents(zip, allFileNames, filenameDate);
+  } catch (err) {
+    if (err instanceof MissingFilesError) err.shape = zipShape(allFileNames);
+    throw err;
+  }
+}
+
+function zipShape(allFileNames: string[]): ZipShape {
+  const files = allFileNames.filter(n => !n.endsWith('/'));
+  return {
+    fileCount: files.length,
+    hasConnectionsFolder: allFileNames.some(n => /(?:^|\/)connections\//i.test(n)),
+    hasMediaFolder: allFileNames.some(n => /(?:^|\/)media\//i.test(n)),
+    hasThreadsFolder: allFileNames.some(isThreadsPath),
+    hasHtmlFiles: files.some(n => /\.html?$/i.test(n)),
+  };
+}
+
+async function parseZipContents(zip: JSZip, allFileNames: string[], filenameDate: number | null): Promise<ParseExportResult> {
 
   const instagramFileNames = allFileNames.filter(n => !isThreadsPath(n));
   const threadsFiles = detectThreadsFiles(allFileNames);

@@ -140,9 +140,17 @@ declare class InvalidZipError extends Error {
     readonly code: "INVALID_ZIP";
     constructor(cause?: unknown);
 }
+interface ZipShape {
+    fileCount: number;
+    hasConnectionsFolder: boolean;
+    hasMediaFolder: boolean;
+    hasThreadsFolder: boolean;
+    hasHtmlFiles: boolean;
+}
 declare class MissingFilesError extends Error {
     readonly code: "MISSING_FILES";
     readonly platform: 'instagram' | 'threads';
+    shape?: ZipShape;
     constructor(missing: string[], platform?: 'instagram' | 'threads');
 }
 declare class MixedFormatError extends Error {
@@ -154,4 +162,4 @@ declare class SchemaValidationError extends Error {
     constructor(filename: string, detail: string);
 }
 
-export { type Account, type ContactMessageInput, type ContactSource, type DeltaDetectionResult, type DeltaReason, type FeedbackInput, type FeedbackSentiment, FileReadError, type FollowersFile, type FollowingFile, InvalidZipError, MissingFilesError, MixedFormatError, type ParseExportResult, type ParsedSnapshot, type Platform, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, analyzeSnapshot, compareSnapshots, contactMessageSchema, contactSources, detectDeltaExport, feedbackSchema, feedbackSentiments, findGhostFollowers, parseExportZip, parseInstagramZip, platforms, snapshotPlatform };
+export { type Account, type ContactMessageInput, type ContactSource, type DeltaDetectionResult, type DeltaReason, type FeedbackInput, type FeedbackSentiment, FileReadError, type FollowersFile, type FollowingFile, InvalidZipError, MissingFilesError, MixedFormatError, type ParseExportResult, type ParsedSnapshot, type Platform, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, type ZipShape, analyzeSnapshot, compareSnapshots, contactMessageSchema, contactSources, detectDeltaExport, feedbackSchema, feedbackSentiments, findGhostFollowers, parseExportZip, parseInstagramZip, platforms, snapshotPlatform };

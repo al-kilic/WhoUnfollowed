@@ -2,6 +2,8 @@
 // the client; no-ops if the script hasn't loaded (e.g. local dev, ad-blockers).
 // Umami is cookieless and self-hosted, so this collects no personal data.
 
+import type { SizeBucket, FileExt, ErrorName, CountBucket, YesNo } from '@/lib/uploadDiagnostics';
+
 type UmamiTracker = {
   track: (eventName: string, eventData?: Record<string, unknown>) => void;
 };
@@ -59,9 +61,24 @@ export function trackLockedView(feature: string): void {
 type FunnelEventMap = {
   'Hero CTA Clicked': { path: 'have_zip' | 'get_export' };
   'Export Guide Opened': { entry: 'hero' | 'upload_error' };
-  'Upload Started': undefined;
+  'Upload Started': { size: SizeBucket };
   'Analysis Completed': { analysis_type: 'non_followers' | 'comparison' };
-  'Analysis Failed': { error_type: 'html_export' | 'missing_data' | 'invalid_zip' | 'unsupported_format' | 'file_read' | 'unknown' };
+  'Analysis Failed': {
+    error_type: 'html_export' | 'missing_data' | 'invalid_zip' | 'unsupported_format' | 'unzipped_file' | 'file_read' | 'unknown';
+    // Diagnostics, all closed sets (see lib/uploadDiagnostics.ts).
+    size?: SizeBucket;
+    file_ext?: FileExt;
+    error_name?: ErrorName;
+    zip_files?: CountBucket;
+    has_connections?: YesNo;
+    has_media?: YesNo;
+    has_threads?: YesNo;
+    has_html?: YesNo;
+  };
+  'Large File Warning': { size: SizeBucket; device: 'mobile' | 'desktop' };
+  'Large File Choice': { choice: 'continue' | 'smaller_export' | 'cancel' };
+  'Export Warning Shown': { reason: 'small_counts' | 'all_recent_timestamps' | 'massive_count_drop' | 'multiple' };
+  'Export Warning Choice': { choice: 're_export' | 'new_account' | 'proceed_anyway' };
   'Snapshot Saved': { storage: 'local' | 'cloud' };
   'Upgrade CTA Clicked': { placement: 'results' | 'pricing' };
 };

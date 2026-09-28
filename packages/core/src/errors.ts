@@ -23,9 +23,20 @@ export class InvalidZipError extends Error {
   }
 }
 
+// Non-identifying outline of an uploaded ZIP (no file names or contents), for
+// diagnosing why an export lacks the files we need.
+export interface ZipShape {
+  fileCount: number;
+  hasConnectionsFolder: boolean;
+  hasMediaFolder: boolean;
+  hasThreadsFolder: boolean;
+  hasHtmlFiles: boolean;
+}
+
 export class MissingFilesError extends Error {
   readonly code = 'MISSING_FILES' as const;
   readonly platform: 'instagram' | 'threads';
+  shape?: ZipShape;
   constructor(missing: string[], platform: 'instagram' | 'threads' = 'instagram') {
     super(
       `Your ${platform === 'threads' ? 'Threads' : 'Instagram'} export is missing required files: ${missing.join(', ')}. ` +

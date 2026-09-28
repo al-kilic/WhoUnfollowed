@@ -23,6 +23,7 @@ var InvalidZipError = class extends Error {
 var MissingFilesError = class extends Error {
   code = "MISSING_FILES";
   platform;
+  shape;
   constructor(missing, platform = "instagram") {
     super(
       `Your ${platform === "threads" ? "Threads" : "Instagram"} export is missing required files: ${missing.join(", ")}. Make sure you selected "Followers and Following" when requesting your data, and that you chose JSON format.`
@@ -296,11 +297,9 @@ function detectFiles(fileNames) {
 }
 function extractExportDateFromFilename(filename) {
   const candidates = [];
-  for (const m of filename.matchAll(/(\d{4})-(\d{2})-(\d{2})/g)) {
-    candidates.push([m[1], m[2], m[3]]);
-  }
-  for (const m of filename.matchAll(/(\d{4})(\d{2})(\d{2})/g)) {
-    candidates.push([m[1], m[2], m[3]]);
+  for (const re of [/(\d{4})-(\d{2})-(\d{2})/g, /(\d{4})(\d{2})(\d{2})/g]) {
+    let m;
+    while ((m = re.exec(filename)) !== null) candidates.push([m[1], m[2], m[3]]);
   }
   const now = Date.now();
   for (const [y, mo, d] of candidates) {
@@ -319,7 +318,12 @@ async function parseInstagramZip(zipFile) {
   return (await parseExportZip(zipFile)).snapshot;
 }
 async function parseExportZip(zipFile) {
-  const filenameDate = zipFile instanceof File ? extractExportDateFromFilename(zipFile.name) : null;
+  let filenameDate = null;
+  try {
+    filenameDate = zipFile instanceof File ? extractExportDateFromFilename(zipFile.name) : null;
+  } catch {
+    filenameDate = null;
+  }
   let input;
   if (zipFile instanceof ArrayBuffer) {
     input = zipFile;
@@ -337,6 +341,24 @@ async function parseExportZip(zipFile) {
     throw new InvalidZipError(err);
   }
   const allFileNames = Object.keys(zip.files);
+  try {
+    return await parseZipContents(zip, allFileNames, filenameDate);
+  } catch (err) {
+    if (err instanceof MissingFilesError) err.shape = zipShape(allFileNames);
+    throw err;
+  }
+}
+function zipShape(allFileNames) {
+  const files = allFileNames.filter((n) => !n.endsWith("/"));
+  return {
+    fileCount: files.length,
+    hasConnectionsFolder: allFileNames.some((n) => /(?:^|\/)connections\//i.test(n)),
+    hasMediaFolder: allFileNames.some((n) => /(?:^|\/)media\//i.test(n)),
+    hasThreadsFolder: allFileNames.some(isThreadsPath),
+    hasHtmlFiles: files.some((n) => /\.html?$/i.test(n))
+  };
+}
+async function parseZipContents(zip, allFileNames, filenameDate) {
   const instagramFileNames = allFileNames.filter((n) => !isThreadsPath(n));
   const threadsFiles = detectThreadsFiles(allFileNames);
   const hasThreads = threadsFiles.followerFileNames.length > 0 || !!threadsFiles.followingFileName;

@@ -35,6 +35,13 @@ export interface HomeContent {
       continueCta: string;
     };
     deltaWarning: DeltaWarningContent;
+    largeFile: {
+      title: string;
+      body: string;
+      smallerCta: string;
+      continueCta: string;
+      cancelCta: string;
+    };
     upgradeDialog: {
       eyebrow: string;
       title: string;
@@ -45,6 +52,7 @@ export interface HomeContent {
       close: string;
     };
     errors: {
+      unzippedFile: string;
       missingData: string;
       missingThreadsData: string;
       mixedFormat: string;
@@ -196,6 +204,13 @@ const EN: HomeContent = {
       continueCta: 'Got it, show Instagram',
     },
     deltaWarning: DELTA_WARNING_EN,
+    largeFile: {
+      title: 'This ZIP is too big to open here.',
+      body: 'Your export is {size}, probably because it includes your photos and videos. Your browser has to read the whole file at once, and phones often run out of memory and close the tab. Request a new export with only Followers and Following selected: it is only a few MB.',
+      smallerCta: 'Show me how to get a smaller export',
+      continueCta: 'Try this file anyway',
+      cancelCta: 'Cancel',
+    },
     upgradeDialog: {
       eyebrow: 'Free plan limit reached',
       title: "You've already saved a snapshot",
@@ -206,7 +221,8 @@ const EN: HomeContent = {
       close: 'Close',
     },
     errors: {
-      missingData: 'This ZIP does not include the Followers and following data we need.',
+      unzippedFile: 'This is a file from inside your export, not the ZIP itself. On Mac, Safari unzips downloads automatically: upload the original .zip from your Downloads folder, or right-click the unzipped folder and choose Compress to make a new ZIP.',
+      missingData: 'This ZIP does not include your followers and following lists (the connections/followers_and_following folder). Request a new export with Followers and Following selected. If your export came in several parts, upload the part that contains that folder.',
       missingThreadsData: 'This Threads export is missing your followers or following list. Request a new export with Followers and following selected, in JSON format.',
       mixedFormat: 'This export mixes JSON and HTML files. Please request the JSON version again, then upload the ZIP.',
       invalidZip: 'We could not read this ZIP. Download the original file again and upload it without unzipping it.',
@@ -415,6 +431,13 @@ const ES: HomeContent = {
       continueCta: 'Entendido, ver Instagram',
     },
     deltaWarning: DELTA_WARNING_ES,
+    largeFile: {
+      title: 'Este ZIP es demasiado grande para abrirlo aquí.',
+      body: 'Tu export pesa {size}, seguramente porque incluye tus fotos y videos. Tu navegador tiene que leer todo el archivo a la vez, y los teléfonos suelen quedarse sin memoria y cerrar la pestaña. Solicita un export nuevo con solo Seguidores y Seguidos: pesa unos pocos MB.',
+      smallerCta: 'Muéstrame cómo obtener un export más pequeño',
+      continueCta: 'Probar este archivo igual',
+      cancelCta: 'Cancelar',
+    },
     upgradeDialog: {
       eyebrow: 'Límite del plan gratis',
       title: 'Ya guardaste un snapshot',
@@ -425,7 +448,8 @@ const ES: HomeContent = {
       close: 'Cerrar',
     },
     errors: {
-      missingData: 'Este ZIP no incluye los datos de seguidores y seguidos que necesitamos.',
+      unzippedFile: 'Este es un archivo de dentro de tu export, no el ZIP en sí. En Mac, Safari descomprime las descargas automáticamente: sube el .zip original de tu carpeta Descargas, o haz clic derecho en la carpeta descomprimida y elige Comprimir para crear un ZIP nuevo.',
+      missingData: 'Este ZIP no incluye tus listas de seguidores y seguidos (la carpeta connections/followers_and_following). Solicita un export nuevo con Seguidores y Seguidos seleccionado. Si tu export llegó en varias partes, sube la parte que contiene esa carpeta.',
       missingThreadsData: 'A este export de Threads le falta tu lista de seguidores o seguidos. Solicita un export nuevo con Seguidores y seguidos seleccionado, en formato JSON.',
       mixedFormat: 'Este export mezcla archivos JSON y HTML. Vuelve a solicitar la versión JSON y sube el ZIP.',
       invalidZip: 'No pudimos leer este ZIP. Descarga de nuevo el archivo original y súbelo sin descomprimirlo.',
@@ -634,6 +658,13 @@ const PT: HomeContent = {
       continueCta: 'Entendi, ver Instagram',
     },
     deltaWarning: DELTA_WARNING_PT,
+    largeFile: {
+      title: 'Este ZIP é grande demais para abrir aqui.',
+      body: 'Seu export tem {size}, provavelmente porque inclui suas fotos e vídeos. O navegador precisa ler o arquivo inteiro de uma vez, e celulares costumam ficar sem memória e fechar a aba. Solicite um novo export só com Seguidores e Seguindo selecionado: ele tem poucos MB.',
+      smallerCta: 'Me mostre como conseguir um export menor',
+      continueCta: 'Tentar este arquivo mesmo assim',
+      cancelCta: 'Cancelar',
+    },
     upgradeDialog: {
       eyebrow: 'Limite do plano grátis',
       title: 'Você já salvou um snapshot',
@@ -644,7 +675,8 @@ const PT: HomeContent = {
       close: 'Fechar',
     },
     errors: {
-      missingData: 'Este ZIP não inclui os dados de seguidores e seguindo de que precisamos.',
+      unzippedFile: 'Este é um arquivo de dentro do seu export, não o ZIP em si. No Mac, o Safari descompacta os downloads automaticamente: envie o .zip original da sua pasta Downloads, ou clique com o botão direito na pasta descompactada e escolha Comprimir para criar um novo ZIP.',
+      missingData: 'Este ZIP não inclui suas listas de seguidores e seguindo (a pasta connections/followers_and_following). Solicite um novo export com Seguidores e Seguindo selecionado. Se o seu export veio em várias partes, envie a parte que contém essa pasta.',
       missingThreadsData: 'Este export do Threads não tem sua lista de seguidores ou seguindo. Solicite um novo export com Seguidores e seguindo selecionado, em formato JSON.',
       mixedFormat: 'Este export mistura arquivos JSON e HTML. Solicite a versão JSON de novo e envie o ZIP.',
       invalidZip: 'Não conseguimos ler este ZIP. Baixe o arquivo original novamente e envie sem descompactar.',
