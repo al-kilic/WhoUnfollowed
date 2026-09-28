@@ -86,7 +86,7 @@ export interface DashboardContent {
   };
   tutorial: { title: string; body: string }[];
   tutorialLabels: { featureTour: string; skipTour: string; next: string; gotIt: string };
-  proLock: { title: string; description: string };
+  proLock: { eyebrow: string; title: string; description: string; cta: string };
   openOn: (username: string, app: string) => string;
   // Radar view for a platform the viewer has no snapshot of yet.
   platformEmpty: { title: (app: string) => string; body: (app: string) => string; cta: string };
@@ -251,8 +251,10 @@ const EN: DashboardContent = {
   ],
   tutorialLabels: { featureTour: 'Feature tour', skipTour: 'Skip tour', next: 'Next', gotIt: 'Got it' },
   proLock: {
+    eyebrow: 'Pro feature',
     title: 'Radar is a Pro feature',
-    description: 'Your account health score, growth over time, audience breakdown, follow-age analysis, and pending requests. Unlock the full picture of your account.',
+    description: 'Your account health score, growth over time, audience breakdown, and follow-age analysis. Unlock the full picture of your account.',
+    cta: 'Upgrade to Pro',
   },
   openOn: (u, app) => `Open @${u} on ${app}`,
   platformEmpty: {
@@ -421,8 +423,10 @@ const ES: DashboardContent = {
   ],
   tutorialLabels: { featureTour: 'Recorrido guiado', skipTour: 'Saltar recorrido', next: 'Siguiente', gotIt: 'Entendido' },
   proLock: {
+    eyebrow: 'Función Pro',
     title: 'Radar es una función Pro',
-    description: 'Tu puntuación de salud de cuenta, crecimiento en el tiempo, desglose de audiencia, análisis de antigüedad de seguimiento y solicitudes pendientes. Desbloquea el panorama completo de tu cuenta.',
+    description: 'Tu puntuación de salud de cuenta, crecimiento en el tiempo, desglose de audiencia y análisis de antigüedad de seguimiento. Desbloquea el panorama completo de tu cuenta.',
+    cta: 'Mejorar a Pro',
   },
   openOn: (u, app) => `Abrir @${u} en ${app}`,
   platformEmpty: {
@@ -591,8 +595,10 @@ const PT: DashboardContent = {
   ],
   tutorialLabels: { featureTour: 'Tour de recursos', skipTour: 'Pular tour', next: 'Próximo', gotIt: 'Entendi' },
   proLock: {
+    eyebrow: 'Recurso Pro',
     title: 'O Radar é um recurso Pro',
-    description: 'Sua pontuação de saúde da conta, crescimento ao longo do tempo, detalhamento de audiência, análise de tempo de seguimento e solicitações pendentes. Desbloqueie o panorama completo da sua conta.',
+    description: 'Sua pontuação de saúde da conta, crescimento ao longo do tempo, detalhamento de audiência e análise de tempo de seguimento. Desbloqueie o panorama completo da sua conta.',
+    cta: 'Assinar Pro',
   },
   openOn: (u, app) => `Abrir @${u} no ${app}`,
   platformEmpty: {

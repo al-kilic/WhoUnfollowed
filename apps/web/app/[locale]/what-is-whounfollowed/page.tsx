@@ -12,19 +12,19 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 const SEO_META: Record<AppLocale, { title: string; description: string; twitterTitle: string; twitterDescription: string }> = {
   en: {
     title: 'What Is WhoUnfollowed? See Who Unfollowed You Without a Password',
-    description: "WhoUnfollowed is open-source and reads the data export Instagram or Threads already gives you, showing who doesn't follow you back in your browser in 2 seconds. No password, no server.",
+    description: "Open-source tool that reads your Instagram or Threads data export in your browser and shows who doesn't follow you back. No password, no server.",
     twitterTitle: 'What Is WhoUnfollowed?',
     twitterDescription: "See who doesn't follow you back on Instagram or Threads without giving anyone your password.",
   },
   es: {
     title: '¿Qué es WhoUnfollowed? Ve quién te dejó de seguir sin contraseña',
-    description: 'WhoUnfollowed es de código abierto y lee el export de datos que Instagram o Threads ya te da, mostrando quién no te sigue de vuelta en tu navegador en 2 segundos. Sin contraseña, sin servidor.',
+    description: 'Herramienta de código abierto que lee tu export de Instagram o Threads en tu navegador y muestra quién no te sigue de vuelta. Sin contraseña, sin servidor.',
     twitterTitle: '¿Qué es WhoUnfollowed?',
     twitterDescription: 'Ve quién no te sigue de vuelta en Instagram o Threads sin darle tu contraseña a nadie.',
   },
   pt: {
     title: 'O Que É o WhoUnfollowed? Veja Quem Deixou de te Seguir Sem Senha',
-    description: 'O WhoUnfollowed é de código aberto e lê o export de dados que o Instagram ou o Threads já te dá, mostrando quem não te segue de volta no seu navegador em 2 segundos. Sem senha, sem servidor.',
+    description: 'Ferramenta de código aberto que lê seu export do Instagram ou do Threads no navegador e mostra quem não te segue de volta. Sem senha, sem servidor.',
     twitterTitle: 'O Que É o WhoUnfollowed?',
     twitterDescription: 'Veja quem não te segue de volta no Instagram ou no Threads sem dar sua senha a ninguém.',
   },

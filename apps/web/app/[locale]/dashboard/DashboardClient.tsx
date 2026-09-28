@@ -1346,8 +1346,10 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
       {locked && (
         <ProLockOverlay
           feature="radar"
+          eyebrow={c.proLock.eyebrow}
           title={c.proLock.title}
           description={c.proLock.description}
+          cta={c.proLock.cta}
         />
       )}
       </div>

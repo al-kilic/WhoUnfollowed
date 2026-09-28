@@ -21,21 +21,21 @@ const SEO_META: Record<AppLocale, { title: string; description: string; appDescr
   en: {
     title: 'Who Unfollowed You on Instagram? Check Free',
     description:
-      'See who doesn\'t follow you back on Instagram or Threads by uploading your official data export. Open-source, processed entirely in your browser. No password, no login.',
+      'See who doesn\'t follow you back on Instagram or Threads from your official data export. Open-source, processed in your browser. No password, no login.',
     appDescription:
       'Privacy-first, open-source follower analysis for Instagram and Threads. Upload your official data export to see who doesn\'t follow you back. Save snapshots over time to see who unfollowed. No password or login required.',
   },
   es: {
     title: '¿Quién te dejó de seguir en Instagram? Compruébalo gratis',
     description:
-      'Descubre quién no te sigue de vuelta en Instagram o Threads subiendo tu export oficial de datos. Código abierto, procesado por completo en tu navegador. Sin contraseña, sin inicio de sesión.',
+      'Descubre quién no te sigue de vuelta en Instagram o Threads con tu export oficial de datos. Código abierto, procesado en tu navegador. Sin contraseña.',
     appDescription:
       'Análisis de seguidores de Instagram y Threads que respeta tu privacidad, de código abierto. Sube tu export oficial de datos para ver quién no te sigue de vuelta. Guarda snapshots con el tiempo para ver quién te dejó de seguir. Sin contraseña ni inicio de sesión.',
   },
   pt: {
     title: 'Quem Deixou de te Seguir no Instagram? Confira Grátis',
     description:
-      'Veja quem não te segue de volta no Instagram ou no Threads enviando seu export oficial de dados. Código aberto, processado inteiramente no seu navegador. Sem senha, sem login.',
+      'Veja quem não te segue de volta no Instagram ou no Threads com seu export oficial de dados. Código aberto, processado no seu navegador. Sem senha.',
     appDescription:
       'Análise de seguidores do Instagram e do Threads com privacidade em primeiro lugar, de código aberto. Envie seu export oficial de dados para ver quem não te segue de volta. Guarde snapshots ao longo do tempo para ver quem deixou de te seguir. Sem senha ou login necessários.',
   },
