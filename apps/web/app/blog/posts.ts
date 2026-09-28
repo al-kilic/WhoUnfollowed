@@ -3683,6 +3683,178 @@ Open Meta's Accounts Center from either app's settings, go to "Your information 
 
 If you're managing both, keep the two exports and the two uploads separate. [Upload your Instagram export](/) for Instagram results and [your Threads export](/threads) for Threads results. WhoUnfollowed reads each one in your browser and never mixes them together.`,
   },
+  {
+    slug: 'can-you-request-your-instagram-data-export-more-than-once',
+    cluster: 'data-export',
+    title: 'Can You Request Your Instagram Data Export More Than Once?',
+    metaTitle: 'Can You Request Your Instagram Export More Than Once?',
+    metaDescription: "Yes, Instagram publishes no limit on repeat data export requests. Here's why requesting a second export is exactly how you see who unfollowed you.",
+    excerpt: "Instagram publishes no limit on how many times you can request your data export, and no cooldown between requests. Here's why requesting a second one isn't a workaround, it's the whole method for seeing who unfollowed you.",
+    date: 'September 28, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'can you request your instagram data export more than once',
+    art: 'search',
+    image: '/blog/export-request-again-hero.jpg',
+    imageAlt: 'A person reading email on a laptop beside a potted plant, representing checking for a new Instagram data export download link',
+    cta: {
+      heading: 'Request the second export. Then compare.',
+      body: 'Two exports taken weeks apart are the whole method. Upload both to WhoUnfollowed and it reads them in your browser and shows exactly who unfollowed you in between. No password, nothing uploaded.',
+      buttonLabel: 'Compare your exports',
+      proNudge: 'Pro keeps every export you take, so once you have requested a second one, the comparison is already sitting there instead of something you have to do by hand each time.',
+    },
+    faq: [
+      { q: 'Can you request your Instagram data export more than once?', a: 'Yes, Instagram publishes no limit on the number of times you can request your data export, and each request is independent of any prior one.' },
+      { q: 'Does requesting a new Instagram data export cancel or delete a previous one?', a: 'No, requesting a new export has no effect on a download link or file you already received; the two exist completely independently.' },
+      { q: 'How long do you have to wait between Instagram data export requests?', a: 'Instagram does not publish a required waiting period between requests, so a new one can be submitted as soon as you need it.' },
+      { q: 'Why would you need to request your Instagram export more than once?', a: 'Comparing two exports taken weeks apart is the only way to see exactly who unfollowed you, since a single export only shows your current followers.' },
+      { q: 'Does the Instagram data export download link expire?', a: 'Yes, the emailed download link expires after a few days, so a fresh request is needed if you wait too long to download it.' },
+    ],
+    body: `Yes. Instagram publishes no limit on how many times you can request your data export, current as of September 2026, and no waiting period between requests. Submitting a new one does not cancel, replace, or interfere with a download you already have sitting in your inbox. Requesting it more than once is not an edge case or a workaround. It is the entire method behind seeing who unfollowed you.
+
+## Why You'd Actually Need a Second Export
+
+A single Instagram data export only tells you who follows you right now, at the exact moment you requested it. It has no memory of anyone who followed you last month and left, a limitation covered in more depth in [does your Instagram data export show who unfollowed you](/blog/does-instagram-data-export-show-who-unfollowed-you). The only way to see who unfollowed you is to compare two exports taken at different times, so requesting your data a second time (and a third, and a fourth) is the normal, intended use of the feature. We cover the comparison itself in [how to see who unfollowed you on Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram).
+
+## Does a New Request Replace the Old One?
+
+No. Each request Instagram processes is independent. Requesting a fresh export does not touch, cancel, or overwrite a download link you already received, and it has no effect on a ZIP file you already saved to your device. You can hold onto last month's export and this month's export side by side, which is exactly what a comparison needs.
+
+## How Long Do You Have to Wait Between Requests?
+
+Instagram does not publish a required cooldown between export requests. [The data download feature itself](https://help.instagram.com/181231772500920) processes each request on its own timeline, typically a few hours for a narrow "Followers and following" request, as covered in [how long an Instagram data request takes](/blog/how-long-does-an-instagram-data-request-take). There is no stated rule preventing you from submitting a new request the same day you downloaded the last one, though there is rarely a reason to request more often than every week or two, since follower changes take time to build into anything worth seeing.
+
+## What If You Request Two Before the First One Arrives?
+
+Instagram documents no restriction on submitting a second request while a first one is still processing. Each request generates its own email and its own download link when it finishes. The practical downside is confusion, not restriction: you may end up with two similarly-timed exports instead of two usefully spaced-out ones. For a real comparison, space your requests by at least a couple of weeks so there is enough time for actual follower changes to show up between them.
+
+## One Thing That Actually Does Have a Limit: The Link Itself
+
+The part of this process with a hard deadline is not the request, it's the download link Instagram emails you. [That link expires after a few days](https://help.instagram.com/181231772500920). If you let it sit too long, the fix is not waiting for it to come back. It's simply requesting the export again, which, as covered above, you are always free to do.
+
+## Turning Two Exports Into an Answer
+
+Once you have two exports saved from different points in time, the comparison itself takes seconds. Upload both to [WhoUnfollowed](/) and it reads them entirely in your browser, matches the two followers lists, and shows you exactly who left in between, by name. No password, nothing sent to a server. If this is your first export, [the full request walkthrough](/blog/how-to-download-your-instagram-data) covers where the setting lives and which format to pick, and [what's inside the ZIP](/blog/whats-inside-your-instagram-data-download) explains the files themselves once it arrives.
+
+## In Short
+
+- Instagram publishes no limit on how many times you can request your data export, current as of September 2026, and no published cooldown between requests.
+- A new request does not cancel, replace, or interfere with a download link or file you already have.
+- The download link itself expires after a few days, which is the part of this process that actually has a hard deadline.
+- Requesting your export more than once is the intended method for seeing who unfollowed you, not a workaround, since a single export only shows your current state.`,
+  },
+  {
+    slug: 'does-whounfollowed-read-your-messages-or-photos-from-your-export',
+    cluster: 'privacy-safety',
+    title: 'Does WhoUnfollowed Read Your Messages or Photos From Your Export?',
+    metaTitle: 'Does WhoUnfollowed Read Your Messages or Photos Too?',
+    metaDescription: "No. WhoUnfollowed's open source parser only opens four connections files by name, and never touches messages, photos, or any other file in your export.",
+    excerpt: "WhoUnfollowed's parser only ever opens four specifically named files inside your export. Even if your ZIP also holds messages, photos, or your entire archive, here's exactly what does and doesn't get read, verified in the open source code.",
+    date: 'September 28, 2026',
+    readTime: '4 min',
+    tag: 'Privacy',
+    primaryKeyword: 'does whounfollowed read your messages or photos',
+    art: 'lock',
+    image: '/blog/parser-scope-privacy-hero.jpg',
+    imageAlt: "A smartphone wrapped in a chain and padlock, representing how WhoUnfollowed's code never opens anything beyond your followers and following files",
+    cta: {
+      heading: 'Upload the whole ZIP. Only four files matter.',
+      body: 'Whether you requested the narrow export or the full archive, WhoUnfollowed opens the same four connections files and nothing else. Upload it and see your non-followers and unfollowers in your browser, no password, nothing sent to a server.',
+      buttonLabel: 'See what it reads',
+    },
+    faq: [
+      { q: 'Does WhoUnfollowed read your private messages from your Instagram export?', a: 'No, the parser only opens your followers, following, pending requests, and recently-unfollowed files by name, and never reads message or media files even if they are present in the ZIP.' },
+      { q: 'Is it safe to upload your full Instagram archive instead of just followers and following?', a: 'Yes, WhoUnfollowed only opens the same four connections files regardless of whether you uploaded a narrow or full export, so extra files in a full archive are never touched.' },
+      { q: 'How can you verify what files WhoUnfollowed actually opens?', a: 'The parsing code is published under the MPL-2.0 license on GitHub, so the exact file-matching logic can be read directly rather than taken on trust.' },
+      { q: 'Does listing the files inside a ZIP count as reading them?', a: 'No, WhoUnfollowed lists file names only to detect the export layout; a file\'s contents are read only if its name matches one of the four connections files.' },
+      { q: "What files does WhoUnfollowed's parser actually open?", a: 'It opens your followers file(s), your following file, your pending-requests file, and your recently-unfollowed file, in whichever format (JSON or HTML) you chose when you requested the export, and nothing else.' },
+    ],
+    body: `No. WhoUnfollowed's parser only ever opens a small, fixed set of files inside your Instagram export by name: your followers list, your following list, your pending follow requests, and your own recently-unfollowed log. Even if your ZIP also contains private messages, photos, comments, or your entire account archive, because you chose "all available information" instead of the narrower request, the code never opens those files to read them. This isn't a policy promise. It's how the parser is written, and the code is public, so it can be checked directly instead of taken on trust.
+
+## Which Files the Parser Actually Opens
+
+WhoUnfollowed's open source parser looks inside your uploaded ZIP for a fixed set of file name patterns, matched by their exact path and name: **followers_1.json** (and its paginated siblings for larger accounts) or **followers_1.html** if you exported in HTML instead of JSON, **following.json** or **following.html**, **pending_follow_requests.json**, and **recently_unfollowed_profiles.json**. Those are the only files it reads the contents of, full stop, regardless of which export format you picked ([JSON is the better choice for other reasons](/blog/instagram-data-export-json-vs-html), but the file-scope guarantee holds either way). For a closer look at what each of those actually contains, [what's inside your Instagram data download](/blog/whats-inside-your-instagram-data-download) breaks it down file by file.
+
+## What Happens If Your Export Also Contains Messages or Photos
+
+Before opening anything, the parser lists the file names inside your ZIP so it can figure out what kind of export it's looking at, connections-only, Threads, or a mix. Listing names is different from reading contents. A file's name shows up in that list; a file's contents only get read if its name matches one of the patterns above. A messages folder, a media folder, an ads_information folder, none of them match, so none of them ever get opened, parsed, or looked at, no matter how large your export is or what else you selected when you requested it.
+
+## Why This Matters More If You Chose the Full Archive
+
+[The narrow "Followers and following" request](/blog/how-to-download-your-instagram-data) keeps your export small on purpose, and if that's what you have, there's nothing else in the ZIP to worry about in the first place. But if you requested "all available information" instead, [your export can include your direct messages, your posts, your comment history, and more](https://help.instagram.com/6947552812036899), running into gigabytes for an active account. That's exactly the scenario where this matters: WhoUnfollowed treats a full archive the same way it treats a narrow one, by looking for the same fixed set of file names and ignoring everything else in the ZIP.
+
+## How to Verify This Yourself
+
+You don't have to take this description on faith. The parsing logic is published under the [MPL-2.0 license](https://mozilla.org/MPL/2.0/) on [GitHub](https://github.com/al-kilic/WhoUnfollowed), and the file-matching logic described above is a few dozen lines you can read start to finish. This is the same standard covered in [does WhoUnfollowed store or sell your Instagram data](/blog/does-whounfollowed-store-or-sell-your-instagram-data): what a tool never opens, it cannot store, sell, or leak, and you can check that for yourself instead of trusting a privacy policy's wording.
+
+## In Short
+
+- WhoUnfollowed's parser only opens a fixed, small set of files inside your export by name: followers, following, pending requests, and your recent-unfollow log, in whichever format you exported.
+- Messages, photos, comments, and every other file in a full "all available information" export are never opened or read, regardless of how large the ZIP is.
+- This applies the same way whether you requested the narrow connections-only export or the full archive.
+- The file-matching logic is open source under MPL-2.0, so the claim can be verified directly in the code rather than taken on trust.
+
+If you're deciding [whether a follower tracker is safe to use at all](/blog/are-instagram-follower-trackers-safe), or wondering [why other trackers ask for your password in the first place](/blog/why-instagram-follower-trackers-ask-for-your-password), the file-scope question above is the kind of specific, checkable claim worth demanding from any tool, not just this one. Most trackers won't let you check. This one does.`,
+  },
+  {
+    slug: 'does-unfollowing-non-followers-improve-your-instagram-reach',
+    cluster: 'account-health',
+    title: "Does Unfollowing People Who Don't Follow You Back Help Your Reach?",
+    metaTitle: 'Does Unfollowing Non-Followers Improve Your Reach?',
+    metaDescription: "No, Instagram's ranking signals don't include your follow count. Here's what actually drives reach, and the real reasons to clean up who you follow.",
+    excerpt: "Instagram's own ranking documentation doesn't count your follow list as a reach signal. Here's what actually decides how far your posts go, and the real (different) reasons cleaning up who you follow is still worth doing.",
+    date: 'September 28, 2026',
+    readTime: '4 min',
+    tag: 'Growth',
+    primaryKeyword: 'does unfollowing non-followers improve your instagram reach',
+    art: 'ratio',
+    image: '/blog/reach-myth-hero.jpg',
+    imageAlt: 'A person scrolling Instagram on a smartphone, representing checking whether cleaning up who you follow changes what you see and who sees you',
+    cta: {
+      heading: 'Clean up for the reasons that actually help.',
+      body: "Reach won't change, but your feed and your profile will. Upload your Instagram export to WhoUnfollowed and see exactly who doesn't follow you back, in your browser, no password required.",
+      buttonLabel: "See who doesn't follow back",
+    },
+    faq: [
+      { q: "Does unfollowing people who don't follow you back improve your Instagram reach?", a: "No, Instagram's published ranking signals for reach are based on engagement (watch time, shares, saves), not on your follow count or follow ratio." },
+      { q: 'What actually determines how far your Instagram posts reach?', a: 'Reach is driven mainly by how early viewers interact with a post, through watch time, shares, saves, and comments, not by how many accounts you follow.' },
+      { q: "Is there any benefit to unfollowing accounts that don't follow you back?", a: 'Yes, it improves your own feed quality and how your profile looks to a human visitor, though it does not change algorithmic reach.' },
+      { q: 'Can unfollowing too many accounts too quickly get your Instagram account restricted?', a: 'Yes, unfollowing a large number of accounts in a short window can trigger a temporary action block, which is a rate limit rather than a reach penalty.' },
+      { q: 'Does your Instagram follow ratio affect the algorithm?', a: "No, Meta's own ranking documentation does not list follow ratio or follow count as a factor in how far posts reach." },
+    ],
+    body: `No, not directly. [Meta's own Transparency Center explains what actually drives reach](https://transparency.meta.com/features/explaining-ranking/ig-feed-recommendations/): signals like watch time, shares, saves, and how people engage with a post, current as of September 2026. Your following list, your follower count, and your follow ratio are nowhere on that list. Unfollowing the accounts that don't follow you back can absolutely be worth doing, just not because it will make Instagram show your posts to more people.
+
+## What Actually Determines Your Reach
+
+Reach runs on an audition system. A new post gets shown to a small slice of your followers and a slice of non-followers first, and how that early group responds, whether they watch to the end, share it, save it, comment, decides whether it reaches further. None of that depends on how many accounts you follow. A small account with one strong post can outreach a much bigger one with a flat post, and a long following list on your side changes none of it. We cover the reach side of this in more depth in [why your reach dropped while your follower count stayed the same](/blog/instagram-reach-dropped-but-follower-count-stayed-the-same).
+
+## Where This Myth Comes From
+
+It's an easy mix-up. [Your follow ratio](/blog/instagram-follow-ratio-what-it-means-how-to-improve-it) (how many people you follow versus how many follow you) is a real, visible number, and cleaning it up does have real effects: it makes your profile look more established to a human visitor deciding whether to follow you. But "looks more credible to a person" and "Instagram's ranking algorithm reaches you further" are two different claims, and only the first one is actually true. [Buffer's current breakdown of Instagram's ranking signals](https://buffer.com/resources/instagram-algorithms/) centers on the same engagement-based factors as Meta's own documentation, not on follow counts or ratios.
+
+## The Real (Different) Benefits of Cleaning Up Who You Follow
+
+Trimming your following list is still worth doing, for reasons that have nothing to do with reach:
+
+- A cleaner feed: every account you follow competes for space in your own Home feed, so fewer, more relevant follows means less noise.
+- A better first impression: a visitor checking your profile before following back does look at your ratio, even if the algorithm doesn't.
+- Knowing who's actually there: the process of reviewing who you follow is also how you catch [ghost followers](/blog/instagram-ghost-followers-how-to-find-and-remove-them) and people who quietly unfollowed you a while back.
+
+[The safe method for cleaning up who you follow](/blog/how-to-clean-up-who-you-follow-on-instagram) covers the actual steps, paced to avoid Instagram's spam limits.
+
+## When a Big Following List Actually Does Hurt You
+
+There is one real edge case. Following or unfollowing an extreme number of accounts in a short window, hundreds in a day, is a pattern Instagram's spam systems do watch for, and it can trigger a temporary action block. That's a rate-of-action problem, not a ranking problem, and it has nothing to do with your reach on posts you've already published.
+
+## In Short
+
+- Instagram's published ranking signals for reach are engagement-based (watch time, shares, saves), and do not include your follow count, following list, or follow ratio.
+- Unfollowing non-followers will not increase how far your posts reach on its own.
+- A cleaner following list still helps your own feed quality and how your profile looks to a human visitor deciding whether to follow back.
+- Following or unfollowing a large number of accounts too quickly can trigger a temporary Instagram action block, which is a rate limit, not an algorithm penalty.
+
+If you're cleaning up your following list for the right reasons, the first step is seeing the actual list. [Upload your Instagram export to WhoUnfollowed](/) and it shows exactly who doesn't follow you back, free, in your browser, no password required.`,
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
