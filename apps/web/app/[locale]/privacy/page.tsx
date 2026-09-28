@@ -14,9 +14,9 @@ import { getPrivacyContent } from './content';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
 const SEO_META: Record<AppLocale, { title: string; description: string }> = {
-  en: { title: 'Privacy Policy', description: 'Privacy Policy for WhoUnfollowed. How we handle your data and our relationship with Instagram and Meta.' },
-  es: { title: 'Política de Privacidad', description: 'Política de Privacidad de WhoUnfollowed. Cómo manejamos tus datos y nuestra relación con Instagram y Meta.' },
-  pt: { title: 'Política de Privacidade', description: 'Política de Privacidade do WhoUnfollowed. Como tratamos seus dados e nossa relação com o Instagram e a Meta.' },
+  en: { title: 'Privacy Policy', description: 'Privacy Policy for WhoUnfollowed. How we handle your data and our relationship with Instagram, Threads, and Meta.' },
+  es: { title: 'Política de Privacidad', description: 'Política de Privacidad de WhoUnfollowed. Cómo manejamos tus datos y nuestra relación con Instagram, Threads y Meta.' },
+  pt: { title: 'Política de Privacidade', description: 'Política de Privacidade do WhoUnfollowed. Como tratamos seus dados e nossa relação com o Instagram, o Threads e a Meta.' },
 };
 
 interface PageProps {

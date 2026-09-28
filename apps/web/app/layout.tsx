@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     template: '%s | WhoUnfollowed',
   },
   description:
-    'See who doesn\'t follow you back on Instagram by uploading your official data export. Open-source, processed entirely in your browser. No password, no login.',
+    'See who doesn\'t follow you back on Instagram or Threads by uploading your official data export. Open-source, processed entirely in your browser. No password, no login.',
   keywords: [
     'instagram unfollow tracker',
     'instagram followers',
@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     siteName: 'WhoUnfollowed',
     title: 'Who Unfollowed You on Instagram? Check Free',
     description:
-      'See who doesn\'t follow you back on Instagram by uploading your official data export. Open-source, processed entirely in your browser. No password, no login.',
+      'See who doesn\'t follow you back on Instagram or Threads by uploading your official data export. Open-source, processed entirely in your browser. No password, no login.',
     images: [
       {
         url: '/opengraph-image',
@@ -81,7 +81,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Who Unfollowed You on Instagram? Check Free',
     description:
-      'See who doesn\'t follow you back on Instagram by uploading your official data export. Open-source, processed entirely in your browser. No password, no login.',
+      'See who doesn\'t follow you back on Instagram or Threads by uploading your official data export. Open-source, processed entirely in your browser. No password, no login.',
     images: ['/opengraph-image'],
   },
   robots: {
@@ -109,7 +109,7 @@ const orgJsonLd = {
       url: SITE_URL,
       logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png` },
       description:
-        'Privacy-first, open-source Instagram follower analysis. AGPL-3.0 web app, MPL-2.0 parser, no password required, processed in your browser.',
+        'Privacy-first, open-source follower analysis for Instagram and Threads. AGPL-3.0 web app, MPL-2.0 parser, no password required, processed in your browser.',
       sameAs: ['https://github.com/al-kilic/WhoUnfollowed'],
       // Homepage, /pricing, /compare, and a handful of other marketing pages
       // (see i18n/localizedPaths.ts) now ship in all three; most of the site

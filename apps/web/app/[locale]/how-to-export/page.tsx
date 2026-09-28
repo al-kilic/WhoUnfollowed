@@ -12,15 +12,15 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 const SEO_META: Record<AppLocale, { title: string; description: string }> = {
   en: {
     title: 'How to Export Instagram Followers & Following Data - Step-by-Step Guide (2026)',
-    description: 'Step-by-step guide to downloading your Instagram followers and following list as a ZIP. Takes under 5 minutes. No third-party app, no password needed.',
+    description: 'Step-by-step guide to downloading your Instagram or Threads followers and following list as a ZIP. Takes under 5 minutes. No third-party app, no password needed.',
   },
   es: {
     title: 'Cómo Exportar tus Seguidores y Seguidos de Instagram: Guía Paso a Paso (2026)',
-    description: 'Guía paso a paso para descargar tu lista de seguidores y seguidos de Instagram como un ZIP. Toma menos de 5 minutos. Sin apps de terceros, sin contraseña.',
+    description: 'Guía paso a paso para descargar tu lista de seguidores y seguidos de Instagram o Threads como un ZIP. Toma menos de 5 minutos. Sin apps de terceros, sin contraseña.',
   },
   pt: {
     title: 'Como Exportar Seguidores e Seguindo do Instagram: Guia Passo a Passo (2026)',
-    description: 'Guia passo a passo para baixar sua lista de seguidores e seguindo do Instagram como um ZIP. Leva menos de 5 minutos. Sem app de terceiros, sem senha.',
+    description: 'Guia passo a passo para baixar sua lista de seguidores e seguindo do Instagram ou do Threads como um ZIP. Leva menos de 5 minutos. Sem app de terceiros, sem senha.',
   },
 };
 
@@ -38,7 +38,7 @@ function buildHowToJsonLd(locale: AppLocale) {
     name: content.headline,
     description: content.intro,
     totalTime: 'PT5M',
-    tool: [{ '@type': 'HowToTool', name: 'Instagram Accounts Center' }],
+    tool: [{ '@type': 'HowToTool', name: 'Meta Accounts Center' }],
     step: [
       { '@type': 'HowToStep', name: d.step1.title, text: d.step1.hint, url: `${SITE_URL}${canonical}#step1` },
       { '@type': 'HowToStep', name: d.step2.title, text: d.step2.nav.join(' → '), url: `${SITE_URL}${canonical}#step2` },

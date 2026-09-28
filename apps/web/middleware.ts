@@ -78,6 +78,7 @@ export const config = {
     '/contact/:path*',
     '/what-is-whounfollowed/:path*',
     '/how-to-export/:path*',
+    '/threads/:path*',
     '/accessibility/:path*',
     '/compare/:path*',
     '/privacy/:path*',

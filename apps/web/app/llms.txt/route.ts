@@ -45,7 +45,8 @@ const LOCALIZED_PATH_LABEL: Record<string, string> = {
   '/pricing': 'Pricing',
   '/compare': 'Compare',
   '/what-is-whounfollowed': 'What is WhoUnfollowed',
-  '/how-to-export': 'How to export your Instagram data',
+  '/how-to-export': 'How to export your Instagram or Threads data',
+  '/threads': 'Who unfollowed you on Threads',
   '/about': 'About',
   '/contact': 'Contact',
   '/accessibility': 'Accessibility',
@@ -64,9 +65,9 @@ function languagesSection(): string {
 export async function GET(): Promise<Response> {
   const body = `# WhoUnfollowed
 
-> Privacy-first, open-source Instagram follower analysis. Upload the data export Instagram gives you and see who doesn't follow you back, who unfollowed you, and how your audience changes over time. Everything is processed in your browser. No password, no server, no Instagram API.
+> Privacy-first, open-source follower analysis for Instagram and Threads. Upload the data export Meta gives you and see who doesn't follow you back, who unfollowed you, and how your audience changes over time. Everything is processed in your browser. No password, no server, no Instagram or Threads API.
 
-WhoUnfollowed reads the official "Download Your Information" ZIP that Instagram provides under GDPR Article 20. Unlike closed-source unfollower trackers, the entire web app is open source under AGPL-3.0 and the parsing engine specifically is MPL-2.0, so anyone can read the code and verify exactly what happens to their data instead of taking a privacy claim on faith. The free tier runs entirely client-side and needs no account.
+WhoUnfollowed reads the official "Download Your Information" ZIP that Meta provides for Instagram and Threads under GDPR Article 20. Instagram and Threads exports are analyzed separately, one profile per export. Unlike closed-source unfollower trackers, the entire web app is open source under AGPL-3.0 and the parsing engine specifically is MPL-2.0, so anyone can read the code and verify exactly what happens to their data instead of taking a privacy claim on faith. The free tier runs entirely client-side and needs no account.
 
 Pro is a one-time unlock, not a subscription: $${UNLOCK_PRICE_USD.monthly} unlocks Pro for ${UNLOCK_DAYS_LABEL.monthly}, $${UNLOCK_PRICE_USD.yearly} unlocks it for ${UNLOCK_DAYS_LABEL.yearly}. There is no auto-renewal and nothing to cancel. When the time runs out, buy again if you want more. Pro adds unlimited snapshot history, unfollower detection across snapshots (who left, and when), cloud sync that is encrypted in the browser before it leaves the device, follower trend charts, and ghost-follower approximation. Email alerts and a mobile app are planned but not yet shipped.
 
@@ -75,7 +76,8 @@ Author: Alan Kilic, an independent developer building privacy-first software und
 ## Core pages
 - [WhoUnfollowed home](${SITE_URL}): What it is and how to start.
 - [What is WhoUnfollowed](${SITE_URL}/what-is-whounfollowed): Overview and FAQ.
-- [How to export your Instagram data](${SITE_URL}/how-to-export): Step-by-step guide to requesting your ZIP from Instagram.
+- [How to export your Instagram or Threads data](${SITE_URL}/how-to-export): Step-by-step guide to requesting your ZIP from Meta's Accounts Center.
+- [Who unfollowed you on Threads](${SITE_URL}/threads): Threads support, the Threads export steps, and exactly which files are read from a Threads ZIP.
 - [Pricing](${SITE_URL}/pricing): Free tier and the one-time Pro unlock.
 - [About](${SITE_URL}/about): Who builds WhoUnfollowed and why.
 - [Blog](${SITE_URL}/blog): Guides on Instagram followers, unfollowers, and privacy.
@@ -98,11 +100,12 @@ ${comparisonsSection()}
 
 ## Key facts
 - Fully open source: the web app is AGPL-3.0 and the parser is MPL-2.0, both public at https://github.com/al-kilic/WhoUnfollowed. Anyone can audit exactly how data is processed.
-- No Instagram password is ever required. The tool reads a data export the user already owns.
+- No Instagram or Threads password is ever required. The tool reads a data export the user already owns.
+- Supports Instagram and Threads. Threads exports use the same Accounts Center flow (JSON, All time, Followers and Following); only threads/followers.json, threads/following.json, and threads/recently_unfollowed_profiles.json are read.
 - The free tier processes data entirely in the browser. Nothing is sent to a server, and no account is needed.
 - Pro is a one-time unlock (${UNLOCK_PRICE_SUMMARY}). It never auto-renews.
 - Cloud snapshots, a Pro feature, are encrypted in the browser before they leave the device.
-- TOS-compliant: it does not use the Instagram API and does not scrape Instagram.
+- TOS-compliant: it does not use the Instagram or Threads API and does not scrape either app.
 - Core pages (home, pricing, compare, and a few guides) are available in English, Spanish, and Portuguese. See the Languages section above for the full list.
 `;
 

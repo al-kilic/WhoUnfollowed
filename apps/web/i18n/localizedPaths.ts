@@ -15,6 +15,7 @@ export const LOCALIZED_PATHS: string[] = [
   '/contact',
   '/what-is-whounfollowed',
   '/how-to-export',
+  '/threads',
   '/accessibility',
   '/compare',
   '/privacy',
