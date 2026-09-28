@@ -108,6 +108,16 @@ describe('parseExportZip: Threads export', () => {
     expect((err as MissingFilesError).message).toContain('threads/following.json');
   });
 
+  it('throws a Threads MissingFilesError for a Threads export without follower data', async () => {
+    const z = new JSZip();
+    z.file('threads/liked_threads.json', '{}');
+    z.file('threads/threads_and_replies.json', '{}');
+
+    const err = await parseExportZip(await toBuffer(z)).catch((e: unknown) => e);
+    expect(err).toBeInstanceOf(MissingFilesError);
+    expect((err as MissingFilesError).platform).toBe('threads');
+  });
+
   it('throws SchemaValidationError for a malformed Threads file', async () => {
     const z = new JSZip();
     z.file('threads/followers.json', JSON.stringify([threadsEntry('ann')]));

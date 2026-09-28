@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     template: '%s | WhoUnfollowed',
   },
   description:
-    'See who doesn\'t follow you back on Instagram or Threads by uploading your official data export. Open-source, processed entirely in your browser. No password, no login.',
+    'See who doesn\'t follow you back on Instagram or Threads from your official data export. Open-source, processed in your browser. No password, no login.',
   keywords: [
     'instagram unfollow tracker',
     'instagram followers',
@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     siteName: 'WhoUnfollowed',
     title: 'Who Unfollowed You on Instagram? Check Free',
     description:
-      'See who doesn\'t follow you back on Instagram or Threads by uploading your official data export. Open-source, processed entirely in your browser. No password, no login.',
+      'See who doesn\'t follow you back on Instagram or Threads from your official data export. Open-source, processed in your browser. No password, no login.',
     images: [
       {
         url: '/opengraph-image',
@@ -81,7 +81,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Who Unfollowed You on Instagram? Check Free',
     description:
-      'See who doesn\'t follow you back on Instagram or Threads by uploading your official data export. Open-source, processed entirely in your browser. No password, no login.',
+      'See who doesn\'t follow you back on Instagram or Threads from your official data export. Open-source, processed in your browser. No password, no login.',
     images: ['/opengraph-image'],
   },
   robots: {

@@ -334,6 +334,13 @@ export async function parseExportZip(zipFile: File | Blob | ArrayBuffer): Promis
     return { snapshot, skippedPlatforms: [] };
   }
 
+  // A Threads export made without the Followers and Following category still
+  // has a threads/ folder (posts, likes, ...). Report the missing Threads
+  // files, not Instagram's, so the error points the user at the right app.
+  if (!hasInstagramRelationshipFiles(instagramFileNames) && allFileNames.some(isThreadsPath)) {
+    throw new MissingFilesError(['threads/followers.json', 'threads/following.json'], 'threads');
+  }
+
   const fileNames = instagramFileNames;
   const { format, followerFileNames, followingFileName } = detectFiles(fileNames);
 

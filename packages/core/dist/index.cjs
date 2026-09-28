@@ -396,6 +396,9 @@ async function parseExportZip(zipFile) {
     const snapshot = await parseThreads(zip, allFileNames, threadsFiles, filenameDate);
     return { snapshot, skippedPlatforms: [] };
   }
+  if (!hasInstagramRelationshipFiles(instagramFileNames) && allFileNames.some(isThreadsPath)) {
+    throw new MissingFilesError(["threads/followers.json", "threads/following.json"], "threads");
+  }
   const fileNames = instagramFileNames;
   const { format, followerFileNames, followingFileName } = detectFiles(fileNames);
   let followers;

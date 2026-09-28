@@ -19,8 +19,9 @@ import { useAuth } from '@/components/AuthProvider';
 import { track, trackFunnel } from '@/lib/analytics';
 import { recordParse as recordParseAction } from '@/app/actions/stats';
 import { DeltaWarning } from '@/components/DeltaWarning';
+import type { DeltaWarningContent } from '@/components/deltaWarning.content';
 import { CombinedExportNotice } from '@/components/CombinedExportNotice';
-import { UpgradeDialog } from '@/components/UpgradeDialog';
+import { UpgradeDialog, type UpgradeDialogContent } from '@/components/UpgradeDialog';
 import { createPortal } from 'react-dom';
 import { T } from './tokens';
 import { Icon, CountUp, GridBg, MagneticCTA } from './atoms';
@@ -62,6 +63,8 @@ interface HeroContent {
     body: string;
     continueCta: string;
   };
+  upgradeDialog: UpgradeDialogContent;
+  deltaWarning: DeltaWarningContent;
   errors: {
     missingData: string;
     missingThreadsData: string;
@@ -338,6 +341,7 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
           onReExport={() => setDeltaWarning(null)}
           onNewAccount={dismissAndProceed}
           onProceedAnyway={dismissAndProceed}
+          content={content.deltaWarning}
         />
       </>
     );
@@ -352,6 +356,7 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
           onDeleteOldest={handleDeleteOldest}
           onUpgrade={handleUpgrade}
           onClose={() => setPending(null)}
+          content={content.upgradeDialog}
         />,
         document.body,
       )}

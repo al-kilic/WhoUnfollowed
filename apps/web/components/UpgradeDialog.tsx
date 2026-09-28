@@ -4,14 +4,25 @@ import { useEffect } from 'react';
 import { T } from '@/components/landing/tokens';
 import { track, Events, trackUpgradeClick } from '@/lib/analytics';
 
+export interface UpgradeDialogContent {
+  eyebrow: string;
+  title: string;
+  body: string;
+  oldestLabel: string;
+  deleteCta: string;
+  upgradeCta: string;
+  close: string;
+}
+
 interface UpgradeDialogProps {
   oldestLabel: string;
   onDeleteOldest: () => void;
   onUpgrade: () => void;
   onClose: () => void;
+  content: UpgradeDialogContent;
 }
 
-export function UpgradeDialog({ oldestLabel, onDeleteOldest, onUpgrade, onClose }: UpgradeDialogProps) {
+export function UpgradeDialog({ oldestLabel, onDeleteOldest, onUpgrade, onClose, content: c }: UpgradeDialogProps) {
   useEffect(() => { track(Events.snapshotLimitHit); }, []);
 
   useEffect(() => {
@@ -58,12 +69,12 @@ export function UpgradeDialog({ oldestLabel, onDeleteOldest, onUpgrade, onClose 
               </svg>
             </div>
             <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.9)', fontFamily: T.mono, textTransform: 'uppercase' }}>
-              Free plan limit reached
+              {c.eyebrow}
             </span>
           </div>
           <button
             onClick={onClose}
-            aria-label="Close"
+            aria-label={c.close}
             style={{ width: 28, height: 28, borderRadius: 8, border: 'none', background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.7)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.15s' }}
             onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.22)'; }}
             onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.12)'; }}
@@ -78,16 +89,16 @@ export function UpgradeDialog({ oldestLabel, onDeleteOldest, onUpgrade, onClose 
         <div style={{ padding: '24px 24px 20px', display: 'flex', flexDirection: 'column', gap: 20 }}>
           <div>
             <h2 id="upgrade-title" style={{ fontFamily: T.serif, fontSize: 22, fontWeight: 400, color: T.ink, letterSpacing: '-0.01em', marginBottom: 8 }}>
-              {"You've"} already saved a snapshot
+              {c.title}
             </h2>
             <p style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.55 }}>
-              The free plan stores 1 snapshot locally. Delete the existing one to save this upload, or upgrade to Pro for unlimited history.
+              {c.body}
             </p>
           </div>
 
           {/* Oldest snapshot */}
           <div style={{ padding: '12px 16px', borderRadius: 12, background: 'var(--t-surface1)', border: '1px solid var(--t-border1)' }}>
-            <div style={{ fontSize: 10, color: T.inkMute, letterSpacing: '0.12em', textTransform: 'uppercase', fontFamily: T.mono, marginBottom: 6 }}>Oldest snapshot</div>
+            <div style={{ fontSize: 10, color: T.inkMute, letterSpacing: '0.12em', textTransform: 'uppercase', fontFamily: T.mono, marginBottom: 6 }}>{c.oldestLabel}</div>
             <div style={{ fontSize: 14, fontWeight: 600, color: T.ink, fontFamily: T.sans, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{oldestLabel}</div>
           </div>
 
@@ -103,7 +114,7 @@ export function UpgradeDialog({ oldestLabel, onDeleteOldest, onUpgrade, onClose 
                 <path d="M2 4 H13 M5 4 V2.5 A0.5 0.5 0 0 1 5.5 2 H9.5 A0.5 0.5 0 0 1 10 2.5 V4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
                 <path d="M4 4 L5 13 H10 L11 4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              Delete oldest &amp; save new upload
+              {c.deleteCta}
             </button>
 
             <button
@@ -115,7 +126,7 @@ export function UpgradeDialog({ oldestLabel, onDeleteOldest, onUpgrade, onClose 
               <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style={{ flexShrink: 0 }}>
                 <path d="M7.5 1 L9 5.5 H13.5 L10 8 L11.5 12.5 L7.5 10 L3.5 12.5 L5 8 L1.5 5.5 H6 Z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
               </svg>
-              Upgrade to Pro
+              {c.upgradeCta}
             </button>
           </div>
         </div>

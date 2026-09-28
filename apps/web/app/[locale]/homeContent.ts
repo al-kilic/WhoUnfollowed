@@ -1,3 +1,4 @@
+import { DELTA_WARNING_EN, DELTA_WARNING_ES, DELTA_WARNING_PT, type DeltaWarningContent } from '@/components/deltaWarning.content';
 import type { AppLocale } from '@/i18n/routing';
 
 // All translatable homepage copy, per locale, mirroring the pattern in
@@ -32,6 +33,16 @@ export interface HomeContent {
       title: string;
       body: string;
       continueCta: string;
+    };
+    deltaWarning: DeltaWarningContent;
+    upgradeDialog: {
+      eyebrow: string;
+      title: string;
+      body: string;
+      oldestLabel: string;
+      deleteCta: string;
+      upgradeCta: string;
+      close: string;
     };
     errors: {
       missingData: string;
@@ -183,6 +194,16 @@ const EN: HomeContent = {
       title: 'This ZIP has Instagram and Threads data.',
       body: 'We are showing your Instagram results. To see Threads too, request a separate export with only your Threads profile selected, then upload that ZIP on its own.',
       continueCta: 'Got it, show Instagram',
+    },
+    deltaWarning: DELTA_WARNING_EN,
+    upgradeDialog: {
+      eyebrow: 'Free plan limit reached',
+      title: "You've already saved a snapshot",
+      body: 'The free plan stores 1 snapshot locally. Delete the existing one to save this upload, or upgrade to Pro for unlimited history.',
+      oldestLabel: 'Oldest snapshot',
+      deleteCta: 'Delete oldest & save new upload',
+      upgradeCta: 'Upgrade to Pro',
+      close: 'Close',
     },
     errors: {
       missingData: 'This ZIP does not include the Followers and following data we need.',
@@ -393,6 +414,16 @@ const ES: HomeContent = {
       body: 'Te mostramos los resultados de Instagram. Para ver Threads, solicita un export aparte con solo tu perfil de Threads seleccionado y sube ese ZIP por separado.',
       continueCta: 'Entendido, ver Instagram',
     },
+    deltaWarning: DELTA_WARNING_ES,
+    upgradeDialog: {
+      eyebrow: 'Límite del plan gratis',
+      title: 'Ya guardaste un snapshot',
+      body: 'El plan gratis guarda 1 snapshot en tu dispositivo. Borra el que tienes para guardar esta subida, o mejora a Pro para tener historial ilimitado.',
+      oldestLabel: 'Snapshot más antiguo',
+      deleteCta: 'Borrar el más antiguo y guardar esta subida',
+      upgradeCta: 'Mejorar a Pro',
+      close: 'Cerrar',
+    },
     errors: {
       missingData: 'Este ZIP no incluye los datos de seguidores y seguidos que necesitamos.',
       missingThreadsData: 'A este export de Threads le falta tu lista de seguidores o seguidos. Solicita un export nuevo con Seguidores y seguidos seleccionado, en formato JSON.',
@@ -601,6 +632,16 @@ const PT: HomeContent = {
       title: 'Este ZIP tem dados do Instagram e do Threads.',
       body: 'Estamos mostrando os resultados do Instagram. Para ver o Threads, solicite um export separado com apenas o seu perfil do Threads selecionado e envie esse ZIP sozinho.',
       continueCta: 'Entendi, ver Instagram',
+    },
+    deltaWarning: DELTA_WARNING_PT,
+    upgradeDialog: {
+      eyebrow: 'Limite do plano grátis',
+      title: 'Você já salvou um snapshot',
+      body: 'O plano grátis guarda 1 snapshot no seu dispositivo. Apague o atual para salvar este envio, ou assine o Pro para ter histórico ilimitado.',
+      oldestLabel: 'Snapshot mais antigo',
+      deleteCta: 'Apagar o mais antigo e salvar este envio',
+      upgradeCta: 'Assinar Pro',
+      close: 'Fechar',
     },
     errors: {
       missingData: 'Este ZIP não inclui os dados de seguidores e seguindo de que precisamos.',

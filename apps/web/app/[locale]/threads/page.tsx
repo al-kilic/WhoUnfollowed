@@ -17,11 +17,11 @@ const SEO_META: Record<AppLocale, { title: string; description: string }> = {
     description: "See who doesn't follow you back on Threads from your official data export. Open-source, processed in your browser. No password, no login.",
   },
   es: {
-    title: '¿Quién te dejó de seguir en Threads? Compruébalo gratis',
+    title: '¿Quién te dejó de seguir en Threads?',
     description: 'Descubre quién no te sigue de vuelta en Threads con tu export oficial de datos. Código abierto, procesado en tu navegador. Sin contraseña, sin inicio de sesión.',
   },
   pt: {
-    title: 'Quem Deixou de te Seguir no Threads? Confira Grátis',
+    title: 'Quem Deixou de te Seguir no Threads?',
     description: 'Veja quem não te segue de volta no Threads com seu export oficial de dados. Código aberto, processado no seu navegador. Sem senha, sem login.',
   },
 };

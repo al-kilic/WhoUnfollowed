@@ -25,12 +25,14 @@ function LockIcon() {
 // Centered "Unlock with Pro" card that floats over blurred Pro content. Render
 // it as a sibling of the blurred element inside a position:relative wrapper.
 export function ProLockOverlay({
+  eyebrow = 'Pro feature',
   title,
   description,
   cta = 'Upgrade to Pro',
   href = '/pricing',
   feature = 'unknown',
 }: {
+  eyebrow?: string;
   title: string;
   description: string;
   cta?: string;
@@ -81,7 +83,7 @@ export function ProLockOverlay({
           <LockIcon />
         </div>
         <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', color: T.tealLight, fontFamily: T.mono, textTransform: 'uppercase', marginBottom: 10 }}>
-          Pro feature
+          {eyebrow}
         </div>
         <h2 style={{ fontFamily: T.serif, fontSize: 24, fontWeight: 400, color: T.ink, letterSpacing: '-0.01em', marginBottom: 10 }}>
           {title}
