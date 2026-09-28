@@ -11,6 +11,7 @@ export interface DashboardContent {
     radar: string;
     exportDate: (date: string) => string;
     whatIsRadar: string;
+    platformSwitcherLabel: string;
     headline: string;
     summary: (followers: string, following: string, nonFollowers: string) => string;
   };
@@ -86,7 +87,9 @@ export interface DashboardContent {
   tutorial: { title: string; body: string }[];
   tutorialLabels: { featureTour: string; skipTour: string; next: string; gotIt: string };
   proLock: { title: string; description: string };
-  openOnInstagram: (username: string) => string;
+  openOn: (username: string, app: string) => string;
+  // Radar view for a platform the viewer has no snapshot of yet.
+  platformEmpty: { title: (app: string) => string; body: (app: string) => string; cta: string };
 }
 
 const EN: DashboardContent = {
@@ -94,7 +97,7 @@ const EN: DashboardContent = {
   loadingRadar: 'Loading Radar…',
   emptyState: {
     title: 'No data to scan yet',
-    body: 'Radar needs an Instagram export to analyze. Upload your data once and your follower radar, non-followers, and growth show up here. Nothing leaves your browser.',
+    body: 'Radar needs an Instagram or Threads export to analyze. Upload your data once and your follower radar, non-followers, and growth show up here. Nothing leaves your browser.',
     uploadExport: 'Upload your export',
     howToExport: 'How to export',
   },
@@ -102,6 +105,7 @@ const EN: DashboardContent = {
     radar: 'RADAR',
     exportDate: (date) => `· ${date}`,
     whatIsRadar: 'What is Radar?',
+    platformSwitcherLabel: 'Choose platform',
     headline: 'The full picture.',
     summary: (followers, following, nonFollowers) => `${followers} followers · ${following} following · ${nonFollowers} don't follow back`,
   },
@@ -120,7 +124,7 @@ const EN: DashboardContent = {
     tooltipP1: 'Followers ÷ Following. A ratio of 1.0 means equal. Above 1.0 means more people follow you than you follow back.',
     tooltipP2: "Most accounts have a ratio well below 1.0 - that's normal. A very low ratio (like 0.00) usually means you followed many accounts that never followed back.",
     howToImprove: 'HOW TO IMPROVE IT',
-    tooltipP3: 'Use the Results page to triage non-followers. Mark them as Dropping and unfollow them on Instagram. As your following count drops, the ratio rises.',
+    tooltipP3: 'Use the Results page to triage non-followers. Mark them as Dropping and unfollow them in the app. As your following count drops, the ratio rises.',
     moreFollowers: (x) => `${x}x more followers than following.`,
     followingMore: (x) => `Following ${x}x more than follow you.`,
     improving: '↑ Improving', declining: '↓ Declining', stable: '→ Stable',
@@ -154,7 +158,7 @@ const EN: DashboardContent = {
   },
   recentlyUnfollowed: {
     sectionLabel: 'Recently unfollowed', title: 'Your recent clean-up',
-    emptyMessage: "Instagram didn't include this in your export.",
+    emptyMessage: "This wasn't included in your export.",
   },
   health: {
     accountHealth: 'ACCOUNT HEALTH',
@@ -225,14 +229,14 @@ const EN: DashboardContent = {
   },
   radarModal: {
     eyebrow: 'RADAR', title: 'What is Radar?',
-    intro: "Radar is the intelligence layer on top of your Instagram export. While the results page tells you who doesn't follow you back right now, Radar tells you the full story - trends, health, history, and context. It turns a static snapshot into an ongoing picture of your account.",
+    intro: "Radar is the intelligence layer on top of your Instagram or Threads export. While the results page tells you who doesn't follow you back right now, Radar tells you the full story - trends, health, history, and context. It turns a static snapshot into an ongoing picture of your account.",
     sections: [
       { icon: '⬡', title: 'Account Health Score', body: 'Radar calculates a single A–F grade from four signals: your follow ratio, how many of your following are mutual, your non-follower rate, and your growth trend over time. One letter that tells the whole story - and gives you something to improve.' },
-      { icon: '↑', title: 'Follower Growth Over Time', body: 'Every time you upload a new Instagram export, Radar plots your follower count on a timeline. You can see exactly when you gained or lost followers, and which period had the biggest drop. It turns a static number into a story.' },
+      { icon: '↑', title: 'Follower Growth Over Time', body: 'Every time you upload a new export, Radar plots your follower count on a timeline. You can see exactly when you gained or lost followers, and which period had the biggest drop. It turns a static number into a story.' },
       { icon: '⧗', title: 'Follow Age Analysis', body: "Radar reads the timestamps in your export to tell you how long you've been following people who never followed back. Broken into buckets: under a month, 1–6 months, 6–12, 1–2 years, and 2+ years. The longer the wait, the colder the lead." },
       { icon: '◎', title: 'Audience Breakdown', body: "Not all followers are equal. Radar splits your audience into Mutuals (both follow each other), Non-followers (you follow them, they don't follow back), and Fans (they follow you, you don't follow back). A donut chart makes it instant." },
-      { icon: '⏳', title: 'Pending Follow Requests', body: 'Instagram tracks every follow request you\'ve sent that hasn\'t been accepted. Radar surfaces them, sorted oldest-first. Requests over 30 days get flagged. Over 90 days: "They saw it." You decide what to do.' },
-      { icon: '✓', title: 'Recently Unfollowed', body: "Instagram logs every account you've recently unfollowed. Radar shows it back to you - useful for confirming you already handled someone, or for seeing patterns in who you're cutting." },
+      { icon: '⏳', title: 'Pending Follow Requests (Instagram)', body: 'Instagram tracks every follow request you\'ve sent that hasn\'t been accepted. Radar surfaces them, sorted oldest-first. Requests over 30 days get flagged. Over 90 days: "They saw it." You decide what to do.' },
+      { icon: '✓', title: 'Recently Unfollowed', body: "Instagram and Threads log every account you've recently unfollowed. Radar shows it back to you - useful for confirming you already handled someone, or for seeing patterns in who you're cutting." },
     ],
     tipLabel: 'How to get more from Radar:',
     tip: 'Upload a new export every few weeks. Each upload adds a data point to your timeline, sharpens your growth trend, and improves the accuracy of your health score.',
@@ -250,7 +254,12 @@ const EN: DashboardContent = {
     title: 'Radar is a Pro feature',
     description: 'Your account health score, growth over time, audience breakdown, follow-age analysis, and pending requests. Unlock the full picture of your account.',
   },
-  openOnInstagram: (u) => `Open @${u} on Instagram`,
+  openOn: (u, app) => `Open @${u} on ${app}`,
+  platformEmpty: {
+    title: (app) => `No ${app} snapshot yet`,
+    body: (app) => `Upload your ${app} export to see its Radar here. Your other app's data stays separate.`,
+    cta: 'Upload an export',
+  },
 };
 
 const ES: DashboardContent = {
@@ -258,7 +267,7 @@ const ES: DashboardContent = {
   loadingRadar: 'Cargando Radar…',
   emptyState: {
     title: 'Aún no hay datos para analizar',
-    body: 'Radar necesita una exportación de Instagram para analizar. Sube tus datos una vez y tu radar de seguidores, no seguidores y crecimiento aparecerán aquí. Nada sale de tu navegador.',
+    body: 'Radar necesita una exportación de Instagram o Threads para analizar. Sube tus datos una vez y tu radar de seguidores, no seguidores y crecimiento aparecerán aquí. Nada sale de tu navegador.',
     uploadExport: 'Sube tu exportación',
     howToExport: 'Cómo exportar',
   },
@@ -266,6 +275,7 @@ const ES: DashboardContent = {
     radar: 'RADAR',
     exportDate: (date) => `· ${date}`,
     whatIsRadar: '¿Qué es Radar?',
+    platformSwitcherLabel: 'Elige la plataforma',
     headline: 'El panorama completo.',
     summary: (followers, following, nonFollowers) => `${followers} seguidores · ${following} seguidos · ${nonFollowers} no te siguen de vuelta`,
   },
@@ -284,7 +294,7 @@ const ES: DashboardContent = {
     tooltipP1: 'Seguidores ÷ Seguidos. Un ratio de 1.0 significa igualdad. Por encima de 1.0 significa que más personas te siguen de las que tú sigues.',
     tooltipP2: 'La mayoría de cuentas tienen un ratio bastante por debajo de 1.0, eso es normal. Un ratio muy bajo (como 0.00) suele significar que seguiste a muchas cuentas que nunca te siguieron de vuelta.',
     howToImprove: 'CÓMO MEJORARLO',
-    tooltipP3: 'Usa la página de resultados para clasificar a quienes no te siguen. Márcalos como Dejar de seguir y déjalos de seguir en Instagram. A medida que baje tu número de seguidos, el ratio sube.',
+    tooltipP3: 'Usa la página de resultados para clasificar a quienes no te siguen. Márcalos como Dejar de seguir y déjalos de seguir en la app. A medida que baje tu número de seguidos, el ratio sube.',
     moreFollowers: (x) => `${x}x más seguidores que seguidos.`,
     followingMore: (x) => `Sigues ${x}x más de los que te siguen.`,
     improving: '↑ Mejorando', declining: '↓ Bajando', stable: '→ Estable',
@@ -318,7 +328,7 @@ const ES: DashboardContent = {
   },
   recentlyUnfollowed: {
     sectionLabel: 'Dejados de seguir recientemente', title: 'Tu limpieza reciente',
-    emptyMessage: 'Instagram no incluyó esto en tu exportación.',
+    emptyMessage: 'Esto no se incluyó en tu exportación.',
   },
   health: {
     accountHealth: 'SALUD DE LA CUENTA',
@@ -389,14 +399,14 @@ const ES: DashboardContent = {
   },
   radarModal: {
     eyebrow: 'RADAR', title: '¿Qué es Radar?',
-    intro: 'Radar es la capa de inteligencia sobre tu exportación de Instagram. Mientras la página de resultados te dice quién no te sigue de vuelta ahora mismo, Radar te cuenta la historia completa: tendencias, salud, historial y contexto. Convierte un snapshot estático en una imagen continua de tu cuenta.',
+    intro: 'Radar es la capa de inteligencia sobre tu exportación de Instagram o Threads. Mientras la página de resultados te dice quién no te sigue de vuelta ahora mismo, Radar te cuenta la historia completa: tendencias, salud, historial y contexto. Convierte un snapshot estático en una imagen continua de tu cuenta.',
     sections: [
       { icon: '⬡', title: 'Puntuación de salud de la cuenta', body: 'Radar calcula una única calificación de A a F a partir de cuatro señales: tu ratio de seguimiento, cuántos de tus seguidos son mutuos, tu tasa de no seguidores y tu tendencia de crecimiento en el tiempo. Una sola letra que cuenta toda la historia y te da algo que mejorar.' },
-      { icon: '↑', title: 'Crecimiento de seguidores en el tiempo', body: 'Cada vez que subes una nueva exportación de Instagram, Radar traza tu número de seguidores en una línea de tiempo. Puedes ver exactamente cuándo ganaste o perdiste seguidores, y qué período tuvo la mayor caída. Convierte un número estático en una historia.' },
+      { icon: '↑', title: 'Crecimiento de seguidores en el tiempo', body: 'Cada vez que subes una nueva exportación, Radar traza tu número de seguidores en una línea de tiempo. Puedes ver exactamente cuándo ganaste o perdiste seguidores, y qué período tuvo la mayor caída. Convierte un número estático en una historia.' },
       { icon: '⧗', title: 'Análisis de antigüedad de seguimiento', body: 'Radar lee las marcas de tiempo en tu exportación para decirte cuánto tiempo llevas siguiendo a personas que nunca te siguieron de vuelta. Dividido en rangos: menos de un mes, 1–6 meses, 6–12, 1–2 años y 2+ años. Cuanto más larga la espera, más frío el interés.' },
       { icon: '◎', title: 'Desglose de audiencia', body: 'No todos los seguidores son iguales. Radar divide tu audiencia en Mutuos (se siguen entre sí), No seguidores (los sigues, no te siguen de vuelta) y Fans (te siguen, no los sigues). Un gráfico de dona lo hace instantáneo.' },
-      { icon: '⏳', title: 'Solicitudes de seguimiento pendientes', body: 'Instagram registra cada solicitud de seguimiento que has enviado y que no ha sido aceptada. Radar las muestra, ordenadas de más antigua a más reciente. Las solicitudes de más de 30 días se marcan. Más de 90 días: "Ya lo vieron." Tú decides qué hacer.' },
-      { icon: '✓', title: 'Dejados de seguir recientemente', body: 'Instagram registra cada cuenta que has dejado de seguir recientemente. Radar te lo muestra de nuevo, útil para confirmar que ya resolviste a alguien, o para ver patrones en a quién estás dejando de seguir.' },
+      { icon: '⏳', title: 'Solicitudes de seguimiento pendientes (Instagram)', body: 'Instagram registra cada solicitud de seguimiento que has enviado y que no ha sido aceptada. Radar las muestra, ordenadas de más antigua a más reciente. Las solicitudes de más de 30 días se marcan. Más de 90 días: "Ya lo vieron." Tú decides qué hacer.' },
+      { icon: '✓', title: 'Dejados de seguir recientemente', body: 'Instagram y Threads registran cada cuenta que has dejado de seguir recientemente. Radar te lo muestra de nuevo, útil para confirmar que ya resolviste a alguien, o para ver patrones en a quién estás dejando de seguir.' },
     ],
     tipLabel: 'Cómo sacarle más provecho a Radar:',
     tip: 'Sube una nueva exportación cada pocas semanas. Cada subida añade un punto de datos a tu línea de tiempo, afina tu tendencia de crecimiento y mejora la precisión de tu puntuación de salud.',
@@ -414,7 +424,12 @@ const ES: DashboardContent = {
     title: 'Radar es una función Pro',
     description: 'Tu puntuación de salud de cuenta, crecimiento en el tiempo, desglose de audiencia, análisis de antigüedad de seguimiento y solicitudes pendientes. Desbloquea el panorama completo de tu cuenta.',
   },
-  openOnInstagram: (u) => `Abrir @${u} en Instagram`,
+  openOn: (u, app) => `Abrir @${u} en ${app}`,
+  platformEmpty: {
+    title: (app) => `Aún no hay snapshot de ${app}`,
+    body: (app) => `Sube tu exportación de ${app} para ver su Radar aquí. Los datos de tu otra app se mantienen aparte.`,
+    cta: 'Subir una exportación',
+  },
 };
 
 const PT: DashboardContent = {
@@ -422,7 +437,7 @@ const PT: DashboardContent = {
   loadingRadar: 'Carregando Radar…',
   emptyState: {
     title: 'Ainda não há dados para analisar',
-    body: 'O Radar precisa de uma exportação do Instagram para analisar. Envie seus dados uma vez e seu radar de seguidores, não seguidores e crescimento aparecem aqui. Nada sai do seu navegador.',
+    body: 'O Radar precisa de uma exportação do Instagram ou do Threads para analisar. Envie seus dados uma vez e seu radar de seguidores, não seguidores e crescimento aparecem aqui. Nada sai do seu navegador.',
     uploadExport: 'Envie sua exportação',
     howToExport: 'Como exportar',
   },
@@ -430,6 +445,7 @@ const PT: DashboardContent = {
     radar: 'RADAR',
     exportDate: (date) => `· ${date}`,
     whatIsRadar: 'O que é o Radar?',
+    platformSwitcherLabel: 'Escolha a plataforma',
     headline: 'O panorama completo.',
     summary: (followers, following, nonFollowers) => `${followers} seguidores · ${following} seguindo · ${nonFollowers} não te seguem de volta`,
   },
@@ -448,7 +464,7 @@ const PT: DashboardContent = {
     tooltipP1: 'Seguidores ÷ Seguindo. Uma proporção de 1.0 significa igualdade. Acima de 1.0 significa que mais pessoas te seguem do que você segue de volta.',
     tooltipP2: 'A maioria das contas tem uma proporção bem abaixo de 1.0, isso é normal. Uma proporção muito baixa (como 0.00) geralmente significa que você seguiu muitas contas que nunca te seguiram de volta.',
     howToImprove: 'COMO MELHORAR',
-    tooltipP3: 'Use a página de resultados para triar quem não te segue de volta. Marque-os como Deixar de seguir e deixe de segui-los no Instagram. À medida que seu número de seguindo cai, a proporção sobe.',
+    tooltipP3: 'Use a página de resultados para triar quem não te segue de volta. Marque-os como Deixar de seguir e deixe de segui-los no app. À medida que seu número de seguindo cai, a proporção sobe.',
     moreFollowers: (x) => `${x}x mais seguidores do que seguindo.`,
     followingMore: (x) => `Você segue ${x}x mais do que te seguem.`,
     improving: '↑ Melhorando', declining: '↓ Caindo', stable: '→ Estável',
@@ -482,7 +498,7 @@ const PT: DashboardContent = {
   },
   recentlyUnfollowed: {
     sectionLabel: 'Deixados de seguir recentemente', title: 'Sua limpeza recente',
-    emptyMessage: 'O Instagram não incluiu isso na sua exportação.',
+    emptyMessage: 'Isso não foi incluído na sua exportação.',
   },
   health: {
     accountHealth: 'SAÚDE DA CONTA',
@@ -553,14 +569,14 @@ const PT: DashboardContent = {
   },
   radarModal: {
     eyebrow: 'RADAR', title: 'O que é o Radar?',
-    intro: 'O Radar é a camada de inteligência sobre sua exportação do Instagram. Enquanto a página de resultados diz quem não te segue de volta agora, o Radar conta a história completa: tendências, saúde, histórico e contexto. Ele transforma um snapshot estático em uma visão contínua da sua conta.',
+    intro: 'O Radar é a camada de inteligência sobre sua exportação do Instagram ou do Threads. Enquanto a página de resultados diz quem não te segue de volta agora, o Radar conta a história completa: tendências, saúde, histórico e contexto. Ele transforma um snapshot estático em uma visão contínua da sua conta.',
     sections: [
       { icon: '⬡', title: 'Pontuação de saúde da conta', body: 'O Radar calcula uma única nota de A a F a partir de quatro sinais: sua proporção de seguimento, quantos dos seus seguindo são mútuos, sua taxa de não seguidores e sua tendência de crescimento ao longo do tempo. Uma única letra que conta toda a história e te dá algo para melhorar.' },
-      { icon: '↑', title: 'Crescimento de seguidores ao longo do tempo', body: 'Toda vez que você envia uma nova exportação do Instagram, o Radar plota seu número de seguidores em uma linha do tempo. Você pode ver exatamente quando ganhou ou perdeu seguidores, e qual período teve a maior queda. Transforma um número estático em uma história.' },
+      { icon: '↑', title: 'Crescimento de seguidores ao longo do tempo', body: 'Toda vez que você envia uma nova exportação, o Radar plota seu número de seguidores em uma linha do tempo. Você pode ver exatamente quando ganhou ou perdeu seguidores, e qual período teve a maior queda. Transforma um número estático em uma história.' },
       { icon: '⧗', title: 'Análise de tempo de seguimento', body: 'O Radar lê os registros de data e hora da sua exportação para dizer há quanto tempo você segue pessoas que nunca te seguiram de volta. Dividido em faixas: menos de um mês, 1–6 meses, 6–12, 1–2 anos e 2+ anos. Quanto mais longa a espera, mais frio o interesse.' },
       { icon: '◎', title: 'Detalhamento de audiência', body: 'Nem todos os seguidores são iguais. O Radar divide sua audiência em Mútuos (se seguem mutuamente), Não seguidores (você os segue, eles não seguem de volta) e Fãs (te seguem, você não os segue). Um gráfico de rosca torna isso instantâneo.' },
-      { icon: '⏳', title: 'Solicitações de seguimento pendentes', body: 'O Instagram registra cada solicitação de seguimento que você enviou e que não foi aceita. O Radar as mostra, ordenadas da mais antiga para a mais recente. Solicitações com mais de 30 dias são sinalizadas. Mais de 90 dias: "Já viram." Você decide o que fazer.' },
-      { icon: '✓', title: 'Deixados de seguir recentemente', body: 'O Instagram registra cada conta que você deixou de seguir recentemente. O Radar mostra isso de volta para você, útil para confirmar que você já resolveu alguém, ou para ver padrões em quem você está cortando.' },
+      { icon: '⏳', title: 'Solicitações de seguimento pendentes (Instagram)', body: 'O Instagram registra cada solicitação de seguimento que você enviou e que não foi aceita. O Radar as mostra, ordenadas da mais antiga para a mais recente. Solicitações com mais de 30 dias são sinalizadas. Mais de 90 dias: "Já viram." Você decide o que fazer.' },
+      { icon: '✓', title: 'Deixados de seguir recentemente', body: 'O Instagram e o Threads registram cada conta que você deixou de seguir recentemente. O Radar mostra isso de volta para você, útil para confirmar que você já resolveu alguém, ou para ver padrões em quem você está cortando.' },
     ],
     tipLabel: 'Como aproveitar mais o Radar:',
     tip: 'Envie uma nova exportação a cada poucas semanas. Cada envio adiciona um ponto de dados à sua linha do tempo, refina sua tendência de crescimento e melhora a precisão da sua pontuação de saúde.',
@@ -578,7 +594,12 @@ const PT: DashboardContent = {
     title: 'O Radar é um recurso Pro',
     description: 'Sua pontuação de saúde da conta, crescimento ao longo do tempo, detalhamento de audiência, análise de tempo de seguimento e solicitações pendentes. Desbloqueie o panorama completo da sua conta.',
   },
-  openOnInstagram: (u) => `Abrir @${u} no Instagram`,
+  openOn: (u, app) => `Abrir @${u} no ${app}`,
+  platformEmpty: {
+    title: (app) => `Ainda não há snapshot do ${app}`,
+    body: (app) => `Envie sua exportação do ${app} para ver o Radar dele aqui. Os dados do seu outro app ficam separados.`,
+    cta: 'Enviar uma exportação',
+  },
 };
 
 export function getDashboardContent(locale: string): DashboardContent {

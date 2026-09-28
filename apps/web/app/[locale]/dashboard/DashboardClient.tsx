@@ -15,6 +15,10 @@ import { useSnapshotStore } from '@/lib/store';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { T } from '@/components/landing/tokens';
 import { useSnapshotList, useSnapshotsLoaded } from '@/hooks/useSnapshots';
+import { platforms as allPlatforms } from '@ig-tracker/core';
+import { PLATFORM_NAME, platformOfHref, snapshotPlatform, type Platform } from '@/lib/platform';
+import { PlatformEmptyPanel } from './PlatformEmptyPanel';
+import { PlatformSwitcher } from '@/components/PlatformSwitcher';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { Tutorial } from '@/components/Tutorial';
 import { ProLockOverlay, lockedContentStyle } from '@/components/ProLockOverlay';
@@ -67,7 +71,7 @@ function IGLink({ href, username, c }: { href: string; username: string; c: Dash
       style={{ color: T.inkMute, display: 'flex', alignItems: 'center', flexShrink: 0 }}
       onMouseEnter={e => (e.currentTarget.style.color = T.tealLight)}
       onMouseLeave={e => (e.currentTarget.style.color = T.inkMute)}
-      aria-label={c.openOnInstagram(username)}
+      aria-label={c.openOn(username, PLATFORM_NAME[platformOfHref(href)])}
     >
       <ExternalLink size={13} />
     </a>
@@ -1134,6 +1138,26 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
 
   const snapshot = storeSnapshot;
 
+  // The switcher can select a platform with no data yet (shows an empty
+  // panel); otherwise the platform is whatever snapshot is on screen.
+  const [selectedPlatform, setSelectedPlatform] = useState<Platform | null>(null);
+  const platform: Platform = selectedPlatform ?? (snapshot ? snapshotPlatform(snapshot) : 'instagram');
+
+  // History-based cards (growth, health, ratio trend) only compare snapshots
+  // from the same platform as the one on screen.
+  const platformSnapshots = useMemo(
+    () => snapshots.filter(s => snapshotPlatform(s.data) === platform),
+    [snapshots, platform],
+  );
+  const emptyPlatforms = allPlatforms.filter(p =>
+    !snapshots.some(s => snapshotPlatform(s.data) === p) && !(snapshot && snapshotPlatform(snapshot) === p),
+  );
+  const switchPlatform = (p: Platform) => {
+    setSelectedPlatform(p);
+    const latest = snapshots.find(s => snapshotPlatform(s.data) === p);
+    if (latest) setSnapshot(latest.data);
+  };
+
   const { nonFollowers, fans, mutuals } = useMemo(() => {
     if (!snapshot) return { nonFollowers: [], fans: [], mutuals: [] };
     const followerSet = new Set(snapshot.followers.map(f => f.username));
@@ -1196,12 +1220,28 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
       {!locked && <Tutorial
         storageKey="ig-tracker:tutorial-radar"
         labels={c.tutorialLabels}
-        steps={c.tutorial.map((step, i) => ({
-          ...step,
-          targetSelector: ['#tutorial-health', '#tutorial-growth', '#tutorial-audience', '#tutorial-follow-age', '#tutorial-pending', '#tutorial-pending'][i]!,
-        }))}
+        steps={c.tutorial
+          .map((step, i) => ({
+            ...step,
+            targetSelector: ['#tutorial-health', '#tutorial-growth', '#tutorial-audience', '#tutorial-follow-age', '#tutorial-pending', '#tutorial-pending'][i]!,
+          }))
+          // Step 5 is the Instagram-only pending-requests card.
+          .filter((_, i) => platform !== 'threads' || i !== 4)}
       />}
 
+      {/* Platform switcher sits outside the Pro-lock area so free users can
+          switch the preview too. */}
+      <div className="px-4 sm:px-8" style={{ maxWidth: 1100, margin: '0 auto', paddingTop: 28, display: 'flex', justifyContent: 'center' }}>
+        <PlatformSwitcher
+          options={allPlatforms}
+          active={platform}
+          onChange={switchPlatform}
+          ariaLabel={c.header.platformSwitcherLabel}
+          empty={emptyPlatforms}
+        />
+      </div>
+
+      {emptyPlatforms.includes(platform) ? <PlatformEmptyPanel platform={platform} c={c} /> : (
       <div style={{ position: 'relative' }}>
       <main className="px-4 sm:px-8 py-8 sm:py-12 pb-20" style={{ maxWidth: 1100, margin: '0 auto' }}>
         {/* Header */}
@@ -1247,7 +1287,7 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
             following={snapshot.following.length}
             mutuals={mutuals.length}
             nonFollowers={nonFollowers.length}
-            snapshots={snapshots as SnapshotSummary[]}
+            snapshots={platformSnapshots as SnapshotSummary[]}
             c={c}
             locked={locked}
           />
@@ -1267,7 +1307,7 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
 
         {/* Growth chart */}
         <div id="tutorial-growth" style={{ marginBottom: 16 }}>
-          <GrowthChart snapshots={snapshots as SnapshotSummary[]} c={c} dateLocale={dateLocale} locked={locked} />
+          <GrowthChart snapshots={platformSnapshots as SnapshotSummary[]} c={c} dateLocale={dateLocale} locked={locked} />
         </div>
 
         {/* Row 1: Audience donut + Follow ratio */}
@@ -1283,7 +1323,7 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
           <FollowRatioCard
             followers={snapshot.followers.length}
             following={snapshot.following.length}
-            snapshots={snapshots as SnapshotSummary[]}
+            snapshots={platformSnapshots as SnapshotSummary[]}
             c={c}
             dateLocale={dateLocale}
             locked={locked}
@@ -1296,8 +1336,10 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
         </div>
 
         {/* Pending + Recently unfollowed */}
-        <div id="tutorial-pending" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-          <PendingRequestsCard accounts={snapshot.pendingRequests ?? []} c={c} locked={locked} />
+        {/* Threads exports have no "requests you sent" list, so the pending
+            card is Instagram-only. */}
+        <div id="tutorial-pending" style={{ display: 'grid', gridTemplateColumns: platform === 'threads' ? '1fr' : '1fr 1fr', gap: 16 }}>
+          {platform !== 'threads' && <PendingRequestsCard accounts={snapshot.pendingRequests ?? []} c={c} locked={locked} />}
           <RecentlyUnfollowedCard accounts={snapshot.recentlyUnfollowed ?? []} c={c} dateLocale={dateLocale} locked={locked} />
         </div>
       </main>
@@ -1309,6 +1351,7 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
         />
       )}
       </div>
+      )}
 
       <LandingFooter />
       <FeedbackWidget content={feedbackC} />

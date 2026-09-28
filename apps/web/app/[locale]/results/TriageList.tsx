@@ -11,6 +11,7 @@ import { trackUpgradeClick, trackFunnel } from '@/lib/analytics';
 import { Link } from '@/i18n/navigation';
 import { T } from '@/components/landing/tokens';
 import { useTriage, usePreviousTriage, type TriageState } from '@/hooks/useTriage';
+import { PLATFORM_NAME, platformOfHref, withApp } from '@/lib/platform';
 import { useAuth } from '@/components/AuthProvider';
 import type { ListToolbarContent } from '@/components/listToolbar.content';
 import type { TriageListContent, TriageOptionContent } from './triageList.content';
@@ -164,12 +165,12 @@ function TriageRow({ account, triageState, isVisited, isFocused, c, onTriage, on
         borderLeft: isFocused
           ? `3px solid ${T.tealMid}`
           : isVisited
-            ? '3px solid rgba(2,136,143,0.4)'
+            ? '3px solid rgba(var(--t-accent-rgb),0.4)'
             : '3px solid transparent',
         background: style
           ? style.bg
           : isFocused
-            ? 'rgba(2,136,143,0.04)'
+            ? 'rgba(var(--t-accent-rgb),0.04)'
             : hovered
               ? 'var(--t-surface1)'
               : 'transparent',
@@ -185,8 +186,8 @@ function TriageRow({ account, triageState, isVisited, isFocused, c, onTriage, on
       {/* Avatar */}
       <div style={{
         width: 36, height: 36, borderRadius: '50%',
-        background: 'rgba(2,136,143,0.12)',
-        border: '1px solid rgba(2,136,143,0.2)',
+        background: 'rgba(var(--t-accent-rgb),0.12)',
+        border: '1px solid rgba(var(--t-accent-rgb),0.2)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: 13, fontWeight: 600, color: T.tealLight,
         flexShrink: 0,
@@ -233,7 +234,7 @@ function TriageRow({ account, triageState, isVisited, isFocused, c, onTriage, on
                 {cfg!.label}
               </span>
               <span style={{ fontSize: 10, color: T.inkMute, fontStyle: 'italic', whiteSpace: 'nowrap' }}>
-                {pickWitty(cfg!.wittys, account.username)}
+                {withApp(pickWitty(cfg!.wittys, account.username), platformOfHref(account.href))}
               </span>
             </div>
             <button
@@ -273,7 +274,7 @@ function TriageRow({ account, triageState, isVisited, isFocused, c, onTriage, on
 
       {/* Visited badge */}
       {isVisited && !triageState && (
-        <span style={{ fontSize: 10, fontFamily: 'monospace', color: 'rgba(2,136,143,0.4)', flexShrink: 0 }}>
+        <span style={{ fontSize: 10, fontFamily: 'monospace', color: 'rgba(var(--t-accent-rgb),0.4)', flexShrink: 0 }}>
           {c.visited}
         </span>
       )}
@@ -284,7 +285,7 @@ function TriageRow({ account, triageState, isVisited, isFocused, c, onTriage, on
         href={account.href}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label={c.openOnInstagram(account.username)}
+        aria-label={c.openOn(account.username, PLATFORM_NAME[platformOfHref(account.href)])}
         onClick={onVisit}
         style={{
           flexShrink: 0, padding: 6, borderRadius: 8,
@@ -317,8 +318,8 @@ function ProgressBar({ done, total, c }: { done: number; total: number; c: Triag
   return (
     <div style={{
       padding: '14px 18px', borderRadius: 12,
-      background: isComplete ? 'rgba(2,136,143,0.08)' : 'var(--t-surface1)',
-      border: `1px solid ${isComplete ? 'rgba(2,136,143,0.3)' : 'var(--t-border1)'}`,
+      background: isComplete ? 'rgba(var(--t-accent-rgb),0.08)' : 'var(--t-surface1)',
+      border: `1px solid ${isComplete ? 'rgba(var(--t-accent-rgb),0.3)' : 'var(--t-border1)'}`,
       transition: 'all 0.3s',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
@@ -494,8 +495,8 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
         <div style={{
           display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
           padding: '12px 16px', borderRadius: 12, marginBottom: 16,
-          background: 'linear-gradient(180deg, rgba(2,136,143,0.10), rgba(2,136,143,0.03))',
-          border: '1px solid rgba(2,136,143,0.25)',
+          background: 'linear-gradient(180deg, rgba(var(--t-accent-rgb),0.10), rgba(var(--t-accent-rgb),0.03))',
+          border: '1px solid rgba(var(--t-accent-rgb),0.25)',
         }}>
           <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>{c.proTeaser.pro}</span>
           <span style={{ flex: 1, minWidth: 200, fontSize: 13, color: T.inkDim, lineHeight: 1.5 }}>
@@ -521,8 +522,8 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
         return (
           <div style={{
             padding: '16px 20px', borderRadius: 14,
-            background: 'rgba(2,136,143,0.05)',
-            border: '1px solid rgba(2,136,143,0.2)',
+            background: 'rgba(var(--t-accent-rgb),0.05)',
+            border: '1px solid rgba(var(--t-accent-rgb),0.2)',
             display: 'flex', flexDirection: 'column', gap: 12,
           }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
@@ -577,8 +578,8 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
                       display: 'flex', alignItems: 'center', gap: 7,
                       padding: '6px 14px', borderRadius: 20, cursor: 'pointer',
                       fontSize: 12, fontFamily: 'monospace',
-                      border: `1px solid ${checked ? 'rgba(2,136,143,0.4)' : 'var(--t-border3)'}`,
-                      background: checked ? 'rgba(2,136,143,0.1)' : 'transparent',
+                      border: `1px solid ${checked ? 'rgba(var(--t-accent-rgb),0.4)' : 'var(--t-border3)'}`,
+                      background: checked ? 'rgba(var(--t-accent-rgb),0.1)' : 'transparent',
                       color: checked ? T.tealLight : T.inkDim,
                       transition: 'all 0.15s',
                     }}
@@ -604,7 +605,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
                 style={{
                   padding: '8px 18px', borderRadius: 10, cursor: selectedCount === 0 ? 'not-allowed' : 'pointer',
                   fontSize: 13, fontWeight: 600, fontFamily: T.sans,
-                  background: selectedCount === 0 ? 'rgba(2,136,143,0.15)' : T.teal,
+                  background: selectedCount === 0 ? 'rgba(var(--t-accent-rgb),0.15)' : T.teal,
                   border: 'none', color: selectedCount === 0 ? T.inkMute : T.cream,
                   transition: 'all 0.15s',
                 }}
@@ -765,8 +766,8 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
       ) : mainAccounts.length === 0 ? (
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          borderRadius: 16, border: `1px solid rgba(2,136,143,0.2)`,
-          background: 'rgba(2,136,143,0.04)',
+          borderRadius: 16, border: `1px solid rgba(var(--t-accent-rgb),0.2)`,
+          background: 'rgba(var(--t-accent-rgb),0.04)',
           padding: '48px 32px', color: T.tealLight, fontSize: 14, fontStyle: 'italic',
         }}>
           {c.progress.listCleared}

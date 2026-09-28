@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useCsvExport } from '@/hooks/useCsvExport';
 import { EN_LIST_TOOLBAR, type ListToolbarContent } from '@/components/listToolbar.content';
+import { PLATFORM_NAME, platformOfHref } from '@/lib/platform';
 
 interface AccountListProps {
   accounts: Account[];
@@ -152,12 +153,12 @@ export function AccountList({
                     ) : null}
                   </div>
 
-                  {/* Open on Instagram */}
+                  {/* Open on Instagram / Threads */}
                   <a
                     href={account.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`Open @${account.username} on Instagram`}
+                    aria-label={c.openOn(account.username, PLATFORM_NAME[platformOfHref(account.href)])}
                     className="shrink-0 rounded-lg p-1.5 text-foreground/30 hover:text-primary hover:bg-primary/10 transition-colors"
                   >
                     <ExternalLink className="size-4" />

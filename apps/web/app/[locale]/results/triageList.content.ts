@@ -11,7 +11,7 @@ export interface TriageListContent {
   options: TriageOptionContent[];
   toast: { addedTo: (username: string) => string; whitelist: string; undo: string };
   clear: string;
-  openOnInstagram: (username: string) => string;
+  openOn: (username: string, app: string) => string;
   visited: string;
   progress: {
     triagedOf: (done: string, total: string) => string;
@@ -131,13 +131,13 @@ const EN: TriageListContent = {
       state: 'deactivated', label: 'Deactivated',
       description: 'This account is deactivated or deleted. Not a real unfollow. Moves them out of the list.',
       wittys: [
-        "Not their choice. Instagram's.",
+        "Not their choice. The platform's.",
         "The account is gone, not the friendship.",
         "They didn't leave. They just… disappeared.",
         'Ghost account. Different kind of ghost.',
         "Can't unfollow you if they don't exist.",
         'Collateral damage.',
-        'Instagram made this decision for them.',
+        '{app} made this decision for them.',
         'Account closed. Case closed.',
         'Not a snub. Just a casualty.',
         'The platform got to them first.',
@@ -148,7 +148,7 @@ const EN: TriageListContent = {
   ],
   toast: { addedTo: (u) => `@${u} added to`, whitelist: 'Whitelist', undo: 'Undo' },
   clear: 'Clear',
-  openOnInstagram: (u) => `Open @${u} on Instagram`,
+  openOn: (u, app) => `Open @${u} on ${app}`,
   visited: 'visited',
   progress: {
     triagedOf: (done, total) => `Triaged ${done} of ${total}`,
@@ -272,13 +272,13 @@ const ES: TriageListContent = {
       state: 'deactivated', label: 'Desactivada',
       description: 'Esta cuenta está desactivada o eliminada. No es un dejar de seguir real. La saca de la lista.',
       wittys: [
-        'No fue su elección. Fue de Instagram.',
+        'No fue su elección. Fue de {app}.',
         'La cuenta desapareció, no la amistad.',
         'No se fueron. Simplemente… desaparecieron.',
         'Cuenta fantasma. Otro tipo de fantasma.',
         'No pueden dejar de seguirte si no existen.',
         'Daño colateral.',
-        'Instagram tomó esta decisión por ellos.',
+        '{app} tomó esta decisión por ellos.',
         'Cuenta cerrada. Caso cerrado.',
         'No es un desaire. Solo una baja.',
         'La plataforma les ganó primero.',
@@ -289,7 +289,7 @@ const ES: TriageListContent = {
   ],
   toast: { addedTo: (u) => `@${u} añadido a`, whitelist: 'Lista blanca', undo: 'Deshacer' },
   clear: 'Borrar',
-  openOnInstagram: (u) => `Abrir @${u} en Instagram`,
+  openOn: (u, app) => `Abrir @${u} en ${app}`,
   visited: 'visto',
   progress: {
     triagedOf: (done, total) => `Clasificados ${done} de ${total}`,
@@ -413,13 +413,13 @@ const PT: TriageListContent = {
       state: 'deactivated', label: 'Desativada',
       description: 'Esta conta está desativada ou excluída. Não é um deixar de seguir de verdade. Tira da lista.',
       wittys: [
-        'Não foi escolha deles. Foi do Instagram.',
+        'Não foi escolha deles. Foi do {app}.',
         'A conta sumiu, não a amizade.',
         'Eles não saíram. Só... desapareceram.',
         'Conta fantasma. Um tipo diferente de fantasma.',
         'Não podem deixar de te seguir se não existem.',
         'Dano colateral.',
-        'O Instagram tomou essa decisão por eles.',
+        'O {app} tomou essa decisão por eles.',
         'Conta encerrada. Caso encerrado.',
         'Não é desfeita. Só uma baixa.',
         'A plataforma chegou neles primeiro.',
@@ -430,7 +430,7 @@ const PT: TriageListContent = {
   ],
   toast: { addedTo: (u) => `@${u} adicionado à`, whitelist: 'Lista branca', undo: 'Desfazer' },
   clear: 'Limpar',
-  openOnInstagram: (u) => `Abrir @${u} no Instagram`,
+  openOn: (u, app) => `Abrir @${u} no ${app}`,
   visited: 'visitado',
   progress: {
     triagedOf: (done, total) => `Triados ${done} de ${total}`,

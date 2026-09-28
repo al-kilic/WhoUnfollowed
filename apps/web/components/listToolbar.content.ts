@@ -3,6 +3,7 @@
 // no locale-specific content is supplied.
 export interface ListToolbarContent {
   searchPlaceholder: string;
+  openOn: (username: string, app: string) => string;
   sortingByNameTooltip: string;
   sortingByDateTooltip: string;
   nameLabel: string;
@@ -22,6 +23,7 @@ export interface ListToolbarContent {
 }
 
 export const EN_LIST_TOOLBAR: ListToolbarContent = {
+  openOn: (u, app) => `Open @${u} on ${app}`,
   searchPlaceholder: 'Search by username…',
   sortingByNameTooltip: 'Sorting by name. Click to sort by follow date instead',
   sortingByDateTooltip: 'Sorting by follow date. Click to sort by name instead',
@@ -42,6 +44,7 @@ export const EN_LIST_TOOLBAR: ListToolbarContent = {
 };
 
 export const ES_LIST_TOOLBAR: ListToolbarContent = {
+  openOn: (u, app) => `Abrir @${u} en ${app}`,
   searchPlaceholder: 'Buscar por usuario…',
   sortingByNameTooltip: 'Ordenando por nombre. Haz clic para ordenar por fecha de seguimiento',
   sortingByDateTooltip: 'Ordenando por fecha de seguimiento. Haz clic para ordenar por nombre',
@@ -62,6 +65,7 @@ export const ES_LIST_TOOLBAR: ListToolbarContent = {
 };
 
 export const PT_LIST_TOOLBAR: ListToolbarContent = {
+  openOn: (u, app) => `Abrir @${u} no ${app}`,
   searchPlaceholder: 'Buscar por usuário…',
   sortingByNameTooltip: 'Ordenando por nome. Clique para ordenar por data de seguimento',
   sortingByDateTooltip: 'Ordenando por data de seguimento. Clique para ordenar por nome',

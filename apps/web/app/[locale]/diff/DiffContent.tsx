@@ -4,7 +4,7 @@ import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import { format } from 'date-fns';
-import { compareSnapshots } from '@ig-tracker/core';
+import { compareSnapshots, snapshotPlatform } from '@ig-tracker/core';
 import type { Account, SnapshotComparison } from '@ig-tracker/core';
 import type { SnapshotRecord } from '@/lib/db';
 import { getSnapshot } from '@/hooks/useSnapshots';
@@ -127,6 +127,7 @@ function DiffPageInner({ locale }: { locale: AppLocale }) {
     // rather than their data.
     Promise.all([getSnapshot(oldId, userId), getSnapshot(currentId, userId)]).then(([o, cur]) => {
       if (!o || !cur) { setError(c.notFound); return; }
+      if (snapshotPlatform(o.data) !== snapshotPlatform(cur.data)) { setError(c.platformMismatch); return; }
       setOldRecord(o);
       setCurrentRecord(cur);
       setDiff(compareSnapshots(o.data, cur.data));

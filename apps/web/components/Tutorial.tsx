@@ -174,7 +174,7 @@ export function Tutorial({
             width: rect.width + PAD * 2, height: rect.height + PAD * 2,
             borderRadius: 14, zIndex: 999, pointerEvents: 'none',
             border: `2px solid ${T.tealMid}`,
-            boxShadow: `0 0 0 4px rgba(2,136,143,0.12), 0 0 28px rgba(2,136,143,0.35)`,
+            boxShadow: `0 0 0 4px rgba(var(--t-accent-rgb),0.12), 0 0 28px rgba(var(--t-accent-rgb),0.35)`,
             animation: 'pulse-ring 2.6s ease-out infinite',
           }} />
         </>
@@ -191,9 +191,9 @@ export function Tutorial({
           top: tooltipTop, bottom: tooltipBottom, left: tooltipLeft,
           width: tooltipW, zIndex: 1000,
           background: '#060e10',
-          border: `1px solid rgba(2,136,143,0.5)`,
+          border: `1px solid rgba(var(--t-accent-rgb),0.5)`,
           borderRadius: 18,
-          boxShadow: `0 20px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(2,136,143,0.1), 0 0 40px rgba(2,136,143,0.1)`,
+          boxShadow: `0 20px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(var(--t-accent-rgb),0.1), 0 0 40px rgba(var(--t-accent-rgb),0.1)`,
           padding: '18px 20px 16px',
           animation: 'fade-up 0.35s cubic-bezier(0.16,1,0.3,1) both',
         }}
@@ -209,7 +209,7 @@ export function Tutorial({
               position: 'absolute', top: 2, left: 2,
               width: 12, height: 12,
               background: '#060e10',
-              border: `1px solid rgba(2,136,143,0.5)`,
+              border: `1px solid rgba(var(--t-accent-rgb),0.5)`,
               transform: arrowPos === 'top' ? 'rotate(45deg)' : 'rotate(225deg)',
               transformOrigin: 'center',
             }} />
@@ -243,7 +243,7 @@ export function Tutorial({
 
         {/* Title */}
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 9, marginBottom: 7 }}>
-          <span style={{ fontSize: 10, fontFamily: T.mono, fontWeight: 700, letterSpacing: '0.14em', color: T.tealMid, background: 'rgba(2,136,143,0.12)', padding: '2px 7px', borderRadius: 5 }}>
+          <span style={{ fontSize: 10, fontFamily: T.mono, fontWeight: 700, letterSpacing: '0.14em', color: T.tealMid, background: 'rgba(var(--t-accent-rgb),0.12)', padding: '2px 7px', borderRadius: 5 }}>
             {String(step + 1).padStart(2, '0')}
           </span>
           <span style={{ fontFamily: T.serif, fontSize: 17, lineHeight: 1.2, letterSpacing: '-0.01em', color: '#f4f0e8' }}>
@@ -262,7 +262,7 @@ export function Tutorial({
             background: `linear-gradient(135deg, ${T.tealMid} 0%, ${T.teal} 100%)`,
             color: '#f4f0e8', border: 'none',
             fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: T.sans,
-            boxShadow: `0 4px 20px rgba(2,136,143,0.35)`,
+            boxShadow: `0 4px 20px rgba(var(--t-accent-rgb),0.35)`,
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
           }}
           onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}

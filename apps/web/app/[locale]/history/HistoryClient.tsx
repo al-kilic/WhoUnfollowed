@@ -14,6 +14,10 @@ import { UnlockSyncForm } from '@/components/sync/UnlockSyncForm';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { T } from '@/components/landing/tokens';
+import { snapshotPlatform, type Platform } from '@/lib/platform';
+import { platforms as allPlatforms } from '@ig-tracker/core';
+import { PlatformSwitcher } from '@/components/PlatformSwitcher';
+import { PlatformBadge } from '@/components/PlatformBadge';
 import { Icon } from '@/components/landing/atoms';
 import { trackUpgradeClick, trackFunnel } from '@/lib/analytics';
 import { getHistoryContent, type HistoryContent } from './content';
@@ -37,6 +41,12 @@ export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionSt
   const snapshots    = useSnapshotList(userId);
   const [deletingId, setDeletingId]     = useState<number | null>(null);
   const [compareBaseId, setCompareBase] = useState<number | null>(null);
+  const [platformFilter, setPlatformFilter] = useState<Platform | 'all'>('all');
+  // The filter only shows up once snapshots from both apps exist.
+  const presentPlatforms = allPlatforms.filter(p => snapshots.some(s => snapshotPlatform(s.data) === p));
+  const visibleSnapshots = platformFilter === 'all' || presentPlatforms.length < 2
+    ? snapshots
+    : snapshots.filter(s => snapshotPlatform(s.data) === platformFilter);
   const [syncingId, setSyncingId]       = useState<number | null>(null);
   const [showUnlock, setShowUnlock]     = useState(false);
   const [cloudList, setCloudList]       = useState<CloudSnapshotMeta[]>([]);
@@ -285,7 +295,18 @@ export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionSt
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {snapshots.map(record => (
+            {presentPlatforms.length > 1 && (
+              <div>
+                <PlatformSwitcher
+                  options={['all', ...allPlatforms] as const}
+                  active={platformFilter}
+                  onChange={setPlatformFilter}
+                  ariaLabel={c.platformFilterLabel}
+                  allLabel={c.platformFilterAll}
+                />
+              </div>
+            )}
+            {visibleSnapshots.map(record => (
               <SnapshotCard
                 key={record.id}
                 record={record}
@@ -353,7 +374,11 @@ function SnapshotCard({ record, allSnapshots, compareBaseId, isDeleting, isSynci
     if (dateChanged) await redateSnapshot(record.id, record.exportedAt, newExportedAt, _userId);
     setEditing(false);
   }
-  const others        = allSnapshots.filter(s => s.id !== record.id);
+  // Only snapshots from the same platform can be compared with this one.
+  const platform      = snapshotPlatform(record.data);
+  const others        = allSnapshots.filter(s => s.id !== record.id && snapshotPlatform(s.data) === platform);
+  const compareBase   = compareBaseId == null ? undefined : allSnapshots.find(s => s.id === compareBaseId);
+  const canCompareWithBase = compareBase != null && snapshotPlatform(compareBase.data) === platform;
   const followers     = record.data.followers.length;
   const following     = record.data.following.length;
   const followerSet   = new Set(record.data.followers.map(f => f.username));
@@ -403,6 +428,7 @@ function SnapshotCard({ record, allSnapshots, compareBaseId, isDeleting, isSynci
               <>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                   <span style={{ fontFamily: T.serif, fontSize: 19, color: T.ink, letterSpacing: '-0.01em' }}>{record.label}</span>
+                  <PlatformBadge platform={platform} />
                   {record.cloudId && isPro ? (
                     <span style={{ fontSize: 10, fontFamily: T.mono, letterSpacing: '0.08em', color: T.tealMid, background: 'rgba(2,136,143,0.1)', border: '1px solid rgba(2,136,143,0.25)', borderRadius: 5, padding: '2px 7px' }}>{c.syncedBadge}</span>
                   ) : (
@@ -457,7 +483,7 @@ function SnapshotCard({ record, allSnapshots, compareBaseId, isDeleting, isSynci
         )}
 
         {!isCompareBase && others.length > 0 ? (
-          compareBaseId == null ? (
+          compareBaseId == null || !canCompareWithBase ? (
             <button onClick={onSetCompareBase} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 16px', borderRadius: 8, border: '1px solid var(--t-border3)', background: 'transparent', color: T.inkDim, fontSize: 12, cursor: 'pointer', fontFamily: T.sans }}>
               {c.compare}
             </button>

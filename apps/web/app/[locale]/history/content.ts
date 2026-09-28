@@ -20,6 +20,8 @@ export interface HistoryContent {
   restoreError: (label: string) => string;
   emptyTitle: string;
   emptyBody: string;
+  platformFilterLabel: string;
+  platformFilterAll: string;
   uploadZip: string;
   syncedBadge: string;
   deviceBadge: string;
@@ -68,7 +70,9 @@ const EN: HistoryContent = {
   restoring: 'Restoring...',
   restoreError: (label) => `Could not restore "${label}". Try unlocking sync again.`,
   emptyTitle: 'No snapshots yet',
-  emptyBody: 'Upload your first Instagram export to get started.',
+  emptyBody: 'Upload your first Instagram or Threads export to get started.',
+  platformFilterLabel: 'Filter by app',
+  platformFilterAll: 'All',
   uploadZip: 'Upload ZIP',
   syncedBadge: 'SYNCED',
   deviceBadge: 'DEVICE',
@@ -118,7 +122,9 @@ const ES: HistoryContent = {
   restoring: 'Restaurando...',
   restoreError: (label) => `No se pudo restaurar "${label}". Intenta desbloquear la sincronización de nuevo.`,
   emptyTitle: 'Aún no hay snapshots',
-  emptyBody: 'Sube tu primera exportación de Instagram para empezar.',
+  emptyBody: 'Sube tu primera exportación de Instagram o Threads para empezar.',
+  platformFilterLabel: 'Filtrar por app',
+  platformFilterAll: 'Todas',
   uploadZip: 'Subir ZIP',
   syncedBadge: 'SINCRONIZADO',
   deviceBadge: 'DISPOSITIVO',
@@ -168,7 +174,9 @@ const PT: HistoryContent = {
   restoring: 'Restaurando...',
   restoreError: (label) => `Não foi possível restaurar "${label}". Tente desbloquear a sincronização novamente.`,
   emptyTitle: 'Nenhum snapshot ainda',
-  emptyBody: 'Envie sua primeira exportação do Instagram para começar.',
+  emptyBody: 'Envie sua primeira exportação do Instagram ou do Threads para começar.',
+  platformFilterLabel: 'Filtrar por app',
+  platformFilterAll: 'Todos',
   uploadZip: 'Enviar ZIP',
   syncedBadge: 'SINCRONIZADO',
   deviceBadge: 'DISPOSITIVO',
