@@ -1,7 +1,7 @@
 import type { ArtVariant } from './BlogArt';
 
 /** Topic clusters for the pillar-and-cluster internal-linking structure. */
-export type ClusterId = 'unfollowers' | 'data-export' | 'privacy-safety' | 'account-health';
+export type ClusterId = 'unfollowers' | 'data-export' | 'privacy-safety' | 'account-health' | 'threads';
 
 export interface BlogPost {
   slug: string;
@@ -3501,6 +3501,188 @@ The only lever that helps is shortening the gap between your exports. The less t
 
 The honest answer is that no export-based method, including this one, can promise to catch everything that happens between two checks. What it can do is shrink that gap until it barely matters. [Upload your export to WhoUnfollowed](/) and it compares your snapshots in your browser, no password required, and shows you everything the gap between them can actually reveal.`,
   },
+  {
+    slug: 'how-to-see-who-unfollowed-you-on-threads',
+    cluster: 'threads',
+    title: 'Who Unfollowed You on Threads? How to See (Without Your Password)',
+    metaTitle: 'Who Unfollowed You on Threads? How to Check for Free',
+    metaDescription: 'Threads won\'t tell you who unfollowed you, but two of your own data exports will. Here is the exact process to follow, no password or login required.',
+    excerpt: 'Threads has no built-in "who unfollowed me" screen, the same gap Instagram has always had. Here is exactly how to request your Threads data from Meta and turn two exports into the list of people who left.',
+    date: 'September 28, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'who unfollowed me on Threads',
+    art: 'search',
+    image: '/blog/threads-unfollowed-hero.jpg',
+    imageAlt: 'A close-up of a smartphone screen showing social media app icons, representing checking who unfollowed you on Threads',
+    cta: {
+      heading: 'See exactly who unfollowed you on Threads.',
+      body: 'No risky login, no password. Upload the export Meta already gives you and WhoUnfollowed shows the names in your browser in about two minutes. The parser is open source, so you can verify it yourself.',
+      buttonLabel: 'Check your Threads followers',
+      proNudge: 'Checking regularly? Pro keeps every Threads snapshot you take, so each new upload shows exactly who left since the last one.',
+    },
+    faq: [
+      { q: 'Does Threads tell you who unfollowed you?', a: 'No, Threads never sends a notification or shows a built-in list of people who unfollowed you; comparing two of your own data exports is the reliable way to see it.' },
+      { q: 'How do you get your Threads data export?', a: 'Through Meta\'s shared Accounts Center, not a separate Threads settings menu, by choosing Export your information, selecting your Threads profile and Followers and following, then choosing JSON and All time.' },
+      { q: 'Can you see who unfollowed you on Threads for free?', a: 'Yes, a single export shows who does not follow you back at no cost; seeing who left between two exports requires saved snapshot history, which is a Pro feature.' },
+      { q: 'Do you need your Threads password to use a tracker like this?', a: 'No, WhoUnfollowed only reads the export file Meta emails you and never asks for your Threads or Instagram login.' },
+      { q: 'Is checking who unfollowed you on Threads against Meta\'s rules?', a: 'No, requesting your own data export is a feature Meta provides under GDPR Article 20, and reading it locally never touches an API or a login.' },
+    ],
+    body: `The short answer: Threads won't tell you who unfollowed you, but you can see it yourself by comparing two exports of your own Threads data over time. Request your data through Meta's Accounts Center, upload it to WhoUnfollowed, and the exact names of who left show up in your browser in about two minutes. No password, no login, nothing sent to a server.
+
+If you searched "who unfollowed me on threads" hoping for a built-in answer, there isn't one. Threads has no unfollowers tab, the same gap that has existed on Instagram for years. The method below is the closest thing to a real answer that actually exists.
+
+## Step 1: Request Your Threads Data Export
+
+Threads doesn't have its own separate export screen. The request goes through Meta's shared **Accounts Center**, the same place Instagram and Facebook data requests live. Open Accounts Center from either app's settings, then go to "Your information and permissions," then "Export your information," then "Create export."
+
+Select your Threads profile specifically, not Instagram. [Each app needs its own separate export](/blog/can-i-use-my-instagram-export-to-see-who-unfollowed-me-on-threads), even though the request flow looks identical. Choose "Followers and following" as the only category, set the format to JSON, and set the date range to "All time" so you get your full lists rather than only recent changes. Submit the request. [Meta's own Help Center walks through this same export flow for Threads specifically](https://help.instagram.com/259803026523198), current as of September 2026.
+
+## Step 2: Download the ZIP
+
+Meta emails a download link once the export is ready, the same way it does for Instagram. Download the ZIP without unzipping it. Selecting only Followers and Following instead of your whole account keeps the file small and the export fast to prepare.
+
+## Step 3: Upload It to WhoUnfollowed
+
+Go to [WhoUnfollowed's Threads page](/threads) or drop the ZIP into the homepage upload zone. The file is read entirely inside your browser, using the same open-source parser (MPL-2.0) that already handles Instagram exports. Nothing is sent to a server. If you want to see who specifically unfollowed you, upload a second export from a later date and WhoUnfollowed compares the two automatically.
+
+## What You'll See
+
+- Every Threads account you follow that doesn't follow you back
+- New followers since your last export
+- Mutual followers
+- Unfollowers, once you have two exports to compare
+
+## Why No Password Is Needed
+
+A quick search for "threads unfollower tracker" turns up plenty of tools that ask for your Threads or Instagram login before showing anything. That's the same risky pattern that has followed Instagram trackers for years: log in as you, pull data through channels Meta doesn't sanction for third parties, and put your account at risk if that activity gets flagged. WhoUnfollowed never asks for a password because it doesn't need one. The export file is already yours. We just read it, on your own device, using the same method used across the site for [Instagram](/blog/how-to-see-who-unfollowed-you-on-instagram).
+
+## In Short
+
+- Threads has no built-in screen showing who unfollowed you, the same gap Instagram has always had.
+- Your Threads data export comes from Meta's shared Accounts Center, not a separate Threads settings menu.
+- A single export shows who doesn't follow you back for free; comparing two exports over time reveals exactly who unfollowed you.
+- Requesting the export is covered by your right to your own data under [GDPR Article 20](https://gdpr-info.eu/art-20-gdpr/), the same basis Instagram exports rely on.
+- WhoUnfollowed reads the file in your browser and never asks for your Threads or Instagram password.
+
+Looking for Instagram instead? The [same method works there too](/blog/how-to-see-who-unfollowed-you-on-instagram), just with a different export screen.`,
+  },
+  {
+    slug: 'does-threads-notify-when-someone-unfollows-you',
+    cluster: 'threads',
+    title: 'Does Threads Notify You When Someone Unfollows You?',
+    metaTitle: 'Does Threads Notify You When Someone Unfollows You?',
+    metaDescription: 'No, Threads sends no alert in either direction when a follow ends. Here is what it does and doesn\'t tell you, and how to find out who left anyway.',
+    excerpt: 'No, Threads does not tell you when someone unfollows you, and it does not tell them when you unfollow either. Here is the full mechanism, the edge cases people assume differently, and how to find out anyway.',
+    date: 'September 28, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'does Threads notify when someone unfollows you',
+    art: 'bell',
+    image: '/blog/threads-notify-hero.jpg',
+    imageAlt: 'A smartphone screen showing social media app notifications in a dim setting, representing the alert Threads never sends for an unfollow',
+    cta: {
+      heading: 'Stop waiting for a notification that never comes.',
+      body: 'Threads keeps unfollows silent in both directions. Upload your Threads export and WhoUnfollowed shows you exactly who left, in your browser, in about two minutes. No password, nothing uploaded.',
+      buttonLabel: 'See who unfollowed you on Threads',
+      proNudge: 'Pro keeps a running history of your Threads snapshots, so you don\'t have to remember to check yourself.',
+    },
+    faq: [
+      { q: 'Does Threads notify you when someone unfollows you?', a: 'No, Threads never sends a notification, badge, or alert when a follower leaves; the change happens silently.' },
+      { q: 'Does Threads tell the other person when you unfollow them?', a: 'No, unfollowing on Threads is silent in both directions, so neither side receives a notification.' },
+      { q: 'Does switching to a private Threads profile change whether unfollows are notified?', a: 'No, Threads does not notify unfollows either way, regardless of whether your profile is public or private.' },
+      { q: 'Does the recently_unfollowed_profiles.json file in a Threads export show who unfollowed you?', a: 'No, it only logs accounts you unfollowed yourself, the same limitation as the equivalent file in an Instagram export.' },
+      { q: 'How can you find out who unfollowed you on Threads without a notification?', a: 'By comparing two of your own Threads data exports taken at different times; anyone missing from the newer one unfollowed you in between.' },
+    ],
+    body: `No. Threads does not send a notification, alert, or any in-app signal when someone unfollows you. It works the same way in reverse: if you unfollow someone, they aren't told either. The only way anyone finds out is by noticing the change themselves, either by remembering who used to follow them or by checking their list.
+
+## What Threads Does Notify You About
+
+New followers, likes, replies, reposts, and mentions all trigger a notification. Threads wants you to see growth and engagement in real time, and that shows up in the Activity tab as it happens.
+
+## What Threads Stays Silent About
+
+- **Unfollowing.** No alert to either side, ever.
+- **Removing a follower.** If you remove someone who follows you, they are not told; they simply stop following you.
+- **Muting.** Completely invisible, the same as on Instagram.
+- **A drop in your follower count.** Threads shows you the new total, not who caused the change.
+
+This mirrors [how Instagram handles the same actions](/blog/does-instagram-notify-when-you-unfollow-someone). Threads runs on the same underlying Meta infrastructure, and [Meta's own Help Center confirms the follow and unfollow action stays silent](https://help.instagram.com/150298994419902) on Threads specifically, current as of September 2026. The two apps also keep [entirely separate follower graphs](/blog/can-i-use-my-instagram-export-to-see-who-unfollowed-me-on-threads), so a silent unfollow on one never shows up as a change on the other.
+
+## Three Things People Assume Wrongly
+
+**Does a private Threads profile change any of this?** No. Whether your account is public or private has no effect on whether an unfollow gets reported. The silence is the same either way.
+
+**Does the Activity tab log lost followers somewhere you might have missed?** No. The Activity tab is built to show gains, likes, replies, and mentions. It has no section for people who left, past or present.
+
+**Does the Threads data export at least contain a record of who unfollowed you?** Also no, and this one trips people up because a file inside the export is named almost exactly right. **recently_unfollowed_profiles.json** exists inside a Threads export, but it logs accounts *you* unfollowed, not accounts that unfollowed *you*. It is your own outbound action history, not a log of what happened to your followers, the identical gap [Instagram's export has](/blog/does-instagram-data-export-show-who-unfollowed-you).
+
+## The Only Way to Actually Find Out
+
+Since nothing inside Threads flags an unfollow, the only reliable method is comparing your own data over time. Request [your Threads export](/blog/how-to-see-who-unfollowed-you-on-threads) now, request another one in a few weeks, and anyone missing from the second list unfollowed you somewhere in between.
+
+You don't have to compare the files by hand. Upload both exports to [WhoUnfollowed](/threads) and it matches the two lists in your browser and shows you the names that dropped off, no password required.
+
+## In Short
+
+- Threads sends no notification for an unfollow in either direction, the same as Instagram.
+- Private accounts, the Activity tab, and the data export itself all stay silent about who left.
+- **recently_unfollowed_profiles.json** inside a Threads export tracks who you unfollowed, not who unfollowed you.
+- Comparing two dated Threads exports, a right covered by [GDPR Article 20](https://gdpr-info.eu/art-20-gdpr/), is the only way to see the actual names.`,
+  },
+  {
+    slug: 'can-i-use-my-instagram-export-to-see-who-unfollowed-me-on-threads',
+    cluster: 'threads',
+    title: 'Can I Use My Instagram Export to See Who Unfollowed Me on Threads?',
+    metaTitle: 'Can Your Instagram Export Show Threads Unfollowers?',
+    metaDescription: 'No, Instagram and Threads keep separate exports and separate follower lists. Here is why one export never covers both, and how to get the right one.',
+    excerpt: 'No. Even though Instagram and Threads share the same export screen, they produce two separate files covering two separate follower lists. Here is why one export never covers both, and what actually happens if you upload a ZIP that has both inside.',
+    date: 'September 28, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'instagram export show threads unfollowers',
+    art: 'split',
+    image: '/blog/threads-instagram-export-hero.jpg',
+    imageAlt: 'Two smartphones shown side by side displaying different screens, representing the separate Instagram and Threads data exports',
+    cta: {
+      heading: 'Get the right export for each app.',
+      body: 'Instagram and Threads need their own exports and their own uploads. WhoUnfollowed reads either one in your browser, matches followers automatically, and never mixes the two together.',
+      buttonLabel: 'Check your Threads export',
+    },
+    faq: [
+      { q: 'Can I use my Instagram data export to see who unfollowed me on Threads?', a: 'No, an Instagram export only contains Instagram follower data; seeing Threads unfollowers requires a separate export with your Threads profile selected.' },
+      { q: 'What happens if my export ZIP contains both Instagram and Threads data?', a: 'WhoUnfollowed reads the Instagram part and shows those results, then prompts you to request a separate export with only your Threads profile selected.' },
+      { q: 'Do my Instagram and Threads followers automatically match each other?', a: 'No, the two apps maintain independent follower graphs, so following or unfollowing someone on one does not change the other.' },
+      { q: 'How do I get an export that shows who unfollowed me on Threads specifically?', a: 'Open Meta\'s Accounts Center, choose Export your information, and select only your Threads profile before submitting the request.' },
+      { q: 'Do I need two separate WhoUnfollowed uploads for Instagram and Threads?', a: 'Yes, upload your Instagram export to see Instagram results and your Threads export separately to see Threads results; WhoUnfollowed keeps the two apart.' },
+    ],
+    body: `No. Instagram and Threads keep separate follower graphs and separate data exports, even though both requests go through the same screen inside Meta's Accounts Center. An Instagram export contains only your Instagram followers and following. To see who unfollowed you on Threads, you need a Threads-specific export, requested separately.
+
+## Why One Request Screen Doesn't Mean One File
+
+Instagram and Threads both route data requests through Meta's shared Accounts Center, which makes it easy to assume one export covers both. It doesn't. [Meta's own export flow](https://help.instagram.com/259803026523198) has you choose a specific profile when you create the export, Instagram or Threads, and that choice determines which follower data comes back. Pick Instagram and you get your Instagram followers. Pick Threads and you get your Threads followers. There is no combined option that returns both lists merged into one.
+
+## What If a Single ZIP Somehow Contains Both?
+
+It can happen, usually when someone selects more categories than just "Followers and following" and ends up with a broader export that includes a Threads folder alongside the Instagram one. If you upload a ZIP like that to WhoUnfollowed, it reads the Instagram part and shows those results, then tells you a separate Threads export is needed to see Threads data too. Nothing gets silently merged or guessed at. The two datasets are kept apart on purpose, the same way [WhoUnfollowed keeps every upload's contents client-side by default](/blog/does-whounfollowed-store-or-sell-your-instagram-data).
+
+## Do Instagram and Threads Followers Even Overlap?
+
+Not automatically, and not reliably. When Threads launched, new accounts could carry over an existing Instagram following list as a starting point, but [the two apps run independent follower graphs](https://help.instagram.com/150298994419902), current as of September 2026. Unfollowing someone on Threads does not touch your Instagram following, and unfollowing on Instagram does not touch your Threads following. Since [Threads never notifies you when a follow changes](/blog/does-threads-notify-when-someone-unfollows-you) either, treating one list as a stand-in for the other only hides real changes on whichever app you didn't check. Your Instagram list and your Threads list may look similar if you built both around the same audience, but they are two separate lists changing independently, not one list mirrored across two apps.
+
+## How to Get the Export You Actually Need
+
+Open Meta's Accounts Center from either app's settings, go to "Your information and permissions," then "Export your information," then "Create export." Select only your Threads profile, choose "Followers and following," set the format to JSON and the range to "All time," and submit. The full walkthrough, including what the files inside actually look like, is covered in [how to see who unfollowed you on Threads](/blog/how-to-see-who-unfollowed-you-on-threads).
+
+## In Short
+
+- Instagram and Threads share the same Accounts Center request screen but produce two completely separate exports.
+- A ZIP containing both is read as Instagram data first; WhoUnfollowed prompts for a separate Threads export rather than guessing or merging the two.
+- Threads and Instagram follower graphs run independently as of September 2026, so unfollowing on one has no effect on the other.
+- Getting Threads unfollower data requires selecting your Threads profile specifically when creating the export, not your Instagram profile.
+
+If you're managing both, keep the two exports and the two uploads separate. [Upload your Instagram export](/) for Instagram results and [your Threads export](/threads) for Threads results. WhoUnfollowed reads each one in your browser and never mixes them together.`,
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
@@ -3520,5 +3702,6 @@ export const CLUSTERS: Record<ClusterId, Cluster> = {
   'data-export':    { id: 'data-export',    label: 'Exporting your Instagram data',   pillarSlug: 'how-to-download-your-instagram-data' },
   'privacy-safety': { id: 'privacy-safety', label: 'Tracker privacy and safety',      pillarSlug: 'why-instagram-follower-trackers-ask-for-your-password' },
   'account-health': { id: 'account-health', label: 'Account health and follow ratio', pillarSlug: 'instagram-follow-ratio-what-it-means-how-to-improve-it' },
+  'threads':        { id: 'threads',        label: 'Seeing who unfollowed you on Threads', pillarSlug: 'how-to-see-who-unfollowed-you-on-threads' },
 };
 
