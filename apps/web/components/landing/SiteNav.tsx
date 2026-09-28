@@ -30,6 +30,10 @@ function WhatIsDropdown() {
       icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>,
     },
     {
+      label: t('threadsLabel'), href: '/threads', desc: t('threadsDesc'),
+      icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/></svg>,
+    },
+    {
       label: t('compare'),             href: '/compare',               desc: t('compareDesc'),
       icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M9 12h6"/></svg>,
     },
@@ -332,6 +336,7 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
           <RadarNavLink onClick={() => setMenuOpen(false)} mobile />
           <Link href="/history" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('snapshotHistory')}</Link>
           <Link href="/what-is-whounfollowed" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('whatIsLabel')}</Link>
+          <Link href="/threads" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('threadsLabel')}</Link>
           <Link href="/compare" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('compare')}</Link>
           {/* /blog isn't migrated under [locale] yet — plain next/link. */}
           <NextLink href="/blog" onClick={() => setMenuOpen(false)} style={{ fontSize: 16, color: T.inkDim, textDecoration: 'none' }}>{t('blog')}</NextLink>

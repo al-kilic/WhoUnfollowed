@@ -90,7 +90,7 @@ export default function AuthorPage() {
             <p style={{ marginBottom: 16 }}>
               I build small, honest tools that give people control over their own data. WhoUnfollowed exists
               because every other Instagram follower tracker asks for a password it has no business asking for.
-              This one never does. You upload the export Instagram already gives you, and your browser reads it locally.
+              This one never does. You upload the export Instagram or Threads already gives you, and your browser reads it locally.
             </p>
             <p style={{ margin: 0 }}>
               I write the guides on this site myself, drawn from building the parser and watching how real Instagram

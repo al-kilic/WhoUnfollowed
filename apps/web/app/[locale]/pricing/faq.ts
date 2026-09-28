@@ -27,11 +27,11 @@ const PRICING_FAQ_EN: PricingFaqItem[] = [
     a: 'To keep the lights on. Pro covers servers and storage so the free app stays free, fast, and independent. No ads, no investors, no selling your data.',
   },
   {
-    q: 'Do I need to give you my Instagram password?',
-    a: 'Never. You download your own data from Instagram and upload the ZIP here. We have no connection to Instagram whatsoever.',
+    q: 'Do I need to give you my Instagram or Threads password?',
+    a: 'Never. You download your own data from Instagram or Threads and upload the ZIP here. We have no connection to either app whatsoever.',
   },
   {
-    q: 'Is my Instagram data safe?',
+    q: 'Is my Instagram or Threads data safe?',
     a: 'Yes. ZIP parsing happens entirely in your browser, so nothing is sent to us. Cloud-synced snapshots are encrypted in your browser before leaving your device. We store only blobs we cannot read.',
   },
 ];
@@ -50,11 +50,11 @@ const PRICING_FAQ_ES: PricingFaqItem[] = [
     a: 'Para mantener el servicio funcionando. Pro cubre los servidores y el almacenamiento para que la app gratuita siga siendo gratis, rápida e independiente. Sin anuncios, sin inversores, sin vender tus datos.',
   },
   {
-    q: '¿Tengo que darles mi contraseña de Instagram?',
-    a: 'Nunca. Descargas tus propios datos desde Instagram y subes el ZIP aquí. No tenemos ninguna conexión con Instagram.',
+    q: '¿Tengo que darles mi contraseña de Instagram o Threads?',
+    a: 'Nunca. Descargas tus propios datos desde Instagram o Threads y subes el ZIP aquí. No tenemos ninguna conexión con ninguna de las dos apps.',
   },
   {
-    q: '¿Mis datos de Instagram están seguros?',
+    q: '¿Mis datos de Instagram o Threads están seguros?',
     a: 'Sí. El ZIP se procesa por completo en tu navegador, así que nada se nos envía. Las copias sincronizadas en la nube se cifran en tu navegador antes de salir de tu dispositivo. Solo guardamos datos que no podemos leer.',
   },
 ];
@@ -73,11 +73,11 @@ const PRICING_FAQ_PT: PricingFaqItem[] = [
     a: 'Para manter o serviço no ar. O Pro cobre servidores e armazenamento para que o app gratuito continue grátis, rápido e independente. Sem anúncios, sem investidores, sem venda dos seus dados.',
   },
   {
-    q: 'Preciso dar minha senha do Instagram?',
-    a: 'Nunca. Você baixa os próprios dados do Instagram e envia o ZIP aqui. Não temos nenhuma conexão com o Instagram.',
+    q: 'Preciso dar minha senha do Instagram ou do Threads?',
+    a: 'Nunca. Você baixa os próprios dados do Instagram ou do Threads e envia o ZIP aqui. Não temos nenhuma conexão com nenhum dos dois apps.',
   },
   {
-    q: 'Meus dados do Instagram estão seguros?',
+    q: 'Meus dados do Instagram ou do Threads estão seguros?',
     a: 'Sim. O ZIP é processado inteiramente no seu navegador, então nada é enviado para nós. Os snapshots sincronizados na nuvem são criptografados no seu navegador antes de sair do dispositivo. Guardamos apenas dados que não conseguimos ler.',
   },
 ];

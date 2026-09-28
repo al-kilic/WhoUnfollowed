@@ -21,6 +21,7 @@ const LOCALIZED_STATIC_PAGES: Array<{
   { path: '/compare', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/what-is-whounfollowed', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/how-to-export', priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/threads', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/about', priority: 0.5, changeFrequency: 'monthly' },
   { path: '/contact', priority: 0.3, changeFrequency: 'yearly' },
   { path: '/accessibility', priority: 0.3, changeFrequency: 'yearly' },

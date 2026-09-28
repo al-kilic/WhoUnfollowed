@@ -57,7 +57,7 @@ const EN: AboutContent = {
   comingHeadline: 'More apps. Same principles.',
   comingBody: 'WhoUnfollowed is the first of several privacy-first tools. Each one targets a space where existing apps routinely overstep.',
   apps: [
-    { name: 'WhoUnfollowed', desc: 'See who stopped following you on Instagram. No password.' },
+    { name: 'WhoUnfollowed', desc: 'See who stopped following you on Instagram and Threads. No password.' },
     { name: 'DataVault', desc: 'See and delete everything companies know about you.' },
     { name: 'TrackOut', desc: 'Find hidden trackers across the apps on your phone.' },
   ],
@@ -96,7 +96,7 @@ const ES: AboutContent = {
   comingHeadline: 'Más apps. Los mismos principios.',
   comingBody: 'WhoUnfollowed es la primera de varias herramientas que respetan la privacidad. Cada una se enfoca en un área donde las apps existentes suelen sobrepasar los límites.',
   apps: [
-    { name: 'WhoUnfollowed', desc: 'Ve quién dejó de seguirte en Instagram. Sin contraseña.' },
+    { name: 'WhoUnfollowed', desc: 'Ve quién dejó de seguirte en Instagram y Threads. Sin contraseña.' },
     { name: 'DataVault', desc: 'Ve y elimina todo lo que las empresas saben sobre ti.' },
     { name: 'TrackOut', desc: 'Encuentra rastreadores ocultos en las apps de tu teléfono.' },
   ],
@@ -135,7 +135,7 @@ const PT: AboutContent = {
   comingHeadline: 'Mais apps. Os mesmos princípios.',
   comingBody: 'O WhoUnfollowed é o primeiro de vários apps com privacidade em primeiro lugar. Cada um foca numa área onde os apps existentes costumam ultrapassar limites.',
   apps: [
-    { name: 'WhoUnfollowed', desc: 'Veja quem deixou de te seguir no Instagram. Sem senha.' },
+    { name: 'WhoUnfollowed', desc: 'Veja quem deixou de te seguir no Instagram e no Threads. Sem senha.' },
     { name: 'DataVault', desc: 'Veja e apague tudo que as empresas sabem sobre você.' },
     { name: 'TrackOut', desc: 'Encontre rastreadores ocultos nos apps do seu celular.' },
   ],

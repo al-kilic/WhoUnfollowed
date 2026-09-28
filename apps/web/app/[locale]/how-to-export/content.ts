@@ -5,6 +5,7 @@ export interface HowToExportContent {
   headline: string;
   intro: string;
   newHereLink: string;
+  threadsCallout: { title: string; body: string; link: string };
   deviceTab: string;
   driveTab: string;
   zipCtaTitle: string;
@@ -80,9 +81,14 @@ export interface HowToExportContent {
 
 const EN: HowToExportContent = {
   eyebrow: 'STEP-BY-STEP GUIDE',
-  headline: 'How to get your Instagram data.',
-  intro: 'Instagram lets you export your followers and following list directly. Pick the method that works for you.',
+  headline: 'How to get your Instagram or Threads data.',
+  intro: 'Instagram and Threads let you export your followers and following list directly, from the same Accounts Center. Pick the method that works for you.',
   newHereLink: 'New here? Learn what WhoUnfollowed does →',
+  threadsCallout: {
+    title: 'Exporting Threads?',
+    body: 'Same steps, same screens. When asked to choose an account, pick your Threads profile. One profile per export, JSON format, All time.',
+    link: 'Threads guide →',
+  },
   deviceTab: 'Download to device',
   driveTab: 'Export to Google Drive',
   zipCtaTitle: 'Got the ZIP?',
@@ -111,7 +117,7 @@ const EN: HowToExportContent = {
       customizeHeader: 'CUSTOMIZE INFORMATION - SELECT ONLY:',
       items: ['Followers and Following', 'Posts', 'Stories', 'Messages', 'Comments'],
       required: 'Required',
-      hint: 'Date range: choose All time. A shorter range only exports recent followers, not your full list.',
+      hint: 'At Choose account, pick one profile: Instagram or Threads. Date range: choose All time. A shorter range only exports recent followers, not your full list.',
     },
     step5: {
       title: 'Choose JSON format, then tap "Start export"',
@@ -184,7 +190,7 @@ const EN: HowToExportContent = {
     folderLabel: 'FOLDER STRUCTURE',
     treeComment1: 'everyone who follows you',
     treeComment2: 'everyone you follow',
-    body: 'You only need this ZIP. You do not need to unzip it or open the files yourself. Just drop the ZIP on WhoUnfollowed and the parser reads it in your browser in about 2 seconds.',
+    body: 'Threads exports put the same two lists in a threads/ folder instead. You only need this ZIP. You do not need to unzip it or open the files yourself. Just drop the ZIP on WhoUnfollowed and the parser reads it in your browser in about 2 seconds.',
     jsonSampleLabel: 'WHAT THE JSON LOOKS LIKE',
     closing: 'This is what our parser reads. The timestamp tells you exactly when someone followed you.',
     miniCtaLabel: 'Got the ZIP?',
@@ -211,6 +217,7 @@ const EN: HowToExportContent = {
       { q: 'What format should I choose - JSON or HTML?', a: "Always choose JSON. It includes timestamps showing when each person followed you, and it's the format our parser is built for. HTML is only for human reading and contains less data." },
       { q: 'Can I request an Instagram data export on desktop?', a: 'Yes. Go to accountscenter.instagram.com → Your information and permissions → Export your information. The process is identical to mobile.' },
       { q: 'Why do I only need the Followers and Following export, not my full archive?', a: 'The full Instagram archive can be several gigabytes and takes much longer. Followers and Following is a small, focused export - usually under 1MB - and ready in minutes.' },
+      { q: 'Can I export my Threads data the same way?', a: 'Yes. Threads uses the same Accounts Center export. Choose your Threads profile instead of Instagram, keep JSON and All time, and upload that ZIP on its own. Instagram and Threads need separate exports.' },
     ],
   },
   relatedGuideEyebrow: 'RELATED GUIDE',
@@ -220,9 +227,14 @@ const EN: HowToExportContent = {
 
 const ES: HowToExportContent = {
   eyebrow: 'GUÍA PASO A PASO',
-  headline: 'Cómo obtener tus datos de Instagram.',
-  intro: 'Instagram te permite exportar directamente tu lista de seguidores y seguidos. Elige el método que te funcione.',
+  headline: 'Cómo obtener tus datos de Instagram o Threads.',
+  intro: 'Instagram y Threads te permiten exportar directamente tu lista de seguidores y seguidos, desde el mismo Centro de cuentas. Elige el método que te funcione.',
   newHereLink: '¿Nuevo aquí? Descubre qué hace WhoUnfollowed →',
+  threadsCallout: {
+    title: '¿Exportas Threads?',
+    body: 'Los mismos pasos y las mismas pantallas. Cuando te pida elegir una cuenta, elige tu perfil de Threads. Un perfil por export, formato JSON, Todo el tiempo.',
+    link: 'Guía de Threads →',
+  },
   deviceTab: 'Descargar al dispositivo',
   driveTab: 'Exportar a Google Drive',
   zipCtaTitle: '¿Ya tienes el ZIP?',
@@ -251,7 +263,7 @@ const ES: HowToExportContent = {
       customizeHeader: 'PERSONALIZAR INFORMACIÓN: SELECCIONA SOLO:',
       items: ['Seguidores y Seguidos', 'Publicaciones', 'Historias', 'Mensajes', 'Comentarios'],
       required: 'Requerido',
-      hint: 'Rango de fechas: elige Todo el tiempo. Un rango más corto solo exporta seguidores recientes, no tu lista completa.',
+      hint: 'En Elegir cuenta, elige un perfil: Instagram o Threads. Rango de fechas: elige Todo el tiempo. Un rango más corto solo exporta seguidores recientes, no tu lista completa.',
     },
     step5: {
       title: 'Elige el formato JSON y toca "Iniciar export"',
@@ -324,7 +336,7 @@ const ES: HowToExportContent = {
     folderLabel: 'ESTRUCTURA DE CARPETAS',
     treeComment1: 'todos los que te siguen',
     treeComment2: 'todos a los que sigues',
-    body: 'Solo necesitas este ZIP. No necesitas descomprimirlo ni abrir los archivos tú mismo. Solo suelta el ZIP en WhoUnfollowed y el parser lo lee en tu navegador en unos 2 segundos.',
+    body: 'Los exports de Threads guardan las mismas dos listas en una carpeta threads/. Solo necesitas este ZIP. No necesitas descomprimirlo ni abrir los archivos tú mismo. Solo suelta el ZIP en WhoUnfollowed y el parser lo lee en tu navegador en unos 2 segundos.',
     jsonSampleLabel: 'CÓMO SE VE EL JSON',
     closing: 'Esto es lo que lee nuestro parser. El timestamp te dice exactamente cuándo alguien empezó a seguirte.',
     miniCtaLabel: '¿Ya tienes el ZIP?',
@@ -351,6 +363,7 @@ const ES: HowToExportContent = {
       { q: '¿Qué formato debo elegir, JSON o HTML?', a: 'Siempre elige JSON. Incluye marcas de tiempo que muestran cuándo cada persona te siguió, y es el formato para el que está construido nuestro parser. HTML es solo para lectura humana y contiene menos datos.' },
       { q: '¿Puedo solicitar un export de datos de Instagram en escritorio?', a: 'Sí. Ve a accountscenter.instagram.com → Tu información y permisos → Exportar tu información. El proceso es idéntico al de móvil.' },
       { q: '¿Por qué solo necesito el export de Seguidores y Seguidos, no mi archivo completo?', a: 'El archivo completo de Instagram puede pesar varios gigabytes y tardar mucho más. Seguidores y Seguidos es un export pequeño y enfocado, normalmente menos de 1MB, y listo en minutos.' },
+      { q: '¿Puedo exportar mis datos de Threads de la misma forma?', a: 'Sí. Threads usa el mismo export del Centro de cuentas. Elige tu perfil de Threads en lugar de Instagram, mantén JSON y Todo el tiempo, y sube ese ZIP por separado. Instagram y Threads necesitan exports distintos.' },
     ],
   },
   relatedGuideEyebrow: 'GUÍA RELACIONADA',
@@ -360,9 +373,14 @@ const ES: HowToExportContent = {
 
 const PT: HowToExportContent = {
   eyebrow: 'GUIA PASSO A PASSO',
-  headline: 'Como obter seus dados do Instagram.',
-  intro: 'O Instagram permite exportar diretamente sua lista de seguidores e seguindo. Escolha o método que funciona para você.',
+  headline: 'Como obter seus dados do Instagram ou do Threads.',
+  intro: 'O Instagram e o Threads permitem exportar diretamente sua lista de seguidores e seguindo, pela mesma Central de contas. Escolha o método que funciona para você.',
   newHereLink: 'Novo por aqui? Descubra o que o WhoUnfollowed faz →',
+  threadsCallout: {
+    title: 'Exportando o Threads?',
+    body: 'Os mesmos passos e as mesmas telas. Quando pedir para escolher uma conta, escolha seu perfil do Threads. Um perfil por export, formato JSON, Todo o período.',
+    link: 'Guia do Threads →',
+  },
   deviceTab: 'Baixar para o dispositivo',
   driveTab: 'Exportar para o Google Drive',
   zipCtaTitle: 'Já tem o ZIP?',
@@ -391,7 +409,7 @@ const PT: HowToExportContent = {
       customizeHeader: 'PERSONALIZAR INFORMAÇÕES: SELECIONE APENAS:',
       items: ['Seguidores e Seguindo', 'Publicações', 'Stories', 'Mensagens', 'Comentários'],
       required: 'Obrigatório',
-      hint: 'Período: escolha Todo o período. Um período mais curto exporta só seguidores recentes, não sua lista completa.',
+      hint: 'Em Escolher conta, escolha um perfil: Instagram ou Threads. Período: escolha Todo o período. Um período mais curto exporta só seguidores recentes, não sua lista completa.',
     },
     step5: {
       title: 'Escolha o formato JSON e toque em "Iniciar export"',
@@ -464,7 +482,7 @@ const PT: HowToExportContent = {
     folderLabel: 'ESTRUTURA DE PASTAS',
     treeComment1: 'todos que te seguem',
     treeComment2: 'todos que você segue',
-    body: 'Você só precisa deste ZIP. Não precisa descompactá-lo nem abrir os arquivos por conta própria. Só solte o ZIP no WhoUnfollowed e o parser o lê no seu navegador em cerca de 2 segundos.',
+    body: 'Os exports do Threads guardam as mesmas duas listas numa pasta threads/. Você só precisa deste ZIP. Não precisa descompactá-lo nem abrir os arquivos por conta própria. Só solte o ZIP no WhoUnfollowed e o parser o lê no seu navegador em cerca de 2 segundos.',
     jsonSampleLabel: 'COMO O JSON SE PARECE',
     closing: 'É isso que nosso parser lê. O timestamp mostra exatamente quando alguém começou a te seguir.',
     miniCtaLabel: 'Já tem o ZIP?',
@@ -491,6 +509,7 @@ const PT: HowToExportContent = {
       { q: 'Qual formato devo escolher, JSON ou HTML?', a: 'Sempre escolha JSON. Ele inclui data e hora mostrando quando cada pessoa começou a te seguir, e é o formato para o qual nosso parser foi criado. HTML é só para leitura humana e contém menos dados.' },
       { q: 'Posso solicitar um export de dados do Instagram no computador?', a: 'Sim. Vá em accountscenter.instagram.com → Suas informações e permissões → Exportar suas informações. O processo é idêntico ao do celular.' },
       { q: 'Por que só preciso do export de Seguidores e Seguindo, não do meu arquivo completo?', a: 'O arquivo completo do Instagram pode ter vários gigabytes e demorar muito mais. Seguidores e Seguindo é um export pequeno e focado, geralmente com menos de 1MB, e pronto em minutos.' },
+      { q: 'Posso exportar meus dados do Threads do mesmo jeito?', a: 'Sim. O Threads usa o mesmo export da Central de contas. Escolha seu perfil do Threads em vez do Instagram, mantenha JSON e Todo o período, e envie esse ZIP separado. Instagram e Threads precisam de exports separados.' },
     ],
   },
   relatedGuideEyebrow: 'GUIA RELACIONADO',

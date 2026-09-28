@@ -157,7 +157,7 @@ export default function OgImage() {
             marginBottom: 48,
           }}
         >
-          Upload your Instagram data export. We parse it in your browser. Nothing touches a server.
+          Upload your Instagram or Threads data export. We parse it in your browser. Nothing touches a server.
         </div>
 
         {/* URL badge */}

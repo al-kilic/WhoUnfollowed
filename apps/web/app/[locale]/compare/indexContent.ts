@@ -37,7 +37,7 @@ export interface CompareIndexContent {
 const EN: CompareIndexContent = {
   eyebrow: 'Compare',
   headline: 'WhoUnfollowed vs every other Instagram tracker.',
-  intro: 'Every other app in this space asks for your Instagram password. That is not a coincidence. Your credentials are part of their business model. Here is the full breakdown.',
+  intro: 'Every other app in this space asks for your Instagram password. That is not a coincidence. Your credentials are part of their business model. Here is the full breakdown. (WhoUnfollowed also works with Threads, using the same export.)',
   competitorNames: ['WhoUnfollowed', 'Followers & Unfollowers', 'FollowMeter', 'Unfollowers for Instagram', 'Reports+'],
   youAreHere: 'You are here',
   featureHeader: 'FEATURE',
@@ -106,7 +106,7 @@ const EN: CompareIndexContent = {
 const ES: CompareIndexContent = {
   eyebrow: 'Comparar',
   headline: 'WhoUnfollowed vs todos los demás rastreadores de Instagram.',
-  intro: 'Todas las demás apps en este espacio piden tu contraseña de Instagram. Eso no es coincidencia. Tus credenciales son parte de su modelo de negocio. Aquí está el desglose completo.',
+  intro: 'Todas las demás apps en este espacio piden tu contraseña de Instagram. Eso no es coincidencia. Tus credenciales son parte de su modelo de negocio. Aquí está el desglose completo. (WhoUnfollowed también funciona con Threads, con el mismo export.)',
   competitorNames: ['WhoUnfollowed', 'Followers & Unfollowers', 'FollowMeter', 'Unfollowers for Instagram', 'Reports+'],
   youAreHere: 'Estás aquí',
   featureHeader: 'FUNCIÓN',
@@ -175,7 +175,7 @@ const ES: CompareIndexContent = {
 const PT: CompareIndexContent = {
   eyebrow: 'Comparar',
   headline: 'WhoUnfollowed vs todos os outros rastreadores do Instagram.',
-  intro: 'Todos os outros apps nesse espaço pedem sua senha do Instagram. Isso não é coincidência. Suas credenciais são parte do modelo de negócio deles. Aqui está o detalhamento completo.',
+  intro: 'Todos os outros apps nesse espaço pedem sua senha do Instagram. Isso não é coincidência. Suas credenciais são parte do modelo de negócio deles. Aqui está o detalhamento completo. (O WhoUnfollowed também funciona com o Threads, com o mesmo export.)',
   competitorNames: ['WhoUnfollowed', 'Followers & Unfollowers', 'FollowMeter', 'Unfollowers for Instagram', 'Reports+'],
   youAreHere: 'Você está aqui',
   featureHeader: 'RECURSO',

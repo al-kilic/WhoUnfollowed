@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { Link as LocaleLink } from '@/i18n/navigation';
+import { PlatformIcon } from '@/components/PlatformIcon';
 import { T } from '@/components/landing/tokens';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
@@ -44,6 +46,16 @@ export function HowToExportContent({ content }: { content: HowToExportContentDat
           <Link href="/what-is-whounfollowed" style={{ fontSize: 13, color: T.inkDim, textDecoration: 'none', borderBottom: '1px solid var(--t-border3)', paddingBottom: 1 }}>
             {content.newHereLink}
           </Link>
+          <div style={{ marginTop: 20, display: 'flex', gap: 12, alignItems: 'flex-start', padding: '14px 16px', borderRadius: 12, border: '1px solid var(--t-border2)', background: 'var(--t-surface1)', maxWidth: 560 }}>
+            <span style={{ flexShrink: 0, width: 30, height: 30, borderRadius: '50%', background: T.ink, color: T.bg, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+              <PlatformIcon platform="threads" size={16} />
+            </span>
+            <div style={{ fontSize: 13.5, color: T.inkDim, lineHeight: 1.55 }}>
+              <strong style={{ color: T.ink, fontWeight: 600 }}>{content.threadsCallout.title}</strong>{' '}
+              {content.threadsCallout.body}{' '}
+              <LocaleLink href="/threads" style={{ color: T.tealLight, textDecoration: 'none', fontWeight: 600 }}>{content.threadsCallout.link}</LocaleLink>
+            </div>
+          </div>
         </div>
 
         {/* Tab switcher */}

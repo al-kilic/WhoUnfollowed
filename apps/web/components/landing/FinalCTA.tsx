@@ -296,6 +296,7 @@ export function LandingFooter() {
     { title: t('product'), items: [
       { label: t('whatIsLabel'),  href: '/what-is-whounfollowed' },
       { label: t('howToExport'), href: '/how-to-export' },
+      { label: t('threadsLabel'), href: '/threads' },
       { label: t('sourceCode'),             href: 'https://github.com/al-kilic/WhoUnfollowed' },
       { label: t('changelog'),               href: '/changelog' },
     ]},

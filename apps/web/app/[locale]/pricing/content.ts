@@ -48,6 +48,7 @@ const EN: PricingContent = {
   freeBadge: 'Free forever',
   freeNoSignup: 'no sign up required',
   freeBullets: [
+    'Works with Instagram and Threads',
     'See who unfollowed you',
     'Full non-followers list',
     'One snapshot at a time',
@@ -106,6 +107,7 @@ const ES: PricingContent = {
   freeBadge: 'Gratis para siempre',
   freeNoSignup: 'sin necesidad de registrarte',
   freeBullets: [
+    'Funciona con Instagram y Threads',
     'Ver quién te dejó de seguir',
     'Lista completa de quienes no te siguen de vuelta',
     'Un snapshot a la vez',
@@ -164,6 +166,7 @@ const PT: PricingContent = {
   freeBadge: 'Grátis para sempre',
   freeNoSignup: 'sem necessidade de cadastro',
   freeBullets: [
+    'Funciona com Instagram e Threads',
     'Ver quem deixou de te seguir',
     'Lista completa de quem não te segue de volta',
     'Um snapshot por vez',

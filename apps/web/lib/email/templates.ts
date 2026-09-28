@@ -74,7 +74,7 @@ function emailLayout(opts: { locale: AppLocale; preview: string; contentHtml: st
             <tr>
               <td style="padding:18px 8px 0;">
                 <p style="margin:0;font-size:11px;line-height:1.6;color:${C.faint};">
-                  WhoUnfollowed. Your data stays in your browser. Not affiliated with Instagram or Meta.
+                  WhoUnfollowed. Your data stays in your browser. Not affiliated with Instagram, Threads, or Meta.
                 </p>
               </td>
             </tr>

@@ -104,12 +104,12 @@ export function DeltaWarning({ reasons, followerCount, followingCount, onReExpor
                 color: 'rgba(244,240,232,0.75)', pointerEvents: 'none',
                 boxShadow: '0 12px 40px rgba(0,0,0,0.7)',
               }}>
-                An <strong style={{ color: T.ink }}>incremental export</strong> is what Instagram sends on a schedule. It only contains activity since your last export, not your full account history. To get complete data, manually request a new export and select <strong style={{ color: T.tealLight }}>All Time</strong> as the date range.
+                An <strong style={{ color: T.ink }}>incremental export</strong> is what Meta sends on a schedule. It only contains activity since your last export, not your full account history. To get complete data, manually request a new export and select <strong style={{ color: T.tealLight }}>All Time</strong> as the date range.
               </div>
             );
           })()}
           <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.65, marginBottom: 20 }}>
-            Instagram scheduled exports only include <strong style={{ color: T.ink }}>new activity since your last export</strong>, not your complete followers and following lists. Uploading this will produce incorrect results.
+            Scheduled exports from Instagram and Threads only include <strong style={{ color: T.ink }}>new activity since your last export</strong>, not your complete followers and following lists. Uploading this will produce incorrect results.
           </p>
 
           {/* Signals */}
@@ -127,7 +127,7 @@ export function DeltaWarning({ reasons, followerCount, followingCount, onReExpor
             <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.1em', marginBottom: 10 }}>WHAT TO DO</div>
             <ol style={{ margin: 0, paddingLeft: 18, display: 'flex', flexDirection: 'column', gap: 8, fontSize: 13, color: T.inkDim, lineHeight: 1.6 }}>
               <li>
-                Go to Instagram <strong style={{ color: T.ink }}>Accounts Center</strong>, then <strong style={{ color: T.ink }}>Your information and permissions</strong>, then <strong style={{ color: T.ink }}>Download your information</strong>
+                Go to the Instagram or Threads <strong style={{ color: T.ink }}>Accounts Center</strong>, then <strong style={{ color: T.ink }}>Your information and permissions</strong>, then <strong style={{ color: T.ink }}>Download your information</strong>
               </li>
               <li>
                 Request a new export and set the date range to{' '}
@@ -139,7 +139,7 @@ export function DeltaWarning({ reasons, followerCount, followingCount, onReExpor
                   All Time
                 </span>
               </li>
-              <li>Wait for the email from Instagram, then upload the new ZIP here</li>
+              <li>Wait for the email from Meta, then upload the new ZIP here</li>
             </ol>
           </div>
 
