@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-import type { ParsedSnapshot } from './schemas.js';
+import { snapshotPlatform, type ParsedSnapshot } from './schemas.js';
 
 export type DeltaReason =
   | 'small_counts'          // Signal B1: both follower+following counts suspiciously small
@@ -29,7 +29,9 @@ export function detectDeltaExport(
   // Signal B1: follower count suspiciously small
   // Following can be large even in delta exports (Instagram sometimes sends the full
   // following list), so we check followers alone — a delta has only new followers.
-  if (snapshot.followers.length < SMALL_COUNT_THRESHOLD) {
+  // Skipped for Threads: Threads accounts are routinely this small for real,
+  // so the signal would fire on nearly every genuine full export.
+  if (snapshotPlatform(snapshot) === 'instagram' && snapshot.followers.length < SMALL_COUNT_THRESHOLD) {
     reasons.push('small_counts');
   }
 

@@ -29,6 +29,24 @@ export const followingFileSchema = z.object({
   relationships_following: z.array(relationshipEntrySchema),
 });
 
+// Threads exports (the `threads/` folder of a Meta "Download your information"
+// ZIP) use the same entry shape as Instagram, but both files are wrapped in an
+// object, including followers (Instagram's followers file is a bare array).
+export const threadsFollowersFileSchema = z.object({
+  text_post_app_text_post_app_followers: z.array(relationshipEntrySchema),
+});
+
+export const threadsFollowingFileSchema = z.object({
+  text_post_app_text_post_app_following: z.array(relationshipEntrySchema),
+});
+
+export const threadsRecentlyUnfollowedFileSchema = z.object({
+  text_post_app_text_post_app_unfollowed_users: z.array(relationshipEntrySchema),
+});
+
+export const platforms = ['instagram', 'threads'] as const;
+export const platformSchema = z.enum(platforms);
+
 export const accountSchema = z.object({
   username: z.string(),
   href: z.string(),
@@ -65,7 +83,15 @@ export const parsedSnapshotSchema = z.object({
   // snapshots already saved in a user's IndexedDB (from before this field
   // existed) still validate.
   format: z.enum(['json', 'html']).optional(),
+  // Which app the export came from. Optional for the same reason as `format`:
+  // snapshots saved before Threads support existed have no value and are
+  // always Instagram. Read it through snapshotPlatform(), never directly.
+  platform: platformSchema.optional(),
 });
+
+export function snapshotPlatform(snapshot: Pick<ParsedSnapshot, 'platform'>): Platform {
+  return snapshot.platform ?? 'instagram';
+}
 
 export const feedbackSentiments = ['angry', 'sad', 'neutral', 'happy', 'delighted'] as const;
 
@@ -107,4 +133,5 @@ export type ParsedSnapshot = z.infer<typeof parsedSnapshotSchema>;
 export type PendingRequestsFile = z.infer<typeof pendingRequestsFileSchema>;
 export type RecentlyUnfollowedFile = z.infer<typeof recentlyUnfollowedFileSchema>;
 export type LabelValuesEntry = z.infer<typeof labelValuesEntrySchema>;
+export type Platform = z.infer<typeof platformSchema>;
 export type LabelValuesFile = z.infer<typeof labelValuesFileSchema>;
