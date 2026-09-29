@@ -47,7 +47,10 @@ export function middleware(request: NextRequest) {
     // database. Protected server data (e.g. /api/sync) independently calls
     // validateRequest().
     const sessionId = request.cookies.get(SESSION_COOKIE)?.value;
-    if (!sessionId) {
+    // Local-only Pro preview (see lib/auth/devProPreview.ts), inlined to keep
+    // the middleware bundle free of server-only imports.
+    const devProPreview = process.env.NODE_ENV === 'development' && process.env.DEV_PRO_PREVIEW === '1';
+    if (!sessionId && !devProPreview) {
       const localeMatch = path.match(LOCALE_PREFIX_RE);
       const loginPath = localeMatch ? `/${localeMatch[1]}/login` : '/login';
       return NextResponse.redirect(new URL(loginPath, request.url));

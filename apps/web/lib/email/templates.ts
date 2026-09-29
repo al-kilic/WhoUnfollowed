@@ -5,6 +5,7 @@ import {
   getVerificationEmailContent,
   getPasswordResetEmailContent,
   getPurchaseEmailContent,
+  getFounderTierEmailContent,
   getExpiringSoonEmailContent,
   getExpiredEmailContent,
 } from './content';
@@ -197,6 +198,34 @@ export function purchaseConfirmationEmail(opts: {
     </table>`;
 
   return { subject, html: emailLayout({ locale, preview, contentHtml: content }), text };
+}
+
+// Sent from the Stripe webhook after a Lifetime ("Founding Member") purchase
+// completes. Deliberately separate from purchaseConfirmationEmail: that
+// function requires a non-null expiresAt and every locale's copy interpolates
+// a date string, neither of which applies to a purchase that never expires.
+export function founderTierConfirmationEmail(opts: { locale?: AppLocale }): EmailResult {
+  const locale = opts.locale ?? 'en';
+  const c = getFounderTierEmailContent(locale);
+  const homeUrl = `${APP_URL}${localizedPathname('/', locale)}`;
+  const text = `${c.body} ${c.perkNote} ${c.footerNote} ${homeUrl}`;
+
+  const content = `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      <tr><td style="padding:30px 30px 0;">
+        <h1 style="margin:0 0 8px;font-size:21px;font-weight:600;color:${C.ink};">${c.title}</h1>
+        <p style="margin:0 0 14px;font-size:14px;line-height:1.6;color:${C.dim};">${c.body}</p>
+        <p style="margin:0 0 22px;font-size:14px;line-height:1.6;color:${C.dim};">${c.perkNote}</p>
+      </td></tr>
+      <tr><td style="padding:0 30px;">
+        <a href="${homeUrl}" style="display:inline-block;background:${C.teal};color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 22px;border-radius:10px;">${c.button}</a>
+      </td></tr>
+      <tr><td style="padding:20px 30px 30px;">
+        <p style="margin:0;font-size:12px;line-height:1.6;color:${C.mute};">${c.footerNote}</p>
+      </td></tr>
+    </table>`;
+
+  return { subject: c.subject, html: emailLayout({ locale, preview: c.preview, contentHtml: content }), text };
 }
 
 // Reminder cron: sent once (see profiles.expiryReminderSentAt) a few days

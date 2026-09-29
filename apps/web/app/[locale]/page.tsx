@@ -3,9 +3,10 @@ import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { LandingPage } from '@/components/landing/LandingPage';
 import { validateRequest } from '@/lib/auth/session';
-import { isProUser } from '@/lib/flags';
+import { isProUser, isPaidFeaturesEnabled } from '@/lib/flags';
 import { getStats } from '@/lib/stats';
-import { UNLOCK_PRICE_USD, UNLOCK_PRICE_SUMMARY } from '@/lib/pricing';
+import { UNLOCK_PRICE_USD, UNLOCK_PRICE_SUMMARY, LIFETIME_PRICE_USD } from '@/lib/pricing';
+import { priceIdForLifetime } from '@/lib/stripe';
 import { routing, type AppLocale } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
 import { OG_LOCALE, ogAlternateLocales } from '@/i18n/ogLocale';
@@ -77,6 +78,7 @@ export default async function HomePage({ params }: PageProps) {
 
   const { user } = await validateRequest();
   const [isPro, initialStats] = await Promise.all([isProUser(), getStats()]);
+  const lifetimeAvailable = isPaidFeaturesEnabled() && priceIdForLifetime() !== null;
   const content = getHomeContent(locale);
   const meta = SEO_META[locale];
 
@@ -107,6 +109,7 @@ export default async function HomePage({ params }: PageProps) {
       { '@type': 'Offer', name: 'Free',          price: '0',    priceCurrency: 'USD' },
       { '@type': 'Offer', name: 'Pro (30 days)',  price: String(UNLOCK_PRICE_USD.monthly), priceCurrency: 'USD' },
       { '@type': 'Offer', name: 'Pro (365 days)', price: String(UNLOCK_PRICE_USD.yearly),  priceCurrency: 'USD' },
+      ...(lifetimeAvailable ? [{ '@type': 'Offer', name: 'Pro (Lifetime, limited time)', price: String(LIFETIME_PRICE_USD), priceCurrency: 'USD' }] : []),
     ],
     featureList: [
       'Open-source web app (AGPL-3.0), auditable on GitHub',
@@ -129,7 +132,7 @@ export default async function HomePage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <LandingPage userEmail={user?.email ?? null} isPro={isPro} initialStats={initialStats} content={content} locale={locale} />
+      <LandingPage userEmail={user?.email ?? null} isPro={isPro} lifetimeAvailable={lifetimeAvailable} initialStats={initialStats} content={content} locale={locale} />
     </>
   );
 }

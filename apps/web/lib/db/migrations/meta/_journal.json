@@ -50,6 +50,20 @@
       "when": 1788600000000,
       "tag": "0006_add_contact_messages",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1788700000000,
+      "tag": "0007_add_lifetime_and_marketing_consent",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1788800000000,
+      "tag": "0008_add_email_subscribers",
+      "breakpoints": true
     }
   ]
 }

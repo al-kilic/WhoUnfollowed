@@ -2,6 +2,59 @@
 export interface ChangelogEntry { version: string; date: string; tag: 'launch' | 'fix' | 'improvement' | 'feature'; items: string[] }
 
 export const CHANGELOG_ENTRIES: ChangelogEntry[] = [  {
+    version: '2.1',
+    date: 'September 29, 2026',
+    tag: 'feature',
+    items: [
+      'New Founding Member option: pay $19.99 once and keep Pro for good, with no expiry date. Available for a limited time to help support the product.',
+      'Founding Members get a badge and title on their account, plus Pro benefits on my next tools, and hear first when they launch.',
+      'Optional updates: you can choose to get emails about future products at checkout, and turn them off any time from your account page.',
+    ],
+  },
+  {
+    version: '2.0',
+    date: 'September 28, 2026',
+    tag: 'feature',
+    items: [
+      'Threads support: WhoUnfollowed now reads Threads data exports too, so you can see who doesn\'t follow you back, and who unfollowed you over time, on Threads as well as Instagram.',
+      'New guide at /threads walking through exactly how to request a Threads export from Meta\'s Accounts Center.',
+      'If your export ZIP contains both Instagram and Threads data, we now tell you clearly which one you\'re seeing and how to get the other one.',
+      'Fixed: the "What is Radar?" popup on the dashboard was unreadable in light mode.',
+      'New Threads-focused blog guides added alongside the launch.',
+    ],
+  },
+  {
+    version: '1.9',
+    date: 'September 16, 2026',
+    tag: 'fix',
+    items: [
+      'Fixed: some mobile uploads, particularly files still syncing from iCloud or Google Drive, failed with a generic error instead of telling you what was actually wrong.',
+      'More blog guides added, including answers to common privacy questions about how your data is handled.',
+    ],
+  },
+  {
+    version: '1.8',
+    date: 'September 10, 2026',
+    tag: 'improvement',
+    items: [
+      'Added a real contact form and a quick feedback widget after you view your results.',
+      'You\'ll now get an email confirmation when you buy Pro, plus a reminder before your unlock expires.',
+      'Radar dashboard: added an upsell section on the results page and a more personalized preview for free users.',
+      'Dashboard charts now have proper descriptions for screen readers.',
+      'Fixed: a rare Instagram export edge case (a removed or deactivated account in your list) could fail your entire upload instead of just skipping that one entry.',
+      'Dozens of new blog guides added covering Instagram growth trends, account cleanup, and follower-tracking questions people actually ask.',
+    ],
+  },
+  {
+    version: '1.7',
+    date: 'September 8, 2026',
+    tag: 'feature',
+    items: [
+      'WhoUnfollowed is now available in Spanish and Portuguese, across the whole site.',
+      'The language switcher is now always visible, and the site can detect your browser\'s language automatically on your first visit.',
+    ],
+  },
+  {
     version: '1.6',
     date: 'September 3, 2026',
     tag: 'feature',

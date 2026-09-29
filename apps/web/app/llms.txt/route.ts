@@ -1,6 +1,7 @@
 import { BLOG_POSTS, CLUSTERS, type ClusterId } from '../blog/posts';
 import { COMPARISONS } from '../compare/comparisons';
-import { UNLOCK_PRICE_USD, UNLOCK_DAYS_LABEL, UNLOCK_PRICE_SUMMARY } from '@/lib/pricing';
+import { UNLOCK_PRICE_USD, UNLOCK_DAYS_LABEL, UNLOCK_PRICE_SUMMARY, LIFETIME_PRICE_USD } from '@/lib/pricing';
+import { priceIdForLifetime } from '@/lib/stripe';
 import { LOCALIZED_PATHS } from '@/i18n/localizedPaths';
 
 // Generated at request time (cached like any other static route) instead of
@@ -103,7 +104,7 @@ ${comparisonsSection()}
 - No Instagram or Threads password is ever required. The tool reads a data export the user already owns.
 - Supports Instagram and Threads. Threads exports use the same Accounts Center flow (JSON, All time, Followers and Following); only threads/followers.json, threads/following.json, and threads/recently_unfollowed_profiles.json are read.
 - The free tier processes data entirely in the browser. Nothing is sent to a server, and no account is needed.
-- Pro is a one-time unlock (${UNLOCK_PRICE_SUMMARY}). It never auto-renews.
+- Pro is a one-time unlock (${UNLOCK_PRICE_SUMMARY}). It never auto-renews.${priceIdForLifetime() ? ` For a limited time there is also a one-time Lifetime "Founding Member" option ($${LIFETIME_PRICE_USD}, no expiry).` : ''}
 - Cloud snapshots, a Pro feature, are encrypted in the browser before they leave the device.
 - TOS-compliant: it does not use the Instagram or Threads API and does not scrape either app.
 - Core pages (home, pricing, compare, and a few guides) are available in English, Spanish, and Portuguese. See the Languages section above for the full list.

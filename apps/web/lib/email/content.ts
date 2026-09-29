@@ -39,6 +39,16 @@ export interface PurchaseEmailContent {
   footerNote: string;
 }
 
+export interface FounderTierEmailContent {
+  subject: string;
+  preview: string;
+  title: string;
+  body: string;
+  perkNote: string;
+  button: string;
+  footerNote: string;
+}
+
 export interface ExpiringSoonEmailContent {
   subject: string;
   preview: (daysLeft: number) => string;
@@ -163,6 +173,36 @@ const purchase: Record<AppLocale, PurchaseEmailContent> = {
   },
 };
 
+const founderTier: Record<AppLocale, FounderTierEmailContent> = {
+  en: {
+    subject: 'Welcome to WhoUnfollowed, Founding Member',
+    preview: 'Your lifetime Pro access is active.',
+    title: 'Welcome, Founding Member',
+    body: 'Thank you for backing WhoUnfollowed. Your Pro access is active now, for good. No expiry date, nothing to renew.',
+    perkNote: 'As a Founding Member, you\'ll be first to know, and get a thank-you perk, whenever I ship something new under Alcatraz Studio.',
+    button: 'Open WhoUnfollowed',
+    footerNote: 'This is a receipt for a one-time purchase, not a subscription. There is nothing to cancel.',
+  },
+  es: {
+    subject: 'Bienvenido a WhoUnfollowed, Miembro Fundador',
+    preview: 'Tu acceso Pro de por vida ya está activo.',
+    title: 'Bienvenido, Miembro Fundador',
+    body: 'Gracias por apoyar a WhoUnfollowed. Tu acceso Pro ya está activo, para siempre. Sin fecha de vencimiento, nada que renovar.',
+    perkNote: 'Como Miembro Fundador, serás de los primeros en enterarte, y tendrás un detalle de agradecimiento, cuando lance algo nuevo bajo Alcatraz Studio.',
+    button: 'Abrir WhoUnfollowed',
+    footerNote: 'Esto es un recibo de una compra única, no una suscripción. No hay nada que cancelar.',
+  },
+  pt: {
+    subject: 'Bem-vindo ao WhoUnfollowed, Membro Fundador',
+    preview: 'Seu acesso Pro vitalício já está ativo.',
+    title: 'Bem-vindo, Membro Fundador',
+    body: 'Obrigado por apoiar o WhoUnfollowed. Seu acesso Pro já está ativo, para sempre. Sem data de vencimento, nada para renovar.',
+    perkNote: 'Como Membro Fundador, você será um dos primeiros a saber, e vai ganhar um agrado de agradecimento, quando eu lançar algo novo pela Alcatraz Studio.',
+    button: 'Abrir WhoUnfollowed',
+    footerNote: 'Isto é um recibo de uma compra única, não uma assinatura. Não há nada para cancelar.',
+  },
+};
+
 const expiringSoon: Record<AppLocale, ExpiringSoonEmailContent> = {
   en: {
     subject: 'Your WhoUnfollowed Pro access is ending soon',
@@ -222,6 +262,9 @@ export function getPasswordResetEmailContent(locale: AppLocale): PasswordResetEm
 }
 export function getPurchaseEmailContent(locale: AppLocale): PurchaseEmailContent {
   return purchase[locale];
+}
+export function getFounderTierEmailContent(locale: AppLocale): FounderTierEmailContent {
+  return founderTier[locale];
 }
 export function getExpiringSoonEmailContent(locale: AppLocale): ExpiringSoonEmailContent {
   return expiringSoon[locale];

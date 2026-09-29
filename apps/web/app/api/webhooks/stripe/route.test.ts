@@ -242,4 +242,79 @@ describe('POST /api/webhooks/stripe', () => {
     expect(update).toHaveBeenCalledTimes(1);
     expect(sendEmail).not.toHaveBeenCalled();
   });
+
+  describe('lifetime purchase', () => {
+    function lifetimeEvent(over: Record<string, unknown> = {}, metadata: Record<string, string> = {}) {
+      return {
+        type: 'checkout.session.completed',
+        data: {
+          object: {
+            mode: 'payment',
+            metadata: { type: 'lifetime', ...metadata },
+            customer: 'cus_life',
+            customer_email: 'founder@example.com',
+            amount_total: 1999,
+            currency: 'usd',
+            ...over,
+          },
+        },
+      };
+    }
+
+    it('overwrites expiry to null (not stacked), sets lifetimePurchasedAt, and skips opt-in when not given', async () => {
+      usersFindFirst.mockResolvedValue({ id: 'existing_user_id' });
+      constructEvent.mockReturnValue(lifetimeEvent({}, { locale: 'pt' }));
+
+      const res = await POST(makeRequest('{}'));
+
+      expect(res.status).toBe(200);
+      const setArg = updateSet.mock.calls[0]![0];
+      expect(setArg.subscriptionExpiresAt).toBeNull();
+      expect(setArg.lifetimePurchasedAt).toBeInstanceOf(Date);
+      expect(setArg.subscriptionStatus).toBe('active');
+      expect(setArg.expiryReminderSentAt).toBeNull();
+      expect(setArg.marketingOptIn).toBeUndefined();
+      expect(profilesFindFirst).not.toHaveBeenCalled();
+      expect(sendTelegramMessage).toHaveBeenCalledWith(expect.stringContaining('Founding Member'));
+      expect(sendEmail).toHaveBeenCalledWith(expect.objectContaining({
+        to: 'founder@example.com',
+        subject: expect.stringContaining('Membro Fundador'),
+      }));
+    });
+
+    it('persists marketing consent only when opted in', async () => {
+      usersFindFirst.mockResolvedValue({ id: 'existing_user_id' });
+      constructEvent.mockReturnValue(lifetimeEvent({}, { marketingOptIn: 'true' }));
+
+      await POST(makeRequest('{}'));
+
+      const setArg = updateSet.mock.calls[0]![0];
+      expect(setArg.marketingOptIn).toBe(true);
+      expect(setArg.marketingOptInAt).toBeInstanceOf(Date);
+      expect(setArg.marketingConsentVersion).toEqual(expect.any(String));
+    });
+
+    it('updates a logged-in user by userId, and creates an account for a new email', async () => {
+      constructEvent.mockReturnValue(lifetimeEvent({}, { userId: 'user_7' }));
+      await POST(makeRequest('{}'));
+      expect(update).toHaveBeenCalledTimes(1);
+      expect(insert).not.toHaveBeenCalled();
+
+      vi.clearAllMocks();
+      usersFindFirst.mockResolvedValue(undefined);
+      constructEvent.mockReturnValue(lifetimeEvent());
+      await POST(makeRequest('{}'));
+      expect(insert).toHaveBeenCalledTimes(2);
+      expect(sendTelegramMessage).toHaveBeenCalledWith(expect.stringContaining('New account: Yes'));
+    });
+
+    it('does nothing when there is neither a userId nor an email', async () => {
+      constructEvent.mockReturnValue(lifetimeEvent({ customer_email: null }));
+      const res = await POST(makeRequest('{}'));
+      expect(res.status).toBe(200);
+      expect(update).not.toHaveBeenCalled();
+      expect(insert).not.toHaveBeenCalled();
+      expect(sendEmail).not.toHaveBeenCalled();
+    });
+  });
 });

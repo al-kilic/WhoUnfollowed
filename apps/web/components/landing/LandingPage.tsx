@@ -17,9 +17,10 @@ import { getQuickFeedbackWidgetContent } from '@/components/quickFeedbackWidget.
 import type { HomeContent } from '@/app/[locale]/homeContent';
 import type { AppLocale } from '@/i18n/routing';
 
-export function LandingPage({ userEmail, isPro = false, initialStats, content, locale = 'en' }: {
+export function LandingPage({ userEmail, isPro = false, lifetimeAvailable = false, initialStats, content, locale = 'en' }: {
   userEmail: string | null;
   isPro?: boolean;
+  lifetimeAvailable?: boolean;
   initialStats: { snapshots: number; avgNonFollowers: number };
   content: HomeContent;
   locale?: AppLocale;
@@ -39,7 +40,7 @@ export function LandingPage({ userEmail, isPro = false, initialStats, content, l
         <FlowSection content={content.flow} />
         <CompareSection content={content.compare} />
         <FAQSection content={content.faq} />
-        <PricingSection content={content.pricingTeaser} />
+        <PricingSection content={content.pricingTeaser} lifetimeAvailable={lifetimeAvailable} />
         <FinalCTA />
       </main>
       <LandingFooter />

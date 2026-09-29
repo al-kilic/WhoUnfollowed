@@ -2,6 +2,7 @@ import { validateRequest } from '@/lib/auth/session';
 import { db } from '@/lib/db/index';
 import { profiles } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
+import { isDevProPreview } from '@/lib/auth/devProPreview';
 
 export function isPaidFeaturesEnabled(): boolean {
   return process.env.NEXT_PUBLIC_PAYMENTS_ENABLED === 'true';
@@ -17,6 +18,7 @@ export type SubscriptionStatus = 'active' | 'grace' | 'cancelled' | 'none';
 // directly instead, there's nothing to expire locally. So: 'active' with a
 // past subscriptionExpiresAt means an unlock that ran out, treated as 'none'.
 export async function getSubscriptionStatus(): Promise<SubscriptionStatus> {
+  if (isDevProPreview()) return 'active';
   const { user } = await validateRequest();
   if (!user) return 'none';
 
@@ -47,22 +49,45 @@ export async function isProUser(): Promise<boolean> {
   return status === 'active';
 }
 
-// True only for a genuine paying customer: an active status backed by either a
-// real Stripe subscription or an unexpired one-time unlock purchase. Signup
-// seeds every profile as 'active' (beta grants Pro *access* to all logged-in
-// users), so 'active' alone does not mean paid — a Stripe subscription or a
-// still-valid unlock is the reliable signal. Use this for the PRO badge and
-// billing UI; use isProUser() for feature access (which stays open during beta).
+// True only for a genuine paying customer: an active status backed by a real
+// Stripe subscription, an unexpired one-time unlock purchase, or a Lifetime
+// purchase (profiles.lifetimePurchasedAt). Signup seeds every profile as
+// 'active' with a null subscriptionExpiresAt (beta grants Pro *access* to all
+// logged-in users), which is the SAME null-expiry shape a Lifetime purchase
+// has — so 'active' alone, or null expiry alone, never means paid.
+// lifetimePurchasedAt is the only valid signal for "this is a genuine
+// Lifetime purchase," checked explicitly below rather than inferred from the
+// null expiry it shares with an ordinary free signup.
+// Use this for the PRO/Founding-Member badge and billing UI; use isProUser()
+// for feature access (which stays open during beta).
 export async function isPaidSubscriber(): Promise<boolean> {
+  if (isDevProPreview()) return true;
   const { user } = await validateRequest();
   if (!user) return false;
 
   const profile = await db.query.profiles.findFirst({
     where: eq(profiles.userId, user.id),
-    columns: { subscriptionStatus: true, stripeSubscriptionId: true, subscriptionExpiresAt: true },
+    columns: { subscriptionStatus: true, stripeSubscriptionId: true, subscriptionExpiresAt: true, lifetimePurchasedAt: true },
   });
   if (!profile || profile.subscriptionStatus !== 'active') return false;
 
+  if (profile.lifetimePurchasedAt) return true;
   if (profile.stripeSubscriptionId) return true;
   return !!profile.subscriptionExpiresAt && profile.subscriptionExpiresAt.getTime() > Date.now();
+}
+
+// True only for a genuine Lifetime ("Founding Member") purchase. Drives the
+// Founding Member badge/title; unlike isPaidSubscriber() it is false for a
+// dated unlock or a plain free signup.
+export async function isLifetimeMember(): Promise<boolean> {
+  // Dev preview is a Pro user; DEV_LIFETIME_PREVIEW=1 also makes it a Founding Member.
+  if (isDevProPreview()) return process.env.DEV_LIFETIME_PREVIEW === '1';
+  const { user } = await validateRequest();
+  if (!user) return false;
+
+  const profile = await db.query.profiles.findFirst({
+    where: eq(profiles.userId, user.id),
+    columns: { subscriptionStatus: true, lifetimePurchasedAt: true },
+  });
+  return profile?.subscriptionStatus === 'active' && !!profile.lifetimePurchasedAt;
 }
