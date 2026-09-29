@@ -48,11 +48,11 @@ export function LifetimeCard({ content, errorGeneric, ctaRedirecting, isLifetime
   }
 
   return (
-    <div style={{
+    <div className="plan-card" style={{
       position: 'relative', background: T.surface1, border: `1px solid ${T.terra}`, borderRadius: 20,
-      padding: '30px 28px', display: 'flex', flexDirection: 'column',
+      padding: '30px 28px', boxShadow: '0 18px 50px rgba(168,75,47,0.12)',
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 14 }}>
+      <div className="plan-head pc-1">
         <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: T.terra, fontFamily: T.mono }}>
           {content.badge}
         </div>
@@ -61,15 +61,18 @@ export function LifetimeCard({ content, errorGeneric, ctaRedirecting, isLifetime
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 2 }}>
+      <div className="pc-2" style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 2 }}>
         <span style={{ fontFamily: T.serif, fontSize: 50, fontWeight: 400, lineHeight: 1 }}>${LIFETIME_PRICE_USD}</span>
         <span style={{ color: T.inkMute, fontSize: 14 }}>{content.oneTime}</span>
       </div>
-      <div style={{ fontSize: 13, color: T.inkDim, marginBottom: 22, lineHeight: 1.5 }}>{content.desc}</div>
+      <div className="pc-3" style={{ marginBottom: 22 }}>
+        <div style={{ fontSize: 13, color: T.inkDim, marginBottom: 8, lineHeight: 1.5 }}>{content.desc}</div>
+        <div style={{ fontSize: 12, color: T.terra, lineHeight: 1.5 }}>{content.valueLine}</div>
+      </div>
 
-      <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 22px', display: 'flex', flexDirection: 'column', gap: 11, flex: 1 }}>
-        {content.bullets.map((b) => (
-          <li key={b} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 14, color: T.ink, lineHeight: 1.45 }}>
+      <ul className="pc-4" style={{ listStyle: 'none', padding: 0, margin: '0 0 22px', display: 'flex', flexDirection: 'column', gap: 11 }}>
+        {content.bullets.map((b, i) => (
+          <li key={b} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 14, color: T.ink, lineHeight: 1.45, fontWeight: i === 0 ? 600 : 400 }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={T.terra} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 2 }}>
               <polyline points="20 6 9 17 4 12" />
             </svg>
@@ -79,28 +82,29 @@ export function LifetimeCard({ content, errorGeneric, ctaRedirecting, isLifetime
       </ul>
 
       {isLifetimeMember ? (
-        <p style={{ fontSize: 14, fontWeight: 600, color: T.terra, textAlign: 'center', margin: 0 }}>{content.alreadyMember}</p>
+        <p className="pc-6" style={{ fontSize: 14, fontWeight: 600, color: T.terra, textAlign: 'center', margin: 0, alignSelf: 'end' }}>{content.alreadyMember}</p>
       ) : (
         <>
-          <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 12, color: T.inkDim, lineHeight: 1.5, marginBottom: 14, cursor: 'pointer' }}>
+          <label className="pc-5" style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 12, color: T.inkDim, lineHeight: 1.5, marginBottom: 14, cursor: 'pointer' }}>
             <input type="checkbox" checked={optIn} onChange={(e) => setOptIn(e.target.checked)} style={{ marginTop: 2 }} />
             {content.consentLabel}
           </label>
 
-          {error && <p style={{ color: '#ef4444', fontSize: 13, marginBottom: 12 }}>{error}</p>}
-
-          <button
-            onClick={handleBuy}
-            disabled={loading}
-            style={{
-              width: '100%', padding: '13px 24px', borderRadius: 12, border: 'none',
-              cursor: loading ? 'not-allowed' : 'pointer', background: T.terra, color: '#fff',
-              fontSize: 15, fontWeight: 600, fontFamily: T.sans, opacity: loading ? 0.7 : 1,
-            }}
-          >
-            {loading ? ctaRedirecting : content.cta}
-          </button>
-          <p style={{ fontSize: 12, color: T.inkMute, textAlign: 'center', marginTop: 10 }}>{content.note}</p>
+          <div className="pc-6" style={{ alignSelf: 'end' }}>
+            {error && <p style={{ color: '#ef4444', fontSize: 13, marginBottom: 12 }}>{error}</p>}
+            <button
+              onClick={handleBuy}
+              disabled={loading}
+              style={{
+                width: '100%', padding: '13px 24px', borderRadius: 12, border: 'none',
+                cursor: loading ? 'not-allowed' : 'pointer', background: T.terra, color: '#fff',
+                fontSize: 15, fontWeight: 600, fontFamily: T.sans, opacity: loading ? 0.7 : 1,
+              }}
+            >
+              {loading ? ctaRedirecting : content.cta}
+            </button>
+          </div>
+          <p className="pc-7" style={{ fontSize: 12, color: T.inkMute, textAlign: 'center', marginTop: 10, minHeight: 32 }}>{content.note}</p>
         </>
       )}
     </div>

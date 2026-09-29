@@ -156,24 +156,23 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, lifet
         </div>
 
         {/* Free + Pro, side by side */}
-        <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: 24, alignItems: 'stretch', maxWidth: lifetimeAvailable ? 1160 : 880, margin: '0 auto',
-        }}>
+        <div className={`plan-grid ${lifetimeAvailable && paymentsEnabled ? 'plan-grid-3' : 'plan-grid-2'}`}>
 
           {/* FREE card */}
-          <div style={{
+          <div className="plan-card" style={{
             background: T.surface1, border: `1px solid ${T.border2}`, borderRadius: 20,
-            padding: '30px 28px', display: 'flex', flexDirection: 'column',
+            padding: '30px 28px',
           }}>
-            <div style={{ display: 'inline-flex', alignSelf: 'flex-start', alignItems: 'center', gap: 6, padding: '4px 11px', borderRadius: 100, background: T.tealGlow, marginBottom: 14 }}>
-              <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.tealLight, flexShrink: 0 }} />
-              <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>{content.freeBadge}</span>
+            <div className="plan-head pc-1">
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 11px', borderRadius: 100, background: T.tealGlow }}>
+                <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.tealLight, flexShrink: 0 }} />
+                <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>{content.freeBadge}</span>
+              </div>
             </div>
-            <div style={{ fontFamily: T.serif, fontSize: 50, lineHeight: 1, letterSpacing: '-0.03em', marginBottom: 4 }}>$0</div>
-            <div style={{ fontSize: 13, color: T.inkMute, marginBottom: 22 }}>{content.freeNoSignup}</div>
+            <div className="pc-2" style={{ fontFamily: T.serif, fontSize: 50, lineHeight: 1, letterSpacing: '-0.03em', marginBottom: 4 }}>$0</div>
+            <div className="pc-3" style={{ fontSize: 13, color: T.inkMute, marginBottom: 22 }}>{content.freeNoSignup}</div>
 
-            <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px', display: 'flex', flexDirection: 'column', gap: 11, flex: 1 }}>
+            <ul className="pc-4" style={{ listStyle: 'none', padding: 0, margin: '0 0 24px', display: 'flex', flexDirection: 'column', gap: 11 }}>
               {content.freeBullets.map((f) => (
                 <li key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: T.ink }}>
                   <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.tealMid, flexShrink: 0 }} />
@@ -184,9 +183,10 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, lifet
 
             <Link
               href="/"
+              className="pc-6"
               onClick={() => track('pricing-use-free-clicked')}
               style={{
-                display: 'block', width: '100%', padding: '13px 24px', borderRadius: 12,
+                display: 'block', width: '100%', padding: '13px 24px', borderRadius: 12, alignSelf: 'end',
                 border: `1px solid ${T.border3}`, textAlign: 'center', textDecoration: 'none',
                 fontSize: 15, fontWeight: 600, fontFamily: T.sans, color: T.ink, boxSizing: 'border-box',
               }}
@@ -196,14 +196,14 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, lifet
           </div>
 
           {/* PRO card */}
-          <div style={{
+          <div className="plan-card" style={{
             position: 'relative',
             background: `linear-gradient(180deg, rgba(2,136,143,0.12) 0%, rgba(2,136,143,0.03) 100%)`,
             border: `1px solid ${T.tealMid}`, borderRadius: 20,
-            padding: '30px 28px', display: 'flex', flexDirection: 'column',
+            padding: '30px 28px',
             boxShadow: '0 18px 50px rgba(2,136,143,0.14)',
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+            <div className="plan-head pc-1">
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>{content.proLabel}</div>
 
               {/* Animated 30-day / 365-day toggle with a pulsing savings badge */}
@@ -241,20 +241,22 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, lifet
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 2 }}>
+            <div className="pc-2" style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 2 }}>
               <span style={{ fontFamily: T.serif, fontSize: 50, fontWeight: 400, lineHeight: 1 }}>
                 ${price}
               </span>
               <span style={{ color: T.inkMute, fontSize: 14 }}>{content.oneTime}</span>
             </div>
-            <div style={{ fontSize: 13, color: T.inkDim, marginBottom: 8, minHeight: 18 }}>
-              {duration === 'yearly' ? fillTemplate(content.unlockDescYearlyTemplate, { pct: saving }) : content.unlockDescMonthly}
-            </div>
-            <div style={{ fontSize: 12, color: T.tealMid, marginBottom: 22 }}>
-              {content.competitorAnchor}
+            <div className="pc-3" style={{ marginBottom: 22 }}>
+              <div style={{ fontSize: 13, color: T.inkDim, marginBottom: 8, minHeight: 18 }}>
+                {duration === 'yearly' ? fillTemplate(content.unlockDescYearlyTemplate, { pct: saving }) : content.unlockDescMonthly}
+              </div>
+              <div style={{ fontSize: 12, color: T.tealMid }}>
+                {content.competitorAnchor}
+              </div>
             </div>
 
-            <div style={{ flex: 1, marginBottom: 22 }}>
+            <div className="pc-4" style={{ marginBottom: 22 }}>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 11 }}>
                 {content.proCore.map((p) => <Perk key={p.label} {...p} />)}
               </ul>
@@ -282,14 +284,15 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, lifet
               )}
             </div>
 
-            {error && <p style={{ color: '#ef4444', fontSize: 13, marginBottom: 12 }}>{error}</p>}
+            {error && <p className="pc-5" style={{ color: '#ef4444', fontSize: 13, marginBottom: 12 }}>{error}</p>}
 
             {!isLifetimeMember && (
             <button
+              className="pc-6"
               onClick={handleUnlock}
               disabled={loading}
               style={{
-                width: '100%', padding: '13px 24px', borderRadius: 12, border: 'none',
+                width: '100%', padding: '13px 24px', borderRadius: 12, border: 'none', alignSelf: 'end',
                 cursor: loading ? 'not-allowed' : 'pointer', background: T.teal, color: T.cream,
                 fontSize: 15, fontWeight: 600, fontFamily: T.sans, opacity: loading ? 0.7 : 1,
               }}
@@ -301,7 +304,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, lifet
             )}
 
             {!isLifetimeMember && (
-            <p style={{ fontSize: 12, color: T.inkMute, textAlign: 'center', marginTop: 10 }}>
+            <p className="pc-7" style={{ fontSize: 12, color: T.inkMute, textAlign: 'center', marginTop: 10, minHeight: 32 }}>
               {paymentsEnabled ? content.onetimeNote : content.betaNote}
             </p>
             )}

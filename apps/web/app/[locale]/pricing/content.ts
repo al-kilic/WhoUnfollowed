@@ -43,6 +43,7 @@ export interface PricingContent {
     limitedNote: string;
     oneTime: string;
     desc: string;
+    valueLine: string;
     bullets: string[];
     consentLabel: string;
     cta: string;
@@ -109,19 +110,21 @@ const EN: PricingContent = {
   ],
   faqTitle: 'COMMON QUESTIONS',
   lifetime: {
-    badge: 'Insider',
+    badge: 'Insider · Lifetime',
     limitedNote: 'Limited-time offer',
-    oneTime: 'once, forever',
-    desc: 'Pay once, keep Pro for good. Available for a limited time to help fund the product.',
+    oneTime: 'once, yours for life',
+    desc: 'Pay once. Pro is yours for life. No renewals, no expiry date, ever.',
+    valueLine: 'Other trackers charge $2 to $4.50 a month. This pays for itself in 5 to 10 months, then it is free for life.',
     bullets: [
-      'Everything in Pro, with no expiry date',
+      'Pro for life: every Pro feature, no expiry, no renewals',
+      'Every Pro feature we add later, included at no extra cost',
+      'Pro benefits on future Alcatraz Studio tools, at no extra cost',
+      'First to hear when each new tool ships',
       'Insider badge and title on your account',
-      'Pro benefits on my next tools, at no extra cost',
-      'First to hear when I ship something new',
     ],
-    consentLabel: 'Email me about future products from Alcatraz Studio. Optional. Unsubscribe any time.',
+    consentLabel: 'Email me when new Alcatraz Studio tools launch, so I can claim my Insider perks. Optional. Unsubscribe any time.',
     cta: 'Become an Insider',
-    note: 'One-time payment. No subscription, nothing to renew.',
+    note: 'One-time payment. No subscription, nothing to renew, ever.',
     alreadyMember: 'You are an Insider. Thank you.',
   },
 };
@@ -184,19 +187,21 @@ const ES: PricingContent = {
   ],
   faqTitle: 'PREGUNTAS FRECUENTES',
   lifetime: {
-    badge: 'Insider',
+    badge: 'Insider · Lifetime',
     limitedNote: 'Oferta por tiempo limitado',
-    oneTime: 'una vez, para siempre',
-    desc: 'Paga una vez y conserva Pro para siempre. Disponible por tiempo limitado para ayudar a financiar el producto.',
+    oneTime: 'una vez, tuyo de por vida',
+    desc: 'Paga una vez. Pro es tuyo de por vida. Sin renovaciones, sin fecha de vencimiento, nunca.',
+    valueLine: 'Otros rastreadores cobran de $2 a $4.50 al mes. Esto se paga solo en 5 a 10 meses, y después es gratis de por vida.',
     bullets: [
-      'Todo lo de Pro, sin fecha de vencimiento',
+      'Pro de por vida: todas las funciones Pro, sin vencimiento ni renovaciones',
+      'Cada función Pro que añadamos después, incluida sin costo extra',
+      'Beneficios Pro en futuras herramientas de Alcatraz Studio, sin costo extra',
+      'Serás de los primeros en enterarte cuando salga cada herramienta nueva',
       'Insignia y título de Insider en tu cuenta',
-      'Beneficios Pro en mis próximas herramientas, sin costo extra',
-      'Serás de los primeros en enterarte cuando lance algo nuevo',
     ],
-    consentLabel: 'Envíame novedades sobre futuros productos de Alcatraz Studio. Opcional. Puedes darte de baja cuando quieras.',
+    consentLabel: 'Avísame por email cuando salgan nuevas herramientas de Alcatraz Studio para reclamar mis ventajas de Insider. Opcional. Puedes darte de baja cuando quieras.',
     cta: 'Hazte Insider',
-    note: 'Pago único. Sin suscripción, nada que renovar.',
+    note: 'Pago único. Sin suscripción, nada que renovar, nunca.',
     alreadyMember: 'Eres Insider. Gracias.',
   },
 };
@@ -259,19 +264,21 @@ const PT: PricingContent = {
   ],
   faqTitle: 'PERGUNTAS FREQUENTES',
   lifetime: {
-    badge: 'Insider',
+    badge: 'Insider · Lifetime',
     limitedNote: 'Oferta por tempo limitado',
-    oneTime: 'uma vez, para sempre',
-    desc: 'Pague uma vez e mantenha o Pro para sempre. Disponível por tempo limitado para ajudar a financiar o produto.',
+    oneTime: 'uma vez, seu para a vida toda',
+    desc: 'Pague uma vez. O Pro é seu para a vida toda. Sem renovações, sem data de vencimento, nunca.',
+    valueLine: 'Outros rastreadores cobram de $2 a $4,50 por mês. Isto se paga sozinho em 5 a 10 meses, e depois é grátis para sempre.',
     bullets: [
-      'Tudo do Pro, sem data de vencimento',
+      'Pro para a vida toda: todos os recursos Pro, sem vencimento nem renovações',
+      'Todo recurso Pro que adicionarmos depois, incluído sem custo extra',
+      'Benefícios Pro nas futuras ferramentas da Alcatraz Studio, sem custo extra',
+      'Você será um dos primeiros a saber quando cada nova ferramenta sair',
       'Selo e título de Insider na sua conta',
-      'Benefícios Pro nas minhas próximas ferramentas, sem custo extra',
-      'Você será um dos primeiros a saber quando eu lançar algo novo',
     ],
-    consentLabel: 'Envie-me novidades sobre futuros produtos da Alcatraz Studio. Opcional. Cancele quando quiser.',
+    consentLabel: 'Avise-me por email quando novas ferramentas da Alcatraz Studio forem lançadas, para eu aproveitar minhas vantagens de Insider. Opcional. Cancele quando quiser.',
     cta: 'Torne-se Insider',
-    note: 'Pagamento único. Sem assinatura, nada para renovar.',
+    note: 'Pagamento único. Sem assinatura, nada para renovar, nunca.',
     alreadyMember: 'Você é Insider. Obrigado.',
   },
 };

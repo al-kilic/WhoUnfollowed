@@ -499,3 +499,31 @@ body.tutorial-active #tutorial-triage-buttons {
     stroke-dashoffset: 0 !important;
   }
 }
+
+/* Pricing plan cards: on wide screens every card is a subgrid of the shared
+   grid, so header, price, description, bullets, button and note line up on the
+   same rows across Free / Pro / Insider. Narrow screens stack as plain flex. */
+.plan-grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin: 0 auto; max-width: 520px; }
+.plan-card { display: flex; flex-direction: column; }
+.plan-head { min-height: 32px; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 14px; }
+@media (min-width: 720px) {
+  .plan-grid.plan-grid-2 { grid-template-columns: repeat(2, 1fr); max-width: 880px; row-gap: 0; }
+}
+@media (min-width: 1024px) {
+  .plan-grid.plan-grid-3 { grid-template-columns: repeat(3, 1fr); max-width: 1160px; row-gap: 0; }
+}
+@media (min-width: 720px) {
+  .plan-grid-2 .plan-card { display: grid; grid-row: span 7; grid-template-rows: subgrid; row-gap: 0; }
+}
+@media (min-width: 1024px) {
+  .plan-grid-3 .plan-card { display: grid; grid-row: span 7; grid-template-rows: subgrid; row-gap: 0; }
+}
+@media (min-width: 720px) {
+  .plan-grid-2 .pc-1 { grid-row: 1; } .plan-grid-2 .pc-2 { grid-row: 2; } .plan-grid-2 .pc-3 { grid-row: 3; }
+  .plan-grid-2 .pc-4 { grid-row: 4; } .plan-grid-2 .pc-5 { grid-row: 5; } .plan-grid-2 .pc-6 { grid-row: 6; } .plan-grid-2 .pc-7 { grid-row: 7; }
+}
+@media (min-width: 1024px) {
+  .plan-grid-3 .pc-1 { grid-row: 1; } .plan-grid-3 .pc-2 { grid-row: 2; } .plan-grid-3 .pc-3 { grid-row: 3; }
+  .plan-grid-3 .pc-4 { grid-row: 4; } .plan-grid-3 .pc-5 { grid-row: 5; } .plan-grid-3 .pc-6 { grid-row: 6; } .plan-grid-3 .pc-7 { grid-row: 7; }
+}
+.pc-4 { flex: 1; }
