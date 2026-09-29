@@ -8,6 +8,7 @@ import { clearSyncKey } from '@/lib/syncKey';
 interface Props {
   userEmail: string | null;
   isPro: boolean;
+  isInsider?: boolean;
   /** 'bar' = button + dropdown (default). 'mobile' = flat list for drawers. */
   variant?: 'bar' | 'mobile';
 }
@@ -186,7 +187,7 @@ const menuItemStyle: CSSProperties = {
   transition: 'background 0.15s',
 };
 
-function AccountBadge({ userEmail, isPro }: { userEmail: string; isPro: boolean }) {
+function AccountBadge({ userEmail, isPro, isInsider }: { userEmail: string; isPro: boolean; isInsider: boolean }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -198,7 +199,14 @@ function AccountBadge({ userEmail, isPro }: { userEmail: string; isPro: boolean 
     return () => document.removeEventListener('keydown', onKey);
   }, [open]);
 
-  const badgeStyle: CSSProperties = isPro
+  const badgeStyle: CSSProperties = isInsider
+    ? {
+        color: '#fff',
+        background: T.terra,
+        border: `1px solid ${T.terra}`,
+        boxShadow: '0 2px 12px rgba(168,75,47,0.4)',
+      }
+    : isPro
     ? {
         color: GOLD.ink,
         background: GOLD.grad,
@@ -232,7 +240,7 @@ function AccountBadge({ userEmail, isPro }: { userEmail: string; isPro: boolean 
           ...badgeStyle,
         }}
       >
-        {isPro ? 'PRO' : 'ACCOUNT'}
+        {isInsider ? 'INSIDER' : isPro ? 'PRO' : 'ACCOUNT'}
         <svg
           width="9"
           height="9"
@@ -265,8 +273,8 @@ function AccountBadge({ userEmail, isPro }: { userEmail: string; isPro: boolean 
           >
             <div style={{ padding: '8px 10px 10px', borderBottom: `1px solid ${T.border1}`, marginBottom: 4 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                <span style={{ fontSize: 10, fontFamily: T.mono, letterSpacing: '0.1em', color: isPro ? '#C9952F' : T.inkMute }}>
-                  {isPro ? 'PRO MEMBER' : 'ACCOUNT'}
+                <span style={{ fontSize: 10, fontFamily: T.mono, letterSpacing: '0.1em', color: isInsider ? T.terra : isPro ? '#C9952F' : T.inkMute }}>
+                  {isInsider ? 'INSIDER' : isPro ? 'PRO MEMBER' : 'ACCOUNT'}
                 </span>
               </div>
               <div style={{ fontSize: 12.5, color: T.ink, fontWeight: 500, wordBreak: 'break-all', lineHeight: 1.3 }}>
@@ -326,7 +334,7 @@ function AccountBadge({ userEmail, isPro }: { userEmail: string; isPro: boolean 
   );
 }
 
-export function AccountMenu({ userEmail, isPro, variant = 'bar' }: Props) {
+export function AccountMenu({ userEmail, isPro, isInsider = false, variant = 'bar' }: Props) {
   // Logged out: animated "Go Pro" CTA. Login lives on the pricing page.
   if (!userEmail) {
     if (variant === 'mobile') {
@@ -393,5 +401,5 @@ export function AccountMenu({ userEmail, isPro, variant = 'bar' }: Props) {
   }
 
   // Logged in, bar: gold PRO badge (or ACCOUNT chip) + dropdown
-  return <AccountBadge userEmail={userEmail} isPro={isPro} />;
+  return <AccountBadge userEmail={userEmail} isPro={isPro} isInsider={isInsider} />;
 }

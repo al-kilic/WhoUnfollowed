@@ -1,12 +1,14 @@
 import 'server-only';
 import { cache } from 'react';
 import { validateRequest } from '@/lib/auth/session';
-import { isProUser } from '@/lib/flags';
+import { isProUser, isLifetimeMember } from '@/lib/flags';
 
 export interface AuthState {
   userId: string | null;
   userEmail: string | null;
   isPro: boolean;
+  // Lifetime purchase ("Insider"): drives the nav badge label.
+  isInsider: boolean;
 }
 
 // Resolved once per request (React cache dedupes), used by the root layout to
@@ -20,5 +22,7 @@ export interface AuthState {
 export const getAuthState = cache(async (): Promise<AuthState> => {
   const { user } = await validateRequest();
   const isPro = user ? await isProUser() : false;
-  return { userId: user?.id ?? null, userEmail: user?.email ?? null, isPro };
+  // Only worth the extra lookup for users who already have Pro access.
+  const isInsider = isPro ? await isLifetimeMember() : false;
+  return { userId: user?.id ?? null, userEmail: user?.email ?? null, isPro, isInsider };
 });
