@@ -61,6 +61,18 @@ export async function changePassword(input: {
   return { ok: true };
 }
 
+// Self-serve withdrawal for the Lifetime-purchase marketing opt-in. Sets
+// marketingOptOutAt rather than clearing marketingOptIn/marketingOptInAt, so
+// the consent record stays intact ("consented on X, withdrew on Y") instead
+// of being overwritten.
+export async function setMarketingOptOut(): Promise<{ ok: boolean }> {
+  const { user } = await validateRequest();
+  if (!user) return { ok: false };
+
+  await db.update(profiles).set({ marketingOptIn: false, marketingOptOutAt: new Date() }).where(eq(profiles.userId, user.id));
+  return { ok: true };
+}
+
 export async function deleteAccountAction() {
   const { user, session } = await validateRequest();
   if (!user || !session) redirect('/login');

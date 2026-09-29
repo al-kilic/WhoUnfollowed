@@ -160,6 +160,7 @@ export interface HomeContent {
     mobileTab: string;
     paymentNotes: string[];
     learnMore: string;
+    lifetimeBanner: { badge: string; text: string; cta: string };
   };
   faq: {
     eyebrow: string;
@@ -362,6 +363,7 @@ const EN: HomeContent = {
     mobileTab: 'Mobile',
     paymentNotes: ['Stripe checkout', 'SCA compliant', 'EU VAT included'],
     learnMore: 'Get more information about Pro →',
+    lifetimeBanner: { badge: 'Founding Member', text: 'Pay $19.99 once and keep Pro for good. Available for a limited time to support an independent product.', cta: 'See the Lifetime offer' },
   },
   faq: {
     eyebrow: 'QUESTIONS',
@@ -589,6 +591,7 @@ const ES: HomeContent = {
     mobileTab: 'Móvil',
     paymentNotes: ['Pago con Stripe', 'Cumple con SCA', 'IVA de la UE incluido'],
     learnMore: 'Más información sobre Pro →',
+    lifetimeBanner: { badge: 'Miembro Fundador', text: 'Paga $19.99 una vez y conserva Pro para siempre. Disponible por tiempo limitado para apoyar un producto independiente.', cta: 'Ver la oferta Lifetime' },
   },
   faq: {
     eyebrow: 'PREGUNTAS',
@@ -816,6 +819,7 @@ const PT: HomeContent = {
     mobileTab: 'Móvel',
     paymentNotes: ['Checkout via Stripe', 'Compatível com SCA', 'IVA da UE incluído'],
     learnMore: 'Mais informações sobre o Pro →',
+    lifetimeBanner: { badge: 'Membro Fundador', text: 'Pague $19.99 uma vez e mantenha o Pro para sempre. Disponível por tempo limitado para apoiar um produto independente.', cta: 'Ver a oferta Lifetime' },
   },
   faq: {
     eyebrow: 'PERGUNTAS',

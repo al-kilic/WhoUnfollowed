@@ -12,7 +12,10 @@ interface Props {
   // Pro feature access. Free users see a locked upgrade card instead of the
   // live sync status, since cloud sync is a Pro feature.
   isPro: boolean;
-  c: AccountContent['syncSetup'];
+  // Server-rendered "Enabled {date}." text. The content's enabledOn function
+  // cannot cross the server/client boundary, so the page resolves it.
+  enabledOnText: string;
+  c: Omit<AccountContent['syncSetup'], 'enabledOn'>;
 }
 
 const card: CSSProperties = {
@@ -35,7 +38,7 @@ function LockIcon() {
 // derived from the account password at login and cached for the session, so for
 // Pro users this is an informational status panel. Free users get a locked
 // upgrade card instead.
-export function SyncSetup({ hasSyncSetup, passphraseSetAt, isPro, c }: Props) {
+export function SyncSetup({ hasSyncSetup, passphraseSetAt, isPro, enabledOnText, c }: Props) {
   useEffect(() => { if (!isPro) trackLockedView('cloud-sync'); }, [isPro]);
 
   if (!isPro) {
@@ -74,9 +77,7 @@ export function SyncSetup({ hasSyncSetup, passphraseSetAt, isPro, c }: Props) {
       </div>
       <p style={{ fontSize: 13.5, color: T.inkDim, lineHeight: 1.5 }}>
         {c.onDesc}
-        {hasSyncSetup && passphraseSetAt
-          ? c.enabledOn(passphraseSetAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }))
-          : ''}
+        {hasSyncSetup && passphraseSetAt ? enabledOnText : ''}
       </p>
     </div>
   );

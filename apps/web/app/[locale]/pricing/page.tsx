@@ -10,6 +10,8 @@ import { PricingClient } from './PricingClient';
 import { getPricingFaq } from './faq';
 import { getPricingContent } from './content';
 import { UNLOCK_PRICE_SUMMARY } from '@/lib/pricing';
+import { priceIdForLifetime } from '@/lib/stripe';
+import { isLifetimeMember } from '@/lib/flags';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
@@ -73,6 +75,8 @@ export default async function PricingPage({ params }: PageProps) {
   const { user } = await validateRequest();
   const paymentsEnabled = isPaidFeaturesEnabled();
   const isPro = await isPaidSubscriber();
+  const lifetimeAvailable = priceIdForLifetime() !== null;
+  const lifetimeMember = await isLifetimeMember();
   const meta = SEO_META[locale];
   const faq = getPricingFaq(locale);
   const content = getPricingContent(locale);
@@ -113,6 +117,8 @@ export default async function PricingPage({ params }: PageProps) {
         userEmail={user?.email ?? null}
         paymentsEnabled={paymentsEnabled}
         isPro={isPro}
+        lifetimeAvailable={lifetimeAvailable}
+        isLifetimeMember={lifetimeMember}
         content={content}
         faq={faq}
         locale={locale}

@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { extendUnlockExpiry, priceIdForUnlock, isStripeConfigured, UNLOCK_DURATION_DAYS } from './stripe';
+import { extendUnlockExpiry, priceIdForUnlock, priceIdForLifetime, isStripeConfigured, UNLOCK_DURATION_DAYS } from './stripe';
 
 describe('extendUnlockExpiry', () => {
   const now = new Date('2026-01-01T00:00:00.000Z');
@@ -89,5 +89,21 @@ describe('UNLOCK_DURATION_DAYS', () => {
   it('matches the advertised 30-day and 365-day unlock periods', () => {
     expect(UNLOCK_DURATION_DAYS.monthly).toBe(30);
     expect(UNLOCK_DURATION_DAYS.yearly).toBe(365);
+  });
+});
+
+describe('priceIdForLifetime', () => {
+  const ORIGINAL_ENV = process.env;
+  beforeEach(() => { process.env = { ...ORIGINAL_ENV }; });
+  afterEach(() => { process.env = ORIGINAL_ENV; });
+
+  it('returns the lifetime price id when set', () => {
+    process.env.STRIPE_PRICE_LIFETIME = 'price_lifetime_1';
+    expect(priceIdForLifetime()).toBe('price_lifetime_1');
+  });
+
+  it('returns null when unset (the kill switch that hides the tier)', () => {
+    delete process.env.STRIPE_PRICE_LIFETIME;
+    expect(priceIdForLifetime()).toBeNull();
   });
 });

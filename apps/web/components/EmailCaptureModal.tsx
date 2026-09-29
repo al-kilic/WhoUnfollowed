@@ -26,6 +26,7 @@ interface Props {
 export function EmailCaptureModal({ csvFilename, onClose, onDownload }: Props) {
   const [email, setEmail] = useState('');
   const [busy, setBusy] = useState(false);
+  const [consent, setConsent] = useState(false);
 
   useEffect(() => {
     const saved = getSavedEmail();
@@ -39,11 +40,14 @@ export function EmailCaptureModal({ csvFilename, onClose, onDownload }: Props) {
   }, [onClose]);
 
   const validEmail = email.trim().includes('@');
+  const canDownload = !consent || validEmail;
 
   async function handleDownload() {
     setBusy(true);
     track(Events.csvExport, { mode: 'capture' });
-    if (validEmail) {
+    // Only a ticked checkbox counts as consent. Without it the CSV still
+    // downloads and nothing is sent or stored.
+    if (validEmail && consent) {
       track(Events.emailCaptured, { context: 'csv' });
       saveEmail(email.trim());
       // Only the email + filename are sent (for product updates). The CSV stays
@@ -52,7 +56,7 @@ export function EmailCaptureModal({ csvFilename, onClose, onDownload }: Props) {
         await fetch('/api/capture-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email.trim(), csvFilename }),
+          body: JSON.stringify({ email: email.trim(), csvFilename, source: 'csv', consent: true }),
         });
       } catch {
         // non-blocking — the download still happens
@@ -95,7 +99,7 @@ export function EmailCaptureModal({ csvFilename, onClose, onDownload }: Props) {
             Your CSV is ready.
           </h2>
           <p style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.6 }}>
-            Enter your email to download your CSV. You&apos;ll also get occasional product updates (unsubscribe anytime). The file itself is built in your browser. We never upload or email it.
+            The file is built in your browser. We never upload or email it. If you want occasional product updates, tick the box and add your email.
           </p>
         </div>
 
@@ -116,14 +120,19 @@ export function EmailCaptureModal({ csvFilename, onClose, onDownload }: Props) {
           />
         </div>
 
+        <label style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 12, color: T.inkDim, lineHeight: 1.5, marginBottom: 16, cursor: 'pointer' }}>
+          <input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} style={{ marginTop: 2 }} />
+          Send me occasional product updates. Unsubscribe any time.
+        </label>
+
         <button
           onClick={handleDownload}
-          disabled={busy || !validEmail}
+          disabled={busy || !canDownload}
           style={{
             width: '100%', padding: '12px 0', borderRadius: 10,
-            cursor: busy || !validEmail ? 'not-allowed' : 'pointer',
-            background: validEmail ? T.teal : 'rgba(2,136,143,0.15)',
-            border: 'none', color: validEmail ? T.cream : T.inkMute,
+            cursor: busy || !canDownload ? 'not-allowed' : 'pointer',
+            background: canDownload ? T.teal : 'rgba(2,136,143,0.15)',
+            border: 'none', color: canDownload ? T.cream : T.inkMute,
             fontSize: 13, fontWeight: 600, fontFamily: T.sans, transition: 'all 0.15s',
           }}
         >

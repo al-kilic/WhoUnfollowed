@@ -9,7 +9,7 @@ vi.mock('@/lib/db/index', () => ({
   db: { query: { profiles: { findFirst } } },
 }));
 
-import { getSubscriptionStatus, isProUser, isPaidSubscriber } from './flags';
+import { getSubscriptionStatus, isProUser, isPaidSubscriber, isLifetimeMember } from './flags';
 
 const USER = { id: 'user_1', email: 'a@b.com' };
 const FUTURE = new Date(Date.now() + 1000 * 60 * 60 * 24 * 10); // 10 days out
@@ -127,5 +127,38 @@ describe('isPaidSubscriber', () => {
     validateRequest.mockResolvedValue({ user: USER });
     findFirst.mockResolvedValue({ subscriptionStatus: 'grace', stripeSubscriptionId: 'sub_123', subscriptionExpiresAt: null });
     expect(await isPaidSubscriber()).toBe(false);
+  });
+});
+
+describe('lifetime (Founding Member)', () => {
+  afterEach(() => { vi.resetAllMocks(); });
+  const LIFETIME = { subscriptionStatus: 'active', stripeSubscriptionId: null, subscriptionExpiresAt: null, lifetimePurchasedAt: new Date() };
+
+  it('isPaidSubscriber is true for an active profile with lifetimePurchasedAt and no expiry', async () => {
+    validateRequest.mockResolvedValue({ user: USER });
+    findFirst.mockResolvedValue(LIFETIME);
+    expect(await isPaidSubscriber()).toBe(true);
+  });
+
+  it('a null expiry alone (free signup) is still not paid, without lifetimePurchasedAt', async () => {
+    validateRequest.mockResolvedValue({ user: USER });
+    findFirst.mockResolvedValue({ ...LIFETIME, lifetimePurchasedAt: null });
+    expect(await isPaidSubscriber()).toBe(false);
+  });
+
+  it('isLifetimeMember is true only with lifetimePurchasedAt set', async () => {
+    validateRequest.mockResolvedValue({ user: USER });
+    findFirst.mockResolvedValue(LIFETIME);
+    expect(await isLifetimeMember()).toBe(true);
+    findFirst.mockResolvedValue({ ...LIFETIME, lifetimePurchasedAt: null });
+    expect(await isLifetimeMember()).toBe(false);
+  });
+
+  it('isLifetimeMember is false when logged out or status is not active', async () => {
+    validateRequest.mockResolvedValue({ user: null });
+    expect(await isLifetimeMember()).toBe(false);
+    validateRequest.mockResolvedValue({ user: USER });
+    findFirst.mockResolvedValue({ ...LIFETIME, subscriptionStatus: 'none' });
+    expect(await isLifetimeMember()).toBe(false);
   });
 });

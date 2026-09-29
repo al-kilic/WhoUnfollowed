@@ -8,6 +8,7 @@ import { db } from '@/lib/db/index';
 import { profiles, syncSettings } from '@/lib/db/schema';
 import { isPaidFeaturesEnabled, isProUser } from '@/lib/flags';
 import { isUserVerified } from '@/lib/auth/verification';
+import { isDevProPreview, devPreviewProfile } from '@/lib/auth/devProPreview';
 import { UNLOCK_PRICE_USD, UNLOCK_DAYS_LABEL } from '@/lib/pricing';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
@@ -18,6 +19,7 @@ import { UpgradeLink } from '@/app/account/UpgradeLink';
 import { ChangePassword } from './ChangePassword';
 import { SyncSetup } from './SyncSetup';
 import { DeleteAccountButton } from './DeleteAccountButton';
+import { MarketingConsent } from './MarketingConsent';
 import { getAccountContent } from './content';
 
 // Personalized, auth-gated content (session, subscription, billing). Never
@@ -41,6 +43,10 @@ function fmtDate(d: Date | null | undefined): string | null {
   return new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
+function isFounderProfile(profile: { subscriptionStatus: string; lifetimePurchasedAt: Date | null } | undefined): boolean {
+  return profile?.subscriptionStatus === 'active' && !!profile.lifetimePurchasedAt;
+}
+
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, padding: '9px 0', borderTop: `1px solid ${T.border1}` }}>
@@ -61,22 +67,29 @@ export default async function AccountPage({ params }: PageProps) {
     redirect({ href: '/login', locale: locale as AppLocale });
     return;
   }
-  if (!(await isUserVerified(user.id))) redirect({ href: '/verify-email', locale: locale as AppLocale });
+  if (!isDevProPreview() && !(await isUserVerified(user.id))) redirect({ href: '/verify-email', locale: locale as AppLocale });
 
   // hasProAccess = real Pro (active subscription: paid or grandfathered). Drives
   // the plan card, badge, and Pro-feature gating (cloud sync etc.).
+  const preview = isDevProPreview();
   const [profile, syncRow, hasProAccess] = await Promise.all([
-    db.query.profiles.findFirst({ where: eq(profiles.userId, user.id) }),
-    db.query.syncSettings.findFirst({ where: eq(syncSettings.userId, user.id) }),
+    preview ? Promise.resolve(devPreviewProfile()) : db.query.profiles.findFirst({ where: eq(profiles.userId, user.id) }),
+    preview ? Promise.resolve(undefined) : db.query.syncSettings.findFirst({ where: eq(syncSettings.userId, user.id) }),
     isProUser(),
   ]);
   const isPro = hasProAccess;
+  // Lifetime purchase (lifetimePurchasedAt) is the only Founding Member signal.
+  const isFounder = isFounderProfile(profile);
 
   const paymentsEnabled = isPaidFeaturesEnabled();
   const status = profile?.subscriptionStatus ?? 'none';
   const memberSince = fmtDate(profile?.createdAt);
   const graceEnds = fmtDate(profile?.gracePeriodEndsAt);
   const hasSyncSetup = !!syncRow;
+  // Functions cannot be passed to the SyncSetup client component, so resolve the
+  // "Enabled {date}." text here and strip the function from its content.
+  const { enabledOn, ...syncSetupContent } = c.syncSetup;
+  const syncEnabledText = syncRow ? enabledOn(fmtDate(syncRow.passphraseSetAt) ?? '') : '';
 
   // Every purchase is a one-time unlock, so "renewal" just means the expiry date.
   const renewal =
@@ -134,22 +147,24 @@ export default async function AccountPage({ params }: PageProps) {
                       padding: '4px 10px',
                       borderRadius: 100,
                       color: isPro ? T.cream : T.inkDim,
-                      background: isPro ? T.teal : 'transparent',
-                      border: isPro ? '1px solid rgba(2,136,143,0.5)' : `1px solid ${T.border3}`,
+                      background: isFounder ? T.terra : isPro ? T.teal : 'transparent',
+                      border: isFounder ? `1px solid ${T.terra}` : isPro ? '1px solid rgba(2,136,143,0.5)' : `1px solid ${T.border3}`,
                     }}
                   >
-                    {isPro ? c.proBadge : c.freeBadge}
+                    {isFounder ? c.founderBadge : isPro ? c.proBadge : c.freeBadge}
                   </span>
                 </div>
                 <div style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5 }}>
-                  {renewal
+                  {isFounder
+                    ? c.founderSince(fmtDate(profile?.lifetimePurchasedAt) ?? '')
+                    : renewal
                     ? `${renewal.label}${renewal.amount ? ` · ${renewal.amount}` : ''}`
                     : isPro
                       ? c.complimentaryAccess
                       : c.onFreePlan}
                 </div>
               </div>
-              {paymentsEnabled ? (
+              {paymentsEnabled && !isFounder ? (
                 <UpgradeLink source="account-plan" href={pricingHref} style={{ fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none', padding: '9px 18px', borderRadius: 10, background: T.teal, whiteSpace: 'nowrap' }}>
                   {isPro ? c.extendPro : c.upgradeToPro}
                 </UpgradeLink>
@@ -209,7 +224,7 @@ export default async function AccountPage({ params }: PageProps) {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 20, marginBottom: 28, alignItems: 'start' }}>
           <section>
             <div style={sectionLabel}>{c.cloudSync}</div>
-            <SyncSetup hasSyncSetup={hasSyncSetup} passphraseSetAt={syncRow?.passphraseSetAt ?? null} isPro={hasProAccess} c={c.syncSetup} />
+            <SyncSetup hasSyncSetup={hasSyncSetup} passphraseSetAt={syncRow?.passphraseSetAt ?? null} isPro={hasProAccess} enabledOnText={syncEnabledText} c={syncSetupContent} />
           </section>
 
           <section>
@@ -222,6 +237,15 @@ export default async function AccountPage({ params }: PageProps) {
             </div>
           </section>
         </div>
+
+        {isFounder && (
+          <section style={{ marginBottom: 28 }}>
+            <div style={sectionLabel}>{c.marketingConsent.title}</div>
+            <div style={card}>
+              <MarketingConsent optedIn={profile?.marketingOptIn ?? false} c={c.marketingConsent} />
+            </div>
+          </section>
+        )}
 
         {/* Danger zone */}
         <section>

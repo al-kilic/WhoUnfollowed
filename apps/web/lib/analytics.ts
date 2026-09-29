@@ -33,7 +33,7 @@ export const Events = {
   historyView: 'history-view',
   lockedView: 'locked-view',          // { feature }
   upgradeClick: 'upgrade-click',      // { source }
-  checkoutStart: 'checkout-start',    // { billing }
+  checkoutStart: 'checkout-start',    // { billing: 'unlock-monthly' | 'unlock-yearly' | 'lifetime' }
   manageBilling: 'manage-billing',
   subscribeComplete: 'subscribe-complete',
   csvExport: 'csv-export',            // { mode: pro | free | capture | limit }

@@ -23,11 +23,13 @@ vi.mock('@/lib/stripe', async () => {
 
 import { POST } from './route';
 
+// Unique IP per request so tests never share the route's per-IP rate-limit bucket.
+let ipCounter = 0;
 function makeRequest(body: unknown) {
   return new NextRequest('http://localhost/api/stripe/checkout', {
     method: 'POST',
     body: JSON.stringify(body),
-    headers: { 'content-type': 'application/json', origin: 'https://whounfollowed.co' },
+    headers: { 'content-type': 'application/json', origin: 'https://whounfollowed.co', 'x-forwarded-for': `10.0.0.${++ipCounter}` },
   });
 }
 
@@ -115,5 +117,37 @@ describe('POST /api/stripe/checkout', () => {
     const args = sessionsCreate.mock.calls[0]![0];
     expect(args.metadata.unlockDuration).toBe('yearly');
     expect(args.metadata.acquisitionSource).toHaveLength(100);
+  });
+
+  describe('lifetime plan', () => {
+    beforeEach(() => { process.env.STRIPE_PRICE_LIFETIME = 'price_lifetime'; });
+
+    it('uses the lifetime price in payment mode with lifetime metadata and success URL', async () => {
+      await POST(makeRequest({ plan: 'lifetime', billing: 'yearly' }));
+      const args = sessionsCreate.mock.calls[0]![0];
+      expect(args.line_items).toEqual([{ price: 'price_lifetime', quantity: 1 }]);
+      expect(args.mode).toBe('payment');
+      expect(args.metadata.type).toBe('lifetime');
+      expect(args.metadata.unlockDuration).toBeUndefined();
+      expect(args.success_url).toContain('plan=lifetime');
+    });
+
+    it('returns 500 when STRIPE_PRICE_LIFETIME is unset', async () => {
+      delete process.env.STRIPE_PRICE_LIFETIME;
+      const res = await POST(makeRequest({ plan: 'lifetime' }));
+      expect(res.status).toBe(500);
+      expect(sessionsCreate).not.toHaveBeenCalled();
+    });
+
+    it('records marketing opt-in only for a strict boolean true', async () => {
+      await POST(makeRequest({ plan: 'lifetime', marketingOptIn: true }));
+      expect(sessionsCreate.mock.calls[0]![0].metadata.marketingOptIn).toBe('true');
+      sessionsCreate.mockClear();
+      await POST(makeRequest({ plan: 'lifetime', marketingOptIn: 'true' }));
+      expect(sessionsCreate.mock.calls[0]![0].metadata.marketingOptIn).toBeUndefined();
+      sessionsCreate.mockClear();
+      await POST(makeRequest({ plan: 'lifetime' }));
+      expect(sessionsCreate.mock.calls[0]![0].metadata.marketingOptIn).toBeUndefined();
+    });
   });
 });

@@ -47,6 +47,7 @@ interface PricingTeaserContent {
   mobileTab: string;
   paymentNotes: string[];
   learnMore: string;
+  lifetimeBanner: { badge: string; text: string; cta: string };
 }
 
 function fillTemplate(template: string, values: Record<string, string | number>): string {
@@ -159,7 +160,7 @@ function PricingMobileTabs({ content, billing, mobileEmail, setMobileEmail, mobi
   );
 }
 
-function PricingBig({ content }: { content: PricingTeaserContent }) {
+function PricingBig({ content, lifetimeAvailable }: { content: PricingTeaserContent; lifetimeAvailable: boolean }) {
   const [billing, setBilling] = React.useState<Billing>('monthly');
   const [mobileEmail, setMobileEmail] = React.useState('');
   const [mobileStatus, setMobileStatus] = React.useState<'idle' | 'sent' | 'error'>('idle');
@@ -170,7 +171,7 @@ function PricingBig({ content }: { content: PricingTeaserContent }) {
       const res = await fetch('/api/capture-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: mobileEmail, csvFilename: 'mobile-app-waitlist' }),
+        body: JSON.stringify({ email: mobileEmail, source: 'mobile-waitlist', consent: true }),
       });
       setMobileStatus(res.ok ? 'sent' : 'error');
     } catch { setMobileStatus('error'); }
@@ -334,6 +335,19 @@ function PricingBig({ content }: { content: PricingTeaserContent }) {
       {/* Mobile: single merged card with tab switcher */}
       <PricingMobileTabs content={content} billing={billing} mobileEmail={mobileEmail} setMobileEmail={setMobileEmail} mobileStatus={mobileStatus} handleMobileNotify={handleMobileNotify} />
 
+      {/* Limited-time Lifetime banner, hidden when STRIPE_PRICE_LIFETIME is unset */}
+      {lifetimeAvailable && (
+        <div style={{ marginTop: 20, padding: '16px 20px', borderRadius: 14, background: T.surface1, border: `1px solid ${T.terra}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, flexWrap: 'wrap' }}>
+          <div style={{ flex: 1, minWidth: 220 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: T.terra, fontFamily: T.mono, marginBottom: 4 }}>{content.lifetimeBanner.badge}</div>
+            <div style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5 }}>{content.lifetimeBanner.text}</div>
+          </div>
+          <Link href="/pricing" onClick={() => trackUpgradeClick('homepage-lifetime-banner')} style={{ fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.terra, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+            {content.lifetimeBanner.cta} →
+          </Link>
+        </div>
+      )}
+
       {/* Payment note */}
       <div className="hidden sm:flex" style={{ marginTop: 24, alignItems: 'center', justifyContent: 'center', gap: 18, fontSize: 11, color: T.inkMute, fontFamily: T.mono }}>
         {content.paymentNotes.map(l => (
@@ -353,7 +367,7 @@ function PricingBig({ content }: { content: PricingTeaserContent }) {
   );
 }
 
-export function PricingSection({ content }: { content: PricingTeaserContent }) {
+export function PricingSection({ content, lifetimeAvailable = false }: { content: PricingTeaserContent; lifetimeAvailable?: boolean }) {
   return (
     <section id="pricing" className="px-4 sm:px-12 pb-24 sm:pb-32 relative">
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
@@ -365,7 +379,7 @@ export function PricingSection({ content }: { content: PricingTeaserContent }) {
           {content.headlineLine1}<br/>
           <span style={{ fontStyle: 'italic', color: T.tealLight }}>{content.headlineLine2}</span>
         </h2>
-        <PricingBig content={content} />
+        <PricingBig content={content} lifetimeAvailable={lifetimeAvailable} />
       </div>
     </section>
   );

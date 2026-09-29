@@ -11,11 +11,14 @@ import { getPathname } from '@/i18n/navigation';
 import type { AppLocale } from '@/i18n/routing';
 import type { PricingFaqItem } from './faq';
 import type { PricingContent } from './content';
+import { LifetimeCard } from './LifetimeCard';
 
 interface Props {
   userEmail: string | null;
   paymentsEnabled: boolean;
   isPro?: boolean;
+  lifetimeAvailable?: boolean;
+  isLifetimeMember?: boolean;
   content: PricingContent;
   faq: PricingFaqItem[];
   locale: AppLocale;
@@ -42,7 +45,7 @@ function Perk({ label, note }: { label: string; note: string }) {
   );
 }
 
-export function PricingClient({ userEmail, paymentsEnabled, isPro = false, content, faq, locale }: Props) {
+export function PricingClient({ userEmail, paymentsEnabled, isPro = false, lifetimeAvailable = false, isLifetimeMember = false, content, faq, locale }: Props) {
   const [duration, setDuration] = useState<'monthly' | 'yearly'>('monthly');
   const [showAll, setShowAll] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -155,7 +158,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, conte
         {/* Free + Pro, side by side */}
         <div style={{
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: 24, alignItems: 'stretch', maxWidth: 880, margin: '0 auto',
+          gap: 24, alignItems: 'stretch', maxWidth: lifetimeAvailable ? 1160 : 880, margin: '0 auto',
         }}>
 
           {/* FREE card */}
@@ -281,6 +284,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, conte
 
             {error && <p style={{ color: '#ef4444', fontSize: 13, marginBottom: 12 }}>{error}</p>}
 
+            {!isLifetimeMember && (
             <button
               onClick={handleUnlock}
               disabled={loading}
@@ -294,11 +298,25 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, conte
                 ? (loading ? content.ctaRedirecting : fillTemplate(content.ctaExtendByTemplate, { period }))
                 : ctaLabel}
             </button>
+            )}
 
+            {!isLifetimeMember && (
             <p style={{ fontSize: 12, color: T.inkMute, textAlign: 'center', marginTop: 10 }}>
               {paymentsEnabled ? content.onetimeNote : content.betaNote}
             </p>
+            )}
           </div>
+
+          {/* LIFETIME card: only while STRIPE_PRICE_LIFETIME is set and payments are live */}
+          {lifetimeAvailable && paymentsEnabled && (
+            <LifetimeCard
+              content={content.lifetime}
+              errorGeneric={content.errorGeneric}
+              ctaRedirecting={content.ctaRedirecting}
+              isLifetimeMember={isLifetimeMember}
+              locale={locale}
+            />
+          )}
         </div>
 
         {/* Privacy / why-different: value, not sales */}

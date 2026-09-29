@@ -13,6 +13,8 @@ export interface AccountContent {
   proUntil: (date: string) => string;
   complimentaryAccess: string;
   onFreePlan: string;
+  founderBadge: string;
+  founderSince: (date: string) => string;
   extendPro: string;
   upgradeToPro: string;
   betaBanner: string;
@@ -66,6 +68,13 @@ export interface AccountContent {
     closeAria: string;
     errorMessage: string;
   };
+  marketingConsent: {
+    title: string;
+    optedInDesc: string;
+    optedOutDesc: string;
+    toggleOff: string;
+    updating: string;
+  };
 }
 
 const EN: AccountContent = {
@@ -84,6 +93,8 @@ const EN: AccountContent = {
   proUntil: (date) => `Pro until ${date}`,
   complimentaryAccess: 'Complimentary access. Thanks for being here early.',
   onFreePlan: 'You are on the free plan.',
+  founderBadge: 'FOUNDING MEMBER',
+  founderSince: (date) => `Founding Member since ${date}. Lifetime access, nothing to renew.`,
   extendPro: 'Extend Pro',
   upgradeToPro: 'Upgrade to Pro',
   betaBanner: 'Free during beta. You have full Pro access at no cost until we launch paid plans. No billing yet.',
@@ -153,6 +164,13 @@ const EN: AccountContent = {
     errorMessage:
       'Something went wrong and your account was not deleted. If you have an active subscription, this can happen if Stripe could not be reached, please try again, or contact support before retrying.',
   },
+  marketingConsent: {
+    title: 'Product updates',
+    optedInDesc: "You're opted in to hear about future products from Alcatraz Studio. Unsubscribe any time, right here.",
+    optedOutDesc: "You're not opted in to future product updates.",
+    toggleOff: 'Turn off',
+    updating: 'Updating…',
+  },
 };
 
 const ES: AccountContent = {
@@ -170,6 +188,8 @@ const ES: AccountContent = {
   freeBadge: 'GRATIS',
   proUntil: (date) => `Pro hasta el ${date}`,
   complimentaryAccess: 'Acceso de cortesía. Gracias por estar aquí desde el principio.',
+  founderBadge: 'MIEMBRO FUNDADOR',
+  founderSince: (date) => `Miembro Fundador desde ${date}. Acceso de por vida, nada que renovar.`,
   onFreePlan: 'Estás en el plan gratuito.',
   extendPro: 'Extender Pro',
   upgradeToPro: 'Mejorar a Pro',
@@ -240,6 +260,13 @@ const ES: AccountContent = {
     errorMessage:
       'Algo salió mal y tu cuenta no se eliminó. Si tienes una suscripción activa, esto puede ocurrir si no se pudo contactar con Stripe. Inténtalo de nuevo o contacta con soporte antes de reintentar.',
   },
+  marketingConsent: {
+    title: 'Novedades de producto',
+    optedInDesc: 'Aceptaste recibir novedades sobre futuros productos de Alcatraz Studio. Puedes darte de baja cuando quieras, aquí mismo.',
+    optedOutDesc: 'No estás suscrito a novedades de futuros productos.',
+    toggleOff: 'Desactivar',
+    updating: 'Actualizando…',
+  },
 };
 
 const PT: AccountContent = {
@@ -258,6 +285,8 @@ const PT: AccountContent = {
   proUntil: (date) => `Pro até ${date}`,
   complimentaryAccess: 'Acesso de cortesia. Obrigado por estar aqui desde o início.',
   onFreePlan: 'Você está no plano gratuito.',
+  founderBadge: 'MEMBRO FUNDADOR',
+  founderSince: (date) => `Membro Fundador desde ${date}. Acesso vitalício, nada para renovar.`,
   extendPro: 'Estender Pro',
   upgradeToPro: 'Assinar Pro',
   betaBanner: 'Grátis durante a beta. Você tem acesso completo ao Pro sem custo até lançarmos os planos pagos. Sem cobrança por enquanto.',
@@ -326,6 +355,13 @@ const PT: AccountContent = {
     closeAria: 'Fechar',
     errorMessage:
       'Algo deu errado e sua conta não foi excluída. Se você tem uma assinatura ativa, isso pode acontecer se não foi possível contatar o Stripe. Tente novamente ou entre em contato com o suporte antes de tentar de novo.',
+  },
+  marketingConsent: {
+    title: 'Novidades de produto',
+    optedInDesc: 'Você optou por receber novidades sobre futuros produtos da Alcatraz Studio. Cancele quando quiser, aqui mesmo.',
+    optedOutDesc: 'Você não está inscrito para novidades de futuros produtos.',
+    toggleOff: 'Desativar',
+    updating: 'Atualizando…',
   },
 };
 

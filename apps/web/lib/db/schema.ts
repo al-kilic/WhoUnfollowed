@@ -4,6 +4,7 @@ import {
   uuid,
   text,
   timestamp,
+  boolean,
   customType,
 } from 'drizzle-orm/pg-core';
 
@@ -94,6 +95,24 @@ export const profiles = pgTable('profiles', {
   // them every day forever.
   expiryReminderSentAt: timestamp('expiry_reminder_sent_at'),
   expiredEmailSentAt: timestamp('expired_email_sent_at'),
+  // The sole signal for a genuine Lifetime ("Founding Member") purchase. Do
+  // NOT infer lifetime status from a null subscriptionExpiresAt elsewhere —
+  // every ordinary signup is already seeded with subscriptionStatus:'active'
+  // and a null subscriptionExpiresAt (see isPaidSubscriber()'s comment in
+  // lib/flags.ts), so null expiry alone means nothing. Also doubles as the
+  // "Founding Member since {date}" copy on /account.
+  lifetimePurchasedAt: timestamp('lifetime_purchased_at'),
+  // Consent to be emailed about future products (not this product's
+  // transactional emails, which need no opt-in). Opt-out is a separate field
+  // rather than clearing marketingOptInAt, so there's a retained record of
+  // "consented on X, withdrew on Y" instead of just a current boolean.
+  marketingOptIn: boolean('marketing_opt_in').notNull().default(false),
+  marketingOptInAt: timestamp('marketing_opt_in_at'),
+  marketingOptOutAt: timestamp('marketing_opt_out_at'),
+  // Freeform tag identifying which version of the consent copy was agreed to
+  // (e.g. 'lifetime-2026-09'), so a later copy change doesn't retroactively
+  // muddy what an earlier consent actually covered.
+  marketingConsentVersion: text('marketing_consent_version'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 
@@ -116,6 +135,23 @@ export const syncSettings = pgTable('sync_settings', {
     .references(() => users.id, { onDelete: 'cascade' }),
   passphraseSalt: text('passphrase_salt').notNull(),
   passphraseSetAt: timestamp('passphrase_set_at').notNull().defaultNow(),
+});
+
+// Email addresses people handed over on purpose (mobile-app waitlist, CSV
+// export prompt), each with a consent record. Distinct from
+// profiles.marketingOptIn, which belongs to an account (Lifetime buyers).
+// A future broadcast send must union both lists and honor both opt-outs.
+export const emailSubscribers = pgTable('email_subscribers', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  // Stored lowercased; unique, so re-subscribing updates the row instead of duplicating it.
+  email: text('email').notNull().unique(),
+  // 'mobile-waitlist' | 'csv'
+  source: text('source').notNull(),
+  consentedAt: timestamp('consented_at').notNull().defaultNow(),
+  // Tag of the consent wording shown, see lib/marketingConsent.ts.
+  consentVersion: text('consent_version').notNull(),
+  optedOutAt: timestamp('opted_out_at'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
 });
 
 export const feedback = pgTable('feedback', {

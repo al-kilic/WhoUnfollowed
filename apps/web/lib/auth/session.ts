@@ -1,10 +1,13 @@
 import { lucia } from './lucia';
 import { cookies } from 'next/headers';
 import type { Session, User } from 'lucia';
+import { devPreviewSession, isDevProPreview } from './devProPreview';
 
 export async function validateRequest(): Promise<
   { user: User; session: Session } | { user: null; session: null }
 > {
+  if (isDevProPreview()) return devPreviewSession();
+
   const cookieStore = await cookies();
   const sessionId = cookieStore.get(lucia.sessionCookieName)?.value ?? null;
 
