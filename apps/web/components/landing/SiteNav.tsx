@@ -249,6 +249,7 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
   const auth = useAuth();
   const userEmail = props.userEmail !== undefined ? props.userEmail : auth.userEmail;
   const isPro     = auth.isPro;
+  const isInsider = auth.isInsider;
   const [menuOpen, setMenuOpen] = useState(false);
   const t = useTranslations('nav');
 
@@ -296,7 +297,7 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
           </a>
           <LanguageSwitcher />
           <ThemeToggle />
-          <AccountMenu userEmail={userEmail} isPro={isPro} />
+          <AccountMenu userEmail={userEmail} isPro={isPro} isInsider={isInsider} />
         </div>
 
         {/* Mobile: toggle + hamburger */}
@@ -356,7 +357,7 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
             {t('github')}
           </a>
           <LanguageSwitcher mobile />
-          <AccountMenu userEmail={userEmail} isPro={isPro} variant="mobile" />
+          <AccountMenu userEmail={userEmail} isPro={isPro} isInsider={isInsider} variant="mobile" />
         </div>
       )}
     </>

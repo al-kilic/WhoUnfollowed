@@ -6,9 +6,10 @@ export interface AuthState {
   userId: string | null;
   userEmail: string | null;
   isPro: boolean;
+  isInsider: boolean;
 }
 
-const AuthContext = createContext<AuthState>({ userId: null, userEmail: null, isPro: false });
+const AuthContext = createContext<AuthState>({ userId: null, userEmail: null, isPro: false, isInsider: false });
 
 // Provides the current login state to client components (notably SiteNav) so any
 // page can render the correct logged-in / logged-out nav without fetching auth.
