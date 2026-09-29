@@ -3855,6 +3855,204 @@ There is one real edge case. Following or unfollowing an extreme number of accou
 
 If you're cleaning up your following list for the right reasons, the first step is seeing the actual list. [Upload your Instagram export to WhoUnfollowed](/) and it shows exactly who doesn't follow you back, free, in your browser, no password required.`,
   },
+  {
+    slug: 'whats-inside-your-threads-data-export',
+    cluster: 'threads',
+    title: "What's Inside Your Threads Data Export?",
+    metaTitle: "What's Inside Your Threads Data Export? A File Guide",
+    metaDescription: 'A Threads export holds three files that matter for followers. Here is what each one contains, what it can and cannot tell you, and how to read it safely.',
+    excerpt: 'A Threads data export is a ZIP with a threads folder inside. Three files in it describe your followers and who you unfollowed. Here is what each one holds, what it leaves out, and why you never need to open it by hand.',
+    date: 'September 29, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'what is in a Threads data export',
+    art: 'search',
+    image: '/blog/threads-export-contents-hero.jpg',
+    imageAlt: 'Colorful folders and a pen arranged on a wooden table, representing the files inside a Threads data export ZIP',
+    cta: {
+      heading: 'Skip the JSON. Get the names.',
+      body: 'You do not have to open these files yourself. Upload your Threads ZIP to WhoUnfollowed and it reads them in your browser, then shows who does not follow you back. No password, nothing uploaded.',
+      buttonLabel: 'Read my Threads export',
+    },
+    faq: [
+      { q: 'What files does a Threads data export contain for followers?', a: 'The follower data lives in a threads folder as followers.json and following.json, plus recently_unfollowed_profiles.json for accounts you unfollowed yourself.' },
+      { q: 'Does a Threads export show the date someone followed you?', a: 'Yes, each entry carries a timestamp for when the follow happened, which is why choosing the JSON format matters.' },
+      { q: 'Does the Threads export show who unfollowed you?', a: 'No, a single export is a snapshot of your current lists; comparing two exports taken at different times is what reveals who left.' },
+      { q: 'Do I need to unzip my Threads export?', a: 'No, upload the original ZIP as Meta sent it; WhoUnfollowed reads the files inside it in your browser.' },
+      { q: 'Is my Threads export uploaded to a server?', a: 'No, WhoUnfollowed parses the ZIP locally in your browser and the file never leaves your device.' },
+    ],
+    body: `A Threads data export is a ZIP file with a folder called **threads** inside it. For follower analysis, three files in that folder matter: **followers.json**, **following.json**, and **recently_unfollowed_profiles.json**. If you selected more categories than followers and following, anything else in the export has nothing to do with who follows you.
+
+## The Three Files That Matter
+
+**threads/followers.json** lists the accounts that follow you right now. Each entry has the username, a link to the profile, and a timestamp for when the follow happened.
+
+**threads/following.json** lists the accounts you follow right now, in the same shape: username, profile link, and the timestamp of when you followed them.
+
+**threads/recently_unfollowed_profiles.json** logs accounts *you* unfollowed. It does not log people who unfollowed you. This is the mix-up that catches most people, and it is the same gap [Instagram's export has](/blog/does-instagram-data-export-show-who-unfollowed-you).
+
+## Why the Format Matters
+
+When you [request your Threads export](/blog/how-to-see-who-unfollowed-you-on-threads), choose **JSON**, not HTML. JSON keeps the follow timestamps, which is how you can see how long someone has been in your list. Also choose **All time** for the date range. A shorter range gives you a partial list, and a partial list produces wrong answers about who is missing.
+
+## What the Export Cannot Tell You
+
+A Threads export is a snapshot. It shows who follows you on the day Meta builds the file, and nothing about the past. It has no "who unfollowed me" section, because Threads [never records that in a way you can see](/blog/does-threads-notify-when-someone-unfollows-you). To find out who left, you compare two exports taken at different times. Anyone in the older file who is missing from the newer one unfollowed you in between.
+
+## Do Not Unzip It
+
+Upload the ZIP exactly as Meta sent it. Unzipping and re-zipping it, or renaming it, is the most common reason an upload fails. You never need to open the files yourself.
+
+## Reading It Without Sending It Anywhere
+
+The files hold real usernames, so where you open them matters. WhoUnfollowed reads your ZIP entirely in your browser. The parser only looks at the three files above, and because [the parsing code is open source](/blog/does-whounfollowed-read-your-messages-or-photos-from-your-export), you can check that for yourself. You are also using a right Meta has to honor: the export comes from [GDPR Article 20](https://gdpr-info.eu/art-20-gdpr/), so there is no login or password involved.
+
+## In Short
+
+- The follower data in a Threads export sits in threads/followers.json and threads/following.json.
+- recently_unfollowed_profiles.json tracks accounts you unfollowed, not accounts that unfollowed you.
+- Pick JSON and All time so the timestamps and the full list come through.
+- A single export is one moment in time. Two exports, compared, show who left.
+
+Have your ZIP ready? [Upload your Threads export](/threads) and see who does not follow you back in about two minutes.`,
+  },
+  {
+    slug: 'how-to-see-who-doesnt-follow-you-back-on-threads',
+    cluster: 'threads',
+    title: "Who Doesn't Follow You Back on Threads? How to Find Out",
+    metaTitle: "Who Doesn't Follow You Back on Threads? Free Check",
+    metaDescription: 'Threads has no list of people who do not follow you back. Here is how one data export gives you that list for free, without a password or login.',
+    excerpt: 'Threads never shows you the accounts you follow that do not follow you back. One data export from Meta does. Here is how to get the list, what it includes, and what to do with it.',
+    date: 'September 29, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'who doesnt follow you back on Threads',
+    art: 'ratio',
+    image: '/blog/threads-not-following-back-hero.jpg',
+    imageAlt: 'A person using a smartphone indoors, representing checking who does not follow you back on Threads',
+    cta: {
+      heading: 'See who is not following you back on Threads.',
+      body: 'Upload your Threads export and WhoUnfollowed lists every account you follow that does not follow you, with the date you followed them. It runs in your browser. No password, no account needed.',
+      buttonLabel: 'Find my non-followers on Threads',
+      proNudge: 'Want to know who unfollowed you between two checks? Pro saves each snapshot so every new upload shows who left since the last one.',
+    },
+    faq: [
+      { q: 'Can you see who does not follow you back on Threads?', a: 'Not inside the app, but one data export from Meta contains both your followers and following lists, so comparing them shows the accounts that do not follow you back.' },
+      { q: 'Is it free to see who does not follow you back on Threads?', a: 'Yes, the free plan shows your non-followers from a single export with no account required.' },
+      { q: 'Does the list show when I started following each account?', a: 'Yes, each entry in the export carries the timestamp of when you followed that account.' },
+      { q: 'Will the other person know I checked or unfollowed them?', a: 'No, checking uses your own export and unfollowing on Threads is silent, so neither action sends a notification.' },
+      { q: 'Do I need my Threads password?', a: 'No, you only upload the export file Meta sends you, and nothing connects to your Threads account.' },
+    ],
+    body: `Threads does not have a screen that lists the accounts you follow that do not follow you back. You can scroll your following list and check people one by one, but that gets slow fast. The reliable shortcut is your own data export: it holds your full followers list and your full following list, and the difference between the two is exactly the list you are after.
+
+## The Idea in One Line
+
+Your non-followers are the accounts that appear in your **following** list but not in your **followers** list. Meta gives you both lists in one export, so nothing needs to be guessed or scraped.
+
+## How to Get the Two Lists
+
+1. Open Meta's Accounts Center from Threads or Instagram settings.
+2. Go to **Your information and permissions**, then **Export your information**, then **Create export**.
+3. Select only your **Threads** profile. One profile per export, so an Instagram export will not work here.
+4. Choose **Followers and following**, set the format to **JSON**, the date range to **All time**, and export to your device.
+
+The [full walkthrough is here](/blog/how-to-see-who-unfollowed-you-on-threads), including what to expect in the email Meta sends.
+
+## Turning the Export Into a List
+
+You could open threads/followers.json and threads/following.json and compare them by hand, but with any real following that is thousands of names. [Upload the ZIP to WhoUnfollowed](/threads) instead. It reads both files in your browser and shows every account you follow that does not follow you back, along with the date you followed them. Leave the ZIP as it arrived. Unzipping or renaming it is what breaks uploads.
+
+## What to Do With the List
+
+Seeing the list does not mean you have to act on it. Some non-followers are accounts you follow because you like them: creators, friends who barely post, brands. Others are people who never followed back and whose posts you no longer read. The follow date helps you tell them apart, since an account you followed years ago and never heard from again is a different case from one you followed last week.
+
+If you do trim your list, unfollowing on Threads is silent. [Threads sends no notification either way](/blog/does-threads-notify-when-someone-unfollows-you), so the other person will not be told.
+
+## Only One Export? You Still Get an Answer
+
+A single export answers "who am I following that does not follow me back." It cannot tell you who unfollowed you last week, because that needs two exports to compare. That part needs saved snapshots, which is what Pro keeps for you.
+
+## In Short
+
+- Threads has no built-in list of accounts that do not follow you back.
+- One Threads export contains your followers and following lists. The difference is your non-followers.
+- The free plan shows that list from one export, with follow dates, no account needed.
+- Unfollowing on Threads is silent, so cleaning up your list will not notify anyone.
+
+[Upload your Threads export](/threads) and get the list in about two minutes.`,
+  },
+  {
+    slug: 'how-to-see-who-unfollowed-you-on-instagram-from-your-phone',
+    cluster: 'unfollowers',
+    title: 'How to See Who Unfollowed You on Instagram From Your Phone',
+    metaTitle: 'See Who Unfollowed You on Instagram From Your Phone',
+    metaDescription: 'You can check who unfollowed you on Instagram entirely from your phone, with no app to install and no password. Here are the exact steps for iPhone and Android.',
+    excerpt: 'Everything you need to see who unfollowed you on Instagram fits on your phone: request your data, download the ZIP, and upload it. Here are the steps, plus the two mistakes that make uploads fail on mobile.',
+    date: 'September 29, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'see who unfollowed you on Instagram from phone',
+    art: 'search',
+    image: '/blog/unfollowed-from-phone-hero.jpg',
+    imageAlt: 'A hand holding a smartphone with Instagram open, representing checking who unfollowed you from a phone',
+    cta: {
+      heading: 'Do the whole check from your phone.',
+      body: 'No app to install and no login. Request your export in Instagram, then upload the ZIP to WhoUnfollowed from your phone. It reads the file in your browser and shows who does not follow you back in about two minutes.',
+      buttonLabel: 'Check who unfollowed me',
+      proNudge: 'Checking again next month? Pro saves each snapshot, so your next upload shows exactly who left since the last one.',
+    },
+    faq: [
+      { q: 'Can you see who unfollowed you on Instagram from your phone?', a: 'Yes, you can request your data export in the Instagram app, download the ZIP on your phone, and upload it to WhoUnfollowed in your mobile browser.' },
+      { q: 'Do I need to install an app to check who unfollowed me?', a: 'No, WhoUnfollowed runs in your browser and reads your export locally; nothing needs to be installed and there is no login.' },
+      { q: 'Why does my ZIP fail to upload on iPhone?', a: 'The usual causes are downloading the ZIP through the Mail app instead of the Files app, unzipping or renaming it, or picking it before it has finished downloading.' },
+      { q: 'How long does the Instagram export take to arrive?', a: 'Instagram usually needs a few minutes to prepare it, and Meta emails you a download link when it is ready.' },
+      { q: 'Can I see who unfollowed me from one export?', a: 'One export shows who does not follow you back; seeing who unfollowed you between two dates needs two exports compared, which saved snapshots make automatic.' },
+    ],
+    body: `Yes, and you never need a computer. The whole process runs on your phone: request your data in the Instagram app, download the ZIP Meta sends you, and upload it to WhoUnfollowed in your mobile browser. There is no app to install and no password to hand over.
+
+## Step 1: Request Your Data in Instagram
+
+In the Instagram app, open your profile and go to the settings menu, then find **Accounts Center**. From there:
+
+1. Tap **Your information and permissions**, then **Export your information**, then **Create export**.
+2. Choose your Instagram profile, then **Export to device**. Pick this one, not "Transfer to destination."
+3. Under **Customize information**, deselect everything except **Followers and following**.
+4. Set the date range to **All time** and the format to **JSON**, then start the export.
+
+The [full export walkthrough](/blog/how-to-download-your-instagram-data) covers each screen in more detail if a menu looks different on your version of the app.
+
+## Step 2: Wait for the Email, Then Download the ZIP
+
+Meta can take a few minutes to prepare the file, and [sometimes longer](/blog/how-long-does-an-instagram-data-request-take). When it is ready, you get an email with a download link. Open it on your phone and download the ZIP.
+
+**On iPhone, save it with the Files app, not through the Mail app.** Downloads opened straight from Mail are a common reason uploads fail later. **On Android,** download it as usual and leave it as a ZIP.
+
+## Step 3: Upload It to WhoUnfollowed
+
+Open [whounfollowed.co](/) in your phone's browser, tap **Choose file**, and select the ZIP. The parsing happens in your browser in about two seconds, and the file never leaves your phone.
+
+Two things prevent most mobile upload errors:
+
+- **Do not unzip or rename the file.** Upload the original ZIP exactly as it arrived.
+- **Let it finish downloading first.** A file that is still syncing from iCloud or Google Drive can fail to open. Wait until it has fully downloaded, then choose it.
+
+## What You Will See
+
+The free plan shows who you follow that does not follow you back. Seeing who unfollowed you between two dates works by comparing two exports: anyone in the older file who is missing from the newer one left in between. [Instagram does not tell you when that happens](/blog/does-instagram-notify-when-you-unfollow-someone), so this comparison is the reliable way to know.
+
+## Do You Need to Log In Anywhere?
+
+No. Nothing here asks for your Instagram password, and nothing connects to your account. Apps that do ask for it are [the ones to avoid](/blog/why-instagram-follower-trackers-ask-for-your-password). Your export is your own data, and reading it in your browser keeps it on your phone.
+
+## In Short
+
+- The full check works from a phone: request the export, download the ZIP, upload it.
+- On iPhone, download with the Files app and do not open it through Mail.
+- Never unzip or rename the ZIP, and wait until it has finished downloading before you pick it.
+- One export shows who does not follow you back. Two exports show who unfollowed you.
+
+[Upload your export](/) and see the list in about two minutes.`,
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
