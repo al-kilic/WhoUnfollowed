@@ -21,7 +21,7 @@ export const UNLOCK_DAYS_LABEL: Record<UnlockDuration, string> = {
 export const UNLOCK_PRICE_SUMMARY =
   `$${UNLOCK_PRICE_USD.monthly} for ${UNLOCK_DAYS_LABEL.monthly}, $${UNLOCK_PRICE_USD.yearly} for ${UNLOCK_DAYS_LABEL.yearly}`;
 
-// The Lifetime ("Founding Member") tier: a separate one-time SKU, not part of
+// The Lifetime ("Insider") tier: a separate one-time SKU, not part of
 // the UnlockDuration union (no day count, never expires). Must be kept in
 // sync BY HAND with STRIPE_PRICE_LIFETIME, same caveat as above.
 export const LIFETIME_PRICE_USD = 19.99;

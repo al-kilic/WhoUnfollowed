@@ -13,8 +13,8 @@ export interface AccountContent {
   proUntil: (date: string) => string;
   complimentaryAccess: string;
   onFreePlan: string;
-  founderBadge: string;
-  founderSince: (date: string) => string;
+  insiderBadge: string;
+  insiderSince: (date: string) => string;
   extendPro: string;
   upgradeToPro: string;
   betaBanner: string;
@@ -93,8 +93,8 @@ const EN: AccountContent = {
   proUntil: (date) => `Pro until ${date}`,
   complimentaryAccess: 'Complimentary access. Thanks for being here early.',
   onFreePlan: 'You are on the free plan.',
-  founderBadge: 'FOUNDING MEMBER',
-  founderSince: (date) => `Founding Member since ${date}. Lifetime access, nothing to renew.`,
+  insiderBadge: 'INSIDER',
+  insiderSince: (date) => `Insider since ${date}. Lifetime access, nothing to renew.`,
   extendPro: 'Extend Pro',
   upgradeToPro: 'Upgrade to Pro',
   betaBanner: 'Free during beta. You have full Pro access at no cost until we launch paid plans. No billing yet.',
@@ -188,8 +188,8 @@ const ES: AccountContent = {
   freeBadge: 'GRATIS',
   proUntil: (date) => `Pro hasta el ${date}`,
   complimentaryAccess: 'Acceso de cortesía. Gracias por estar aquí desde el principio.',
-  founderBadge: 'MIEMBRO FUNDADOR',
-  founderSince: (date) => `Miembro Fundador desde ${date}. Acceso de por vida, nada que renovar.`,
+  insiderBadge: 'INSIDER',
+  insiderSince: (date) => `Insider desde ${date}. Acceso de por vida, nada que renovar.`,
   onFreePlan: 'Estás en el plan gratuito.',
   extendPro: 'Extender Pro',
   upgradeToPro: 'Mejorar a Pro',
@@ -285,8 +285,8 @@ const PT: AccountContent = {
   proUntil: (date) => `Pro até ${date}`,
   complimentaryAccess: 'Acesso de cortesia. Obrigado por estar aqui desde o início.',
   onFreePlan: 'Você está no plano gratuito.',
-  founderBadge: 'MEMBRO FUNDADOR',
-  founderSince: (date) => `Membro Fundador desde ${date}. Acesso vitalício, nada para renovar.`,
+  insiderBadge: 'INSIDER',
+  insiderSince: (date) => `Insider desde ${date}. Acesso vitalício, nada para renovar.`,
   extendPro: 'Estender Pro',
   upgradeToPro: 'Assinar Pro',
   betaBanner: 'Grátis durante a beta. Você tem acesso completo ao Pro sem custo até lançarmos os planos pagos. Sem cobrança por enquanto.',

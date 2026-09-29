@@ -5,7 +5,7 @@ import {
   getVerificationEmailContent,
   getPasswordResetEmailContent,
   getPurchaseEmailContent,
-  getFounderTierEmailContent,
+  getInsiderTierEmailContent,
   getExpiringSoonEmailContent,
   getExpiredEmailContent,
 } from './content';
@@ -200,13 +200,13 @@ export function purchaseConfirmationEmail(opts: {
   return { subject, html: emailLayout({ locale, preview, contentHtml: content }), text };
 }
 
-// Sent from the Stripe webhook after a Lifetime ("Founding Member") purchase
+// Sent from the Stripe webhook after a Lifetime ("Insider") purchase
 // completes. Deliberately separate from purchaseConfirmationEmail: that
 // function requires a non-null expiresAt and every locale's copy interpolates
 // a date string, neither of which applies to a purchase that never expires.
-export function founderTierConfirmationEmail(opts: { locale?: AppLocale }): EmailResult {
+export function insiderTierConfirmationEmail(opts: { locale?: AppLocale }): EmailResult {
   const locale = opts.locale ?? 'en';
-  const c = getFounderTierEmailContent(locale);
+  const c = getInsiderTierEmailContent(locale);
   const homeUrl = `${APP_URL}${localizedPathname('/', locale)}`;
   const text = `${c.body} ${c.perkNote} ${c.footerNote} ${homeUrl}`;
 

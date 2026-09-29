@@ -252,7 +252,7 @@ describe('POST /api/webhooks/stripe', () => {
             mode: 'payment',
             metadata: { type: 'lifetime', ...metadata },
             customer: 'cus_life',
-            customer_email: 'founder@example.com',
+            customer_email: 'insider@example.com',
             amount_total: 1999,
             currency: 'usd',
             ...over,
@@ -275,10 +275,10 @@ describe('POST /api/webhooks/stripe', () => {
       expect(setArg.expiryReminderSentAt).toBeNull();
       expect(setArg.marketingOptIn).toBeUndefined();
       expect(profilesFindFirst).not.toHaveBeenCalled();
-      expect(sendTelegramMessage).toHaveBeenCalledWith(expect.stringContaining('Founding Member'));
+      expect(sendTelegramMessage).toHaveBeenCalledWith(expect.stringContaining('Insider'));
       expect(sendEmail).toHaveBeenCalledWith(expect.objectContaining({
-        to: 'founder@example.com',
-        subject: expect.stringContaining('Membro Fundador'),
+        to: 'insider@example.com',
+        subject: expect.stringContaining('Bem-vindo'),
       }));
     });
 

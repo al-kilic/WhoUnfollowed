@@ -6,8 +6,8 @@ export const CHANGELOG_ENTRIES: ChangelogEntry[] = [  {
     date: 'September 29, 2026',
     tag: 'feature',
     items: [
-      'New Founding Member option: pay $19.99 once and keep Pro for good, with no expiry date. Available for a limited time to help support the product.',
-      'Founding Members get a badge and title on their account, plus Pro benefits on my next tools, and hear first when they launch.',
+      'New Insider option: pay $19.99 once and keep Pro for good, with no expiry date. Available for a limited time to help support the product.',
+      'Insiders get a badge and title on their account, plus Pro benefits on my next tools, and hear first when they launch.',
       'Optional updates: you can choose to get emails about future products at checkout, and turn them off any time from your account page.',
     ],
   },

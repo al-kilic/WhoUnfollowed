@@ -43,7 +43,7 @@ function fmtDate(d: Date | null | undefined): string | null {
   return new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-function isFounderProfile(profile: { subscriptionStatus: string; lifetimePurchasedAt: Date | null } | undefined): boolean {
+function isInsiderProfile(profile: { subscriptionStatus: string; lifetimePurchasedAt: Date | null } | undefined): boolean {
   return profile?.subscriptionStatus === 'active' && !!profile.lifetimePurchasedAt;
 }
 
@@ -78,8 +78,8 @@ export default async function AccountPage({ params }: PageProps) {
     isProUser(),
   ]);
   const isPro = hasProAccess;
-  // Lifetime purchase (lifetimePurchasedAt) is the only Founding Member signal.
-  const isFounder = isFounderProfile(profile);
+  // Lifetime purchase (lifetimePurchasedAt) is the only Insider signal.
+  const isInsider = isInsiderProfile(profile);
 
   const paymentsEnabled = isPaidFeaturesEnabled();
   const status = profile?.subscriptionStatus ?? 'none';
@@ -147,16 +147,16 @@ export default async function AccountPage({ params }: PageProps) {
                       padding: '4px 10px',
                       borderRadius: 100,
                       color: isPro ? T.cream : T.inkDim,
-                      background: isFounder ? T.terra : isPro ? T.teal : 'transparent',
-                      border: isFounder ? `1px solid ${T.terra}` : isPro ? '1px solid rgba(2,136,143,0.5)' : `1px solid ${T.border3}`,
+                      background: isInsider ? T.terra : isPro ? T.teal : 'transparent',
+                      border: isInsider ? `1px solid ${T.terra}` : isPro ? '1px solid rgba(2,136,143,0.5)' : `1px solid ${T.border3}`,
                     }}
                   >
-                    {isFounder ? c.founderBadge : isPro ? c.proBadge : c.freeBadge}
+                    {isInsider ? c.insiderBadge : isPro ? c.proBadge : c.freeBadge}
                   </span>
                 </div>
                 <div style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5 }}>
-                  {isFounder
-                    ? c.founderSince(fmtDate(profile?.lifetimePurchasedAt) ?? '')
+                  {isInsider
+                    ? c.insiderSince(fmtDate(profile?.lifetimePurchasedAt) ?? '')
                     : renewal
                     ? `${renewal.label}${renewal.amount ? ` · ${renewal.amount}` : ''}`
                     : isPro
@@ -164,7 +164,7 @@ export default async function AccountPage({ params }: PageProps) {
                       : c.onFreePlan}
                 </div>
               </div>
-              {paymentsEnabled && !isFounder ? (
+              {paymentsEnabled && !isInsider ? (
                 <UpgradeLink source="account-plan" href={pricingHref} style={{ fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none', padding: '9px 18px', borderRadius: 10, background: T.teal, whiteSpace: 'nowrap' }}>
                   {isPro ? c.extendPro : c.upgradeToPro}
                 </UpgradeLink>
@@ -238,7 +238,7 @@ export default async function AccountPage({ params }: PageProps) {
           </section>
         </div>
 
-        {isFounder && (
+        {isInsider && (
           <section style={{ marginBottom: 28 }}>
             <div style={sectionLabel}>{c.marketingConsent.title}</div>
             <div style={card}>

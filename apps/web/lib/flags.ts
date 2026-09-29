@@ -58,7 +58,7 @@ export async function isProUser(): Promise<boolean> {
 // lifetimePurchasedAt is the only valid signal for "this is a genuine
 // Lifetime purchase," checked explicitly below rather than inferred from the
 // null expiry it shares with an ordinary free signup.
-// Use this for the PRO/Founding-Member badge and billing UI; use isProUser()
+// Use this for the PRO/Insider badge and billing UI; use isProUser()
 // for feature access (which stays open during beta).
 export async function isPaidSubscriber(): Promise<boolean> {
   if (isDevProPreview()) return true;
@@ -76,11 +76,11 @@ export async function isPaidSubscriber(): Promise<boolean> {
   return !!profile.subscriptionExpiresAt && profile.subscriptionExpiresAt.getTime() > Date.now();
 }
 
-// True only for a genuine Lifetime ("Founding Member") purchase. Drives the
-// Founding Member badge/title; unlike isPaidSubscriber() it is false for a
+// True only for a genuine Lifetime ("Insider") purchase. Drives the
+// Insider badge/title; unlike isPaidSubscriber() it is false for a
 // dated unlock or a plain free signup.
 export async function isLifetimeMember(): Promise<boolean> {
-  // Dev preview is a Pro user; DEV_LIFETIME_PREVIEW=1 also makes it a Founding Member.
+  // Dev preview is a Pro user; DEV_LIFETIME_PREVIEW=1 also makes it an Insider.
   if (isDevProPreview()) return process.env.DEV_LIFETIME_PREVIEW === '1';
   const { user } = await validateRequest();
   if (!user) return false;
