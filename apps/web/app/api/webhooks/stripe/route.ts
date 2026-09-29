@@ -8,7 +8,7 @@ import { sendTelegramMessage, escapeTelegramHtml } from '@/lib/telegram';
 import { trackServerEvent } from '@/lib/umamiServer';
 import { Events } from '@/lib/analytics';
 import { sendEmail } from '@/lib/email/send';
-import { purchaseConfirmationEmail, founderTierConfirmationEmail } from '@/lib/email/templates';
+import { purchaseConfirmationEmail, insiderTierConfirmationEmail } from '@/lib/email/templates';
 import { routing, type AppLocale } from '@/i18n/routing';
 import { MARKETING_CONSENT_VERSION } from '@/lib/marketingConsent';
 
@@ -197,7 +197,7 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({ received: true });
 }
 
-// The Lifetime ("Founding Member") tier. Deliberately kept as its own
+// The Lifetime ("Insider") tier. Deliberately kept as its own
 // function rather than merged into the unlock branch above: it writes
 // absolute values (null expiry, "now" for lifetimePurchasedAt) instead of
 // unlock's relative date-math (extendUnlockExpiry's stacking), and an
@@ -263,7 +263,7 @@ async function handleLifetimePurchase(session: CheckoutSession): Promise<void> {
     ? new Intl.NumberFormat('en-US', { style: 'currency', currency: (session.currency ?? 'usd').toUpperCase() }).format(session.amount_total / 100)
     : null;
   const acquisitionSource = session.metadata?.acquisitionSource || null;
-  const lines = ['🏆 Founding Member purchase!'];
+  const lines = ['🏆 Insider purchase!'];
   if (email) lines.push(`Email: ${escapeTelegramHtml(email)}`);
   if (amount) lines.push(`Amount: ${escapeTelegramHtml(amount)}`);
   lines.push(`New account: ${isNewAccount ? 'Yes' : 'No'}`);
@@ -277,11 +277,11 @@ async function handleLifetimePurchase(session: CheckoutSession): Promise<void> {
   }
 
   if (email) {
-    const { subject, html, text } = founderTierConfirmationEmail({ locale });
+    const { subject, html, text } = insiderTierConfirmationEmail({ locale });
     const sent = await sendEmail({ to: email, subject, html, text });
     if (!sent.ok) {
       // Non-fatal: the purchase already went through; just log.
-      console.error('[stripe webhook] founder-tier confirmation email failed:', sent.error);
+      console.error('[stripe webhook] insider-tier confirmation email failed:', sent.error);
     }
   }
 

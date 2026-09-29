@@ -23,8 +23,8 @@ const PRICING_FAQ_EN: PricingFaqItem[] = [
     a: 'No. It\'s a one-time payment that unlocks Pro for 30 or 365 days. When it runs out, buy again if you want to keep going. No recurring charge, ever.',
   },
   {
-    q: 'What is the Lifetime Founding Member option?',
-    a: 'For a limited time, you can pay $19.99 once and keep Pro with no expiry date. It is meant to support an independent product. Founding Members get a badge and title, Pro benefits on my next tools, and hear first when they launch. It may be removed at any time, and existing Founding Members keep their access.',
+    q: 'What is the Lifetime Insider option?',
+    a: 'For a limited time, you can pay $19.99 once and keep Pro with no expiry date. It is meant to support an independent product. Insiders get a badge and title, Pro benefits on my next tools, and hear first when they launch. It may be removed at any time, and existing Insiders keep their access.',
   },
   {
     q: 'Why charge for Pro at all?',
@@ -50,8 +50,8 @@ const PRICING_FAQ_ES: PricingFaqItem[] = [
     a: 'No. Es un pago único que desbloquea Pro por 30 o 365 días. Cuando se acaba, puedes comprarlo de nuevo si quieres seguir usándolo. Nunca hay cobro recurrente.',
   },
   {
-    q: '¿Qué es la opción Lifetime de Miembro Fundador?',
-    a: 'Por tiempo limitado, puedes pagar $19.99 una vez y conservar Pro sin fecha de vencimiento. Sirve para apoyar un producto independiente. Los Miembros Fundadores reciben una insignia y un título, beneficios Pro en mis próximas herramientas y son los primeros en enterarse cuando se lancen. Puede retirarse en cualquier momento, y quienes ya son Miembros Fundadores conservan su acceso.',
+    q: '¿Qué es la opción Lifetime de Insider?',
+    a: 'Por tiempo limitado, puedes pagar $19.99 una vez y conservar Pro sin fecha de vencimiento. Sirve para apoyar un producto independiente. Los Insiders reciben una insignia y un título, beneficios Pro en mis próximas herramientas y son los primeros en enterarse cuando se lancen. Puede retirarse en cualquier momento, y quienes ya son Insiders conservan su acceso.',
   },
   {
     q: '¿Por qué cobrar por Pro?',
@@ -77,8 +77,8 @@ const PRICING_FAQ_PT: PricingFaqItem[] = [
     a: 'Não. É um pagamento único que libera o Pro por 30 ou 365 dias. Quando o prazo acaba, você compra de novo se quiser continuar. Nunca há cobrança recorrente.',
   },
   {
-    q: 'O que é a opção Lifetime de Membro Fundador?',
-    a: 'Por tempo limitado, você pode pagar $19.99 uma vez e manter o Pro sem data de vencimento. Serve para apoiar um produto independente. Os Membros Fundadores recebem um selo e um título, benefícios Pro nas minhas próximas ferramentas e são os primeiros a saber quando forem lançadas. Pode ser retirada a qualquer momento, e quem já é Membro Fundador mantém o acesso.',
+    q: 'O que é a opção Lifetime de Insider?',
+    a: 'Por tempo limitado, você pode pagar $19.99 uma vez e manter o Pro sem data de vencimento. Serve para apoiar um produto independente. Os Insiders recebem um selo e um título, benefícios Pro nas minhas próximas ferramentas e são os primeiros a saber quando forem lançadas. Pode ser retirada a qualquer momento, e quem já é Insider mantém o acesso.',
   },
   {
     q: 'Por que cobrar pelo Pro?',

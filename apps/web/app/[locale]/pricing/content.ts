@@ -109,20 +109,20 @@ const EN: PricingContent = {
   ],
   faqTitle: 'COMMON QUESTIONS',
   lifetime: {
-    badge: 'Founding Member',
+    badge: 'Insider',
     limitedNote: 'Limited-time offer',
     oneTime: 'once, forever',
     desc: 'Pay once, keep Pro for good. Available for a limited time to help fund the product.',
     bullets: [
       'Everything in Pro, with no expiry date',
-      'Founding Member badge and title on your account',
+      'Insider badge and title on your account',
       'Pro benefits on my next tools, at no extra cost',
       'First to hear when I ship something new',
     ],
     consentLabel: 'Email me about future products from Alcatraz Studio. Optional. Unsubscribe any time.',
-    cta: 'Become a Founding Member',
+    cta: 'Become an Insider',
     note: 'One-time payment. No subscription, nothing to renew.',
-    alreadyMember: 'You are a Founding Member. Thank you.',
+    alreadyMember: 'You are an Insider. Thank you.',
   },
 };
 
@@ -184,20 +184,20 @@ const ES: PricingContent = {
   ],
   faqTitle: 'PREGUNTAS FRECUENTES',
   lifetime: {
-    badge: 'Miembro Fundador',
+    badge: 'Insider',
     limitedNote: 'Oferta por tiempo limitado',
     oneTime: 'una vez, para siempre',
     desc: 'Paga una vez y conserva Pro para siempre. Disponible por tiempo limitado para ayudar a financiar el producto.',
     bullets: [
       'Todo lo de Pro, sin fecha de vencimiento',
-      'Insignia y título de Miembro Fundador en tu cuenta',
+      'Insignia y título de Insider en tu cuenta',
       'Beneficios Pro en mis próximas herramientas, sin costo extra',
       'Serás de los primeros en enterarte cuando lance algo nuevo',
     ],
     consentLabel: 'Envíame novedades sobre futuros productos de Alcatraz Studio. Opcional. Puedes darte de baja cuando quieras.',
-    cta: 'Hazte Miembro Fundador',
+    cta: 'Hazte Insider',
     note: 'Pago único. Sin suscripción, nada que renovar.',
-    alreadyMember: 'Eres Miembro Fundador. Gracias.',
+    alreadyMember: 'Eres Insider. Gracias.',
   },
 };
 
@@ -259,20 +259,20 @@ const PT: PricingContent = {
   ],
   faqTitle: 'PERGUNTAS FREQUENTES',
   lifetime: {
-    badge: 'Membro Fundador',
+    badge: 'Insider',
     limitedNote: 'Oferta por tempo limitado',
     oneTime: 'uma vez, para sempre',
     desc: 'Pague uma vez e mantenha o Pro para sempre. Disponível por tempo limitado para ajudar a financiar o produto.',
     bullets: [
       'Tudo do Pro, sem data de vencimento',
-      'Selo e título de Membro Fundador na sua conta',
+      'Selo e título de Insider na sua conta',
       'Benefícios Pro nas minhas próximas ferramentas, sem custo extra',
       'Você será um dos primeiros a saber quando eu lançar algo novo',
     ],
     consentLabel: 'Envie-me novidades sobre futuros produtos da Alcatraz Studio. Opcional. Cancele quando quiser.',
-    cta: 'Torne-se Membro Fundador',
+    cta: 'Torne-se Insider',
     note: 'Pagamento único. Sem assinatura, nada para renovar.',
-    alreadyMember: 'Você é Membro Fundador. Obrigado.',
+    alreadyMember: 'Você é Insider. Obrigado.',
   },
 };
 

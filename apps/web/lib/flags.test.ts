@@ -130,7 +130,7 @@ describe('isPaidSubscriber', () => {
   });
 });
 
-describe('lifetime (Founding Member)', () => {
+describe('lifetime (Insider)', () => {
   afterEach(() => { vi.resetAllMocks(); });
   const LIFETIME = { subscriptionStatus: 'active', stripeSubscriptionId: null, subscriptionExpiresAt: null, lifetimePurchasedAt: new Date() };
 

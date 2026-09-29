@@ -10,7 +10,7 @@ export function isDevProPreview(): boolean {
 }
 
 // Stub profile so /account renders without a database. DEV_LIFETIME_PREVIEW=1
-// makes it a Founding Member with marketing opt-in on.
+// makes it an Insider with marketing opt-in on.
 export function devPreviewProfile() {
   const lifetime = process.env.DEV_LIFETIME_PREVIEW === '1';
   return {

@@ -95,12 +95,12 @@ export const profiles = pgTable('profiles', {
   // them every day forever.
   expiryReminderSentAt: timestamp('expiry_reminder_sent_at'),
   expiredEmailSentAt: timestamp('expired_email_sent_at'),
-  // The sole signal for a genuine Lifetime ("Founding Member") purchase. Do
+  // The sole signal for a genuine Lifetime ("Insider") purchase. Do
   // NOT infer lifetime status from a null subscriptionExpiresAt elsewhere —
   // every ordinary signup is already seeded with subscriptionStatus:'active'
   // and a null subscriptionExpiresAt (see isPaidSubscriber()'s comment in
   // lib/flags.ts), so null expiry alone means nothing. Also doubles as the
-  // "Founding Member since {date}" copy on /account.
+  // "Insider since {date}" copy on /account.
   lifetimePurchasedAt: timestamp('lifetime_purchased_at'),
   // Consent to be emailed about future products (not this product's
   // transactional emails, which need no opt-in). Opt-out is a separate field
