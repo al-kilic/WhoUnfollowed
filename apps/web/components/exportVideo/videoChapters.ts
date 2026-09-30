@@ -5,6 +5,9 @@
 export const EXPORT_VIDEO = {
   src: '/video/export-guide-v1.mp4',
   poster: '/video/export-guide-v1-poster.jpg',
+  // A frame from step 1. Used where the video is click-to-play: the centered
+  // play button would sit on top of the title card's headline.
+  posterStep1: '/video/export-guide-v1-poster-step1.jpg',
   durationSeconds: 68.2,
   isoDuration: 'PT1M8S',
   uploadDate: '2026-09-30',

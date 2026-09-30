@@ -10,7 +10,9 @@ const SCROLL_SEEK_DELAY_MS = 300;
 //  - clicking a step (or a chapter segment) seeks the video
 //  - scrolling a different step into the reading band seeks the video to it
 // The page is never scrolled programmatically, so the two cannot fight.
-export function useVideoStepSync(enabled: boolean) {
+// `autoplay: false` is the click-to-play variant (homepage): nothing plays, or
+// downloads, until the visitor presses play.
+export function useVideoStepSync(enabled: boolean, { autoplay = true }: { autoplay?: boolean } = {}) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
   const stepsRef = useRef<HTMLDivElement>(null);
@@ -19,6 +21,8 @@ export function useVideoStepSync(enabled: boolean) {
   const activeRef = useRef(0);
   // True once the viewer paused on purpose: nothing auto-resumes after that.
   const userPaused = useRef(false);
+  // True once the viewer pressed play themselves.
+  const started = useRef(false);
 
   const syncTime = useCallback(() => {
     const video = videoRef.current;
@@ -48,6 +52,7 @@ export function useVideoStepSync(enabled: boolean) {
 
   const watchStep = useCallback((index: number) => {
     userPaused.current = false;
+    started.current = true;
     seekToStep(index);
     play();
   }, [seekToStep, play]);
@@ -57,6 +62,7 @@ export function useVideoStepSync(enabled: boolean) {
     if (!video) return;
     if (video.paused) {
       userPaused.current = false;
+      started.current = true;
       play();
     } else {
       userPaused.current = true;
@@ -74,23 +80,23 @@ export function useVideoStepSync(enabled: boolean) {
     return () => cancelAnimationFrame(frame);
   }, [playing, syncTime]);
 
-  // Autoplay (muted) unless the visitor asked for reduced motion, and pause
-  // while the video is scrolled out of view.
+  // Autoplay (muted) unless the visitor asked for reduced motion or this is the
+  // click-to-play variant, and pause while the video is scrolled out of view.
   useEffect(() => {
     const video = videoRef.current;
     if (!enabled || !video) return;
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const auto = autoplay && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const observer = new IntersectionObserver(([entry]) => {
       if (!entry) return;
       if (entry.isIntersecting) {
-        if (!reducedMotion && !userPaused.current) play();
+        if ((auto || started.current) && !userPaused.current) play();
       } else {
         video.pause();
       }
     }, { threshold: 0.25 });
     observer.observe(video);
     return () => observer.disconnect();
-  }, [enabled, play]);
+  }, [enabled, autoplay, play]);
 
   // Scroll -> seek: the step crossing a line 45% down the viewport (just under
   // the pinned video on a phone) is the one being read. A zero-height band

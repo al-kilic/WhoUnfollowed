@@ -116,6 +116,9 @@ export interface HomeContent {
     waitNote: string;
     notSure: string;
     guideCta: string;
+    videoTitle: string;
+    videoBody: string;
+    videoMeta: string[];
   };
   compare: {
     eyebrow: string;
@@ -299,6 +302,9 @@ const EN: HomeContent = {
     waitNote: 'Meta may take a few minutes to prepare the download. Once it arrives, come back and upload the ZIP.',
     notSure: 'Not sure how to get your export?',
     guideCta: 'Step-by-step export guide',
+    videoTitle: 'Watch the whole export in 68 seconds.',
+    videoBody: 'Every screen in Meta Accounts Center, in order, from opening it to the download email. Press play, or jump straight to the step you are stuck on.',
+    videoMeta: ['68 sec', 'No sound', '6 steps'],
   },
   compare: {
     eyebrow: 'PRIVACY',
@@ -527,6 +533,9 @@ const ES: HomeContent = {
     waitNote: 'Meta puede tardar unos minutos en preparar la descarga. Cuando llegue, vuelve y sube el ZIP.',
     notSure: '¿No sabes cómo obtener tu export?',
     guideCta: 'Guía paso a paso',
+    videoTitle: 'Mira todo el export en 68 segundos.',
+    videoBody: 'Cada pantalla del Centro de cuentas de Meta, en orden, desde que lo abres hasta el correo de descarga. Dale a reproducir o salta directo al paso en el que te atascaste.',
+    videoMeta: ['68 seg', 'Sin sonido', '6 pasos', 'Texto en inglés'],
   },
   compare: {
     eyebrow: 'PRIVACIDAD',
@@ -755,6 +764,9 @@ const PT: HomeContent = {
     waitNote: 'A Meta pode levar alguns minutos para preparar o download. Quando chegar, volte e envie o ZIP.',
     notSure: 'Não sabe como conseguir seu export?',
     guideCta: 'Guia passo a passo',
+    videoTitle: 'Veja todo o export em 68 segundos.',
+    videoBody: 'Cada tela da Central de Contas da Meta, em ordem, desde abrir até o email de download. Dê o play ou vá direto ao passo em que você travou.',
+    videoMeta: ['68 s', 'Sem som', '6 passos', 'Texto em inglês'],
   },
   compare: {
     eyebrow: 'PRIVACIDADE',

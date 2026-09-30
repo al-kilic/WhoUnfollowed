@@ -10,14 +10,16 @@ import { LandingFooter } from '@/components/landing/FinalCTA';
 import type { HowToExportContent as HowToExportContentData } from './content';
 import { DeviceSteps } from './DeviceSteps';
 import { DriveSteps } from './DriveSteps';
-import { ExportVideo } from './ExportVideo';
 import { GuideSections } from './GuideSections';
 import { TabButton, ZipCTA } from './parts';
-import { useVideoStepSync } from './useVideoStepSync';
+import { ExportVideo } from '@/components/exportVideo/ExportVideo';
+import { useVideoStepSync } from '@/components/exportVideo/useVideoStepSync';
 
 export function HowToExportContent({ content }: { content: HowToExportContentData }) {
   const [tab, setTab] = useState<'device' | 'drive'>('device');
   const sync = useVideoStepSync(tab === 'device');
+  const d = content.device;
+  const chapterTitles = [d.step1.title, d.step2.title, d.step3.title, d.step4.title, d.step5.title, d.step6.title];
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
@@ -67,7 +69,7 @@ export function HowToExportContent({ content }: { content: HowToExportContentDat
         {tab === 'device' && (
           <div className="export-split">
             <div className="export-video">
-              <ExportVideo content={content} sync={sync} />
+              <ExportVideo sync={sync} labels={content.video} chapterTitles={chapterTitles} caption={content.video.caption} collapsible />
             </div>
             <div ref={sync.stepsRef} className="export-steps">
               <DeviceSteps content={content} activeStep={sync.activeStep} onWatchStep={sync.seekToStep} />

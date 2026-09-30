@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from '@/i18n/navigation';
 import { T } from './tokens';
+import { FlowVideoCard, type FlowVideoProps } from './FlowVideoCard';
 
 // ─── Illustrations ─────────────────────────────────────────────────────────────
 
@@ -110,7 +110,7 @@ function SettingsList({ items }: { items: string[] }) {
 
 // ─── FlowSection ──────────────────────────────────────────────────────────────
 
-interface FlowContent {
+export interface FlowContent {
   eyebrow: string;
   headlinePrefix: string;
   headlineSuffix: string;
@@ -126,9 +126,12 @@ interface FlowContent {
   waitNote: string;
   notSure: string;
   guideCta: string;
+  videoTitle: string;
+  videoBody: string;
+  videoMeta: string[];
 }
 
-export function FlowSection({ content }: { content: FlowContent }) {
+export function FlowSection({ content, video }: { content: FlowContent; video: FlowVideoProps }) {
   return (
     <section id="flow" className="px-4 sm:px-12 pb-24 sm:pb-32 relative">
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
@@ -157,21 +160,12 @@ export function FlowSection({ content }: { content: FlowContent }) {
             illustration={<IllDrop />} eta={content.step3Eta} highlight
           />
         </div>
-        <div style={{ maxWidth: 600, margin: '0 auto 32px', padding: '14px 18px', borderRadius: 12, background: 'rgba(2,136,143,0.06)', border: '1px solid rgba(2,136,143,0.2)', textAlign: 'center' }}>
+        <div style={{ maxWidth: 600, margin: '0 auto 40px', padding: '14px 18px', borderRadius: 12, background: 'rgba(2,136,143,0.06)', border: '1px solid rgba(2,136,143,0.2)', textAlign: 'center' }}>
           <p style={{ fontSize: 13, color: T.inkDim, margin: 0, lineHeight: 1.5 }}>
             {content.waitNote}
           </p>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-          <p style={{ fontSize: 13, color: T.terra, margin: 0, fontFamily: T.mono, letterSpacing: '0.04em' }}>{content.notSure}</p>
-          <Link
-            href="/how-to-export"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 14, fontWeight: 600, color: T.cream, textDecoration: 'none', padding: '13px 24px', borderRadius: 12, background: T.teal, boxShadow: `0 4px 20px ${T.tealGlow}` }}
-          >
-            {content.guideCta}
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7 H11 M11 7 L8 4 M11 7 L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-          </Link>
-        </div>
+        <FlowVideoCard content={content} video={video} />
       </div>
     </section>
   );

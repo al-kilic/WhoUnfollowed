@@ -8,6 +8,7 @@ import { MarqueeBand }   from './MarqueeBand';
 import { WhatYouGetSection } from './WhatYouGetSection';
 import { ValueSection }  from './ValueSection';
 import { FlowSection }   from './FlowSection';
+import type { FlowVideoProps } from './FlowVideoCard';
 import { CompareSection } from './CompareSection';
 import { PricingSection } from './PricingSection';
 import { FAQSection }    from './FAQSection';
@@ -17,12 +18,13 @@ import { getQuickFeedbackWidgetContent } from '@/components/quickFeedbackWidget.
 import type { HomeContent } from '@/app/[locale]/homeContent';
 import type { AppLocale } from '@/i18n/routing';
 
-export function LandingPage({ userEmail, isPro = false, lifetimeAvailable = false, initialStats, content, locale = 'en' }: {
+export function LandingPage({ userEmail, isPro = false, lifetimeAvailable = false, initialStats, content, exportVideo, locale = 'en' }: {
   userEmail: string | null;
   isPro?: boolean;
   lifetimeAvailable?: boolean;
   initialStats: { snapshots: number; avgNonFollowers: number };
   content: HomeContent;
+  exportVideo: FlowVideoProps;
   locale?: AppLocale;
 }) {
   return (
@@ -37,7 +39,7 @@ export function LandingPage({ userEmail, isPro = false, lifetimeAvailable = fals
         <MarqueeBand items={content.marquee} />
         <WhatYouGetSection content={content.whatYouGet} />
         <ValueSection content={content.value} />
-        <FlowSection content={content.flow} />
+        <FlowSection content={content.flow} video={exportVideo} />
         <CompareSection content={content.compare} />
         <FAQSection content={content.faq} />
         <PricingSection content={content.pricingTeaser} lifetimeAvailable={lifetimeAvailable} />
