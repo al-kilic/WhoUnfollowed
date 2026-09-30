@@ -553,3 +553,18 @@ body.tutorial-active #tutorial-triage-buttons {
   .export-caption { display: block; }
   .export-collapse { display: none !important; }
 }
+
+/* Homepage "How it works" video card. Phones: text, player, guide button.
+   Wide screens: text and button stacked on the left, centered against the
+   player on the right. */
+.flow-video { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 20px; }
+.flow-video .export-player { border-radius: 12px; }
+@media (min-width: 900px) {
+  .flow-video {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 8fr); grid-template-rows: auto auto;
+    column-gap: 40px; row-gap: 24px; padding: 28px 28px 28px 36px;
+  }
+  .flow-video-text { grid-column: 1; grid-row: 1; align-self: end; }
+  .flow-video-cta { grid-column: 1; grid-row: 2; align-self: start; }
+  .flow-video-player { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+}

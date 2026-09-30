@@ -10,7 +10,7 @@ interface Props {
 }
 
 // The six "Download to device" steps. Each one is tied to a chapter of the
-// video guide: see videoChapters.ts and useVideoStepSync.ts.
+// video guide: see components/exportVideo (videoChapters.ts, useVideoStepSync.ts).
 export function DeviceSteps({ content, activeStep, onWatchStep }: Props) {
   const sync = (n: number) => ({
     n,

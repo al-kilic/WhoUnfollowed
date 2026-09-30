@@ -6,7 +6,7 @@ import { OG_LOCALE, ogAlternateLocales } from '@/i18n/ogLocale';
 import { getPathname } from '@/i18n/navigation';
 import { HowToExportContent } from './HowToExportContent';
 import { getHowToExportContent } from './content';
-import { EXPORT_VIDEO } from './videoChapters';
+import { EXPORT_VIDEO } from '@/components/exportVideo/videoChapters';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
@@ -51,7 +51,7 @@ function buildHowToJsonLd(locale: AppLocale) {
   };
 }
 
-// The on-page video guide (self-hosted, see videoChapters.ts).
+// The on-page video guide (self-hosted, see components/exportVideo/videoChapters.ts).
 function buildVideoJsonLd(locale: AppLocale) {
   const { video } = getHowToExportContent(locale);
   return {

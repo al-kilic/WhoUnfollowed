@@ -11,6 +11,7 @@ import { routing, type AppLocale } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
 import { OG_LOCALE, ogAlternateLocales } from '@/i18n/ogLocale';
 import { getHomeContent } from './homeContent';
+import { getHowToExportContent } from './how-to-export/content';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
@@ -80,6 +81,13 @@ export default async function HomePage({ params }: PageProps) {
   const [isPro, initialStats] = await Promise.all([isProUser(), getStats()]);
   const lifetimeAvailable = isPaidFeaturesEnabled() && priceIdForLifetime() !== null;
   const content = getHomeContent(locale);
+  // Player labels and chapter titles for the homepage walkthrough video come
+  // from the export guide's content, so the two can't drift apart.
+  const guide = getHowToExportContent(locale);
+  const exportVideo = {
+    labels: guide.video,
+    chapterTitles: [1, 2, 3, 4, 5, 6].map((n) => guide.device[`step${n}` as 'step1'].title),
+  };
   const meta = SEO_META[locale];
 
   // FAQPage markup mirrors the visible homepage FAQ (content.faq.items), so
@@ -132,7 +140,7 @@ export default async function HomePage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <LandingPage userEmail={user?.email ?? null} isPro={isPro} lifetimeAvailable={lifetimeAvailable} initialStats={initialStats} content={content} locale={locale} />
+      <LandingPage userEmail={user?.email ?? null} isPro={isPro} lifetimeAvailable={lifetimeAvailable} initialStats={initialStats} content={content} exportVideo={exportVideo} locale={locale} />
     </>
   );
 }
