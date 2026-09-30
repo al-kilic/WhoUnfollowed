@@ -77,6 +77,20 @@ export interface HowToExportContent {
   relatedGuideEyebrow: string;
   relatedGuideLink: string;
   backToHome: string;
+  video: {
+    ariaLabel: string;
+    caption: string;
+    play: string;
+    pause: string;
+    fullscreen: string;
+    hide: string;
+    show: string;
+    watchStep: string;
+    onScreen: string;
+    jumpToStep: string;
+    schemaName: string;
+    schemaDescription: string;
+  };
 }
 
 const EN: HowToExportContent = {
@@ -223,6 +237,20 @@ const EN: HowToExportContent = {
   relatedGuideEyebrow: 'RELATED GUIDE',
   relatedGuideLink: 'How to download your Instagram data (step by step) →',
   backToHome: 'Back to WhoUnfollowed',
+  video: {
+    ariaLabel: 'Video guide: how to export your Instagram followers',
+    caption: '68 seconds, no sound. The video follows the step you are reading. Click any step to jump to it.',
+    play: 'Play video',
+    pause: 'Pause video',
+    fullscreen: 'Full screen',
+    hide: 'Hide video',
+    show: 'Show video',
+    watchStep: 'Watch this step',
+    onScreen: 'On screen now',
+    jumpToStep: 'Jump to step {n}',
+    schemaName: 'How to export your Instagram followers (68-second video guide)',
+    schemaDescription: 'A silent 68-second walkthrough of the six steps to export your Instagram or Threads followers and following list from Meta Accounts Center as a ZIP.',
+  },
 };
 
 const ES: HowToExportContent = {
@@ -369,6 +397,20 @@ const ES: HowToExportContent = {
   relatedGuideEyebrow: 'GUÍA RELACIONADA',
   relatedGuideLink: 'Cómo descargar tus datos de Instagram (paso a paso) →',
   backToHome: 'Volver a WhoUnfollowed',
+  video: {
+    ariaLabel: 'Guía en video: cómo exportar tus seguidores de Instagram',
+    caption: '68 segundos, sin sonido, con texto en inglés. El video sigue el paso que estás leyendo. Haz clic en cualquier paso para saltar a él.',
+    play: 'Reproducir video',
+    pause: 'Pausar video',
+    fullscreen: 'Pantalla completa',
+    hide: 'Ocultar video',
+    show: 'Mostrar video',
+    watchStep: 'Ver este paso',
+    onScreen: 'En pantalla ahora',
+    jumpToStep: 'Ir al paso {n}',
+    schemaName: 'Cómo exportar tus seguidores de Instagram (guía en video de 68 segundos)',
+    schemaDescription: 'Un recorrido silencioso de 68 segundos por los seis pasos para exportar tu lista de seguidores y seguidos de Instagram o Threads desde el Centro de cuentas de Meta como un ZIP.',
+  },
 };
 
 const PT: HowToExportContent = {
@@ -515,6 +557,20 @@ const PT: HowToExportContent = {
   relatedGuideEyebrow: 'GUIA RELACIONADO',
   relatedGuideLink: 'Como baixar seus dados do Instagram (passo a passo) →',
   backToHome: 'Voltar ao WhoUnfollowed',
+  video: {
+    ariaLabel: 'Guia em vídeo: como exportar seus seguidores do Instagram',
+    caption: '68 segundos, sem som, com texto em inglês. O vídeo acompanha o passo que você está lendo. Clique em qualquer passo para ir até ele.',
+    play: 'Reproduzir vídeo',
+    pause: 'Pausar vídeo',
+    fullscreen: 'Tela cheia',
+    hide: 'Ocultar vídeo',
+    show: 'Mostrar vídeo',
+    watchStep: 'Ver este passo',
+    onScreen: 'Na tela agora',
+    jumpToStep: 'Ir para o passo {n}',
+    schemaName: 'Como exportar seus seguidores do Instagram (guia em vídeo de 68 segundos)',
+    schemaDescription: 'Um passo a passo silencioso de 68 segundos pelos seis passos para exportar sua lista de seguidores e seguindo do Instagram ou do Threads pela Central de Contas da Meta como um ZIP.',
+  },
 };
 
 export function getHowToExportContent(locale: AppLocale): HowToExportContent {
