@@ -15,6 +15,16 @@ const nextConfig = {
   turbopack: {
     root: path.resolve(__dirname, '../..'),
   },
+  // Self-hosted guide videos are versioned by filename (export-guide-v1.mp4),
+  // so they can be cached for a year. Next serves public/ uncached by default.
+  async headers() {
+    return [
+      {
+        source: '/video/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+      },
+    ];
+  },
   async redirects() {
     return [
       // Retired 2026-07-26: the "compare two lists" post chased a weak,

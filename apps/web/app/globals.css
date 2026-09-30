@@ -527,3 +527,29 @@ body.tutorial-active #tutorial-triage-buttons {
   .plan-grid-3 .pc-4 { grid-row: 4; } .plan-grid-3 .pc-5 { grid-row: 5; } .plan-grid-3 .pc-6 { grid-row: 6; } .plan-grid-3 .pc-7 { grid-row: 7; }
 }
 .pc-4 { flex: 1; }
+
+/* How-to-export: the video guide stays pinned above the steps on small
+   screens and beside them on wide ones. It lives inside .export-split, so it
+   unpins by itself once the steps end. --export-nav-h is published by
+   useVideoStepSync (the sticky site nav has no fixed height). */
+.export-narrow { max-width: 720px; margin: 0 auto; }
+.export-split { max-width: 720px; margin: 0 auto; }
+.export-video {
+  position: sticky; top: var(--export-nav-h, 72px); z-index: 40;
+  margin: 0 -32px 32px; background: var(--t-bg);
+}
+.export-caption { display: none; }
+@media (max-width: 1023px) and (max-height: 560px) {
+  /* Landscape phones: a pinned video would leave no room for the steps. */
+  .export-video { position: static; }
+}
+@media (min-width: 1024px) {
+  .export-split {
+    max-width: none; display: grid; align-items: start; gap: 48px;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  }
+  .export-video { top: calc(var(--export-nav-h, 72px) + 24px); margin: 0; background: transparent; }
+  .export-player { border-radius: 16px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22); }
+  .export-caption { display: block; }
+  .export-collapse { display: none !important; }
+}

@@ -6,6 +6,7 @@ import { OG_LOCALE, ogAlternateLocales } from '@/i18n/ogLocale';
 import { getPathname } from '@/i18n/navigation';
 import { HowToExportContent } from './HowToExportContent';
 import { getHowToExportContent } from './content';
+import { EXPORT_VIDEO } from './videoChapters';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
@@ -47,6 +48,22 @@ function buildHowToJsonLd(locale: AppLocale) {
       { '@type': 'HowToStep', name: d.step5.title, text: d.step5.hint, url: `${SITE_URL}${canonical}#step5` },
       { '@type': 'HowToStep', name: d.step6.title, text: d.step6.hint, url: `${SITE_URL}${canonical}#step6` },
     ],
+  };
+}
+
+// The on-page video guide (self-hosted, see videoChapters.ts).
+function buildVideoJsonLd(locale: AppLocale) {
+  const { video } = getHowToExportContent(locale);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: video.schemaName,
+    description: video.schemaDescription,
+    thumbnailUrl: `${SITE_URL}${EXPORT_VIDEO.poster}`,
+    contentUrl: `${SITE_URL}${EXPORT_VIDEO.src}`,
+    uploadDate: EXPORT_VIDEO.uploadDate,
+    duration: EXPORT_VIDEO.isoDuration,
+    inLanguage: 'en',
   };
 }
 
@@ -104,6 +121,10 @@ export default async function HowToExportPage({ params }: PageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buildHowToJsonLd(locale)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildVideoJsonLd(locale)) }}
       />
       <HowToExportContent content={content} />
     </>
