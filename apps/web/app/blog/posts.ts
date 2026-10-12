@@ -4053,6 +4053,195 @@ No. Nothing here asks for your Instagram password, and nothing connects to your 
 
 [Upload your export](/) and see the list in about two minutes.`,
   },
+  {
+    slug: 'unfollowers-vs-non-followers-on-instagram-whats-the-difference',
+    cluster: 'unfollowers',
+    title: "Unfollowers vs. Non-Followers on Instagram: What's the Difference?",
+    metaTitle: 'Unfollowers vs. Non-Followers on Instagram Explained',
+    metaDescription: 'A non-follower never followed you back. An unfollower used to and stopped. Here is why the two get mixed up, and what each one needs to be found.',
+    excerpt: 'People use "unfollowed me" and "does not follow me back" as if they mean the same thing. They do not, and the difference is why one list is instant and the other needs two snapshots.',
+    date: 'October 12, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'unfollowers vs non-followers instagram',
+    art: 'split',
+    image: '/blog/unfollowers-vs-non-followers-hero.jpg',
+    imageAlt: 'An open notebook with handwritten notes on a wooden desk beside a laptop, representing comparing two follower lists',
+    cta: {
+      heading: 'Get the list you actually want.',
+      body: 'Upload your Instagram export and WhoUnfollowed shows who you follow that does not follow you back, in your browser, in about two minutes. No password, nothing uploaded.',
+      buttonLabel: "See who doesn't follow me back",
+      proNudge: 'Want the true unfollowers, the people who left? Pro saves each snapshot, so your next upload shows exactly who dropped off since the last one.',
+    },
+    faq: [
+      { q: 'What is the difference between a non-follower and an unfollower?', a: 'A non-follower is someone you follow who does not follow you back, while an unfollower is someone who used to follow you and stopped.' },
+      { q: 'Can one Instagram export show who unfollowed you?', a: 'No, one export is a snapshot of your current lists, so it shows non-followers; finding unfollowers requires comparing two exports taken at different times.' },
+      { q: 'Is every non-follower someone who unfollowed me?', a: 'No, many non-followers never followed you back in the first place, so they never unfollowed anything.' },
+      { q: 'Why do different trackers show different numbers?', a: 'Some count non-followers and others count unfollowers, and they are different lists, so the totals will not match.' },
+      { q: 'What is a fan on Instagram?', a: 'A fan is someone who follows you but whom you do not follow back, the reverse of a non-follower.' },
+    ],
+    body: `A **non-follower** is someone you follow who does not follow you back. An **unfollower** is someone who used to follow you and stopped. They sound close, but they are different lists, and mixing them up is why so many people end up confused by their own results.
+
+## Non-Followers: Visible From One Export
+
+Your following list minus your followers list gives you the accounts you follow that do not follow you back. That is a single comparison, so [one Instagram export](/blog/who-doesnt-follow-you-back-on-instagram) is enough to produce it.
+
+The catch is what that list does and does not say. It does not tell you *why* someone is on it. Plenty of non-followers never followed you at all. You followed them, they never followed back, and nothing was ever withdrawn.
+
+## Unfollowers: Need Two Moments in Time
+
+An unfollower is a change, not a state. To see a change you need a before and an after. One export is only the "after." So the only way to find someone who left is to compare two exports: anyone in the older followers list who is missing from the newer one [unfollowed you in between](/blog/how-to-see-who-unfollowed-you-on-instagram).
+
+You can do that comparison [by hand](/blog/how-to-compare-two-instagram-follower-lists-manually), or let a tool match the two files for you.
+
+## A Quick Example
+
+Say you follow 300 accounts and 220 of them follow you back. You have 80 non-followers. That number says nothing about whether any of them ever followed you.
+
+Now say last month 500 accounts followed you and today 490 do, and 12 new people also followed. That means 22 people left. Those 22 are your unfollowers, and you can only know that because you had last month's list to compare against.
+
+## Where the Fans Fit In
+
+There is a third group worth knowing. A **fan** follows you, but you do not follow them back. It is the mirror image of a non-follower. Between them, non-followers, fans, and mutuals cover everyone in either list.
+
+## Why Trackers Give Different Numbers
+
+If two tools disagree, check what each one is counting. One may be listing non-followers and the other unfollowers. They are different questions, so the totals will not match. [Your follower count can also differ from a tracker's](/blog/why-follower-count-doesnt-match-tracker) simply because the numbers were taken at different times.
+
+## In Short
+
+- A non-follower is someone you follow who does not follow you back. One export shows this.
+- An unfollower is someone who used to follow you and left. Finding one takes two exports compared.
+- Most non-followers never followed you, so they did not unfollow anything.
+- A fan is the reverse: they follow you and you do not follow them.
+
+If you want the non-follower list right now, [upload your Instagram export](/). It runs in your browser and shows the list in about two minutes.`,
+  },
+  {
+    slug: 'how-to-see-who-unfollowed-you-on-instagram-on-a-computer',
+    cluster: 'unfollowers',
+    title: 'How to See Who Unfollowed You on Instagram From a Computer',
+    metaTitle: 'See Who Unfollowed You on Instagram From a Computer',
+    metaDescription: 'The whole check works on a laptop or desktop with no app and no password. Here are the steps, and the one Safari setting that quietly breaks the upload.',
+    excerpt: 'You can check who unfollowed you on Instagram entirely from a computer: request your data in the browser, download the ZIP, and drop it onto the page. Here are the steps, and the Mac Safari setting that trips people up.',
+    date: 'October 12, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'see who unfollowed you on instagram on computer',
+    art: 'search',
+    image: '/blog/instagram-on-a-computer-hero.jpg',
+    imageAlt: 'A person using a laptop at a desk to review social media, representing checking who unfollowed you from a computer',
+    cta: {
+      heading: 'Drop the ZIP on the page. Get the list.',
+      body: 'On a computer it is a drag and drop. Upload your Instagram export to WhoUnfollowed and it reads the file in your browser and shows who does not follow you back in about two minutes. No password, nothing uploaded.',
+      buttonLabel: 'Check who unfollowed me',
+      proNudge: 'Checking again later? Pro keeps each snapshot, so your next upload shows exactly who left since the last one.',
+    },
+    faq: [
+      { q: 'Can you see who unfollowed you on Instagram from a computer?', a: 'Yes, you can request your data export in the browser, download the ZIP, and drop it onto WhoUnfollowed on the same computer.' },
+      { q: 'Do I need to install software on my computer?', a: 'No, WhoUnfollowed runs in your browser and reads your export locally; there is nothing to install and no login.' },
+      { q: 'Why does the upload fail after I download the ZIP on a Mac?', a: 'Safari may unzip downloads automatically, and the unzipped folder will not upload; turn off "Open safe files after downloading" or use another browser, then download again.' },
+      { q: 'Should I unzip my Instagram export before uploading?', a: 'No, upload the original ZIP exactly as Meta sent it, without unzipping, renaming, or re-zipping it.' },
+      { q: 'How long does the export take to arrive?', a: 'Instagram usually needs a few minutes to prepare it, and Meta emails you a download link when it is ready.' },
+    ],
+    body: `Yes. The whole check works from a laptop or desktop, with no software to install and no password to share. You request your data in the browser, download the ZIP Meta sends you, and drop it onto WhoUnfollowed. A computer is actually the easier place to do it, because dragging a file is simpler than hunting for it on a phone.
+
+## Step 1: Request Your Data
+
+Open Instagram in your browser and go to **Accounts Center** from your settings. Then:
+
+1. Choose **Your information and permissions**, then **Export your information**, then **Create export**.
+2. Pick your Instagram profile and **Export to device**. Choose this, not "Transfer to destination."
+3. Under **Customize information**, deselect everything except **Followers and following**.
+4. Set the date range to **All time** and the format to **JSON**, then start the export.
+
+The [full export guide](/blog/how-to-download-your-instagram-data) covers each screen if a menu looks different for you.
+
+## Step 2: Download the ZIP From the Email
+
+Meta takes a few minutes to prepare the file, [sometimes longer](/blog/how-long-does-an-instagram-data-request-take), and then emails you a download link. Open it on the same computer and download the ZIP.
+
+## The Safari Trap on a Mac
+
+If you use Safari, check this before you upload. By default Safari can unzip downloaded files automatically and leave you with a folder instead of the ZIP. A folder will not upload. You want the original ZIP.
+
+To avoid it, open Safari's settings, go to **General**, and turn off **Open "safe" files after downloading**. Then download the export again. Using Chrome or another browser avoids the issue as well. Do not zip the folder back up yourself, because re-zipping changes the file and is a common reason uploads fail.
+
+## Step 3: Drop It Onto the Page
+
+Go to [whounfollowed.co](/) and drag the ZIP anywhere onto the page, or click **Choose file**. The parsing happens in your browser in about two seconds, and the file never leaves your computer.
+
+## What You Will See
+
+The free plan shows who you follow that does not follow you back. Seeing who actually *unfollowed* you means comparing two exports taken at different times, which is [how that works](/blog/unfollowers-vs-non-followers-on-instagram-whats-the-difference). [Instagram does not notify you](/blog/does-instagram-notify-when-you-unfollow-someone) when it happens, so a comparison is the only reliable way to know.
+
+## In Short
+
+- The full check works on a computer. Request the export, download the ZIP, drop it on the page.
+- Never unzip, rename, or re-zip the file. On a Mac, switch off Safari's auto-unzip or use another browser.
+- No software, no login, and your file stays on your computer.
+- One export shows who does not follow you back. Two exports show who left.
+
+[Upload your export](/) and have the list in about two minutes.`,
+  },
+  {
+    slug: 'can-you-see-who-unfollowed-you-on-threads-for-free',
+    cluster: 'threads',
+    title: 'Can You See Who Unfollowed You on Threads for Free?',
+    metaTitle: 'Can You See Who Unfollowed You on Threads for Free?',
+    metaDescription: 'Part of it is free and part of it is not. Here is exactly what you get from one Threads export at no cost, and what needs saved snapshots.',
+    excerpt: 'Threads will not tell you who unfollowed you, so the question is what you can work out yourself at no cost. Here is the honest split between what is free and what is not.',
+    date: 'October 12, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'see who unfollowed you on Threads for free',
+    art: 'bell',
+    image: '/blog/threads-unfollowers-free-hero.jpg',
+    imageAlt: 'Hands holding a smartphone in dim lighting, representing checking Threads followers for free',
+    cta: {
+      heading: 'Start with the part that is free.',
+      body: 'Upload your Threads export and WhoUnfollowed lists every account you follow that does not follow you back, in your browser, with no account and no password.',
+      buttonLabel: 'Check my Threads followers free',
+      proNudge: 'To see who left between two checks automatically, Pro saves each Threads snapshot for you.',
+    },
+    faq: [
+      { q: 'Can you see who unfollowed you on Threads for free?', a: 'You can see who does not follow you back from one export for free; seeing who unfollowed you between two exports needs saved snapshots, which Pro keeps.' },
+      { q: 'Does Threads show who unfollowed you?', a: 'No, Threads sends no notification and has no built-in list of people who unfollowed you.' },
+      { q: 'Do I need an account to use the free check?', a: 'No, the free check runs in your browser from the export file and needs no account or password.' },
+      { q: 'Can I compare two Threads exports myself without paying?', a: 'Yes, you can compare the two lists by hand, but it is slow for any real following, which is what saved snapshots automate.' },
+      { q: 'Is my Threads export uploaded anywhere?', a: 'No, the file is parsed locally in your browser and never leaves your device.' },
+    ],
+    body: `Part of it, yes. Threads itself will not tell you who unfollowed you, but your own data export gives you a lot for free. The split is simple: one export shows you who does not follow you back at no cost, while seeing who actually *left* between two checks needs saved snapshots, which is the paid part.
+
+## What Threads Gives You Natively
+
+Nothing here. Threads [sends no notification when someone unfollows](/blog/does-threads-notify-when-someone-unfollows-you), and it has no screen listing who left. If you rely on the app alone, you will not know.
+
+## What You Get Free From One Export
+
+[Request your Threads export](/blog/how-to-see-who-unfollowed-you-on-threads), upload the ZIP to WhoUnfollowed, and the free plan shows every account you follow that does not follow you back, with the date you followed them. There is no account to create and no password involved. It is the same [non-follower list](/blog/how-to-see-who-doesnt-follow-you-back-on-threads) most people are after first.
+
+## What Needs Two Exports
+
+An unfollower is a change over time, so one export cannot show one. To see who left, you compare an older export with a newer one: anyone in the old followers list who is missing from the new one unfollowed you in between. The free plan works one snapshot at a time. Keeping your snapshots so each new upload shows what changed is what Pro adds.
+
+## The Free DIY Route
+
+You are not locked out if you do not want to pay. Keep your first export ZIP safe, request a new one later, and compare the two lists yourself. The files are plain JSON with usernames in them, so it works, but with a real following it is thousands of lines. The [manual comparison method](/blog/how-to-compare-two-instagram-follower-lists-manually) written for Instagram applies the same way.
+
+## Is It Safe to Use Either Way?
+
+Yes. The export is your own data, and Meta provides it under [GDPR Article 20](https://gdpr-info.eu/art-20-gdpr/). Reading it in your browser involves no login and no connection to your Threads account, so there is nothing for Meta to flag.
+
+## In Short
+
+- Threads shows you nothing about who unfollowed you.
+- One export, free: see who does not follow you back, no account needed.
+- Who left between two checks needs two exports compared, which saved snapshots automate in Pro.
+- Comparing two exports by hand is free, just slow.
+
+[Upload your Threads export](/threads) and get the free list in about two minutes.`,
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
