@@ -38,7 +38,7 @@ type UploadPhase = 'idle' | 'dragging' | 'parsing' | 'error' | 'success';
 // 'html_export' has no real code path today (HTML exports parse successfully,
 // see the results-page notice instead) but stays in the union since Analysis
 // Failed's allowlist is fixed by the analytics contract, not by this mapper.
-type ErrorKind = 'missing_data' | 'invalid_zip' | 'unsupported_format' | 'unzipped_file' | 'html_export' | 'file_read' | 'unknown';
+type ErrorKind = 'missing_data' | 'invalid_zip' | 'unsupported_format' | 'unzipped_file' | 'html_export' | 'file_read' | 'schema_changed' | 'unknown';
 
 // Closed-set diagnostics attached to 'Analysis Failed' (lib/uploadDiagnostics.ts).
 type FailProps = Omit<Parameters<typeof trackFunnel<'Analysis Failed'>>[1], 'error_type'>;
@@ -119,8 +119,9 @@ function classifyError(err: unknown, content: HeroContent): { message: string; k
   if (err instanceof SchemaValidationError) {
     return {
       message: content.errors.schemaChanged,
-      kind: 'unknown',
+      kind: 'schema_changed',
       showGuideCta: false,
+      props: { schema_reason: err.reason },
     };
   }
   if (err instanceof FileReadError) {

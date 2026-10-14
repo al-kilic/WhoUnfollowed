@@ -67,9 +67,11 @@ function entryToAccount(entry: RelationshipEntry, platform: Platform = 'instagra
   const item = entry.string_list_data[0];
   if (!item) return null;
   const username = item.value ?? entry.title ?? '';
+  if (!username) return null;
+  const href = item.href ?? '';
   return {
     username,
-    href: platform === 'threads' ? sanitizeThreadsHref(item.href, username) : sanitizeIgHref(item.href, username),
+    href: platform === 'threads' ? sanitizeThreadsHref(href, username) : sanitizeIgHref(href, username),
     followedAt: item.timestamp && item.timestamp > 0 ? item.timestamp : null,
   };
 }

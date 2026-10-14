@@ -64,11 +64,12 @@ type FunnelEventMap = {
   'Upload Started': { size: SizeBucket };
   'Analysis Completed': { analysis_type: 'non_followers' | 'comparison' };
   'Analysis Failed': {
-    error_type: 'html_export' | 'missing_data' | 'invalid_zip' | 'unsupported_format' | 'unzipped_file' | 'file_read' | 'unknown';
+    error_type: 'html_export' | 'missing_data' | 'invalid_zip' | 'unsupported_format' | 'unzipped_file' | 'file_read' | 'schema_changed' | 'unknown';
     // Diagnostics, all closed sets (see lib/uploadDiagnostics.ts).
     size?: SizeBucket;
     file_ext?: FileExt;
     error_name?: ErrorName;
+    schema_reason?: 'not_json' | 'shape_mismatch';
     zip_files?: CountBucket;
     has_connections?: YesNo;
     has_media?: YesNo;
