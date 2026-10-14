@@ -1,23 +1,23 @@
 import { z } from 'zod';
 
 declare const followersFileSchema: z.ZodArray<z.ZodObject<{
-    title: z.ZodOptional<z.ZodString>;
+    title: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     media_list_data: z.ZodOptional<z.ZodArray<z.ZodUnknown>>;
-    string_list_data: z.ZodArray<z.ZodObject<{
-        href: z.ZodString;
-        value: z.ZodOptional<z.ZodString>;
-        timestamp: z.ZodNullable<z.ZodNumber>;
-    }, z.core.$strip>>;
+    string_list_data: z.ZodDefault<z.ZodArray<z.ZodObject<{
+        href: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        value: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        timestamp: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+    }, z.core.$strip>>>;
 }, z.core.$strip>>;
 declare const followingFileSchema: z.ZodObject<{
     relationships_following: z.ZodArray<z.ZodObject<{
-        title: z.ZodOptional<z.ZodString>;
+        title: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         media_list_data: z.ZodOptional<z.ZodArray<z.ZodUnknown>>;
-        string_list_data: z.ZodArray<z.ZodObject<{
-            href: z.ZodString;
-            value: z.ZodOptional<z.ZodString>;
-            timestamp: z.ZodNullable<z.ZodNumber>;
-        }, z.core.$strip>>;
+        string_list_data: z.ZodDefault<z.ZodArray<z.ZodObject<{
+            href: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+            value: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+            timestamp: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
+        }, z.core.$strip>>>;
     }, z.core.$strip>>;
 }, z.core.$strip>;
 declare const platforms: readonly ["instagram", "threads"];
@@ -159,6 +159,7 @@ declare class MixedFormatError extends Error {
 }
 declare class SchemaValidationError extends Error {
     readonly code: "SCHEMA_VALIDATION";
+    readonly reason: 'not_json' | 'shape_mismatch';
     constructor(filename: string, detail: string);
 }
 

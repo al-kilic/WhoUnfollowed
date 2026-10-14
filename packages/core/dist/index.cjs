@@ -95,32 +95,42 @@ var MixedFormatError = class extends Error {
 };
 var SchemaValidationError = class extends Error {
   code = "SCHEMA_VALIDATION";
+  // Closed-set reason for analytics (never the file name or raw detail).
+  reason;
   constructor(filename, detail) {
     super(
       `The file "${filename}" in your export has an unexpected format. Instagram may have changed their export structure. Detail: ${detail}`
     );
     this.name = "SchemaValidationError";
+    this.reason = detail === "File is not valid JSON" ? "not_json" : "shape_mismatch";
   }
 };
 
 // src/schemas.ts
 var import_zod = require("zod");
 var stringListItemSchema = import_zod.z.object({
-  href: import_zod.z.string(),
-  value: import_zod.z.string().optional(),
+  // Tolerant on purpose: a missing href or timestamp key used to fail the whole
+  // file. The parser rebuilds the profile link from the username instead.
+  href: import_zod.z.string().nullish(),
+  value: import_zod.z.string().nullish(),
   // Real exports have shown `null` here (in addition to the documented `0`)
   // for accounts with no recorded follow time — see entryToAccount in parser.ts.
-  timestamp: import_zod.z.number().nullable()
+  timestamp: import_zod.z.number().nullish()
 });
 var relationshipEntrySchema = import_zod.z.object({
-  title: import_zod.z.string().optional(),
+  title: import_zod.z.string().nullish(),
   media_list_data: import_zod.z.array(import_zod.z.unknown()).optional(),
   // A strict tuple-of-exactly-1 used to be required here, but a real Instagram
   // export can contain a zero-length string_list_data for an account Instagram
   // has since removed/deactivated (no resolvable profile info left) — that
   // used to fail the *entire* file's validation over one placeholder entry.
   // Accept 0 or 1 items; parser.ts's entryToAccount skips the empty ones.
-  string_list_data: import_zod.z.array(stringListItemSchema).max(1)
+  // Missing key treated like an empty list; extra items are ignored (first wins).
+  string_list_data: import_zod.z.array(stringListItemSchema).default([])
+}).refine((e) => e.title != null || e.string_list_data.length > 0, {
+  // An entry with neither a title nor any data is a different structure
+  // entirely, not a placeholder. Fail loudly instead of parsing to nothing.
+  message: "Entry has no title and no string_list_data"
 });
 var followersFileSchema = import_zod.z.array(relationshipEntrySchema);
 var followingFileSchema = import_zod.z.object({
@@ -218,9 +228,11 @@ function entryToAccount(entry, platform = "instagram") {
   const item = entry.string_list_data[0];
   if (!item) return null;
   const username = item.value ?? entry.title ?? "";
+  if (!username) return null;
+  const href = item.href ?? "";
   return {
     username,
-    href: platform === "threads" ? sanitizeThreadsHref(item.href, username) : sanitizeIgHref(item.href, username),
+    href: platform === "threads" ? sanitizeThreadsHref(href, username) : sanitizeIgHref(href, username),
     followedAt: item.timestamp && item.timestamp > 0 ? item.timestamp : null
   };
 }

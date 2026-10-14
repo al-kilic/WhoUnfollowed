@@ -24,10 +24,14 @@ describe('followersFileSchema', () => {
     expect(result.success).toBe(true);
   });
 
-  it('fails when string_list_data is missing', () => {
-    const invalid = { title: 'x', media_list_data: [] };
-    const result = followersFileSchema.safeParse([invalid]);
-    expect(result.success).toBe(false);
+  it('treats a missing string_list_data key as an empty placeholder', () => {
+    const result = followersFileSchema.safeParse([{ title: 'x', media_list_data: [] }]);
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts entries with no href or timestamp key', () => {
+    const result = followersFileSchema.safeParse([{ string_list_data: [{ value: 'someone' }] }]);
+    expect(result.success).toBe(true);
   });
 
   it('accepts a zero-length string_list_data (removed/deactivated account placeholder)', () => {
@@ -36,10 +40,10 @@ describe('followersFileSchema', () => {
     expect(result.success).toBe(true);
   });
 
-  it('fails when string_list_data has more than one item', () => {
+  it('accepts more than one string_list_data item (first wins)', () => {
     const tooMany = { ...validEntry, string_list_data: [validEntry.string_list_data[0], validEntry.string_list_data[0]] };
     const result = followersFileSchema.safeParse([tooMany]);
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
   });
 
   it('accepts a null timestamp', () => {

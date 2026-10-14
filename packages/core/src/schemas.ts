@@ -5,22 +5,29 @@
 import { z } from 'zod';
 
 export const stringListItemSchema = z.object({
-  href: z.string(),
-  value: z.string().optional(),
+  // Tolerant on purpose: a missing href or timestamp key used to fail the whole
+  // file. The parser rebuilds the profile link from the username instead.
+  href: z.string().nullish(),
+  value: z.string().nullish(),
   // Real exports have shown `null` here (in addition to the documented `0`)
   // for accounts with no recorded follow time — see entryToAccount in parser.ts.
-  timestamp: z.number().nullable(),
+  timestamp: z.number().nullish(),
 });
 
 export const relationshipEntrySchema = z.object({
-  title: z.string().optional(),
+  title: z.string().nullish(),
   media_list_data: z.array(z.unknown()).optional(),
   // A strict tuple-of-exactly-1 used to be required here, but a real Instagram
   // export can contain a zero-length string_list_data for an account Instagram
   // has since removed/deactivated (no resolvable profile info left) — that
   // used to fail the *entire* file's validation over one placeholder entry.
   // Accept 0 or 1 items; parser.ts's entryToAccount skips the empty ones.
-  string_list_data: z.array(stringListItemSchema).max(1),
+  // Missing key treated like an empty list; extra items are ignored (first wins).
+  string_list_data: z.array(stringListItemSchema).default([]),
+}).refine(e => e.title != null || e.string_list_data.length > 0, {
+  // An entry with neither a title nor any data is a different structure
+  // entirely, not a placeholder. Fail loudly instead of parsing to nothing.
+  message: 'Entry has no title and no string_list_data',
 });
 
 export const followersFileSchema = z.array(relationshipEntrySchema);

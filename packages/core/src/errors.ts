@@ -61,11 +61,14 @@ export class MixedFormatError extends Error {
 
 export class SchemaValidationError extends Error {
   readonly code = 'SCHEMA_VALIDATION' as const;
+  // Closed-set reason for analytics (never the file name or raw detail).
+  readonly reason: 'not_json' | 'shape_mismatch';
   constructor(filename: string, detail: string) {
     super(
       `The file "${filename}" in your export has an unexpected format. ` +
         `Instagram may have changed their export structure. Detail: ${detail}`,
     );
     this.name = 'SchemaValidationError';
+    this.reason = detail === 'File is not valid JSON' ? 'not_json' : 'shape_mismatch';
   }
 }
