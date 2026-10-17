@@ -9,6 +9,7 @@ export const CHANGELOG_ENTRIES: ChangelogEntry[] = [  {
       'Fixed: if you requested your export with a date range shorter than All time, people who followed you before that date were missing from the file and wrongly showed up as not following you back. We now spot these partial exports and tell you how to request a complete one.',
       'HTML exports now show follow dates too, so follow age and the export checks work for them, not just for JSON.',
       'Fixed: exports missing a profile link or follow date on some entries no longer fail the whole upload.',
+      'The feedback panel on your results is easier to read, opens once by itself after you have had a look, and has quick replies for results that look wrong, so we can find and fix accuracy problems faster.',
       'We now check every few minutes that the site is up, so outages get caught and fixed faster.',
       'Security updates to the libraries the site is built on.',
       'New blog guides, including unfollowers vs non-followers and checking from a computer.',
