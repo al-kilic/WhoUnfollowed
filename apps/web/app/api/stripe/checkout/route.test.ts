@@ -93,6 +93,7 @@ describe('POST /api/stripe/checkout', () => {
     const args = sessionsCreate.mock.calls[0]![0];
     expect(args.customer_email).toBeUndefined();
     expect(args.customer).toBeUndefined();
+    expect(args.customer_creation).toBe('always');
   });
 
   it('reuses an existing Stripe customer id for a logged-in buyer who already has one', async () => {
@@ -101,6 +102,8 @@ describe('POST /api/stripe/checkout', () => {
     await POST(makeRequest({ billing: 'monthly' }));
     expect(sessionsCreate).toHaveBeenCalledWith(expect.objectContaining({ customer: 'cus_existing' }));
     const args = sessionsCreate.mock.calls[0]![0];
+    // Stripe rejects customer_creation alongside an existing customer.
+    expect(args.customer_creation).toBeUndefined();
     expect(args.metadata).toEqual(expect.objectContaining({ type: 'unlock', userId: 'user_1' }));
   });
 
@@ -108,7 +111,7 @@ describe('POST /api/stripe/checkout', () => {
     validateRequest.mockResolvedValue({ user: { id: 'user_2', email: 'user2@example.com' } });
     profilesFindFirst.mockResolvedValue({ stripeCustomerId: null });
     await POST(makeRequest({ billing: 'monthly' }));
-    expect(sessionsCreate).toHaveBeenCalledWith(expect.objectContaining({ customer_email: 'user2@example.com' }));
+    expect(sessionsCreate).toHaveBeenCalledWith(expect.objectContaining({ customer_email: 'user2@example.com', customer_creation: 'always' }));
   });
 
   it('tags the session metadata with the unlock duration and truncated acquisition source', async () => {
