@@ -86,6 +86,11 @@ export async function POST(request: NextRequest) {
     sessionParams.customer_email = email;
   }
   // Otherwise Stripe collects the email on the checkout page (buy-first).
+  // Payment-mode checkout only creates a Stripe Customer when asked to. Without
+  // one, session.customer is null and nothing gets stored, so a repeat buyer
+  // could never be matched to their earlier purchases. Not allowed together
+  // with `customer`, so only for first-time buyers.
+  if (!sessionParams.customer) sessionParams.customer_creation = 'always';
   sessionParams.metadata = metadata;
 
   const session = await stripe.checkout.sessions.create(sessionParams);
