@@ -34,16 +34,21 @@ export const EN_FEEDBACK_WIDGET: FeedbackWidgetContent = {
   sendFeedback: 'Send feedback',
   sentiments: [
     { value: 'angry', emoji: '😠', label: 'Angry', reasons: [
+      'My results are wrong',
       "Couldn't get my export to work",
       'The upload or parsing broke',
       'Lost my snapshot history',
     ] },
     { value: 'sad', emoji: '😞', label: 'Sad', reasons: [
+      'Followers show up as not following back',
+      "Numbers don't match Instagram",
+      'Instagram export took too long',
       'Confusing to use',
       'Missing a feature I needed',
       'Pro price feels high',
     ] },
     { value: 'neutral', emoji: '😐', label: 'Neutral', reasons: [
+      'Works, but some numbers look off',
       'Works, but nothing stood out',
       'Just exploring',
     ] },
@@ -71,16 +76,21 @@ export const ES_FEEDBACK_WIDGET: FeedbackWidgetContent = {
   sendFeedback: 'Enviar opinión',
   sentiments: [
     { value: 'angry', emoji: '😠', label: 'Enfadado', reasons: [
+      'Mis resultados están mal',
       'No pude hacer que mi exportación funcionara',
       'La carga o el análisis fallaron',
       'Perdí mi historial de snapshots',
     ] },
     { value: 'sad', emoji: '😞', label: 'Triste', reasons: [
+      'Seguidores aparecen como que no me siguen',
+      'Los números no coinciden con Instagram',
+      'La exportación de Instagram tardó demasiado',
       'Confuso de usar',
       'Falta una función que necesitaba',
       'El precio de Pro se siente alto',
     ] },
     { value: 'neutral', emoji: '😐', label: 'Neutral', reasons: [
+      'Funciona, pero algunos números no cuadran',
       'Funciona, pero nada destacó',
       'Solo estoy explorando',
     ] },
@@ -108,16 +118,21 @@ export const PT_FEEDBACK_WIDGET: FeedbackWidgetContent = {
   sendFeedback: 'Enviar feedback',
   sentiments: [
     { value: 'angry', emoji: '😠', label: 'Bravo', reasons: [
+      'Meus resultados estão errados',
       'Não consegui fazer minha exportação funcionar',
       'O upload ou a análise quebrou',
       'Perdi meu histórico de snapshots',
     ] },
     { value: 'sad', emoji: '😞', label: 'Triste', reasons: [
+      'Seguidores aparecem como se não me seguissem',
+      'Os números não batem com o Instagram',
+      'A exportação do Instagram demorou demais',
       'Confuso de usar',
       'Faltou um recurso que eu precisava',
       'O preço do Pro parece alto',
     ] },
     { value: 'neutral', emoji: '😐', label: 'Neutro', reasons: [
+      'Funciona, mas alguns números parecem errados',
       'Funciona, mas nada se destacou',
       'Só estou explorando',
     ] },

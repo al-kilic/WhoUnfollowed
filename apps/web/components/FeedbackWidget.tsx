@@ -9,6 +9,9 @@ import { T } from '@/components/landing/tokens';
 import { EN_FEEDBACK_WIDGET, type FeedbackWidgetContent } from '@/components/feedbackWidget.content';
 
 const STORAGE_KEY = 'wu_feedback_submitted';
+// Set once the panel has popped open by itself (or the user has opened or
+// closed it), so it never auto-opens a second time in this session.
+const AUTO_OPENED_KEY = 'wu_feedback_auto_opened';
 
 type Status = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -16,9 +19,14 @@ function focusRing(el: HTMLElement, on: boolean) {
   el.style.boxShadow = on ? `0 0 0 2px ${T.teal}` : 'none';
 }
 
+function markAutoOpened() {
+  try { sessionStorage.setItem(AUTO_OPENED_KEY, '1'); } catch { /* ignore */ }
+}
+
 // Defaults to English so the unmigrated dashboard (which doesn't pass this)
-// keeps working unchanged.
-export function FeedbackWidget({ content: c = EN_FEEDBACK_WIDGET }: { content?: FeedbackWidgetContent } = {}) {
+// keeps working unchanged. With autoOpenAfterMs the panel expands by itself
+// once per session after that delay, waiting for the feature tour to close.
+export function FeedbackWidget({ content: c = EN_FEEDBACK_WIDGET, autoOpenAfterMs }: { content?: FeedbackWidgetContent; autoOpenAfterMs?: number } = {}) {
   const SENTIMENTS = c.sentiments;
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
@@ -35,6 +43,26 @@ export function FeedbackWidget({ content: c = EN_FEEDBACK_WIDGET }: { content?: 
       if (sessionStorage.getItem(STORAGE_KEY)) setAlreadySubmitted(true);
     } catch { /* sessionStorage unavailable */ }
   }, []);
+
+  useEffect(() => {
+    if (autoOpenAfterMs === undefined) return;
+    try {
+      if (sessionStorage.getItem(AUTO_OPENED_KEY) || sessionStorage.getItem(STORAGE_KEY)) return;
+    } catch { return; }
+    let timer: ReturnType<typeof setTimeout>;
+    const tryOpen = () => {
+      // Don't cover the results feature tour; check again shortly.
+      if (document.body.classList.contains('tutorial-active')) {
+        timer = setTimeout(tryOpen, 2000);
+        return;
+      }
+      try { if (sessionStorage.getItem(AUTO_OPENED_KEY)) return; } catch { /* ignore */ }
+      markAutoOpened();
+      setOpen(true);
+    };
+    timer = setTimeout(tryOpen, autoOpenAfterMs);
+    return () => clearTimeout(timer);
+  }, [autoOpenAfterMs]);
 
   if (!mounted || alreadySubmitted) return null;
 
@@ -74,7 +102,7 @@ export function FeedbackWidget({ content: c = EN_FEEDBACK_WIDGET }: { content?: 
     <>
       <button
         type="button"
-        onClick={() => setOpen(o => !o)}
+        onClick={() => { markAutoOpened(); setOpen(o => !o); }}
         aria-expanded={open}
         aria-label={open ? c.ariaToggleClose : c.ariaToggleOpen}
         style={{
@@ -103,7 +131,7 @@ export function FeedbackWidget({ content: c = EN_FEEDBACK_WIDGET }: { content?: 
           style={{
             position: 'fixed', bottom: 80, right: 20, zIndex: 1000,
             width: 320, maxWidth: 'calc(100vw - 32px)',
-            background: T.surface1, border: `1px solid ${T.border2}`,
+            background: T.bgCard, border: `1px solid ${T.border2}`,
             borderRadius: 18, padding: '18px 18px 16px',
             boxShadow: '0 20px 60px rgba(0,0,0,0.35)',
             animation: 'fade-up 0.25s cubic-bezier(0.16,1,0.3,1) both',

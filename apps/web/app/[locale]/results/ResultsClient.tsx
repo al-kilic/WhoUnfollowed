@@ -496,7 +496,7 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
       </main>
 
       <LandingFooter />
-      <FeedbackWidget content={feedbackC} />
+      <FeedbackWidget content={feedbackC} autoOpenAfterMs={30_000} />
     </div>
   );
 }
