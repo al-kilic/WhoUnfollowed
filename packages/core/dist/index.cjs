@@ -297,6 +297,26 @@ async function parseThreadsFollowing(zip, fileName) {
   return result.data.text_post_app_text_post_app_following.map((e) => entryToAccount(e, "threads")).filter((a) => a !== null);
 }
 var IG_LINK_RE = /href="(https:\/\/www\.instagram\.com\/(?:_u\/)?([^"/?#]+)[^"]*)"/gi;
+var HTML_DATE_AFTER_LINK_RE = /^[^>]*>[^<]*<\/a>\s*<\/div>\s*<div>\s*([A-Za-z]{3})[a-z]*\.? (\d{1,2}), (\d{4}),? (\d{1,2}):(\d{2})\s*([ap]m)?\s*<\/div>/i;
+var MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+function parseHtmlDateAfterLink(html, from) {
+  const m = HTML_DATE_AFTER_LINK_RE.exec(html.slice(from, from + 300));
+  if (!m) return null;
+  const month = MONTHS.indexOf(m[1].toLowerCase());
+  if (month < 0) return null;
+  let hour = Number(m[4]);
+  const ampm = m[6]?.toLowerCase();
+  if (ampm === "pm" && hour < 12) hour += 12;
+  if (ampm === "am" && hour === 12) hour = 0;
+  const ms = Date.UTC(Number(m[3]), month, Number(m[2]), hour, Number(m[5]));
+  return Number.isFinite(ms) && ms > 0 ? Math.floor(ms / 1e3) : null;
+}
+function extractHtmlGeneratedAt(html) {
+  const m = /<time datetime="(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?Z)"/i.exec(html);
+  if (!m) return null;
+  const ms = Date.parse(m[1]);
+  return Number.isFinite(ms) && ms > 0 && ms <= Date.now() ? Math.floor(ms / 1e3) : null;
+}
 function parseAccountsFromHtml(html) {
   const accounts = [];
   let match;
@@ -305,7 +325,7 @@ function parseAccountsFromHtml(html) {
     const href = match[1];
     const username = match[2];
     if (href && username) {
-      accounts.push({ username, href, followedAt: null });
+      accounts.push({ username, href, followedAt: parseHtmlDateAfterLink(html, IG_LINK_RE.lastIndex) });
     }
   }
   return accounts;
@@ -317,10 +337,6 @@ async function parseFollowersHtml(zip, fileNames) {
     accounts.push(...parseAccountsFromHtml(html));
   }
   return accounts;
-}
-async function parseFollowingHtml(zip, fileName) {
-  const html = await zip.files[fileName].async("string");
-  return parseAccountsFromHtml(html);
 }
 var THREADS_DIR_RE = /(?:^|\/)threads\//i;
 function isThreadsPath(name) {
@@ -437,9 +453,12 @@ async function parseZipContents(zip, allFileNames, filenameDate) {
   const { format, followerFileNames, followingFileName } = detectFiles(fileNames);
   let followers;
   let following;
+  let exportedAt = filenameDate;
   if (format === "html") {
     followers = await parseFollowersHtml(zip, followerFileNames);
-    following = await parseFollowingHtml(zip, followingFileName);
+    const followingHtml = await zip.files[followingFileName].async("string");
+    following = parseAccountsFromHtml(followingHtml);
+    exportedAt ??= extractHtmlGeneratedAt(followingHtml);
   } else {
     followers = await parseFollowersJson(zip, followerFileNames);
     following = await parseFollowingJson(zip, followingFileName);
@@ -466,7 +485,7 @@ async function parseZipContents(zip, allFileNames, filenameDate) {
   );
   return {
     snapshot: {
-      exportedAt: filenameDate ?? Math.floor(Date.now() / 1e3),
+      exportedAt: exportedAt ?? Math.floor(Date.now() / 1e3),
       followers,
       following,
       ...pendingRequests ? { pendingRequests } : {},
@@ -518,10 +537,12 @@ async function parseOptionalRelationships(zip, fileNames, pattern, parse) {
 var SMALL_COUNT_THRESHOLD = 50;
 var RECENT_WINDOW_DAYS = 14;
 var DROP_THRESHOLD = 0.8;
+var DATE_RANGE_WINDOW_DAYS = 370;
+var DATE_RANGE_MIN_FOLLOWERS = 20;
+var DATE_RANGE_MIN_FOLLOWERS_THREADS = 50;
 function detectDeltaExport(snapshot, previousSnapshot) {
   const reasons = [];
-  const now = Math.floor(Date.now() / 1e3);
-  const recentCutoff = now - RECENT_WINDOW_DAYS * 86400;
+  const recentCutoff = snapshot.exportedAt - RECENT_WINDOW_DAYS * 86400;
   if (snapshotPlatform(snapshot) === "instagram" && snapshot.followers.length < SMALL_COUNT_THRESHOLD) {
     reasons.push("small_counts");
   }
@@ -532,6 +553,14 @@ function detectDeltaExport(snapshot, previousSnapshot) {
   if (withTimestamp.length >= 3) {
     const allRecent = withTimestamp.every((a) => (a.followedAt ?? 0) >= recentCutoff);
     if (allRecent) reasons.push("all_recent_timestamps");
+  }
+  const datedFollowers = snapshot.followers.filter((a) => a.followedAt !== null);
+  const minFollowers = snapshotPlatform(snapshot) === "threads" ? DATE_RANGE_MIN_FOLLOWERS_THREADS : DATE_RANGE_MIN_FOLLOWERS;
+  if (!reasons.includes("all_recent_timestamps") && datedFollowers.length >= minFollowers && datedFollowers.length >= snapshot.followers.length * 0.9) {
+    const oldest = datedFollowers.reduce((min, a) => Math.min(min, a.followedAt ?? Infinity), Infinity);
+    if (snapshot.exportedAt - oldest <= DATE_RANGE_WINDOW_DAYS * 86400) {
+      reasons.push("limited_date_range");
+    }
   }
   if (previousSnapshot) {
     const prevCount = previousSnapshot.followers.length;

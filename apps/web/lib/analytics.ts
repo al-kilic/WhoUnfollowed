@@ -3,6 +3,7 @@
 // Umami is cookieless and self-hosted, so this collects no personal data.
 
 import type { SizeBucket, FileExt, ErrorName, CountBucket, YesNo } from '@/lib/uploadDiagnostics';
+import type { DeltaReason } from '@ig-tracker/core';
 
 type UmamiTracker = {
   track: (eventName: string, eventData?: Record<string, unknown>) => void;
@@ -78,7 +79,7 @@ type FunnelEventMap = {
   };
   'Large File Warning': { size: SizeBucket; device: 'mobile' | 'desktop' };
   'Large File Choice': { choice: 'continue' | 'smaller_export' | 'cancel' };
-  'Export Warning Shown': { reason: 'small_counts' | 'all_recent_timestamps' | 'massive_count_drop' | 'multiple' };
+  'Export Warning Shown': { reason: DeltaReason | 'multiple' };
   'Export Warning Choice': { choice: 're_export' | 'new_account' | 'proceed_anyway' };
   'Snapshot Saved': { storage: 'local' | 'cloud' };
   'Upgrade CTA Clicked': { placement: 'results' | 'pricing' };

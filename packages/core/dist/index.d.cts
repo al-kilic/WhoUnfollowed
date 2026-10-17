@@ -104,7 +104,7 @@ interface ParseExportResult {
 declare function parseInstagramZip(zipFile: File | Blob | ArrayBuffer): Promise<ParsedSnapshot>;
 declare function parseExportZip(zipFile: File | Blob | ArrayBuffer): Promise<ParseExportResult>;
 
-type DeltaReason = 'small_counts' | 'all_recent_timestamps' | 'massive_count_drop';
+type DeltaReason = 'small_counts' | 'all_recent_timestamps' | 'massive_count_drop' | 'limited_date_range';
 interface DeltaDetectionResult {
     isDelta: boolean;
     reasons: DeltaReason[];

@@ -193,4 +193,78 @@ describe('detectDeltaExport', () => {
     expect(result.reasons).toContain('all_recent_timestamps');
     expect(result.reasons).toContain('massive_count_drop');
   });
+
+  // ── Signal D: export made with a shorter date range than All time ────────
+
+  const DAY = 86400;
+  // n follow times spread evenly over the `spanDays` before the export.
+  const spread = (n: number, spanDays: number) =>
+    Array.from({ length: n }, (_, i) => NOW - Math.round(((i + 1) / n) * spanDays * DAY));
+
+  it('flags a "Last year" export: no follower older than a year, old following', () => {
+    const snap = makeSnapshot(600, 900, {
+      followerTimestamps: spread(600, 360),
+      followingTimestamps: spread(900, 3 * 365),
+    });
+    expect(detectDeltaExport(snap).reasons).toEqual(['limited_date_range']);
+  });
+
+  it('flags a "Last year" export where both lists were trimmed', () => {
+    const snap = makeSnapshot(600, 400, {
+      followerTimestamps: spread(600, 364),
+      followingTimestamps: spread(400, 364),
+    });
+    expect(detectDeltaExport(snap).reasons).toEqual(['limited_date_range']);
+  });
+
+  it('flags a "Last 3 months" export', () => {
+    const snap = makeSnapshot(200, 300, {
+      followerTimestamps: spread(200, 89),
+      followingTimestamps: spread(300, 89),
+    });
+    expect(detectDeltaExport(snap).reasons).toEqual(['limited_date_range']);
+  });
+
+  it('does not flag D when some followers are older than a year', () => {
+    const snap = makeSnapshot(600, 400, {
+      followerTimestamps: spread(600, 2 * 365),
+      followingTimestamps: spread(400, 2 * 365),
+    });
+    expect(detectDeltaExport(snap).isDelta).toBe(false);
+  });
+
+  it('measures D from the export date, not today', () => {
+    // A full export made two years ago, uploaded today.
+    const exportedAt = NOW - 2 * 365 * DAY;
+    const snap = {
+      ...makeSnapshot(300, 300),
+      exportedAt,
+    };
+    snap.followers = snap.followers.map((a, i) => ({ ...a, followedAt: exportedAt - (i + 1) * 3 * DAY }));
+    expect(detectDeltaExport(snap).reasons).not.toContain('limited_date_range');
+  });
+
+  it('does not flag D for undated (old HTML) exports', () => {
+    const snap = makeSnapshot(600, 400);
+    expect(detectDeltaExport(snap).reasons).not.toContain('limited_date_range');
+  });
+
+  it('does not flag D with fewer than 20 dated followers (small Threads accounts)', () => {
+    const snap = { ...makeSnapshot(14, 28, { followerTimestamps: spread(14, 150), followingTimestamps: spread(28, 150) }), platform: 'threads' as const };
+    expect(detectDeltaExport(snap).isDelta).toBe(false);
+  });
+
+  it('needs 50 dated followers before flagging D on Threads', () => {
+    const opts = (n: number) => ({ followerTimestamps: spread(n, 300), followingTimestamps: spread(n, 300) });
+    expect(detectDeltaExport({ ...makeSnapshot(40, 40, opts(40)), platform: 'threads' }).isDelta).toBe(false);
+    expect(detectDeltaExport({ ...makeSnapshot(60, 60, opts(60)), platform: 'threads' }).reasons).toEqual(['limited_date_range']);
+  });
+
+  it('does not add D on top of B2 for a fully recent export', () => {
+    const snap = makeSnapshot(100, 100, {
+      followerTimestamps: spread(100, 10),
+      followingTimestamps: spread(100, 10),
+    });
+    expect(detectDeltaExport(snap).reasons).toEqual(['all_recent_timestamps']);
+  });
 });

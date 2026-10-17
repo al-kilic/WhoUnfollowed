@@ -433,7 +433,7 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
           <p style={{ fontSize: 15, color: T.inkDim, marginTop: 10 }}>
             {c.outOfAccounts(analysis.totalFollowing.toLocaleString())}
           </p>
-          {snapshot.format === 'html' && (
+          {snapshot.format === 'html' && !snapshot.followers.some(a => a.followedAt !== null) && (
             <div style={{ marginTop: 16, padding: '12px 16px', borderRadius: 12, background: 'rgba(var(--t-accent-rgb),0.06)', border: '1px solid rgba(var(--t-accent-rgb),0.2)', display: 'flex', alignItems: 'flex-start', gap: 10, maxWidth: 560 }}>
               <span style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5 }}>
                 {c.htmlFormatNotice}{' '}

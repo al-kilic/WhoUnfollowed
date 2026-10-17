@@ -27,6 +27,8 @@ function reasonText(reason: DeltaReason, followerCount: number, followingCount: 
       return c.reasons.allRecent;
     case 'massive_count_drop':
       return c.reasons.massiveDrop;
+    case 'limited_date_range':
+      return c.reasons.limitedDateRange.replace('{followers}', followerCount.toLocaleString());
   }
 }
 
@@ -35,7 +37,13 @@ function Rich({ parts, strongColor = T.ink }: { parts: string[]; strongColor?: s
   return <>{parts.map((part, i) => (i % 2 === 1 ? <strong key={i} style={{ color: strongColor }}>{part}</strong> : <span key={i}>{part}</span>))}</>;
 }
 
-export function DeltaWarning({ reasons, followerCount, followingCount, onReExport, onNewAccount, onProceedAnyway, content: c }: Props) {
+export function DeltaWarning({ reasons, followerCount, followingCount, onReExport, onNewAccount, onProceedAnyway, content }: Props) {
+  // A short date range is a different mistake from an incremental export, so
+  // it gets its own heading and explanation (unless an incremental signal
+  // also fired, which is the stronger explanation).
+  const dateRangeOnly = reasons.includes('limited_date_range')
+    && !reasons.includes('small_counts') && !reasons.includes('all_recent_timestamps');
+  const c: DeltaWarningContent = dateRangeOnly ? { ...content, ...content.dateRange } : content;
   const [showDismissOptions, setShowDismissOptions] = useState(false);
   const [showIncrementalTip, setShowIncrementalTip] = useState(false);
   const tipRef = useRef<HTMLSpanElement>(null);
