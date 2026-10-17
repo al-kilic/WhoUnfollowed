@@ -1,0 +1,98 @@
+name: Uptime
+
+# External uptime check for whounfollowed.co. Runs on GitHub's servers (not the
+# VPS), so it still alerts when the whole box is down. Posts to the same
+# Telegram chat as the daily Umami report, only when the state changes:
+# one message when the site goes down, one when it recovers.
+# GitHub may start scheduled runs a few minutes late; expect alerts within
+# roughly 5 to 15 minutes of an outage.
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+    inputs:
+      test:
+        description: 'Send a test message to Telegram'
+        type: boolean
+        default: false
+
+concurrency:
+  group: uptime
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # Last known state ("up" or "down <epoch>") lives in the Actions cache. A
+      # new entry is saved only when the state changes, so entries stay few.
+      - name: Restore last state
+        uses: actions/cache/restore@v4
+        with:
+          path: .uptime-state
+          key: uptime-state-${{ github.run_id }}
+          restore-keys: uptime-state-
+
+      - name: Check /api/health
+        id: check
+        run: |
+          prev=$(cat .uptime-state 2>/dev/null || echo up)
+          status=down
+          detail=""
+          # Three tries, 20s apart, so a single blip during a deploy restart
+          # doesn't page anyone.
+          for i in 1 2 3; do
+            code=$(curl -s -o body.txt -w '%{http_code}' --max-time 15 https://whounfollowed.co/api/health) || code=000
+            if [ "$code" = "200" ]; then status=up; break; fi
+            detail="HTTP $code $(head -c 100 body.txt 2>/dev/null | tr -d '\r\n')"
+            [ "$i" -lt 3 ] && sleep 20
+          done
+          now=$(date +%s)
+          if [ "$status" = "up" ]; then new=up; elif [ "${prev%% *}" = "down" ]; then new="$prev"; else new="down $now"; fi
+          changed=false
+          [ "${prev%% *}" != "${new%% *}" ] && changed=true
+          echo "$new" > .uptime-state
+          {
+            echo "status=$status"
+            echo "changed=$changed"
+            echo "detail=$detail"
+            echo "down_since=$(echo "$prev" | awk '{print $2}')"
+          } >> "$GITHUB_OUTPUT"
+          echo "prev=$prev status=$status changed=$changed $detail"
+
+      - name: Save state
+        if: steps.check.outputs.changed == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .uptime-state
+          key: uptime-state-${{ github.run_id }}
+
+      - name: Alert Telegram
+        if: steps.check.outputs.changed == 'true' || inputs.test
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          STATUS: ${{ steps.check.outputs.status }}
+          CHANGED: ${{ steps.check.outputs.changed }}
+          DETAIL: ${{ steps.check.outputs.detail }}
+          DOWN_SINCE: ${{ steps.check.outputs.down_since }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ "$CHANGED" != "true" ]; then
+            msg="🧪 Test: uptime alarmları bu kanala bağlı. Şu anki durum: ${STATUS}."
+          elif [ "$STATUS" = "down" ]; then
+            msg=$(printf '🔴 WhoUnfollowed erişilemiyor\n/api/health: %s\n3 deneme başarısız (~1 dk)\n%s' "$DETAIL" "$RUN_URL")
+          else
+            mins=""
+            [ -n "$DOWN_SINCE" ] && mins=" (~$(( ($(date +%s) - DOWN_SINCE + 59) / 60 )) dk kesinti)"
+            msg="🟢 WhoUnfollowed tekrar ayakta${mins}"
+          fi
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=${msg}" \
+            --data-urlencode "disable_web_page_preview=true" -o /dev/null -w "telegram HTTP %{http_code}\n"
