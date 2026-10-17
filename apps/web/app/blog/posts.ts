@@ -4242,6 +4242,458 @@ Yes. The export is your own data, and Meta provides it under [GDPR Article 20](h
 
 [Upload your Threads export](/threads) and get the free list in about two minutes.`,
   },
+  {
+    // Photo: Pexels 32021560 (free license, no attribution required)
+    slug: 'can-chatgpt-tell-me-who-unfollowed-me-on-instagram',
+    cluster: 'unfollowers',
+    title: 'Can ChatGPT, Claude or Gemini Tell Me Who Unfollowed Me on Instagram?',
+    metaTitle: 'Can ChatGPT Tell Me Who Unfollowed Me on Instagram?',
+    metaDescription: 'No. ChatGPT, Claude and Gemini cannot see your Instagram followers, so none of them knows who left. Here is what they can do, and what actually works.',
+    excerpt: 'People now ask chatbots who unfollowed them. The honest answer is that no assistant can see your follower list, and even an AI agent driving your browser cannot tell you who left. Here is why, and what works instead.',
+    date: 'October 17, 2026',
+    readTime: '6 min',
+    tag: 'Guide',
+    primaryKeyword: 'can chatgpt tell me who unfollowed me on instagram',
+    art: 'search',
+    image: '/blog/ai-chatbot-unfollowers-hero.jpg',
+    imageAlt: 'A smartphone on a desk showing an open AI chat app asking "What can I help with?", representing asking a chatbot who unfollowed you on Instagram',
+    cta: {
+      heading: 'Skip the chatbot. Read your own list.',
+      body: 'No assistant can see who unfollowed you. Your Instagram export can. Upload it to WhoUnfollowed and see who does not follow you back in about two minutes. It reads the file in your browser, with no password, no AI, and nothing uploaded.',
+      buttonLabel: 'Check who unfollowed me',
+      proNudge: 'Want the people who actually left? Pro keeps each snapshot, so your next upload shows exactly who unfollowed you since the last one.',
+    },
+    faq: [
+      { q: 'Can ChatGPT tell me who unfollowed me on Instagram?', a: 'No, ChatGPT has no access to your Instagram account or follower list in a normal chat, so it cannot tell you who unfollowed you.' },
+      { q: 'Can Gemini or Claude check who unfollowed me on Instagram?', a: 'Not in a normal conversation; neither is connected to your Instagram account, and Instagram has not let outside apps read follower lists through its API since 2018.' },
+      { q: 'Can an AI agent go through my Instagram followers for me?', a: 'An agent driving your logged-in browser could scroll your current followers, but that is automated collection Instagram\'s terms prohibit, and one list cannot show who left.' },
+      { q: 'Why did ChatGPT give me names of people who unfollowed me?', a: 'The assistant had no access to your follower data, so any names it gave were not based on your account and should be treated as made up.' },
+      { q: 'How do I see who unfollowed me on Instagram?', a: 'Compare two of your own Instagram data exports taken at different times; anyone in the older followers list who is missing from the newer one unfollowed you.' },
+    ],
+    body: `No. ChatGPT, Claude and Gemini cannot see your Instagram account, so none of them can tell you who unfollowed you. They have no access to your follower list, and even if they did, they would not know who was on it last month. The only reliable answer comes from comparing two copies of your own follower list, taken at different times.
+
+## Why can't ChatGPT see who unfollowed me?
+
+When you type a question into ChatGPT, Claude, Gemini or Microsoft Copilot, the assistant answers from what it learned in training, sometimes topped up with a web search. Your follower list is in neither place. It sits behind your Instagram login, and a normal chat has no key to it.
+
+There is no back door through Meta, either. Instagram cut third-party access to follower lists out of its developer API back in April 2018, and the older Instagram Basic Display API [has returned errors since December 4, 2024](https://developers.facebook.com/blog/post/2024/09/04/update-on-instagram-basic-display-api/). No chatbot has an official line into who follows you.
+
+So when you ask "who unfollowed me on Instagram?", the honest reply is that the assistant does not know. Most of them will say so. If one ever hands you a list of names, it invented them.
+
+## Can an AI agent check my Instagram followers for me?
+
+This part is new. Some assistants can now drive a web browser for you: the agent mode in OpenAI's Atlas browser, Perplexity's Comet, Claude in Chrome, and Gemini in Chrome. In some modes they can use sites you are already logged in to.
+
+So could you point one at your followers page and say "read this"? In theory it could scroll the list. In practice you hit three problems:
+
+1. **It still cannot tell you who unfollowed you.** Scrolling today's list shows today's followers. An unfollower is someone who was there before and is not now, so you need an earlier list to compare against, and the agent does not have one.
+2. **It breaks Instagram's rules.** Instagram's [Terms of Use](https://help.instagram.com/581066165581870) bar collecting information in an automated way without Meta's permission, and Meta's [Automated Data Collection Terms](https://www.facebook.com/legal/automated_data_collection_terms) say bots and scrapers need express written permission. An agent paging through a few thousand followers is that kind of activity, and it happens on your account.
+3. **You hand an agent your logged-in session.** Whatever it reads goes back to the AI company to be processed. For a list of everyone you know, that is a lot to give up for an answer the agent cannot even produce.
+
+## What can ChatGPT actually help me with here?
+
+It can help with the steps, not with the answer. An assistant is fine for:
+
+- Explaining where Instagram's "Export your information" menu lives and what to select.
+- Spelling out the difference between an unfollower and someone who [never followed you back](/blog/unfollowers-vs-non-followers-on-instagram-whats-the-difference).
+- Talking you out of refreshing your follower count every hour.
+
+What it cannot do is produce the list. That takes your data.
+
+## Can I just upload my Instagram data to ChatGPT instead?
+
+You can, but then the chatbot is not seeing your account. It is reading a file you handed over, and the price is privacy. Your export is a full map of your social circle, with the date of every follow, and once you upload it, it sits on an AI company's servers, often under settings that allow training by default. One file also only shows who does not follow you back, not who left. We went through the trade-offs in [is it safe to upload my Instagram data to ChatGPT](/blog/is-it-safe-to-upload-my-instagram-data-to-chatgpt).
+
+## Why did ChatGPT recommend an unfollower app?
+
+Ask a few assistants for "the best app to see who unfollowed you" and you will get confident lists of app names. Those come from web pages the assistant read, many of them affiliate roundups, or from training data that may be months or years old. An app recommended that way might be gone, renamed, or one of the many that [ask for your Instagram password](/blog/why-instagram-follower-trackers-ask-for-your-password). The assistant is not checking any of that for you. We dug into this in [why AI assistants recommend different unfollower apps](/blog/why-do-ai-assistants-recommend-different-instagram-unfollower-apps).
+
+## So how do I see who unfollowed me on Instagram?
+
+Instagram [does not notify you when someone unfollows](https://help.instagram.com/286340048138725), but it does let you download your own data, including your full followers and following lists. That export is the one source that is both complete and yours. Meta provides it under data portability rules like [GDPR Article 20](https://gdpr-info.eu/art-20-gdpr/).
+
+1. In Instagram, open **Accounts Center**, then **Your information and permissions**, then **Export your information**. The [export guide](/blog/how-to-download-your-instagram-data) covers each screen.
+2. Select only **Followers and following**, choose **JSON**, and export to your device.
+3. Upload the ZIP to [WhoUnfollowed](/). It reads the file inside your browser. Nothing is sent to a server, and no AI model ever sees it.
+
+One export shows who you follow that does not follow you back. To see who actually unfollowed you, you need a second export later: anyone in the old followers list who is missing from the new one left in between. That is the whole method, and it is the only one that gives you real names instead of guesses.
+
+## In Short
+
+- ChatGPT, Claude, Gemini and Copilot cannot see your Instagram followers in a normal chat.
+- Instagram has not let outside apps read follower lists through its API since 2018.
+- A browser agent could scroll your list, but that is automated collection Instagram's terms prohibit, and it still cannot show who left.
+- Your own data export is the reliable source. Two exports compared show exactly who unfollowed you.
+
+Your export already has the answer the chatbot could not give you. [Upload it](/) and see the list in about two minutes.`,
+  },
+  {
+    // Photo: Pexels 36740854 (free license, no attribution required)
+    slug: 'is-it-safe-to-upload-my-instagram-data-to-chatgpt',
+    cluster: 'privacy-safety',
+    title: 'Is It Safe to Upload My Instagram Data to ChatGPT to Find Unfollowers?',
+    metaTitle: 'Is It Safe to Upload My Instagram Data to ChatGPT?',
+    metaDescription: 'A chatbot can sort your Instagram export, but you hand an AI company your whole follower list. Here is what is in the file and a private way to do it.',
+    excerpt: 'Dropping your Instagram export into ChatGPT, Gemini or Claude does work. It also sends a dated map of everyone you know to an AI company. Here is what is in the file, what each assistant does with uploads, and the private alternative.',
+    date: 'October 17, 2026',
+    readTime: '6 min',
+    tag: 'Privacy',
+    primaryKeyword: 'is it safe to upload my instagram data to chatgpt',
+    art: 'lock',
+    image: '/blog/ai-upload-export-privacy-hero.jpg',
+    imageAlt: 'A hand holding a brass padlock against a dark background, representing keeping your Instagram data export private',
+    cta: {
+      heading: 'Get the list without handing it over.',
+      body: 'WhoUnfollowed does the same comparison a chatbot would, inside your browser. Your export never leaves your device, no AI reads it, and the parser is open source so you can check. About two minutes, no password.',
+      buttonLabel: 'Find non-followers privately',
+    },
+    faq: [
+      { q: 'Is it safe to upload my Instagram data to ChatGPT?', a: 'It is not private: it works, but you give OpenAI a complete list of your followers with dates, and unless you turn off "Improve the model for everyone" in Data Controls, OpenAI says your content can be used to train its models.' },
+      { q: 'What is in my Instagram followers and following export?', a: 'Every follower and every account you follow, each with a username, a profile link and the date of the follow; a full export can also include your messages and comments.' },
+      { q: 'Do AI chatbots train on files I upload?', a: 'It depends on the service and your settings; ChatGPT and Perplexity use consumer content for training by default unless you opt out, while Claude depends on the privacy setting on your account.' },
+      { q: 'How can I see who doesn\'t follow me back without uploading my data?', a: 'Use a tool that reads the export locally: WhoUnfollowed parses your Instagram export inside your browser, so the file never leaves your device and no AI model sees it.' },
+      { q: 'Should I upload my whole Instagram ZIP to ChatGPT?', a: 'No, a full Instagram export can contain your direct messages and comment history, and any file you upload leaves your device, which is why a local tool is the safer way to check.' },
+    ],
+    body: `It works, but it is not private. ChatGPT, Claude, Gemini and most other assistants accept file uploads, so they can read your Instagram export and list who does not follow you back. The cost is that a complete, dated map of your social circle now sits on an AI company's servers, often under settings that allow training unless you switch them off.
+
+## Can ChatGPT actually find who doesn't follow me back from my export?
+
+This tip is all over social media now: download your Instagram data, drop the followers and following files into a chatbot, and ask "who doesn't follow me back?" If the assistant runs code on the files, the answer can be correct. If it just reads the text and replies, long lists are exactly where a language model can skip or invent a name, and you have no easy way to see which happened.
+
+But whether it works is the smaller question. The bigger one is what you gave away to get the answer.
+
+## What's in my Instagram data export?
+
+A followers and following export is not a count. Every entry holds a username, a link to the profile, and a timestamp for when the follow happened. With 3,000 followers that is 3,000 real people, plus the date each connection started. The breakdown is in [what's inside your Instagram data download](/blog/whats-inside-your-instagram-data-download).
+
+Plenty of people do not stop at that section. If you exported everything, the ZIP can also hold [your direct messages, your posts, your comment history, and more](https://help.instagram.com/6947552812036899). Drag the whole folder into a chat window and all of it goes along for the ride.
+
+And most of that data is not only yours. Your followers never agreed to be uploaded to an AI service.
+
+## What happens to my file after I upload it to an AI?
+
+Everything below comes from each company's own help pages as of this writing. Policies change, so check the current version before you rely on any of it.
+
+1. **Your upload can train future models.** OpenAI's [Data Controls FAQ](https://help.openai.com/en/articles/7730893-data-controls-faq) says new conversations are kept out of training only once you turn off "Improve the model for everyone." Perplexity's [data collection page](https://intercom.help/perplexity-ai/en/articles/11564572-data-collection-at-perplexity) says AI Data Retention is on by default for Free, Pro and Max users. On X, a setting under Privacy and safety, Data sharing and personalization, controls whether your [Grok](https://help.x.com/en/using-x/about-grok) interactions are used for training.
+2. **A person may read it.** Google's [Gemini privacy notice](https://support.google.com/gemini/answer/13594961) says a subset of chats is reviewed by human reviewers, that reviewed chats are kept for up to three years, and asks you not to enter confidential information you would not want a reviewer to see.
+3. **It stays around.** Microsoft's [Copilot privacy FAQ](https://support.microsoft.com/en-us/topic/privacy-faq-for-microsoft-copilot-27b3a435-8dc9-4b55-9a4b-58eeb9647a7f) says conversation activity is stored for 18 months by default, and that files you share are treated like any other conversation.
+4. **Where it is stored matters.** DeepSeek's [privacy policy](https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html) says it collects, processes and stores personal data in the People's Republic of China.
+5. **Meta AI is a special case.** Meta already holds your follower graph, so asking Meta AI about it is not new exposure. But Meta said that from [December 16, 2025](https://about.fb.com/news/2025/10/improving-your-recommendations-apps-ai-meta/) it would use your AI chats to personalize content and ad recommendations in most regions, so what you ask it feeds your ads.
+
+Claude handles this differently: Anthropic's [privacy center](https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training) says whether consumer chats are used to improve Claude depends on your privacy setting, and incognito chats are excluded. Either way, the file has still left your device.
+
+## Do ChatGPT, Claude and Gemini train on my uploads?
+
+| Assistant | Training on your chats | Where to change it |
+|---|---|---|
+| ChatGPT | Yes, while "Improve the model for everyone" is on | Settings, Data Controls |
+| Claude | Depends on your privacy setting | Settings, Privacy |
+| Gemini | Some chats reviewed by people | Gemini Apps Activity |
+| Microsoft Copilot | You can opt out | Copilot privacy settings |
+| Perplexity | On by default | Settings, Preferences, AI Data Retention |
+| Grok on X | Controlled by a data sharing setting | Privacy and safety, Data sharing and personalization |
+| DeepSeek | Policy offers an opt-out right | See its privacy policy |
+
+Turning training off helps. It does not change the fact that the file left your device.
+
+## How do I find unfollowers without uploading my data anywhere?
+
+What you want is a comparison: the accounts you follow minus the accounts that follow you. That does not need a language model, a data center, or anybody's training pipeline. It needs a parser.
+
+WhoUnfollowed reads your Instagram export inside your browser. The ZIP is never uploaded, and no AI model is involved at any step. You do not have to take our word for it, either. The parser is open source under the [MPL-2.0 license](https://mozilla.org/MPL/2.0/) and the code is on [GitHub](https://github.com/al-kilic/WhoUnfollowed), so anyone can read exactly what happens to the file. With a chatbot you can read a privacy policy. You cannot read the system.
+
+The same goes for tools that skip the export and [ask for your Instagram password](/blog/why-instagram-follower-trackers-ask-for-your-password) instead. Those are worse than a chatbot, not better.
+
+## In Short
+
+- A chatbot can read your Instagram export and list non-followers.
+- The file holds every follower with dates, and a full export can include your DMs.
+- ChatGPT and Perplexity train on consumer chats by default unless you opt out. Gemini sends some chats to human reviewers. Copilot keeps history for 18 months by default.
+- WhoUnfollowed does the same comparison locally, with open-source code and nothing uploaded.
+
+You want a list of names, not a new copy of your data on someone else's server. [Get it in your browser](/) in about two minutes.`,
+  },
+  {
+    // Photo: Pexels 5077393 (free license, no attribution required)
+    slug: 'best-app-to-see-who-unfollowed-me-on-instagram-without-password',
+    cluster: 'unfollowers',
+    title: 'What Is the Best App to See Who Unfollowed Me on Instagram Without My Password?',
+    metaTitle: 'Best App to See Who Unfollowed Me on Instagram, No Password',
+    metaDescription: 'Five ways to see who unfollowed you on Instagram in 2026, compared on safety, accuracy and cost. Only one catches every unfollower with no password.',
+    excerpt: 'Scrolling your list, asking a chatbot, password apps, browser extensions, or your own data export. Here is how each one does on accuracy, account risk and cost, and which to use for which question.',
+    date: 'October 17, 2026',
+    readTime: '6 min',
+    tag: 'Guide',
+    primaryKeyword: 'best app to see who unfollowed me on instagram without my password',
+    art: 'ratio',
+    image: '/blog/best-way-unfollowers-2026-hero.jpg',
+    imageAlt: 'A person at a desk holding a smartphone next to an open laptop, representing comparing ways to see who unfollowed you on Instagram',
+    cta: {
+      heading: 'Use the method that catches everyone.',
+      body: 'Your Instagram export is the only complete record of who follows you. Upload it to WhoUnfollowed and see who does not follow you back in about two minutes, in your browser, with no password and nothing uploaded.',
+      buttonLabel: 'Find my unfollowers',
+      proNudge: 'Pro keeps every snapshot, so each new upload shows exactly who left since the last one. One-time payment, no auto-renewal.',
+    },
+    faq: [
+      { q: 'What is the best app to see who unfollowed me on Instagram without my password?', a: 'Use a tool that reads your own Instagram data export, such as WhoUnfollowed, and compare two exports taken at different times; anyone in the older followers list who is missing from the newer one unfollowed you.' },
+      { q: 'Does Instagram show you who unfollowed you?', a: 'No, Instagram has no screen that lists who unfollowed you and sends no notification when someone does.' },
+      { q: 'Are unfollower apps that ask for my Instagram password safe?', a: 'No, they log in as you from their own servers, which Instagram can flag as suspicious and which goes against Meta\'s rules on automated access.' },
+      { q: 'Is WhoUnfollowed free?', a: 'Checking one export is free and needs no account; saving snapshots so each upload shows who left is part of Pro, a one-time $1.99 for 30 days or $9.99 for 365 days.' },
+      { q: 'Can I see who unfollowed me without them knowing?', a: 'Yes, comparing your own data exports never touches anyone else\'s profile, so nobody can tell you checked.' },
+    ],
+    body: `The best app to see who unfollowed you on Instagram without your password is one that reads your own Instagram data export, like WhoUnfollowed, and compares two exports taken a few weeks apart. It never touches your login, does not break Instagram's rules, and catches every unfollower. Every other method guesses, misses people, or puts your account at risk.
+
+## What are my options for seeing who unfollowed me on Instagram?
+
+| Method | Needs your password | Shows who unfollowed | Risk to your account | Cost |
+|---|---|---|---|---|
+| Scrolling your followers list | No | Only if you remember who was there | None | Free |
+| Asking ChatGPT, Gemini or Copilot | No | No, it cannot see your account | None, and no answer either | Free |
+| Password-based tracker apps | Yes | Sometimes, until they get blocked | High: flagged logins, locked accounts | Often paid |
+| Browser extensions in your Instagram tab | No, but they act as you | Sometimes | Automated access Meta prohibits | Varies |
+| Your data export, compared over time | No | Yes, every one | None, it is your own data | Free for one export |
+
+Here is what sits behind each row.
+
+## Can I just check my followers list in the Instagram app?
+
+Instagram lets you search your own followers. If you suspect one specific person, type their name: if they do not show up, they are not following you. That is free, private, and fine for a single name.
+
+It falls apart past that. Instagram [sends no notification when someone unfollows](https://help.instagram.com/286340048138725), and there is no "recently unfollowed you" screen, so you can only check people you already suspect. The [following categories](/blog/instagram-following-categories-least-interacted-with) Instagram does show are about accounts you follow, not about who left you.
+
+## Can ChatGPT or Google's AI Overview tell me who unfollowed me?
+
+If you searched this and got a Google AI Overview, or asked Microsoft Copilot or ChatGPT, you got a summary of web pages. None of these assistants can see your follower list, so none can name who left. The details are in [can ChatGPT tell me who unfollowed me](/blog/can-chatgpt-tell-me-who-unfollowed-me-on-instagram). Good for learning the steps, useless for the list itself.
+
+## Are unfollower apps that ask for my password safe?
+
+These ask you to log in with your Instagram username and password, then log in as you from their own servers. Instagram sees a login from an unfamiliar location and repeated automated requests, which is the pattern its systems flag. Meta's [Automated Data Collection Terms](https://www.facebook.com/legal/automated_data_collection_terms) prohibit this kind of access without written permission. The result people report most is a locked account or a forced password reset. More in [why trackers ask for your password](/blog/why-instagram-follower-trackers-ask-for-your-password) and [whether you can get banned for using one](/blog/can-you-get-banned-for-using-a-follower-tracker-on-instagram).
+
+## What about browser extensions?
+
+Extensions skip the password by running inside the Instagram tab you are already logged in to. Your password stays with you, but the extension acts as you, firing requests at Instagram from your session. That is still automated collection on your account. An extension can also change owners and push an update you never review.
+
+## Why is the Instagram data export the safest way?
+
+Instagram lets you download your own followers and following lists through Accounts Center. Meta provides it under data portability rules like [GDPR Article 20](https://gdpr-info.eu/art-20-gdpr/), so using it is about as safe as it gets. It is the complete list, with the date of every follow.
+
+One export shows who does not follow you back. Two exports, taken weeks apart, show who unfollowed you: anyone in the older followers list who is missing from the newer one left in between. That is the only method on this list that names every unfollower with no guessing.
+
+This is what WhoUnfollowed is built around. You upload the ZIP and it reads the file in your browser, so it is never sent to a server. There is no password and no login to Instagram. The web app is open source under AGPL-3.0 and the parser under MPL-2.0, with the code on [GitHub](https://github.com/al-kilic/WhoUnfollowed), so the privacy claim is checkable.
+
+On cost: one export is free with no account. Pro saves your snapshots so each new upload shows who left since the last one. It is a one-time $1.99 for 30 days or $9.99 for 365 days, with no auto-renewal. Details on the [pricing page](/pricing).
+
+## Which method should I use?
+
+- **You suspect one specific person:** search your followers list in the app.
+- **You want everyone who does not follow you back:** one export, free.
+- **You want to know who left:** two exports compared, by hand or with saved snapshots.
+- **Anything that asks for your Instagram password:** skip it.
+
+Comparing two exports [by hand](/blog/how-to-compare-two-instagram-follower-lists-manually) is possible, just slow once you have more than a few hundred followers. That gap is the reason tools exist at all.
+
+## In Short
+
+- Instagram has no unfollower list and sends no unfollow notification.
+- Chatbots, including Google AI Overviews and Copilot, cannot see your followers.
+- Password apps and extensions act as you, which Meta's rules prohibit and which risks your account.
+- Your own data export, compared over time, is the only method that catches every unfollower safely.
+
+Start with your export. [Upload it to WhoUnfollowed](/) and get the first list in about two minutes.`,
+  },
+  {
+    // Photo: Pexels 28971395 (free license, no attribution required)
+    slug: 'why-do-ai-assistants-recommend-different-instagram-unfollower-apps',
+    cluster: 'privacy-safety',
+    title: 'Why Do AI Assistants Recommend Different Instagram Unfollower Apps?',
+    metaTitle: 'Why Do AI Assistants Recommend Different Unfollower Apps?',
+    metaDescription: 'Perplexity, Gemini, Copilot and Grok often name different unfollower apps for the same question. Here is why, and a three-part test to judge any of them.',
+    excerpt: 'Ask Perplexity, Gemini, Copilot, Grok, DeepSeek and Meta AI for the best unfollower app and the lists often do not match. None of them tested the apps. Here is where their answers come from and how to check a tool yourself.',
+    date: 'October 17, 2026',
+    readTime: '6 min',
+    tag: 'Privacy',
+    primaryKeyword: 'why do ai assistants recommend different instagram unfollower apps',
+    art: 'split',
+    image: '/blog/ai-assistants-disagree-hero.jpg',
+    imageAlt: 'Two people holding their smartphones out toward each other on a parking lot, representing different AI assistants giving different answers',
+    cta: {
+      heading: 'Run the three-part test on us.',
+      body: 'WhoUnfollowed never asks for your password, reads your Instagram export inside your browser, and publishes its code on GitHub. Upload your export and see who does not follow you back in about two minutes.',
+      buttonLabel: 'Try the no-password checker',
+    },
+    faq: [
+      { q: 'Why do AI assistants recommend different Instagram unfollower apps?', a: 'Each assistant builds its answer from different sources, such as its own search index or older training data, and none of them tests the apps it names.' },
+      { q: 'How do I know if an Instagram unfollower app is safe?', a: 'Check three things: it never asks for your Instagram password, it processes your data on your own device, and its code is public so anyone can verify that.' },
+      { q: 'Can Meta AI show me who unfollowed me on Instagram?', a: 'There is no documented Meta AI feature that lists who unfollowed you, and Instagram itself does not provide an unfollower list.' },
+      { q: 'Should I trust an unfollower app because ChatGPT recommended it?', a: 'Not on that basis alone; an AI recommendation reflects what ranks or appears often online, not a security review, so check the app yourself.' },
+      { q: 'What is the biggest red flag in an Instagram unfollower app?', a: 'A request for your Instagram password, because the app then logs in as you from its own servers, which Meta\'s rules prohibit and which can get your account locked.' },
+    ],
+    body: `AI assistants recommend different Instagram unfollower apps because each one builds its answer from different sources, like a different search index or an older training cutoff. None of them tests the apps. Treat any recommendation as a lead, then check the tool yourself: does it want your password, where does your data go, and can you read the code?
+
+## Why do I get different apps every time I ask?
+
+Type "what's the best app to see who unfollowed me on Instagram?" into Perplexity, Gemini, Microsoft Copilot, Grok, DeepSeek and Meta AI, and you can easily get six different lists. Run the same question again tomorrow and some of the names may change. That is not a glitch. It is how these products work.
+
+## Where does each AI assistant get its answer?
+
+- **Perplexity** searches the web and shows its sources next to the answer, so you get whatever ranks for that query today.
+- **Gemini** and **Google AI Overviews** lean on Google Search results.
+- **Microsoft Copilot** grounds its answers in Bing.
+- **Grok** can pull from posts on X as well as the web, so a popular thread can shape its answer.
+- **DeepSeek** answers from its training data unless you switch on web search, so it can name apps that have since been pulled or renamed.
+- **Meta AI** is made by the company that runs Instagram. Instagram has never shipped an unfollower list, and there is no documented Meta AI feature that gives you one.
+
+All of them share one weakness. In this niche, most of the pages they read are affiliate roundups or blog posts written by app makers who put themselves first. To be fair, this post is on a tool maker's blog too. That is exactly why the test below is about things you can check, not about trusting whoever wrote the list.
+
+## Is a popular unfollower app a safe one?
+
+An app being mentioned a lot, or having a high store rating, tells you it gets attention. It tells you nothing about what happens to your login. Many unfollower apps work by taking your Instagram username and password and logging in as you from their own servers. Meta's [Automated Data Collection Terms](https://www.facebook.com/legal/automated_data_collection_terms) prohibit that kind of automated access without written permission, and it is the most common reason people report a [locked account after using a tracker](/blog/can-you-get-banned-for-using-a-follower-tracker-on-instagram).
+
+An assistant summarizing ten listicles will not catch that. You have to.
+
+## How do I know if an Instagram unfollower app is safe?
+
+Run any unfollower tool through these before you hand it anything:
+
+1. **Does it ask for your Instagram password or a "log in with Instagram" screen inside the app?** If yes, stop. A legitimate tool has no reason to hold your password. Instagram already gives you your own data through its export.
+2. **Where is your data processed?** On your device, or on the company's servers? If the answer is not written plainly on the site, assume servers.
+3. **Can you read the code?** Open source code means anyone can verify what the tool does with your data. Closed code means you are trusting a privacy policy.
+
+WhoUnfollowed was built to pass all three. It never asks for your password; it reads the export you download from Instagram. The file is processed in your browser and not uploaded. The web app is open source under AGPL-3.0 and the parser under MPL-2.0, with everything on [GitHub](https://github.com/al-kilic/WhoUnfollowed). You can hold us to that. That is the point.
+
+## What are the red flags in an unfollower app?
+
+- A password field for your Instagram account inside the app or site.
+- A request for your two-factor authentication code.
+- "Real-time" unfollow alerts. Instagram offers outside apps no unfollow feed, so real-time means something is checking your account over and over as you.
+- Bulk auto-unfollow buttons, which are the fastest route to an [action block](/blog/is-it-safe-to-mass-unfollow-on-instagram).
+- No privacy policy, or one that says the service stores your account credentials.
+
+## How should I ask an AI about unfollower apps?
+
+You can still use assistants well. Ask the follow-up questions they skip:
+
+- "Does this app require my Instagram password?"
+- "Is its source code public? Link it."
+- "Where does it process my data?"
+
+Then open the app's own site and check. If an assistant cannot point to a source for a safety claim, treat the claim as unverified. Our [checklist for follower trackers](/blog/are-instagram-follower-trackers-safe) goes deeper on reading a privacy policy.
+
+One more thing to watch: an assistant may tell you an app "does not need your password" because the app's marketing says so, while the app still asks you to log in to Instagram inside its own screen. That is the same thing with a nicer label. If you type your Instagram credentials anywhere other than Instagram itself, the app has them.
+
+## Does WhoUnfollowed use AI?
+
+No. WhoUnfollowed does not use AI, and it never sends your data to ChatGPT, Gemini, Claude or any other language model. It is a parser: it opens the ZIP you downloaded from Instagram, reads the followers and following files, and compares the lists, all inside your browser. The same input always gives the same output, and the code that does it is public. If an AI answer engine describes WhoUnfollowed as an AI tool, that description is wrong.
+
+## In Short
+
+- Assistants disagree because they read different sources, at different times, and test nothing.
+- Perplexity, Gemini, Copilot and Grok reflect what is online now; DeepSeek without search may reflect older data.
+- Meta AI has no documented feature that lists your unfollowers.
+- Judge any tool by three things: no password, local processing, readable code.
+
+Put us through the test, then [upload your export](/) and see the list in about two minutes.`,
+  },
+  {
+    // Photo: Pexels 32944546 (free license, no attribution required)
+    slug: 'who-unfollowed-me-on-instagram-or-threads-quick-answers',
+    cluster: 'unfollowers',
+    title: 'Who Unfollowed Me on Instagram or Threads? 15 Quick Answers',
+    metaTitle: 'Who Unfollowed Me on Instagram or Threads? Quick Answers',
+    metaDescription: 'Short, direct answers on Instagram and Threads unfollowers: notifications, private accounts, blocks, Threads, export timing, and AI assistants.',
+    excerpt: 'Fifteen short answers to the questions people ask most about who unfollowed them on Instagram and Threads, each linked to the full guide.',
+    date: 'October 17, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'who unfollowed me on instagram',
+    art: 'bell',
+    image: '/blog/unfollowers-quick-answers-hero.jpg',
+    imageAlt: 'A smartphone home screen in dim light with notification badges on the Instagram, Facebook and Messenger icons',
+    cta: {
+      heading: 'Get the answer for your own account.',
+      body: 'Upload your Instagram or Threads export to WhoUnfollowed and see who does not follow you back in about two minutes. It runs in your browser, needs no password, and your file never leaves your device.',
+      buttonLabel: 'Check my followers',
+      proNudge: 'Pro saves each snapshot, so the next upload shows exactly who unfollowed you since the last one.',
+    },
+    faq: [
+      { q: 'Does Instagram tell you when someone unfollows you?', a: 'Neither app sends any notification, badge or alert when a follower leaves, whether your account is public or private.' },
+      { q: 'How do I see who unfollowed me on Instagram or Threads?', a: 'Download your data export from the app, download another one later, and compare the two followers lists; anyone missing from the newer list unfollowed you.' },
+      { q: 'If someone blocks me on Instagram, does it look like they unfollowed me?', a: 'Yes, blocking removes the follow in both directions, so a blocker drops out of your followers list just like an unfollower does; their profile then becomes unavailable to you.' },
+      { q: 'Does my Instagram data export show my Threads unfollowers?', a: 'No, Threads keeps its own followers and following, so checking Threads unfollowers needs a separate Threads export.' },
+      { q: 'Can Meta AI or ChatGPT tell me who unfollowed me?', a: 'No, AI assistants have no record of your followers over time, so they cannot say who left.' },
+    ],
+    body: `Nothing in Instagram or Threads tells you who unfollowed you. The only reliable way to find out is to compare two of your own data exports taken at different times: anyone missing from the newer followers list left in between. Below are short, direct answers to the questions people ask most, each linked to a full guide.
+
+## Does Instagram tell you when someone unfollows you?
+
+No. Instagram sends no notification, badge or alert when someone unfollows you, and it does not tell the other person when you unfollow them either. Instagram's [Help Center](https://help.instagram.com/286340048138725) confirms unfollowing is silent. Full detail in [does Instagram notify when you unfollow someone](/blog/does-instagram-notify-when-you-unfollow-someone).
+
+## Can one Instagram export show who unfollowed me?
+
+No. One export is a snapshot of who follows you right now. It shows who does not follow you back, which is a different list. Unfollowers need a before and an after, so you need two exports. See [unfollowers vs. non-followers](/blog/unfollowers-vs-non-followers-on-instagram-whats-the-difference).
+
+## Who doesn't follow me back on Instagram?
+
+One export answers this. Your following list minus your followers list is everyone you follow who does not follow you back, with the date you followed each one. Full detail in [who doesn't follow you back on Instagram](/blog/who-doesnt-follow-you-back-on-instagram).
+
+## How do I see who unfollowed me on Instagram?
+
+Request your followers and following export, keep it, request another one a few weeks later, and compare the followers lists. Anyone in the old list who is missing from the new one unfollowed you. The [step-by-step guide](/blog/how-to-see-who-unfollowed-you-on-instagram) covers it on any device.
+
+## Will they know I checked who unfollowed me?
+
+No. Comparing your own exports never touches their profile, so nothing reaches them. More in [how to see who unfollowed you without them knowing](/blog/how-to-see-who-unfollowed-you-without-them-knowing).
+
+## Can I see who unfollowed me on a private account?
+
+Yes. Your export includes your full followers list whether your account is public or private, so the method is the same. A private account is actually the stronger case for the export method, because it never means letting an outside app log in to an account you chose to keep private. See [private accounts](/blog/can-you-see-who-unfollowed-you-private-instagram-account).
+
+## Did they unfollow me or block me on Instagram?
+
+Both remove them from your followers list. The difference is their profile: after a block it shows as unavailable to you but loads normally for others. After a plain unfollow it looks completely normal. How to tell is in [deactivated or blocked](/blog/deactivated-or-blocked-on-instagram-how-to-tell).
+
+## Did they unfollow me or delete their account?
+
+A deactivated, deleted or banned account also drops out of your followers list, and it looks unavailable to everyone, not just you. See [did they unfollow you or get banned](/blog/did-they-unfollow-you-or-get-banned-on-instagram).
+
+## Why did I lose followers on Instagram overnight?
+
+Instagram periodically removes spam and inactive accounts, which can take a chunk of followers at once without a single real person unfollowing you. If your count fell by dozens in a day and the names missing from your export are ones you do not recognize, a cleanup is the likely cause, not a wave of real unfollows. See [why you lost followers overnight](/blog/why-did-i-lose-followers-overnight-on-instagram).
+
+## How long does it take to download my Instagram data?
+
+A followers-and-following-only export in JSON usually arrives within minutes. To keep it fast, deselect everything else in the export screen and choose JSON, which also includes the date of each follow. A full archive with photos and messages takes much longer. The download link expires after a few days, so grab it soon. See [how long a data request takes](/blog/how-long-does-an-instagram-data-request-take).
+
+## Can I download my Instagram data more than once?
+
+Yes, as often as you like. Each request gives you a fresh snapshot, which is exactly what the comparison needs. See [requesting your export again](/blog/can-you-request-your-instagram-data-export-more-than-once).
+
+## Does Threads tell you when someone unfollows you?
+
+No. Threads is silent in both directions, the same as Instagram, and there is no list of recent unfollowers in the app. The fix is the same as well: compare two Threads exports. See [does Threads notify when someone unfollows you](/blog/does-threads-notify-when-someone-unfollows-you).
+
+## Does my Instagram export show my Threads unfollowers?
+
+No. Threads keeps its own followers and following, so you need a separate Threads export. See [using your Instagram export for Threads](/blog/can-i-use-my-instagram-export-to-see-who-unfollowed-me-on-threads) and the [Threads guide](/blog/how-to-see-who-unfollowed-you-on-threads).
+
+## Can Meta AI or ChatGPT tell me who unfollowed me?
+
+No. Meta AI, ChatGPT, Claude, Gemini and the rest have no record of your followers over time, and there is no documented Meta AI feature that lists unfollowers. See [can ChatGPT tell me who unfollowed me](/blog/can-chatgpt-tell-me-who-unfollowed-me-on-instagram).
+
+## Is it safe to use an Instagram unfollower app?
+
+Only one that never asks for your Instagram password. Password-based apps log in as you from their servers, which Meta's [Automated Data Collection Terms](https://www.facebook.com/legal/automated_data_collection_terms) prohibit without written permission, and which is how accounts end up locked. A tool that reads your own export, in your browser, carries no account risk. See [how to judge unfollower apps](/blog/why-do-ai-assistants-recommend-different-instagram-unfollower-apps).
+
+## In Short
+
+- Instagram and Threads never notify you about unfollows.
+- One export shows who does not follow you back. Two exports show who unfollowed you.
+- Blocks, deactivations and spam purges also drop people from your list, so check before you assume.
+- Threads needs its own export.
+- No AI assistant can see who left. Your own data can.
+
+WhoUnfollowed reads your Instagram or Threads export in your browser and shows the list in about two minutes. [Upload yours](/) to start.`,
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
