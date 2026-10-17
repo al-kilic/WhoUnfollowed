@@ -2,6 +2,29 @@
 export interface ChangelogEntry { version: string; date: string; tag: 'launch' | 'fix' | 'improvement' | 'feature'; items: string[] }
 
 export const CHANGELOG_ENTRIES: ChangelogEntry[] = [  {
+    version: '2.3',
+    date: 'October 18, 2026',
+    tag: 'fix',
+    items: [
+      'Fixed: if you requested your export with a date range shorter than All time, people who followed you before that date were missing from the file and wrongly showed up as not following you back. We now spot these partial exports and tell you how to request a complete one.',
+      'HTML exports now show follow dates too, so follow age and the export checks work for them, not just for JSON.',
+      'Fixed: exports missing a profile link or follow date on some entries no longer fail the whole upload.',
+      'We now check every few minutes that the site is up, so outages get caught and fixed faster.',
+      'Security updates to the libraries the site is built on.',
+      'New blog guides, including unfollowers vs non-followers and checking from a computer.',
+    ],
+  },
+  {
+    version: '2.2',
+    date: 'September 30, 2026',
+    tag: 'improvement',
+    items: [
+      'New video walkthrough on the How to export page. It stays in view while you scroll and jumps to whichever step you are reading.',
+      'The same video is now on the homepage under How it works.',
+      'Clearer Insider plan details on the pricing page, and the three plan cards now line up properly.',
+    ],
+  },
+  {
     version: '2.1',
     date: 'September 29, 2026',
     tag: 'feature',
