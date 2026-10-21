@@ -107,7 +107,12 @@ export default async function HomePage({ params }: PageProps) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
+    '@id': `${SITE_URL}/#software`,
     name: 'WhoUnfollowed',
+    provider: { '@id': `${SITE_URL}/#organization` },
+    isAccessibleForFree: true,
+    license: 'https://www.gnu.org/licenses/agpl-3.0.html',
+    sameAs: ['https://github.com/al-kilic/WhoUnfollowed'],
     applicationCategory: 'UtilitiesApplication',
     operatingSystem: 'Web',
     url: SITE_URL,

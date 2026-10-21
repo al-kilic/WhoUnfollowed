@@ -106,7 +106,9 @@ const orgJsonLd = {
       '@type': 'Organization',
       '@id': `${SITE_URL}/#organization`,
       name: 'WhoUnfollowed',
+      alternateName: ['Who Unfollowed', 'whounfollowed.co'],
       url: SITE_URL,
+      founder: { '@id': `${SITE_URL}/author/alan-kilic#person` },
       logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png` },
       description:
         'Privacy-first, open-source follower analysis for Instagram and Threads. AGPL-3.0 web app, MPL-2.0 parser, no password required, processed in your browser.',
