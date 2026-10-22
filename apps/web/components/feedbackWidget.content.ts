@@ -14,6 +14,7 @@ export interface FeedbackWidgetContent {
   thanks: string;
   howsItGoing: string;
   radioGroupAriaLabel: string;
+  pickReason: string;
   commentPlaceholder: string;
   errorMessage: string;
   sending: string;
@@ -28,6 +29,7 @@ export const EN_FEEDBACK_WIDGET: FeedbackWidgetContent = {
   thanks: 'Thanks for the feedback.',
   howsItGoing: "How's it going so far?",
   radioGroupAriaLabel: "How's your experience been?",
+  pickReason: 'Pick the closest one',
   commentPlaceholder: 'Anything else? (optional)',
   errorMessage: 'Something went wrong. Mind trying again?',
   sending: 'Sending…',
@@ -38,6 +40,7 @@ export const EN_FEEDBACK_WIDGET: FeedbackWidgetContent = {
       "Couldn't get my export to work",
       'The upload or parsing broke',
       'Lost my snapshot history',
+      'Something else',
     ] },
     { value: 'sad', emoji: '😞', label: 'Sad', reasons: [
       'Followers show up as not following back',
@@ -46,19 +49,23 @@ export const EN_FEEDBACK_WIDGET: FeedbackWidgetContent = {
       'Confusing to use',
       'Missing a feature I needed',
       'Pro price feels high',
+      'Something else',
     ] },
     { value: 'neutral', emoji: '😐', label: 'Neutral', reasons: [
       'Works, but some numbers look off',
       'Works, but nothing stood out',
       'Just exploring',
+      'Something else',
     ] },
     { value: 'happy', emoji: '🙂', label: 'Happy', reasons: [
       'Found exactly who unfollowed me',
       'Clean and easy to use',
+      'Something else',
     ] },
     { value: 'delighted', emoji: '🤩', label: 'Delighted', reasons: [
       'Exactly what I needed',
       'Already recommending it',
+      'Something else',
     ] },
   ],
 };
@@ -70,6 +77,7 @@ export const ES_FEEDBACK_WIDGET: FeedbackWidgetContent = {
   thanks: 'Gracias por tu opinión.',
   howsItGoing: '¿Qué tal va todo hasta ahora?',
   radioGroupAriaLabel: '¿Cómo ha sido tu experiencia?',
+  pickReason: 'Elige la más cercana',
   commentPlaceholder: '¿Algo más? (opcional)',
   errorMessage: 'Algo salió mal. ¿Puedes intentarlo de nuevo?',
   sending: 'Enviando…',
@@ -80,6 +88,7 @@ export const ES_FEEDBACK_WIDGET: FeedbackWidgetContent = {
       'No pude hacer que mi exportación funcionara',
       'La carga o el análisis fallaron',
       'Perdí mi historial de snapshots',
+      'Otra cosa',
     ] },
     { value: 'sad', emoji: '😞', label: 'Triste', reasons: [
       'Seguidores aparecen como que no me siguen',
@@ -88,19 +97,23 @@ export const ES_FEEDBACK_WIDGET: FeedbackWidgetContent = {
       'Confuso de usar',
       'Falta una función que necesitaba',
       'El precio de Pro se siente alto',
+      'Otra cosa',
     ] },
     { value: 'neutral', emoji: '😐', label: 'Neutral', reasons: [
       'Funciona, pero algunos números no cuadran',
       'Funciona, pero nada destacó',
       'Solo estoy explorando',
+      'Otra cosa',
     ] },
     { value: 'happy', emoji: '🙂', label: 'Contento', reasons: [
       'Encontré exactamente quién me dejó de seguir',
       'Limpio y fácil de usar',
+      'Otra cosa',
     ] },
     { value: 'delighted', emoji: '🤩', label: 'Encantado', reasons: [
       'Exactamente lo que necesitaba',
       'Ya lo estoy recomendando',
+      'Otra cosa',
     ] },
   ],
 };
@@ -112,6 +125,7 @@ export const PT_FEEDBACK_WIDGET: FeedbackWidgetContent = {
   thanks: 'Obrigado pelo feedback.',
   howsItGoing: 'Como está indo até agora?',
   radioGroupAriaLabel: 'Como tem sido sua experiência?',
+  pickReason: 'Escolha a mais próxima',
   commentPlaceholder: 'Mais alguma coisa? (opcional)',
   errorMessage: 'Algo deu errado. Pode tentar novamente?',
   sending: 'Enviando…',
@@ -122,6 +136,7 @@ export const PT_FEEDBACK_WIDGET: FeedbackWidgetContent = {
       'Não consegui fazer minha exportação funcionar',
       'O upload ou a análise quebrou',
       'Perdi meu histórico de snapshots',
+      'Outra coisa',
     ] },
     { value: 'sad', emoji: '😞', label: 'Triste', reasons: [
       'Seguidores aparecem como se não me seguissem',
@@ -130,19 +145,23 @@ export const PT_FEEDBACK_WIDGET: FeedbackWidgetContent = {
       'Confuso de usar',
       'Faltou um recurso que eu precisava',
       'O preço do Pro parece alto',
+      'Outra coisa',
     ] },
     { value: 'neutral', emoji: '😐', label: 'Neutro', reasons: [
       'Funciona, mas alguns números parecem errados',
       'Funciona, mas nada se destacou',
       'Só estou explorando',
+      'Outra coisa',
     ] },
     { value: 'happy', emoji: '🙂', label: 'Feliz', reasons: [
       'Encontrei exatamente quem deixou de me seguir',
       'Limpo e fácil de usar',
+      'Outra coisa',
     ] },
     { value: 'delighted', emoji: '🤩', label: 'Encantado', reasons: [
       'Exatamente o que eu precisava',
       'Já estou recomendando',
+      'Outra coisa',
     ] },
   ],
 };

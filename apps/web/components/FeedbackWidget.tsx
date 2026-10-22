@@ -67,9 +67,11 @@ export function FeedbackWidget({ content: c = EN_FEEDBACK_WIDGET, autoOpenAfterM
   if (!mounted || alreadySubmitted) return null;
 
   const selectedMeta = sentiment ? SENTIMENTS.find(s => s.value === sentiment) : null;
+  // A quick reply is required: it is the part we can actually count and act on.
+  const canSubmit = sentiment !== null && reason !== null;
 
   async function handleSubmit() {
-    if (!sentiment) return;
+    if (!sentiment || !reason) return;
     const payload = {
       sentiment,
       reason: reason ?? undefined,
@@ -177,7 +179,10 @@ export function FeedbackWidget({ content: c = EN_FEEDBACK_WIDGET, autoOpenAfterM
               </RadioGroup>
 
               {selectedMeta && (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 12 }}>
+                <p style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono, margin: '12px 0 0' }}>{c.pickReason}</p>
+              )}
+              {selectedMeta && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8 }}>
                   {selectedMeta.reasons.map(r => (
                     <button
                       key={r}
@@ -199,7 +204,7 @@ export function FeedbackWidget({ content: c = EN_FEEDBACK_WIDGET, autoOpenAfterM
                 </div>
               )}
 
-              {sentiment && (
+              {reason && (
                 <textarea
                   value={comment}
                   onChange={e => setComment(e.target.value)}
@@ -224,12 +229,12 @@ export function FeedbackWidget({ content: c = EN_FEEDBACK_WIDGET, autoOpenAfterM
 
               <button
                 type="button"
-                disabled={!sentiment || status === 'submitting'}
+                disabled={!canSubmit || status === 'submitting'}
                 onClick={handleSubmit}
                 style={{
                   width: '100%', marginTop: 14, padding: '10px 16px', borderRadius: 12,
-                  border: 'none', cursor: sentiment ? 'pointer' : 'not-allowed',
-                  background: sentiment ? 'linear-gradient(135deg, #02888f, #01696f)' : T.border2,
+                  border: 'none', cursor: canSubmit ? 'pointer' : 'not-allowed',
+                  background: canSubmit ? 'linear-gradient(135deg, #02888f, #01696f)' : T.border2,
                   color: '#f4f0e8', fontFamily: T.sans, fontSize: 13.5, fontWeight: 700,
                   opacity: status === 'submitting' ? 0.7 : 1,
                   outline: 'none',
