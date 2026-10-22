@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import type { Metadata } from 'next';
 import { routing, type AppLocale } from '@/i18n/routing';
@@ -25,6 +26,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function ResetPasswordPage({ params, searchParams }: PageProps) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
+  // Lets locale-aware Links read the locale without request headers (static rendering).
+  setRequestLocale(locale);
   const { token } = await searchParams;
 
   return <ResetPasswordForm token={token ?? ''} locale={locale as AppLocale} />;

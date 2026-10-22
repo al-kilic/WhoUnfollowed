@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { LandingPage } from '@/components/landing/LandingPage';
@@ -76,6 +77,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function HomePage({ params }: PageProps) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
+  // Lets locale-aware Links read the locale without request headers (static rendering).
+  setRequestLocale(locale);
 
   const { user } = await validateRequest();
   const [isPro, initialStats] = await Promise.all([isProUser(), getStats()]);

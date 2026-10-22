@@ -250,6 +250,9 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
   const userEmail = props.userEmail !== undefined ? props.userEmail : auth.userEmail;
   const isPro     = auth.isPro;
   const isInsider = auth.isInsider;
+  // Hold the account area until the login state is known, so signed-in users
+  // don't see a flash of the logged-out button (layout space is kept).
+  const authHidden = props.userEmail === undefined && !auth.ready;
   const [menuOpen, setMenuOpen] = useState(false);
   const t = useTranslations('nav');
 
@@ -297,7 +300,9 @@ export function SiteNav(props: { userEmail?: string | null; isPro?: boolean } = 
           </a>
           <LanguageSwitcher />
           <ThemeToggle />
-          <AccountMenu userEmail={userEmail} isPro={isPro} isInsider={isInsider} />
+          <span style={{ visibility: authHidden ? 'hidden' : 'visible' }}>
+            <AccountMenu userEmail={userEmail} isPro={isPro} isInsider={isInsider} />
+          </span>
         </div>
 
         {/* Mobile: toggle + hamburger */}

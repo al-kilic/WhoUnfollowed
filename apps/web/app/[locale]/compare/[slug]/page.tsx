@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { hasLocale } from 'next-intl';
 import { getComparison, COMPARISONS, resolveComparison } from '@/app/compare/comparisons';
@@ -57,6 +58,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function ComparePage({ params }: PageProps) {
   const { locale, slug } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
+  // Lets locale-aware Links read the locale without request headers (static rendering).
+  setRequestLocale(locale);
   const c = getComparison(slug);
   if (!c) notFound();
 

@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { setRequestLocale } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { hasLocale } from 'next-intl';
@@ -59,6 +60,8 @@ function Row({ label, value }: { label: string; value: string }) {
 export default async function AccountPage({ params }: PageProps) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
+  // Lets locale-aware Links read the locale without request headers (static rendering).
+  setRequestLocale(locale);
   const c = getAccountContent(locale);
   const pricingHref = getPathname({ href: '/pricing', locale: locale as AppLocale });
 

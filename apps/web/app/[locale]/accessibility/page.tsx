@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { setRequestLocale } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
@@ -57,6 +58,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function AccessibilityPage({ params }: PageProps) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
+  // Lets locale-aware Links read the locale without request headers (static rendering).
+  setRequestLocale(locale);
   const content = getAccessibilityContent(locale);
 
   return (

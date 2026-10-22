@@ -17,3 +17,31 @@ whounfollowed.co {
         format console
     }
 }
+
+analytics.whounfollowed.co {
+    reverse_proxy umami:3001
+
+    encode gzip
+
+    log {
+        output stdout
+        format console
+    }
+}
+
+admin.whounfollowed.co {
+    reverse_proxy nocodb:8080
+
+    encode gzip
+
+    log {
+        output stdout
+        format console
+    }
+}
+
+# www has never been the canonical host. Redirect it permanently so shared or
+# typed www links land on the real site instead of failing.
+www.whounfollowed.co {
+    redir https://whounfollowed.co{uri} permanent
+}

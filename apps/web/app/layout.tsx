@@ -2,24 +2,10 @@ import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import { ThemeProvider } from 'next-themes';
 import { NextIntlClientProvider } from 'next-intl';
-import { getLocale, getMessages } from 'next-intl/server';
+import { chromeMessagesFor, STATIC_INTL_CONFIG } from '@/lib/i18n/chromeMessages';
 import { FontLoader } from '@/components/FontLoader';
 import { AuthProvider } from '@/components/AuthProvider';
-import { getAuthState } from '@/lib/auth/getAuthState';
 import './globals.css';
-
-// Sitewide chrome (SiteNav, LandingFooter, FinalCTA) needs useTranslations()
-// on every page, including ones outside app/[locale]. Only these namespaces
-// are sent to the client; per-page prose (much larger) stays server-side in
-// content files like app/[locale]/pricing/content.ts and is never part of
-// this catalog.
-const CHROME_NAMESPACES = ['nav', 'footer', 'cta'] as const;
-
-function pickChromeMessages(messages: Awaited<ReturnType<typeof getMessages>>) {
-  return Object.fromEntries(
-    CHROME_NAMESPACES.filter((ns) => ns in messages).map((ns) => [ns, messages[ns]]),
-  );
-}
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
@@ -133,11 +119,14 @@ const orgJsonLd = {
   ],
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [auth, locale, messages] = await Promise.all([getAuthState(), getLocale(), getMessages()]);
-  const chromeMessages = pickChromeMessages(messages);
+// Nothing here may read the request (cookies, headers): it would make every
+// page, marketing and blog included, render per request. So the login state
+// is fetched on the client (AuthProvider), and this layout always starts in
+// English; app/[locale]/layout.tsx switches the chrome text and <html lang>
+// for es/pt pages.
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
@@ -203,8 +192,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <NextIntlClientProvider locale={locale} messages={chromeMessages}>
-            <AuthProvider value={auth}>
+          <NextIntlClientProvider locale="en" messages={chromeMessagesFor('en')} {...STATIC_INTL_CONFIG}>
+            <AuthProvider>
               <FontLoader />
               {children}
             </AuthProvider>

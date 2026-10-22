@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import { validateRequest } from '@/lib/auth/session';
 import type { Metadata } from 'next';
@@ -22,6 +23,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function LoginPage({ params }: PageProps) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
+  // Lets locale-aware Links read the locale without request headers (static rendering).
+  setRequestLocale(locale);
 
   // Already logged in? Don't show the login form again — send them to history.
   const { user } = await validateRequest();

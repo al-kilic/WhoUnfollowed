@@ -11,9 +11,10 @@ export interface AuthState {
   isInsider: boolean;
 }
 
-// Resolved once per request (React cache dedupes), used by the root layout to
-// feed the shared nav context so SiteNav reflects the real login state on every
-// page without each page having to fetch auth itself. In production (payments
+// Resolved once per request (React cache dedupes). Served to the client-side
+// AuthProvider by /api/auth/state, and passed straight in by per-visitor pages
+// (results, diff), so the root layout never reads the session cookie and
+// marketing pages stay static. In production (payments
 // always on) isPro = an active subscription status, i.e. a real Pro user (paid
 // or grandfathered) — new signups start Free, so this no longer over-grants.
 //

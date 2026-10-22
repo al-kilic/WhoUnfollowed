@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { setRequestLocale } from 'next-intl/server';
 import { hasLocale } from 'next-intl';
 import type { Metadata } from 'next';
 import { redirect } from '@/i18n/navigation';
@@ -27,6 +28,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function VerifyEmailPage({ params }: PageProps) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
+  // Lets locale-aware Links read the locale without request headers (static rendering).
+  setRequestLocale(locale);
   const l = locale as AppLocale;
 
   const { user } = await validateRequest();

@@ -1,12 +1,11 @@
 import { Link } from '@/i18n/navigation';
+import { setRequestLocale } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { T } from '@/components/landing/tokens';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { LandingFooter } from '@/components/landing/FinalCTA';
-import { validateRequest } from '@/lib/auth/session';
-import { isProUser } from '@/lib/flags';
 import { routing, type AppLocale } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
 import { OG_LOCALE, ogAlternateLocales } from '@/i18n/ogLocale';
@@ -58,13 +57,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function ChangelogPage({ params }: PageProps) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
+  // Lets locale-aware Links read the locale without request headers (static rendering).
+  setRequestLocale(locale);
   const c = getChangelogContent(locale);
-  const { user } = await validateRequest();
-  const isPro = await isProUser();
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <SiteNav userEmail={user?.email ?? null} isPro={isPro} />
+      <SiteNav />
 
       <main style={{ maxWidth: 680, margin: '0 auto', padding: '56px 32px 80px' }}>
         <div style={{ marginBottom: 56 }}>

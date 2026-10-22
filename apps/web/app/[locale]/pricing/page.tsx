@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { setRequestLocale } from 'next-intl/server';
 import { validateRequest } from '@/lib/auth/session';
 import { isPaidFeaturesEnabled, isPaidSubscriber } from '@/lib/flags';
 import { hasLocale } from 'next-intl';
@@ -71,6 +72,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function PricingPage({ params }: PageProps) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
+  // Lets locale-aware Links read the locale without request headers (static rendering).
+  setRequestLocale(locale);
 
   const { user } = await validateRequest();
   const paymentsEnabled = isPaidFeaturesEnabled();
