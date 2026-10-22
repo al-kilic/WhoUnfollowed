@@ -118,6 +118,8 @@ export default async function PrivacyPage({ params }: PageProps) {
             {c.s5Body2}
             <br /><br />
             {c.s5Body3}
+            <br /><br />
+            {c.s5Body4}
           </Section>
 
           <Section title={c.s6Title}>
