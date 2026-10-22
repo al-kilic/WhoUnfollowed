@@ -2,6 +2,19 @@
 export interface ChangelogEntry { version: string; date: string; tag: 'launch' | 'fix' | 'improvement' | 'feature'; items: string[] }
 
 export const CHANGELOG_ENTRIES: ChangelogEntry[] = [  {
+    version: '2.4',
+    date: 'October 22, 2026',
+    tag: 'improvement',
+    items: [
+      'Some accounts in your list may not open on Instagram. They are usually deactivated, deleted or suspended, and Meta still includes them in your export. A short explainer now shows up the first time you open a profile, and a link next to your list brings it back any time.',
+      'Cleaner results page: the headline comes first, there is less spacing between sections, the tabs are slimmer, and the toolbar and filter buttons line up.',
+      'Your triage progress is now a thin line under the list instead of a big bar at the top.',
+      'The feature tour now shows once per browser instead of every visit.',
+      'The feedback panel waits a minute before opening, and asks you to pick the reply closest to your experience.',
+      'New guide: why your Instagram export lists accounts you cannot find, plus a matching answer in the FAQ.',
+    ],
+  },
+  {
     version: '2.3',
     date: 'October 18, 2026',
     tag: 'fix',
