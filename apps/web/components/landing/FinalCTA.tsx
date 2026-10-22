@@ -299,6 +299,7 @@ export function LandingFooter() {
       { label: t('threadsLabel'), href: '/threads' },
       { label: t('sourceCode'),             href: 'https://github.com/al-kilic/WhoUnfollowed' },
       { label: t('changelog'),               href: '/changelog' },
+      { label: t('llmsTxt'),                 href: '/llms.txt' },
     ]},
     { title: t('company'), items: [
       { label: t('about'),   href: '/about' },
@@ -353,7 +354,9 @@ export function LandingFooter() {
                   }
                   // /blog isn't migrated under [locale] yet — plain next/link
                   // so it isn't incorrectly locale-prefixed.
-                  if (l.href === '/blog') {
+                  // English-only routes outside app/[locale]: a locale-aware Link would
+                  // prefix them (/es/blog) and 404.
+                  if (l.href === '/blog' || l.href === '/llms.txt') {
                     return (
                       <NextLink key={l.label} href={l.href} style={linkStyle} {...hoverProps}>
                         {l.label}
