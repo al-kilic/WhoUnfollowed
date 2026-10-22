@@ -4694,6 +4694,89 @@ Only one that never asks for your Instagram password. Password-based apps log in
 
 WhoUnfollowed reads your Instagram or Threads export in your browser and shows the list in about two minutes. [Upload yours](/) to start.`,
   },
+  {
+    slug: 'accounts-in-instagram-export-you-cant-find',
+    cluster: 'data-export',
+    title: "Why Your Instagram Export Lists Accounts You Can't Find",
+    metaTitle: "Accounts in Your Instagram Export You Can't Find? Why",
+    metaDescription: "Your Instagram data download lists someone, but their profile says the page isn't available. Here's why deactivated, deleted and suspended accounts stay in exports.",
+    excerpt: "Your export says you follow them. Instagram says the page isn't available. Nothing is broken: Meta keeps some accounts on record after they disappear from the app. Here's what each case means and what to do.",
+    date: 'October 22, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: "instagram account in data download but page isn't available",
+    art: 'ghost',
+    // Photo: Pexels 9783811 (free license, no attribution required)
+    image: '/blog/accounts-in-export-cant-find-hero.jpg',
+    imageAlt: 'Hands holding a smartphone in dim teal light, representing searching Instagram for an account that appears in a data export but will not open',
+    cta: {
+      heading: "Clear the accounts that aren't really there.",
+      body: "Upload your Instagram export to WhoUnfollowed and see everyone who doesn't follow you back. If a profile won't open, mark it Deactivated and it moves out of your list, so you only spend time on real accounts. In your browser, no password.",
+      buttonLabel: 'Check my non-followers',
+    },
+    faq: [
+      { q: 'Why does my Instagram data download include accounts that no longer exist?', a: 'Meta keeps the follow on record while an account is deactivated, during the 30 days before a deleted account is removed for good, and often while an account is suspended, so your export can still list it even though the profile no longer opens in the app.' },
+      { q: "What does \"Sorry, this page isn't available\" mean on Instagram?", a: "It means the profile can't be shown to you: the account was deactivated, deleted, suspended, renamed, or the person blocked you." },
+      { q: "Does \"this page isn't available\" mean someone blocked me on Instagram?", a: "Not if the account still appears in your newest export. Blocking removes the follow in both directions, so a person who blocked you drops out of your followers and following lists; an account that is still listed but won't open is usually deactivated, deleted or suspended." },
+      { q: 'Do deactivated Instagram accounts still count as followers or following?', a: 'Instagram hides deactivated accounts from the app, but the follow is kept so it comes back if the person reactivates, which is why your data export can still list them.' },
+      { q: 'How long does a deleted Instagram account stay in my following list?', a: 'Instagram waits 30 days after a deletion request before removing the account permanently, so it can keep appearing in your export during that window and then disappears.' },
+      { q: 'Is my unfollower tracker wrong if it lists accounts I cannot open?', a: 'No, a tracker that reads your Instagram export shows exactly what Meta put in the file, and Meta includes accounts that are temporarily hidden, so the list is accurate even when a profile will not load.' },
+    ],
+    body: `You downloaded your Instagram data, checked who doesn't follow you back, and tapped a name. Instagram answered with "Sorry, this page isn't available." Your export says you follow this person. The app says they don't exist. One of them looks wrong.
+
+Neither is. Instagram's data export and Instagram's app show two different things. The app shows accounts that are live right now. The export shows the follow relationships Meta still has on record, and that record includes accounts that are hidden from the app but not gone from Meta's systems.
+
+## The short answer
+
+If an account is in your export but its profile won't open, it is almost always one of three things:
+
+- **Deactivated.** The person paused their account. Instagram hides it everywhere but keeps the follow so it can come back.
+- **Deleted, but not gone yet.** The person asked Instagram to delete the account, and Instagram waits 30 days before doing it.
+- **Suspended or disabled.** Instagram took the account down. It can stay on record while the owner appeals.
+
+Nothing is wrong with your account, your export, or the tool you used to read it.
+
+## Deactivated accounts
+
+Instagram lets anyone temporarily deactivate their account. While it is deactivated, their profile, posts, comments and likes are hidden from everyone, and their profile link shows the "page isn't available" screen. What does not happen is the follow being deleted. If the person comes back next week, every follower and following relationship comes back with them.
+
+That is why your export can list them. Meta still has the follow on record, so your data download includes it, even though the app hides the account. The same thing explains why your follower count in the app can be slightly lower than the number of people in your export.
+
+## Deleted accounts in the 30-day window
+
+Deleting an Instagram account is not instant. After someone requests deletion, Instagram gives them 30 days to change their mind. During that window the account is hidden, just like a deactivated one, and it can still show up in exports. After the window closes, the account is removed permanently and drops out of your next export.
+
+If you see an account that won't open, request a fresh export in a month. If it is gone, it was deleted. If it is still there, it is probably deactivated.
+
+## Suspended or disabled accounts
+
+When Instagram disables an account for breaking its rules, the profile disappears from the app. The owner can usually appeal, so the account is not necessarily erased right away, and its follows can remain in exports for a while. Spam and bot accounts removed in a cleanup often fall in this group, which is why a [platform purge](/blog/instagram-great-purge-2026-follower-drop) can leave a few dead names in your data.
+
+## Two other possibilities
+
+**They changed their username.** Your export records usernames as they were when Meta built the file. If someone renamed their account afterwards, the old link breaks. Search for them by display name, or check whether a familiar face appears under a new handle in your next export. See [did they unfollow you or start a new account](/blog/did-they-unfollow-you-or-start-a-new-instagram-account).
+
+**They blocked you after your export was made.** Blocking removes the follow in both directions, so a person who blocked you will not be in a newer export at all. If they are still in your latest export, a block is unlikely. The difference is covered in detail in [deactivated, deleted, or blocked](/blog/deactivated-or-blocked-on-instagram-how-to-tell).
+
+## What to do with these accounts
+
+You cannot unfollow an account you cannot open, and you do not need to. If it is deleted, the follow disappears on its own. If it is deactivated, it is not costing you anything while it is hidden.
+
+What matters is keeping them out of your way when you go through your [non-followers list](/blog/who-doesnt-follow-you-back-on-instagram). In WhoUnfollowed, mark any account whose profile will not load as **Deactivated**. It moves out of your main list and stops counting toward your triage progress, so the list you work through only contains real, reachable accounts. If the person comes back, you will see them again the next time you upload an export.
+
+## Why the export is still the right source
+
+It can feel like a list with a few dead accounts is less trustworthy. It is the opposite. Your export is Meta's own record of your followers and following, delivered under data portability rules, and it is the only complete list Instagram gives you. Apps that scrape Instagram or ask for your password do not get better data, they just get it in ways that put your account at risk. For what else is in the file, see [what's inside your Instagram data download](/blog/whats-inside-your-instagram-data-download), and for why counts rarely match exactly, see [why your follower count doesn't match a tracker](/blog/why-follower-count-doesnt-match-tracker).
+
+## In short
+
+- Your export lists follows Meta still has on record. The app only shows live accounts.
+- Deactivated, recently deleted and suspended accounts can be in your export but won't open.
+- A block removes the follow both ways, so a listed account is usually not a block.
+- Mark these accounts Deactivated in WhoUnfollowed to clear them from your list.
+
+Ready to check your own list? [Download your Instagram data](/blog/how-to-download-your-instagram-data) and [upload it here](/). It runs in your browser and your file never leaves your device.`,
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
