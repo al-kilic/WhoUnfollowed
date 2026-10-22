@@ -3,7 +3,6 @@ export interface ResultsContent {
   eyebrow: string;
   exportFrom: (date: string) => string;
   headlineSuffix: (n: number, app: string) => string;
-  outOfAccounts: (n: string) => string;
   htmlFormatNotice: string;
   seeHowToRequestJson: string;
   statFollowers: string;
@@ -44,9 +43,8 @@ export interface ResultsContent {
 const EN: ResultsContent = {
   metaTitle: 'Results',
   eyebrow: 'RESULTS',
-  exportFrom: (date) => `· Export from ${date}`,
+  exportFrom: (date) => `Export from ${date}`,
   headlineSuffix: (n, app) => (n === 1 ? `person doesn't follow you back on ${app}.` : `people don't follow you back on ${app}.`),
-  outOfAccounts: (n) => `Out of ${n} accounts you follow.`,
   htmlFormatNotice:
     "This export was in HTML format, so follow dates aren't available. JSON exports include those timestamps, which power follow age and growth trends in Radar.",
   seeHowToRequestJson: 'See how to request a JSON export →',
@@ -117,9 +115,8 @@ const EN: ResultsContent = {
 const ES: ResultsContent = {
   metaTitle: 'Resultados',
   eyebrow: 'RESULTADOS',
-  exportFrom: (date) => `· Exportado el ${date}`,
+  exportFrom: (date) => `Exportado el ${date}`,
   headlineSuffix: (n, app) => (n === 1 ? `persona no te sigue de vuelta en ${app}.` : `personas no te siguen de vuelta en ${app}.`),
-  outOfAccounts: (n) => `De ${n} cuentas que sigues.`,
   htmlFormatNotice:
     'Esta exportación estaba en formato HTML, así que las fechas de seguimiento no están disponibles. Las exportaciones JSON incluyen esas marcas de tiempo, que alimentan la antigüedad de seguimiento y las tendencias de crecimiento en Radar.',
   seeHowToRequestJson: 'Ve cómo solicitar una exportación JSON →',
@@ -190,9 +187,8 @@ const ES: ResultsContent = {
 const PT: ResultsContent = {
   metaTitle: 'Resultados',
   eyebrow: 'RESULTADOS',
-  exportFrom: (date) => `· Exportado em ${date}`,
+  exportFrom: (date) => `Exportado em ${date}`,
   headlineSuffix: (n, app) => (n === 1 ? `pessoa não te segue de volta no ${app}.` : `pessoas não te seguem de volta no ${app}.`),
-  outOfAccounts: (n) => `De ${n} contas que você segue.`,
   htmlFormatNotice:
     'Esta exportação estava em formato HTML, então as datas de seguimento não estão disponíveis. As exportações JSON incluem esses registros de data e hora, que alimentam o tempo de seguimento e as tendências de crescimento no Radar.',
   seeHowToRequestJson: 'Veja como solicitar uma exportação JSON →',

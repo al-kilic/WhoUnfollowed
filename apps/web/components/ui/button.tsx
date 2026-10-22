@@ -11,6 +11,9 @@ const buttonVariants = cva(
         default: 'bg-primary text-primary-foreground [a]:hover:bg-primary/80',
         outline:
           'border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50',
+        // Toolbar buttons: a step brighter than filter pills, quieter than outline.
+        subtle:
+          'border-[var(--t-border3)] bg-[var(--t-surface2)] text-[var(--t-inkDim)] hover:bg-[var(--t-border2)] hover:text-[var(--t-ink)] aria-expanded:bg-[var(--t-border2)] aria-expanded:text-[var(--t-ink)]',
         secondary:
           'bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground',
         ghost:

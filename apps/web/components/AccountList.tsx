@@ -68,7 +68,7 @@ export function AccountList({
           />
         </div>
         <Button
-          variant="outline"
+          variant="subtle"
           size="sm"
           onClick={() => setSortField((f) => (f === 'username' ? 'date' : 'username'))}
           title={sortField === 'username' ? c.sortingByNameTooltip : c.sortingByDateTooltip}
@@ -78,7 +78,7 @@ export function AccountList({
           <ChevronDown className="size-3 -ml-0.5 opacity-50" />
         </Button>
         <Button
-          variant="outline"
+          variant="subtle"
           size="sm"
           onClick={() => setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))}
           title={
@@ -94,7 +94,7 @@ export function AccountList({
           <ChevronDown className="size-3 -ml-0.5 opacity-50" />
         </Button>
         <Button
-          variant="outline"
+          variant="subtle"
           size="sm"
           onClick={() => requestExport(filtered)}
           disabled={filtered.length === 0}

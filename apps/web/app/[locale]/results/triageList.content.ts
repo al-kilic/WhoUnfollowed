@@ -14,10 +14,7 @@ export interface TriageListContent {
   openOn: (username: string, app: string) => string;
   visited: string;
   progress: {
-    triagedOf: (done: string, total: string) => string;
-    gettingStarted: string;
-    gettingSomewhere: string;
-    halfwayThrough: string;
+    triaged: (done: string, total: string, pct: number) => string;
     listCleared: string;
   };
   proTeaser: {
@@ -51,6 +48,19 @@ export interface TriageListContent {
   everyoneEarnedSpot: string;
   deactivatedSection: { label: string; description: string };
   whitelistSection: { label: string; description: string };
+  // Accounts in the export whose profile no longer opens. {app} is filled in.
+  unavailable: {
+    hint: string;
+    title: string;
+    lead: string;
+    reasons: { label: string; detail: string }[];
+    allFine: string;
+    learnMore: string;
+    tipBefore: string;
+    tipAfter: string;
+    ack: string;
+    close: string;
+  };
 }
 
 const EN: TriageListContent = {
@@ -151,10 +161,7 @@ const EN: TriageListContent = {
   openOn: (u, app) => `Open @${u} on ${app}`,
   visited: 'visited',
   progress: {
-    triagedOf: (done, total) => `Triaged ${done} of ${total}`,
-    gettingStarted: 'Getting started.',
-    gettingSomewhere: "You're getting somewhere.",
-    halfwayThrough: 'Halfway through. Radar is warming up.',
+    triaged: (done, total, pct) => `Triaged ${done} / ${total} · ${pct}%`,
     listCleared: 'List cleared. Suspiciously loyal bunch.',
   },
   proTeaser: {
@@ -192,6 +199,23 @@ const EN: TriageListContent = {
   everyoneEarnedSpot: "Everyone here earned their spot. Radar's got nothing.",
   deactivatedSection: { label: 'Deactivated', description: 'Accounts that deactivated. Not a real unfollow.' },
   whitelistSection: { label: 'Whitelist', description: 'You follow them for the content, not the follow-back.' },
+  unavailable: {
+    hint: "Don't see an account on {app}? Here's why",
+    title: "Don't see this account on {app}?",
+    lead: "It's most likely deactivated, deleted or suspended. It isn't hiding from you.",
+    reasons: [
+      { label: 'Deactivated', detail: '{app} keeps the follow on record' },
+      { label: 'Deleted', detail: 'Stays in exports for up to 30 days' },
+      { label: 'Suspended', detail: 'Not always removed from exports' },
+    ],
+    allFine: 'Your account, export and results are fine.',
+    learnMore: 'Learn more',
+    tipBefore: 'Mark it',
+    tipAfter: 'to clear it from your list.',
+    ack: 'Got it',
+    close: 'Close',
+  },
+
 };
 
 const ES: TriageListContent = {
@@ -292,10 +316,7 @@ const ES: TriageListContent = {
   openOn: (u, app) => `Abrir @${u} en ${app}`,
   visited: 'visto',
   progress: {
-    triagedOf: (done, total) => `Clasificados ${done} de ${total}`,
-    gettingStarted: 'Empezando.',
-    gettingSomewhere: 'Ya vas avanzando.',
-    halfwayThrough: 'Vas a la mitad. Radar se está calentando.',
+    triaged: (done, total, pct) => `Clasificados ${done} / ${total} · ${pct}%`,
     listCleared: 'Lista despejada. Un grupo sospechosamente leal.',
   },
   proTeaser: {
@@ -333,6 +354,23 @@ const ES: TriageListContent = {
   everyoneEarnedSpot: 'Todos aquí se ganaron su lugar. Radar no tiene nada.',
   deactivatedSection: { label: 'Desactivadas', description: 'Cuentas que se desactivaron. No es un dejar de seguir real.' },
   whitelistSection: { label: 'Lista blanca', description: 'Las sigues por el contenido, no por el seguimiento mutuo.' },
+  unavailable: {
+    hint: '¿No ves una cuenta en {app}? Esta es la razón',
+    title: '¿No ves esta cuenta en {app}?',
+    lead: 'Lo más probable es que esté desactivada, eliminada o suspendida. No se está escondiendo de ti.',
+    reasons: [
+      { label: 'Desactivada', detail: '{app} guarda el seguimiento' },
+      { label: 'Eliminada', detail: 'Sigue en las exportaciones hasta 30 días' },
+      { label: 'Suspendida', detail: 'No siempre se quita de las exportaciones' },
+    ],
+    allFine: 'Tu cuenta, tu exportación y tus resultados están bien.',
+    learnMore: 'Más información',
+    tipBefore: 'Márcala como',
+    tipAfter: 'para sacarla de tu lista.',
+    ack: 'Entendido',
+    close: 'Cerrar',
+  },
+
 };
 
 const PT: TriageListContent = {
@@ -433,10 +471,7 @@ const PT: TriageListContent = {
   openOn: (u, app) => `Abrir @${u} no ${app}`,
   visited: 'visitado',
   progress: {
-    triagedOf: (done, total) => `Triados ${done} de ${total}`,
-    gettingStarted: 'Começando.',
-    gettingSomewhere: 'Já está avançando.',
-    halfwayThrough: 'Na metade do caminho. O Radar está esquentando.',
+    triaged: (done, total, pct) => `Triados ${done} / ${total} · ${pct}%`,
     listCleared: 'Lista limpa. Um grupo suspeitosamente leal.',
   },
   proTeaser: {
@@ -474,6 +509,23 @@ const PT: TriageListContent = {
   everyoneEarnedSpot: 'Todos aqui conquistaram seu lugar. O Radar não tem nada.',
   deactivatedSection: { label: 'Desativadas', description: 'Contas que se desativaram. Não é um deixar de seguir de verdade.' },
   whitelistSection: { label: 'Lista branca', description: 'Você as segue pelo conteúdo, não pelo seguir de volta.' },
+  unavailable: {
+    hint: 'Não encontra uma conta no {app}? Veja o motivo',
+    title: 'Não encontra esta conta no {app}?',
+    lead: 'Provavelmente ela foi desativada, excluída ou suspensa. Não está se escondendo de você.',
+    reasons: [
+      { label: 'Desativada', detail: 'O {app} mantém o registro do follow' },
+      { label: 'Excluída', detail: 'Fica nas exportações por até 30 dias' },
+      { label: 'Suspensa', detail: 'Nem sempre sai das exportações' },
+    ],
+    allFine: 'Sua conta, sua exportação e seus resultados estão certos.',
+    learnMore: 'Saiba mais',
+    tipBefore: 'Marque como',
+    tipAfter: 'para tirá-la da sua lista.',
+    ack: 'Entendi',
+    close: 'Fechar',
+  },
+
 };
 
 export function getTriageListContent(locale: string): TriageListContent {

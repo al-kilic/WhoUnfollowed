@@ -393,6 +393,8 @@ const EN: HomeContent = {
       product: [
         ['How accurate are the results?',
          "Exact. We compare your Followers list against your Following list directly. If a username appears in one and not the other, that is the truth, not an estimate or a probability."],
+        ["Why does my list show accounts I can't open on Instagram?",
+         "The account is most likely deactivated, deleted, or suspended. Meta still includes it in your export: it keeps the follow on record for deactivated accounts, waits 30 days before removing deleted ones, and doesn't always remove suspended or banned accounts. So nothing is wrong with your account, your export, or our parser. On the results page you can mark these as Deactivated to move them out of your list."],
         ['Can I track changes over time?',
          "Yes, on Pro. Each upload becomes a snapshot. You can compare any two snapshots to see who started following, who unfollowed, and who quietly came back."],
         ['What file format do you need?',
@@ -624,6 +626,8 @@ const ES: HomeContent = {
       product: [
         ['¿Qué tan precisos son los resultados?',
          'Exactos. Comparamos directamente tu lista de Seguidores contra tu lista de Seguidos. Si un usuario aparece en una y no en la otra, esa es la verdad, no una estimación ni una probabilidad.'],
+        ["¿Por qué mi lista muestra cuentas que no puedo abrir en Instagram?",
+         "Lo más probable es que la cuenta esté desactivada, eliminada o suspendida. Meta la sigue incluyendo en tu exportación: guarda el seguimiento de las cuentas desactivadas, espera 30 días antes de quitar las eliminadas y no siempre quita las cuentas suspendidas o bloqueadas. Así que no pasa nada malo con tu cuenta, tu exportación ni nuestro parser. En la página de resultados puedes marcarlas como Desactivada para sacarlas de tu lista."],
         ['¿Puedo hacer seguimiento de cambios con el tiempo?',
          'Sí, en Pro. Cada subida se convierte en un snapshot. Puedes comparar dos snapshots cualquiera para ver quién empezó a seguirte, quién dejó de seguirte y quién volvió en silencio.'],
         ['¿Qué formato de archivo necesitan?',
@@ -855,6 +859,8 @@ const PT: HomeContent = {
       product: [
         ['Quão precisos são os resultados?',
          'Exatos. Comparamos diretamente sua lista de Seguidores com sua lista de Seguindo. Se um usuário aparece em uma e não na outra, essa é a verdade, não uma estimativa ou probabilidade.'],
+        ["Por que minha lista mostra contas que não consigo abrir no Instagram?",
+         "A conta provavelmente foi desativada, excluída ou suspensa. A Meta ainda a inclui na sua exportação: mantém o registro do follow de contas desativadas, espera 30 dias antes de remover as excluídas e nem sempre remove contas suspensas ou banidas. Ou seja, não há nada de errado com sua conta, sua exportação ou nosso parser. Na página de resultados você pode marcá-las como Desativada para tirá-las da sua lista."],
         ['Posso acompanhar mudanças ao longo do tempo?',
          'Sim, no Pro. Cada envio se torna um snapshot. Você pode comparar dois snapshots quaisquer para ver quem começou a seguir, quem deixou de seguir e quem voltou silenciosamente.'],
         ['Qual formato de arquivo vocês precisam?',

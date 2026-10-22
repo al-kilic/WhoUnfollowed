@@ -16,6 +16,7 @@ export const T = {
   tealLight: 'var(--t-tealLight)',
   tealGlow:  'var(--t-tealGlow)',
   terra:     'var(--t-terra)',
+  terraText: 'var(--t-terraText)',
   cream:     'var(--t-cream)',
 
   // Derived surface / border

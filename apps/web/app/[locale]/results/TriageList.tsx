@@ -15,6 +15,7 @@ import { PLATFORM_NAME, platformOfHref, withApp } from '@/lib/platform';
 import { useAuth } from '@/components/AuthProvider';
 import type { ListToolbarContent } from '@/components/listToolbar.content';
 import type { TriageListContent, TriageOptionContent } from './triageList.content';
+import { UnavailableProfilesNotice, hasAckedUnavailableNotice } from './UnavailableProfilesNotice';
 
 const ROW_HEIGHT = 64;
 
@@ -302,47 +303,26 @@ function TriageRow({ account, triageState, isVisited, isFocused, c, onTriage, on
   );
 }
 
-// ─── Progress bar ─────────────────────────────────────────────────────────────
+// ─── Progress line ────────────────────────────────────────────────────────────
 
-function ProgressBar({ done, total, c }: { done: number; total: number; c: TriageListContent }) {
-  const pct = total === 0 ? 0 : Math.round((done / total) * 100);
-  const isComplete = pct === 100;
-
-  const message =
-    pct === 0   ? null :
-    pct < 25    ? c.progress.gettingStarted :
-    pct < 50    ? c.progress.gettingSomewhere :
-    pct < 100   ? c.progress.halfwayThrough :
-                  c.progress.listCleared;
-
+// A hairline under the list with a small caption. Quiet on purpose: it is a
+// sense of progress, not a goal to chase.
+function ProgressLine({ done, total, c }: { done: number; total: number; c: TriageListContent }) {
+  if (total === 0) return null;
+  const pct = Math.round((done / total) * 100);
+  const complete = done >= total;
   return (
-    <div style={{
-      padding: '14px 18px', borderRadius: 12,
-      background: isComplete ? 'rgba(var(--t-accent-rgb),0.08)' : 'var(--t-surface1)',
-      border: `1px solid ${isComplete ? 'rgba(var(--t-accent-rgb),0.3)' : 'var(--t-border1)'}`,
-      transition: 'all 0.3s',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-        <span style={{ fontSize: 12, fontFamily: 'monospace', color: T.inkDim }}>
-          {c.progress.triagedOf(done.toLocaleString(), total.toLocaleString())}
-        </span>
-        <span style={{ fontSize: 12, fontFamily: 'monospace', color: isComplete ? T.tealLight : T.inkMute }}>
-          {pct}%
-        </span>
-      </div>
-      <div style={{ height: 4, borderRadius: 4, background: 'var(--t-border1)', overflow: 'hidden' }}>
+    <div aria-hidden="true" style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: -4 }}>
+      <div style={{ height: 2, borderRadius: 2, background: 'var(--t-border1)', overflow: 'hidden' }}>
         <div style={{
-          height: '100%', borderRadius: 4,
-          background: isComplete ? T.tealLight : T.tealMid,
-          width: `${pct}%`,
+          height: '100%', width: `${pct}%`, borderRadius: 2,
+          background: complete ? T.tealLight : 'rgba(var(--t-accent-rgb),0.55)',
           transition: 'width 0.4s ease',
         }} />
       </div>
-      {message && (
-        <p style={{ fontSize: 11, color: isComplete ? T.tealLight : T.inkMute, marginTop: 8, fontStyle: 'italic' }}>
-          {message}
-        </p>
-      )}
+      <span style={{ fontSize: 11, fontFamily: 'monospace', color: complete ? T.tealLight : T.inkMute, opacity: complete ? 1 : 0.8 }}>
+        {c.progress.triaged(done.toLocaleString(), total.toLocaleString(), pct)}
+      </span>
     </div>
   );
 }
@@ -371,6 +351,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
   const [focusedIndex, setFocusedIdx] = useState<number>(-1);
   const [slideOpen, setSlideOpen]         = useState(false);
   const [deactivatedOpen, setDeactivatedOpen] = useState(false);
+  const [unavailableOpen, setUnavailableOpen] = useState(false);
   const [visited, setVisited]         = useState<Set<string>>(() => new Set());
   const [toast, setToast]             = useState<ToastData | null>(null);
   const { requestExport, modal } = useCsvExport(csvFilename);
@@ -413,6 +394,14 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
     });
   }, [snapshotKey]);
 
+  // Opening a non-follower's profile is when a dead account shows up, so the
+  // explainer pops up then (the profile still opens in its new tab) until the
+  // user acknowledges it.
+  const openProfile = useCallback((username: string) => {
+    markVisited(username);
+    if (!hasAckedUnavailableNotice()) setUnavailableOpen(true);
+  }, [markVisited]);
+
   // Split into main queue vs let-it-slide vs deactivated, with search + filter + sort
   const { mainAccounts, slideAccounts, deactivatedAccounts } = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -435,15 +424,19 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
     return { mainAccounts: main, slideAccounts: slide, deactivatedAccounts: deactivated };
   }, [accounts, triage, search, sortField, sortDir, filterState]);
 
-  // Count non-let_it_slide / non-deactivated triaged
-  const triaged = useMemo(
-    () => accounts.filter(a => {
+  // Whitelisted and deactivated accounts leave the queue, so they count
+  // toward neither side of the progress.
+  // Counted from the full list, so searching doesn't move the line.
+  const { triaged, totalForProgress } = useMemo(() => {
+    let done = 0, total = 0;
+    for (const a of accounts) {
       const s = triage.get(a.username);
-      return s !== undefined && s !== 'let_it_slide' && s !== 'deactivated';
-    }).length,
-    [accounts, triage],
-  );
-  const totalForProgress = accounts.length - slideAccounts.length - deactivatedAccounts.length;
+      if (s === 'let_it_slide' || s === 'deactivated') continue;
+      total++;
+      if (s !== undefined) done++;
+    }
+    return { triaged: done, totalForProgress: total };
+  }, [accounts, triage]);
 
   const listHeight = Math.min(560, Math.max(120, mainAccounts.length * ROW_HEIGHT));
 
@@ -486,9 +479,6 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      {/* Progress bar */}
-      <ProgressBar done={triaged} total={totalForProgress} c={c} />
-
       {/* Pro teaser: carry-over across exports (shown to free users once they've
           actually triaged something, so the value lands at the right moment). */}
       {!isPro && !importDismissed && triage.size > 0 && (
@@ -647,7 +637,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
           />
         </div>
         <Button
-          variant="outline"
+          variant="subtle"
           size="sm"
           onClick={() => setSortField(f => f === 'username' ? 'date' : 'username')}
           title={sortField === 'username' ? tb.sortingByNameTooltip : tb.sortingByDateTooltip}
@@ -657,7 +647,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
           <ChevronDown size={12} style={{ opacity: 0.5, marginLeft: -2 }} />
         </Button>
         <Button
-          variant="outline"
+          variant="subtle"
           size="sm"
           onClick={() => setSortDir(d => d === 'asc' ? 'desc' : 'asc')}
           title={
@@ -674,7 +664,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
         </Button>
         <Button
           id="tutorial-export-csv"
-          variant="outline"
+          variant="subtle"
           size="sm"
           onClick={() => requestExport(mainAccounts)}
           disabled={mainAccounts.length === 0}
@@ -702,6 +692,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
             ...(OPTION_STYLE[o.state].gradient ? { gradient: OPTION_STYLE[o.state].gradient } : {}),
           })),
         ];
+        // Pills grow to fill the row so both edges line up with the toolbar above.
         return (
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             {filters.map(f => {
@@ -711,6 +702,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
                   key={f.value}
                   onClick={() => setFilterState(f.value)}
                   style={{
+                    flex: '1 1 auto', justifyContent: 'center',
                     display: 'flex', alignItems: 'center', gap: 5,
                     padding: '5px 11px',
                     borderRadius: 20, fontSize: 12,
@@ -747,12 +739,23 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
         );
       })()}
 
-      {/* Count */}
-      <p style={{ fontSize: 12, color: T.inkMute, fontFamily: 'monospace' }}>
-        {mainAccounts.length === accounts.length - slideAccounts.length
-          ? c.count.accounts(mainAccounts.length.toLocaleString())
-          : c.count.ofTotal(mainAccounts.length.toLocaleString(), (accounts.length - slideAccounts.length).toLocaleString())}
-      </p>
+      {/* Count, plus why some profiles won't open */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+        <p style={{ fontSize: 12, color: T.inkMute, fontFamily: 'monospace' }}>
+          {mainAccounts.length === accounts.length - slideAccounts.length
+            ? c.count.accounts(mainAccounts.length.toLocaleString())
+            : c.count.ofTotal(mainAccounts.length.toLocaleString(), (accounts.length - slideAccounts.length).toLocaleString())}
+        </p>
+        {accounts.length > 0 && (
+          <UnavailableProfilesNotice
+            platform={platformOfHref(accounts[0]!.href)}
+            c={c.unavailable}
+            deactivatedLabel={c.deactivatedSection.label}
+            open={unavailableOpen}
+            onOpenChange={setUnavailableOpen}
+          />
+        )}
+      </div>
 
       {/* Main list */}
       {mainAccounts.length === 0 && slideAccounts.length === 0 ? (
@@ -796,7 +799,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
                     isFocused={focusedIndex === item.index}
                     c={c}
                     onTriage={state => handleTriage(account.username, state)}
-                    onVisit={() => markVisited(account.username)}
+                    onVisit={() => openProfile(account.username)}
                     onFocus={() => setFocusedIdx(item.index)}
                   />
                 </div>
@@ -805,6 +808,8 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
           </div>
         </div>
       )}
+
+      <ProgressLine done={triaged} total={totalForProgress} c={c} />
 
       {/* Toast */}
       {toast && (

@@ -6,15 +6,15 @@ import { PlatformIcon } from '@/components/PlatformIcon';
 function PlatformMark({ platform }: { platform: Platform }) {
   const threads = platform === 'threads';
   return (
-    <div style={{
-      width: 52, height: 52, flexShrink: 0,
+    <div className="size-10 xl:size-[52px]" style={{
+      flexShrink: 0,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      borderRadius: threads ? '50%' : 15,
+      borderRadius: threads ? '50%' : 13,
       background: threads ? T.ink : 'linear-gradient(140deg, #02888f 0%, #01494d 100%)',
       color: threads ? T.bg : '#f4f0e8',
       boxShadow: threads ? '0 0 0 6px var(--t-surface2)' : '0 10px 28px rgba(2,136,143,0.28)',
     }}>
-      <PlatformIcon platform={platform} size={26} />
+      <PlatformIcon platform={platform} size={22} />
     </div>
   );
 }
@@ -23,7 +23,7 @@ function PlatformMark({ platform }: { platform: Platform }) {
 function ThreadLine() {
   return (
     <svg
-      className="hidden sm:block"
+      className="hidden sm:block xl:hidden"
       aria-hidden="true"
       width="260" height="64" viewBox="0 0 260 64" fill="none"
       style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}
@@ -39,15 +39,17 @@ function ThreadLine() {
   );
 }
 
+// Wide screens: parked in the left gutter beside the headline, so the page
+// opens on the number. Narrower: a compact row above the headline.
 export function PlatformHero({ platform, eyebrow, exportFrom }: { platform: Platform; eyebrow: string; exportFrom: string }) {
   return (
-    <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 14, marginBottom: 22 }}>
+    <div className="relative mb-4 flex items-center gap-3 xl:absolute xl:right-full xl:top-10 xl:mb-0 xl:w-[170px] xl:flex-col xl:items-end xl:gap-2.5 xl:text-right">
       <PlatformMark platform={platform} />
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <span style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em' }}>{eyebrow}</span>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
-          <span style={{ fontFamily: T.serif, fontSize: 22, color: T.ink, letterSpacing: '-0.02em', lineHeight: 1.1 }}>{PLATFORM_NAME[platform]}</span>
-          <span style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono }}>{exportFrom}</span>
+      <div className="flex flex-col gap-0.5 xl:items-end">
+        <span style={{ fontSize: 10.5, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em' }}>{eyebrow}</span>
+        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 xl:flex-col xl:items-end">
+          <span style={{ fontFamily: T.serif, fontSize: 20, color: T.ink, letterSpacing: '-0.02em', lineHeight: 1.1 }}>{PLATFORM_NAME[platform]}</span>
+          <span style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono }}><span className="xl:hidden">· </span>{exportFrom}</span>
         </div>
       </div>
       {platform === 'threads' && <ThreadLine />}

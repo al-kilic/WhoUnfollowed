@@ -107,21 +107,23 @@ function TabBar({ tabs, activeId, onChange }: { tabs: Tab[]; activeId: string; o
           <button
             key={tab.id}
             onClick={() => onChange(tab.id)}
+            className="flex-col gap-1 px-1.5 text-[12px] sm:flex-row sm:gap-2 sm:px-3.5 sm:text-[13px]"
             style={{
-              flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-              padding: '10px 16px', borderRadius: 10,
+              flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              paddingTop: 7, paddingBottom: 7, borderRadius: 10, whiteSpace: 'nowrap',
               background: active ? 'rgba(var(--t-accent-rgb),0.12)' : 'transparent',
               border: `1px solid ${active ? 'rgba(var(--t-accent-rgb),0.3)' : 'transparent'}`,
               color: active ? T.ink : T.inkDim,
-              fontSize: 13, fontWeight: active ? 600 : 400,
+              fontWeight: active ? 600 : 400,
               fontFamily: T.sans, cursor: 'pointer',
               transition: 'all 0.2s',
             }}
           >
-            {tab.label}
-            <InfoTooltip text={tab.description} />
+            <span style={{ maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis' }}>{tab.label}</span>
+            {/* Tooltips are hover-only, so they just cost width on phones */}
+            <span className="hidden sm:inline-flex"><InfoTooltip text={tab.description} /></span>
             <span style={{
-              fontSize: 11, padding: '2px 7px', borderRadius: 20, fontFamily: T.mono,
+              fontSize: 11, padding: '2px 7px', borderRadius: 20, fontFamily: T.mono, flexShrink: 0,
               background: active ? T.tealMid : 'var(--t-border1)',
               color: active ? T.cream : T.inkMute,
             }}>
@@ -422,17 +424,14 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
           account menu, dropdowns). RadarPulse below targets its data-radar-nav-link attribute. */}
       <SiteNav />
 
-      <main className="px-4 sm:px-8 py-10 sm:py-12" style={{ maxWidth: 900, margin: '0 auto' }}>
+      <main className="px-4 sm:px-8 py-8 sm:py-10" style={{ maxWidth: 900, margin: '0 auto', position: 'relative' }}>
         {/* Header */}
-        <div style={{ marginBottom: 40 }}>
+        <div style={{ marginBottom: 24 }}>
           <PlatformHero platform={platform} eyebrow={c.eyebrow} exportFrom={c.exportFrom(exportedDate)} />
           <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(36px, 5vw, 56px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', color: T.ink }}>
             <span style={{ color: T.tealLight }}>{analysis.nonFollowers.length.toLocaleString()}</span>{' '}
             {c.headlineSuffix(analysis.nonFollowers.length, PLATFORM_NAME[platform])}
           </h1>
-          <p style={{ fontSize: 15, color: T.inkDim, marginTop: 10 }}>
-            {c.outOfAccounts(analysis.totalFollowing.toLocaleString())}
-          </p>
           {snapshot.format === 'html' && !snapshot.followers.some(a => a.followedAt !== null) && (
             <div style={{ marginTop: 16, padding: '12px 16px', borderRadius: 12, background: 'rgba(var(--t-accent-rgb),0.06)', border: '1px solid rgba(var(--t-accent-rgb),0.2)', display: 'flex', alignItems: 'flex-start', gap: 10, maxWidth: 560 }}>
               <span style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5 }}>
@@ -446,7 +445,7 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
         </div>
 
         {/* Stats grid */}
-        <div id="tutorial-stats" className="grid grid-cols-2 sm:grid-cols-4" style={{ gap: 10, marginBottom: 40 }}>
+        <div id="tutorial-stats" className="grid grid-cols-2 sm:grid-cols-4" style={{ gap: 10, marginBottom: 24 }}>
           <StatCard label={c.statFollowers} value={analysis.totalFollowers} />
           <StatCard
             label={c.statFollowing}
@@ -496,7 +495,7 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
       </main>
 
       <LandingFooter />
-      <FeedbackWidget content={feedbackC} autoOpenAfterMs={30_000} />
+      <FeedbackWidget content={feedbackC} autoOpenAfterMs={60_000} />
     </div>
   );
 }
