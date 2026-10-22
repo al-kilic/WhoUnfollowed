@@ -54,8 +54,10 @@ export function Tutorial({
 
   useEffect(() => {
     setMounted(true);
+    // Once per browser: finishing or skipping the tour both count as seen.
+    // sessionStorage is still read so tours seen before this change stay hidden.
     try {
-      if (!sessionStorage.getItem(storageKey)) setVisible(true);
+      if (!localStorage.getItem(storageKey) && !sessionStorage.getItem(storageKey)) setVisible(true);
     } catch { setVisible(true); }
   }, [storageKey]);
 
@@ -95,7 +97,7 @@ export function Tutorial({
   }, [visible, mounted, step, measure]);
 
   function dismiss() {
-    try { sessionStorage.setItem(storageKey, '1'); } catch {}
+    try { localStorage.setItem(storageKey, '1'); } catch {}
     document.body.classList.remove('tutorial-active');
     setVisible(false);
     onDismiss?.();
