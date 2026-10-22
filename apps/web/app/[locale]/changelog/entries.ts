@@ -12,6 +12,8 @@ export const CHANGELOG_ENTRIES: ChangelogEntry[] = [  {
       'The feature tour now shows once per browser instead of every visit.',
       'The feedback panel waits a minute before opening, and asks you to pick the reply closest to your experience.',
       'New guide: why your Instagram export lists accounts you cannot find, plus a matching answer in the FAQ.',
+      'Privacy and cookie policies updated to cover everything the site does today: which Instagram files we read, the feedback and contact forms, the email we use to send account emails, and the language cookie.',
+      'Pages like the blog and export guide now load much faster, and the footer links to our llms.txt for AI assistants.',
     ],
   },
   {
