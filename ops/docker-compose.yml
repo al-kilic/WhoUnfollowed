@@ -5,8 +5,8 @@ services:
     env_file: .env
     environment:
       - NODE_ENV=production
-    ports:
-      - "3000:3000"
+      - HOSTNAME=0.0.0.0
+    # No published port: only Caddy reaches the app, over the compose network.
     depends_on:
       postgres:
         condition: service_healthy
