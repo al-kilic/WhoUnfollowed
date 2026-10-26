@@ -30,6 +30,11 @@ analytics.whounfollowed.co {
 }
 
 admin.whounfollowed.co {
+    # Password in front of NocoDB (a database admin tool). The bcrypt hash lives
+    # only on the server, in the Caddy data volume, never in this repo:
+    # /srv/ig-tracker/data/caddy/admin-auth.caddy holds `basic_auth { <user> <hash> }`.
+    # Caddy refuses to load if that file is missing, so create it before deploying.
+    import /data/admin-auth.caddy
     reverse_proxy nocodb:8080
 
     encode gzip
