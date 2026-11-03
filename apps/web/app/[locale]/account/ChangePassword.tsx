@@ -62,6 +62,7 @@ export function ChangePassword({ c }: { c: AccountContent['changePassword'] }) {
             : code === 'too_short' ? c.errors.tooShort
             : code === 'account_not_found' ? c.errors.accountNotFound
             : code === 'incorrect_password' ? c.errors.incorrectPassword
+            : code === 'too_many_attempts' ? c.errors.tooManyAttempts
             : c.errors.generic,
           );
           return;

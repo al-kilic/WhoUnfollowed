@@ -45,6 +45,7 @@ export interface AccountContent {
       notAuthenticated: string;
       accountNotFound: string;
       incorrectPassword: string;
+      tooManyAttempts: string;
     };
   };
   syncSetup: {
@@ -137,6 +138,7 @@ const EN: AccountContent = {
       notAuthenticated: 'Not authenticated.',
       accountNotFound: 'Account not found.',
       incorrectPassword: 'Your current password is incorrect.',
+      tooManyAttempts: 'Too many attempts. Wait a few minutes and try again.',
     },
   },
   syncSetup: {
@@ -233,6 +235,7 @@ const ES: AccountContent = {
       notAuthenticated: 'No has iniciado sesión.',
       accountNotFound: 'Cuenta no encontrada.',
       incorrectPassword: 'Tu contraseña actual es incorrecta.',
+      tooManyAttempts: 'Demasiados intentos. Espera unos minutos e inténtalo de nuevo.',
     },
   },
   syncSetup: {
@@ -329,6 +332,7 @@ const PT: AccountContent = {
       notAuthenticated: 'Não autenticado.',
       accountNotFound: 'Conta não encontrada.',
       incorrectPassword: 'Sua senha atual está incorreta.',
+      tooManyAttempts: 'Muitas tentativas. Aguarde alguns minutos e tente novamente.',
     },
   },
   syncSetup: {

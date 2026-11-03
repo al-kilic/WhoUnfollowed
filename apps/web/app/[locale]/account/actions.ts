@@ -8,6 +8,7 @@ import { db } from '@/lib/db/index';
 import { users, cloudSnapshots, profiles } from '@/lib/db/schema';
 import { validateRequest, invalidateSession } from '@/lib/auth/session';
 import { getStripe, isStripeConfigured } from '@/lib/stripe';
+import { checkRateLimit } from '@/lib/auth/rate-limit';
 
 const ARGON2_OPTIONS = { memoryCost: 19456, timeCost: 2, parallelism: 1 };
 
@@ -15,7 +16,8 @@ export type ChangePasswordErrorCode =
   | 'not_authenticated'
   | 'too_short'
   | 'account_not_found'
-  | 'incorrect_password';
+  | 'incorrect_password'
+  | 'too_many_attempts';
 
 // Change the password for the logged-in user. The cloud-sync key is derived from
 // the password, so the client re-encrypts every cloud snapshot under the new key
@@ -28,6 +30,11 @@ export async function changePassword(input: {
 }): Promise<{ ok: boolean; error?: ChangePasswordErrorCode }> {
   const { user } = await validateRequest();
   if (!user) return { ok: false, error: 'not_authenticated' as const };
+
+  // Limits guessing the current password from a hijacked session.
+  if (!checkRateLimit(`change-password:${user.id}`).allowed) {
+    return { ok: false, error: 'too_many_attempts' as const };
+  }
 
   if (!input.newPassword || input.newPassword.length < 8) {
     return { ok: false, error: 'too_short' as const };
