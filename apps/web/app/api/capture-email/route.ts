@@ -24,6 +24,15 @@ function isRateLimited(ip: string): boolean {
   return false;
 }
 
+// The filename ends up in an email subject and body sent from our domain, so
+// only a short, plain filename is accepted. Anything else falls back to a
+// fixed name rather than echoing visitor input into the email.
+function safeCsvFilename(value: unknown): string {
+  if (typeof value !== 'string') return 'export.csv';
+  const name = value.trim();
+  return /^[A-Za-z0-9._ -]{1,80}\.csv$/.test(name) ? name : 'export.csv';
+}
+
 export async function POST(req: Request) {
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
   if (isRateLimited(ip)) {
@@ -36,7 +45,7 @@ export async function POST(req: Request) {
   }
 
   const email       = typeof body.email       === 'string' ? body.email.trim().toLowerCase() : null;
-  const csvFilename = typeof body.csvFilename === 'string' ? body.csvFilename.trim() : 'export.csv';
+  const csvFilename = safeCsvFilename(body.csvFilename);
   const source = SOURCES.find((s) => s === body.source);
 
   // csvContent is intentionally NOT accepted, follower data must never reach the server.

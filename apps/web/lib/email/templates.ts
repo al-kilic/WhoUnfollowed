@@ -33,9 +33,8 @@ function preheader(text: string): string {
   return `<div style="display:none;max-height:0;overflow:hidden;opacity:0;mso-hide:all;">${text}</div>`;
 }
 
-// Every other template here only interpolates copy this file wrote itself.
-// contactNotificationEmail below is the first to embed raw visitor input, so
-// it's the first that actually needs this.
+// For templates that embed visitor input (contact notification, export
+// confirmation filename).
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, '&amp;')
@@ -143,9 +142,12 @@ export function passwordResetEmail(resetUrl: string, locale: AppLocale = 'en'): 
   return { subject, html: emailLayout({ locale, preview: c.preview, contentHtml: content }), text };
 }
 
-export function exportConfirmationEmail(csvFilename: string): EmailResult {
-  const subject = `You exported: ${csvFilename}`;
-  const text = `Thanks for using WhoUnfollowed. Your CSV (${csvFilename}) was downloaded directly to your device. We do not store your follower data on our servers.`;
+export function exportConfirmationEmail(rawFilename: string): EmailResult {
+  // Visitor-supplied (capture-email route), so escaped even though the route
+  // already restricts it to a plain .csv filename.
+  const csvFilename = escapeHtml(rawFilename);
+  const subject = `You exported: ${rawFilename}`;
+  const text = `Thanks for using WhoUnfollowed. Your CSV (${rawFilename}) was downloaded directly to your device. We do not store your follower data on our servers.`;
 
   const content = `
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">

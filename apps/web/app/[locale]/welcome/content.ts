@@ -9,7 +9,11 @@ export type WelcomeErrorCode =
   | 'payments_not_configured'
   | 'account_not_found_stripe'
   | 'invalid_or_expired_session'
-  | 'account_not_found_webhook_pending';
+  | 'account_not_found_webhook_pending'
+  | 'too_many_attempts'
+  | 'payment_not_complete'
+  | 'already_has_password'
+  | 'claim_not_allowed';
 
 export interface WelcomeContent {
   title: string;
@@ -45,7 +49,11 @@ const EN: WelcomeContent = {
     payments_not_configured: 'Payments not configured.',
     account_not_found_stripe: 'Could not find your account. Please contact support.',
     invalid_or_expired_session: 'Invalid or expired session. Please contact support.',
-    account_not_found_webhook_pending: 'Account not found. The webhook may still be processing — wait a moment and try again.',
+    account_not_found_webhook_pending: 'Account not found. Your payment may still be processing. Wait a moment and try again.',
+    too_many_attempts: 'Too many attempts. Wait a few minutes and try again.',
+    payment_not_complete: 'This payment is not complete yet. If you just paid, wait a moment and try again.',
+    already_has_password: 'This account already has a password. Log in instead, or use Forgot password if you need a new one.',
+    claim_not_allowed: 'This link cannot set a password for this account. Log in, or use Forgot password.',
   },
 };
 
@@ -68,7 +76,11 @@ const ES: WelcomeContent = {
     payments_not_configured: 'Los pagos no están configurados.',
     account_not_found_stripe: 'No pudimos encontrar tu cuenta. Contacta con soporte.',
     invalid_or_expired_session: 'Sesión inválida o caducada. Contacta con soporte.',
-    account_not_found_webhook_pending: 'Cuenta no encontrada. El webhook puede seguir procesándose, espera un momento e inténtalo de nuevo.',
+    account_not_found_webhook_pending: 'Cuenta no encontrada. Tu pago puede seguir procesándose. Espera un momento e inténtalo de nuevo.',
+    too_many_attempts: 'Demasiados intentos. Espera unos minutos e inténtalo de nuevo.',
+    payment_not_complete: 'Este pago aún no está completo. Si acabas de pagar, espera un momento e inténtalo de nuevo.',
+    already_has_password: 'Esta cuenta ya tiene contraseña. Inicia sesión o usa ¿Olvidaste tu contraseña? si necesitas una nueva.',
+    claim_not_allowed: 'Este enlace no puede establecer una contraseña para esta cuenta. Inicia sesión o usa ¿Olvidaste tu contraseña?',
   },
 };
 
@@ -91,7 +103,11 @@ const PT: WelcomeContent = {
     payments_not_configured: 'Pagamentos não configurados.',
     account_not_found_stripe: 'Não conseguimos encontrar sua conta. Entre em contato com o suporte.',
     invalid_or_expired_session: 'Sessão inválida ou expirada. Entre em contato com o suporte.',
-    account_not_found_webhook_pending: 'Conta não encontrada. O webhook ainda pode estar processando — aguarde um momento e tente novamente.',
+    account_not_found_webhook_pending: 'Conta não encontrada. Seu pagamento ainda pode estar processando. Aguarde um momento e tente novamente.',
+    too_many_attempts: 'Muitas tentativas. Aguarde alguns minutos e tente novamente.',
+    payment_not_complete: 'Este pagamento ainda não foi concluído. Se você acabou de pagar, aguarde um momento e tente novamente.',
+    already_has_password: 'Esta conta já tem senha. Faça login ou use Esqueci minha senha se precisar de uma nova.',
+    claim_not_allowed: 'Este link não pode definir uma senha para esta conta. Faça login ou use Esqueci minha senha.',
   },
 };
 

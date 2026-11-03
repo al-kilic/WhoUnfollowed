@@ -60,6 +60,13 @@ describe('POST /api/capture-email', () => {
     expect(sendEmail).toHaveBeenCalledTimes(1);
   });
 
+  it('never echoes a crafted filename into the email', async () => {
+    await POST(makeRequest({ email: 'a@b.com', source: 'csv', consent: true, csvFilename: '<a href="https://evil.example">Reset your password</a>.csv' }));
+    const sent = sendEmail.mock.calls[0]?.[0] as { subject: string; html: string };
+    expect(sent.subject).toBe('You exported: export.csv');
+    expect(sent.html).not.toContain('evil.example');
+  });
+
   it('returns 500 and sends nothing when saving fails', async () => {
     onConflictDoUpdate.mockRejectedValueOnce(new Error('db down'));
     const res = await POST(makeRequest({ email: 'a@b.com', source: 'csv', consent: true }));
