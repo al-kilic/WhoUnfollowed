@@ -12,7 +12,7 @@ overrides:
   brace-expansion@<2: ^1.1.21
   brace-expansion@>=4: '>=5.0.12'
   esbuild: '>=0.28.1'
-  vite: 8.3.5
+  vite: ^8.3.5
   nanoid: '>=3.3.18'
   browserslist: '>=4.28.7'
   js-yaml: '>=4.3.2'
@@ -1881,7 +1881,7 @@ packages:
     resolution: {integrity: sha512-2XJVD55d1o5AZous5CCGKS74g/riOj9odEt2bQpCVZeblHyHdnMeFl4jl0XjU21stf4mbjUkew2eXQZt65g5CQ==}
     peerDependencies:
       msw: ^2.4.9
-      vite: 8.3.5
+      vite: ^8.3.5
     peerDependenciesMeta:
       msw:
         optional: true
@@ -4175,7 +4175,7 @@ packages:
       '@vitest/ui': 4.1.11
       happy-dom: '*'
       jsdom: '*'
-      vite: 8.3.5
+      vite: ^8.3.5
     peerDependenciesMeta:
       '@edge-runtime/vm':
         optional: true
