@@ -16,7 +16,7 @@ import { LandingFooter } from '@/components/landing/FinalCTA';
 import { T } from '@/components/landing/tokens';
 import { useSnapshotList, useSnapshotsLoaded } from '@/hooks/useSnapshots';
 import { platforms as allPlatforms } from '@ig-tracker/core';
-import { PLATFORM_NAME, platformOfHref, snapshotPlatform, type Platform } from '@/lib/platform';
+import { PLATFORM_NAME, hasPendingRequests, platformOfHref, snapshotPlatform, type Platform } from '@/lib/platform';
 import { PlatformEmptyPanel } from './PlatformEmptyPanel';
 import { PlatformSwitcher } from '@/components/PlatformSwitcher';
 import { SiteNav } from '@/components/landing/SiteNav';
@@ -26,6 +26,12 @@ import { FeedbackWidget } from '@/components/FeedbackWidget';
 import type { AppLocale } from '@/i18n/routing';
 import { getDashboardContent, type DashboardContent } from './content';
 import { getFeedbackWidgetContent } from '@/components/feedbackWidget.content';
+import { HealthCheckCard } from '@/components/tools/HealthCheckCard';
+import { GrowthTimelineCard } from '@/components/tools/GrowthTimelineCard';
+import { StarsCard } from '@/components/tools/StarsCard';
+import { UnfollowPlannerCard } from '@/components/tools/UnfollowPlannerCard';
+import { VerdictCard } from '@/components/tools/VerdictCard';
+import { useStars } from '@/hooks/useStars';
 
 const DATE_FNS_LOCALES: Partial<Record<AppLocale, DateFnsLocale>> = { es, pt };
 
@@ -685,217 +691,6 @@ function RecentlyUnfollowedCard({ accounts, c, dateLocale, locked = false }: { a
   );
 }
 
-// ─── 7. Account health score ─────────────────────────────────────────────────
-
-interface HealthResult {
-  score: number; grade: 'A' | 'B' | 'C' | 'D' | 'F'; color: string;
-  ratio: { score: number; max: number; tier: number; ratioStr: string; nonFollowers: number; improvedRatioStr: string };
-  mutual: { score: number; max: number; tier: number; pct: number; isHigh: boolean; toRemove: number };
-  nf: { score: number; max: number; tier: number; pct: number; isLow: boolean; toHitTen: number };
-  growth: { score: number; max: number; kind: 'noData' | 'strong' | 'positive' | 'flat' | 'slight' | 'drop'; actionKind: 'noData' | 'keepCadence' | 'uploadMore' | 'checkCompare'; delta: number };
-}
-
-function computeHealth({
-  followers, following, mutuals, nonFollowers, snapshots,
-}: {
-  followers: number; following: number; mutuals: number; nonFollowers: number;
-  snapshots: { data: { followers: { username: string }[]; following: { username: string }[] } }[];
-}): HealthResult {
-  const ratio        = following === 0 ? 0 : followers / following;
-  const mutualPct    = following === 0 ? 0 : mutuals / following;
-  const nonFollowerPct = following === 0 ? 0 : nonFollowers / following;
-
-  // Component 1: Follow ratio (0–25)
-  const ratioScore = ratio >= 2 ? 25 : ratio >= 1 ? 20 : ratio >= 0.5 ? 12 : ratio >= 0.3 ? 6 : 0;
-  const ratioTier   = ratio >= 2 ? 0 : ratio >= 1 ? 1 : ratio >= 0.5 ? 2 : ratio >= 0.3 ? 3 : 4;
-  const improvedRatio = ratio >= 2 ? ratio : ratio >= 1
-    ? (followers / (following - nonFollowers))
-    : (following - nonFollowers > 0 ? followers / (following - nonFollowers) : Infinity);
-
-  // Component 2: Mutual health (0–25)
-  const mutualScore = mutualPct >= 0.7 ? 25 : mutualPct >= 0.5 ? 20 : mutualPct >= 0.3 ? 12 : mutualPct >= 0.1 ? 6 : 0;
-  const mutualTier   = mutualPct >= 0.7 ? 0 : mutualPct >= 0.5 ? 1 : mutualPct >= 0.3 ? 2 : mutualPct >= 0.1 ? 3 : 4;
-  const mutualToRemove = Math.max(0, Math.ceil(following * (1 - 0.7)) - (following - mutuals));
-
-  // Component 3: Non-follower rate (0–25)
-  const nfScore = nonFollowerPct <= 0.1 ? 25 : nonFollowerPct <= 0.2 ? 20 : nonFollowerPct <= 0.35 ? 12 : nonFollowerPct <= 0.5 ? 6 : 0;
-  const nfTier   = nonFollowerPct <= 0.1 ? 0 : nonFollowerPct <= 0.2 ? 1 : nonFollowerPct <= 0.35 ? 2 : nonFollowerPct <= 0.5 ? 3 : 4;
-  const toHitTen = Math.max(0, nonFollowers - Math.floor(following * 0.1));
-
-  // Component 4: Growth trend (0–25)
-  let growthScore = 12;
-  let growthDelta = 0;
-  let growthPct = 0;
-  if (snapshots.length >= 2) {
-    const latest = snapshots[0]!.data.followers.length;
-    const prev   = snapshots[1]!.data.followers.length;
-    growthDelta  = latest - prev;
-    growthPct    = prev === 0 ? 0 : growthDelta / prev;
-    growthScore  = growthPct > 0.05 ? 25 : growthPct > 0 ? 20 : growthPct === 0 ? 15 : growthPct > -0.05 ? 8 : 0;
-  }
-  const growthKind: HealthResult['growth']['kind'] =
-    snapshots.length < 2 ? 'noData' :
-    growthScore === 25 ? 'strong' :
-    growthScore === 20 ? 'positive' :
-    growthScore === 15 ? 'flat' :
-    growthScore === 8  ? 'slight' : 'drop';
-  const growthActionKind: HealthResult['growth']['actionKind'] =
-    snapshots.length < 2 ? 'noData' :
-    growthScore >= 20 ? 'keepCadence' :
-    growthScore === 15 ? 'uploadMore' : 'checkCompare';
-
-  const score = ratioScore + mutualScore + nfScore + growthScore;
-  const grade = score >= 85 ? 'A' : score >= 70 ? 'B' : score >= 55 ? 'C' : score >= 40 ? 'D' : 'F';
-  const color = score >= 85 ? T.tealLight : score >= 70 ? '#6db8bc' : score >= 55 ? '#a0956b' : score >= 40 ? '#c07a50' : T.terra;
-
-  return {
-    score, grade, color,
-    ratio: { score: ratioScore, max: 25, tier: ratioTier, ratioStr: ratio.toFixed(2), nonFollowers, improvedRatioStr: Number.isFinite(improvedRatio) ? improvedRatio.toFixed(2) : '∞' },
-    mutual: { score: mutualScore, max: 25, tier: mutualTier, pct: Math.round(mutualPct * 100), isHigh: mutualPct >= 0.7, toRemove: mutualToRemove },
-    nf: { score: nfScore, max: 25, tier: nfTier, pct: Math.round(nonFollowerPct * 100), isLow: nonFollowerPct <= 0.1, toHitTen },
-    growth: { score: growthScore, max: 25, kind: growthKind, actionKind: growthActionKind, delta: growthDelta },
-  };
-}
-
-function scoreColor(score: number, max: number): string {
-  const pct = score / max;
-  return pct >= 0.8 ? T.tealLight : pct >= 0.5 ? '#a0956b' : pct >= 0.25 ? '#c07a50' : T.terra;
-}
-
-function GradeRing({ score, grade, color }: { score: number; grade: string; color: string }) {
-  const r = 52, cx = 68, cy = 68, sw = 7;
-  const circ = 2 * Math.PI * r;
-  const dash = (score / 100) * circ;
-  return (
-    <svg width={136} height={136} viewBox="0 0 136 136" style={{ filter: `drop-shadow(0 0 18px ${color}40)` }}>
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--t-border1)" strokeWidth={sw} />
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke={color} strokeWidth={sw}
-        strokeDasharray={`${dash} ${circ - dash}`} strokeLinecap="round"
-        transform={`rotate(-90 ${cx} ${cy})`} />
-      <text x={cx} y={cy + 18} textAnchor="middle"
-        fontSize={54} fontFamily={T.serif} fontWeight={700} fill={color}>
-        {grade}
-      </text>
-      <text x={cx} y={cy + 36} textAnchor="middle"
-        fontSize={11} fontFamily="monospace" fill="rgba(244,240,232,0.3)">
-        {score}/100
-      </text>
-    </svg>
-  );
-}
-
-function MiniRing({ score, max }: { score: number; max: number }) {
-  const color = scoreColor(score, max);
-  const r = 20, cx = 26, cy = 26, sw = 4;
-  const circ = 2 * Math.PI * r;
-  const dash = (score / max) * circ;
-  return (
-    <svg width={52} height={52} viewBox="0 0 52 52">
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--t-border1)" strokeWidth={sw} />
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke={color} strokeWidth={sw}
-        strokeDasharray={`${dash} ${circ - dash}`} strokeLinecap="round"
-        transform={`rotate(-90 ${cx} ${cy})`} />
-      <text x={cx} y={cy + 4} textAnchor="middle"
-        fontSize={10} fontFamily="monospace" fontWeight={700} fill={color}>
-        {score}/{max}
-      </text>
-    </svg>
-  );
-}
-
-const BREAKDOWN_ICONS = ['⚖', '↔', '⊘', '↑'];
-
-function AccountHealthCard(props: {
-  followers: number; following: number; mutuals: number; nonFollowers: number;
-  snapshots: { data: { followers: { username: string }[]; following: { username: string }[] } }[];
-  c: DashboardContent;
-  locked?: boolean;
-}) {
-  const { locked = false, c } = props;
-  const h = computeHealth(props);
-
-  const breakdown = [
-    { label: c.health.breakdownLabels.ratio,       score: h.ratio.score,  max: h.ratio.max,  note: c.health.ratioNote(h.ratio.tier, h.ratio.ratioStr),  action: c.health.ratioAction(h.ratio.tier === 0 ? 0 : h.ratio.tier === 1 ? 1 : 2, h.ratio.nonFollowers, h.ratio.improvedRatioStr) },
-    { label: c.health.breakdownLabels.mutual,      score: h.mutual.score, max: h.mutual.max, note: c.health.mutualNote(h.mutual.tier, h.mutual.pct), action: c.health.mutualAction(h.mutual.isHigh, h.mutual.toRemove) },
-    { label: c.health.breakdownLabels.nonFollower, score: h.nf.score,     max: h.nf.max,     note: c.health.nfNote(h.nf.tier, h.nf.pct, h.nf.toHitTen), action: c.health.nfAction(h.nf.isLow, h.nf.toHitTen) },
-    { label: c.health.breakdownLabels.growth,      score: h.growth.score, max: h.growth.max, note: c.health.growthNote(h.growth.kind, h.growth.delta), action: c.health.growthAction(h.growth.actionKind) },
-  ];
-
-  const gradeDesc = c.health.gradeDesc[h.grade];
-
-  return (
-    <div style={{
-      borderRadius: 20, overflow: 'hidden',
-      background: `linear-gradient(135deg, ${T.bgCard} 0%, ${h.color}18 100%)`,
-      border: `1px solid ${h.color}40`,
-      boxShadow: `0 0 40px ${h.color}12`,
-    }}>
-      {/* Header strip */}
-      <div style={{
-        padding: '14px 24px', borderBottom: `1px solid ${T.border1}`,
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      }}>
-        <span style={{ fontSize: 10, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em' }}>{c.health.accountHealth}</span>
-        <span style={{ fontSize: 11, fontFamily: T.mono, color: T.inkMute, fontStyle: 'italic', ...(locked ? lockedContentStyle : {}) }}>{gradeDesc}</span>
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: 0 }}>
-        {/* Left: Grade ring */}
-        <div style={{
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          padding: '32px 24px', gap: 8,
-          borderRight: `1px solid ${h.color}15`,
-          background: `radial-gradient(circle at center, ${h.color}08 0%, transparent 70%)`,
-          ...(locked ? lockedContentStyle : {}),
-        }}>
-          <GradeRing score={h.score} grade={h.grade} color={h.color} />
-          <div style={{
-            fontSize: 11, fontFamily: T.mono, color: T.inkMute,
-            textAlign: 'center', lineHeight: 1.5, maxWidth: 120,
-          }}>
-            {h.score >= 85 ? c.health.scoreSummary.topTier : h.score >= 70 ? c.health.scoreSummary.aboveAverage : h.score >= 55 ? c.health.scoreSummary.roomToGrow : h.score >= 40 ? c.health.scoreSummary.needsWork : c.health.scoreSummary.critical}
-          </div>
-        </div>
-
-        {/* Right: 2x2 component grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0 }}>
-          {breakdown.map((b, i) => {
-            const col = scoreColor(b.score, b.max);
-            const isBottom = i >= breakdown.length - 2;
-            const isRight  = i % 2 === 1;
-            return (
-              <div key={b.label} style={{
-                padding: '16px 20px',
-                borderBottom: !isBottom ? `1px solid var(--t-surface2)` : 'none',
-                borderRight:  !isRight  ? `1px solid var(--t-surface2)` : 'none',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
-              }}>
-                {/* Label stays visible (it's the feature name), note/action/ring are the data */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0, flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span style={{ fontSize: 13, lineHeight: 1, flexShrink: 0 }}>{BREAKDOWN_ICONS[i]}</span>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: T.inkDim, whiteSpace: 'nowrap' }}>{b.label}</span>
-                  </div>
-                  <span style={{ fontSize: 11, color: col, paddingLeft: 19, lineHeight: 1.5, ...(locked ? lockedContentStyle : {}) }}>
-                    {b.note}
-                  </span>
-                  <span style={{ fontSize: 10, fontFamily: T.mono, color: T.inkMute, paddingLeft: 19, lineHeight: 1.4, fontStyle: 'italic', ...(locked ? lockedContentStyle : {}) }}>
-                    → {b.action}
-                  </span>
-                </div>
-                {/* Ring */}
-                <div style={locked ? lockedContentStyle : undefined}>
-                  <MiniRing score={b.score} max={b.max} />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // ─── 8. Follower growth chart ─────────────────────────────────────────────────
 
 type SnapshotSummary = { exportedAt: number; data: { followers: { username: string }[]; following: { username: string }[] } };
@@ -1149,6 +944,15 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
     () => snapshots.filter(s => snapshotPlatform(s.data) === platform),
     [snapshots, platform],
   );
+  // The newest saved export of this platform that is older than the one on
+  // screen, for checks that compare two exports.
+  const previousSnapshot = useMemo(() => {
+    if (!snapshot) return undefined;
+    return platformSnapshots
+      .filter(s => s.data.exportedAt < snapshot.exportedAt)
+      .sort((a, b) => b.data.exportedAt - a.data.exportedAt)[0]?.data;
+  }, [platformSnapshots, snapshot]);
+  const { stars, toggleStar } = useStars(account.userId, platform);
   const emptyPlatforms = allPlatforms.filter(p =>
     !snapshots.some(s => snapshotPlatform(s.data) === p) && !(snapshot && snapshotPlatform(snapshot) === p),
   );
@@ -1226,7 +1030,7 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
             targetSelector: ['#tutorial-health', '#tutorial-growth', '#tutorial-audience', '#tutorial-follow-age', '#tutorial-pending', '#tutorial-pending'][i]!,
           }))
           // Step 5 is the Instagram-only pending-requests card.
-          .filter((_, i) => platform !== 'threads' || i !== 4)}
+          .filter((_, i) => hasPendingRequests(platform) || i !== 4)}
       />}
 
       {/* Platform switcher sits outside the Pro-lock area so free users can
@@ -1241,6 +1045,12 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
         />
       </div>
 
+      {/* Verdict card is free, so it sits above the Pro-locked Radar. */}
+      {!emptyPlatforms.includes(platform) && (
+        <div className="px-4 sm:px-8" style={{ maxWidth: 1100, margin: '0 auto', paddingTop: 24 }}>
+          <VerdictCard current={snapshot} previous={previousSnapshot} locale={locale} />
+        </div>
+      )}
       {emptyPlatforms.includes(platform) ? <PlatformEmptyPanel platform={platform} c={c} /> : (
       <div style={{ position: 'relative' }}>
       <main className="px-4 sm:px-8 py-8 sm:py-12 pb-20" style={{ maxWidth: 1100, margin: '0 auto' }}>
@@ -1280,17 +1090,9 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
           </p>
         </div>
 
-        {/* Health score */}
-        <div id="tutorial-health" style={{ marginBottom: 16 }}>
-          <AccountHealthCard
-            followers={snapshot.followers.length}
-            following={snapshot.following.length}
-            mutuals={mutuals.length}
-            nonFollowers={nonFollowers.length}
-            snapshots={platformSnapshots as SnapshotSummary[]}
-            c={c}
-            locked={locked}
-          />
+        {/* Health check: ranked, specific findings (replaces the old grade). */}
+        <div style={{ marginBottom: 16 }}>
+          <HealthCheckCard current={snapshot} previous={previousSnapshot} locale={locale} locked={locked} />
         </div>
 
         {/* Hero stats */}
@@ -1335,11 +1137,25 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
           <FollowAgeCard nonFollowers={nonFollowers} c={c} locked={locked} />
         </div>
 
+        {/* Growth timeline from follow dates */}
+        <div style={{ marginBottom: 16 }}>
+          <GrowthTimelineCard snapshot={snapshot} locale={locale} />
+        </div>
+
+        {/* Stars and the unfollow planner list real usernames, so they only
+            render for Pro (the locked preview never puts names in the page). */}
+        {!locked && (
+          <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: 16, marginBottom: 16 }}>
+            <StarsCard mutuals={mutuals} current={snapshot} previous={previousSnapshot} stars={stars} onToggle={toggleStar} locale={locale} />
+            <UnfollowPlannerCard owner={account.userId} platform={platform} oneWay={nonFollowers} starred={stars} locale={locale} />
+          </div>
+        )}
+
         {/* Pending + Recently unfollowed */}
         {/* Threads exports have no "requests you sent" list, so the pending
             card is Instagram-only. */}
-        <div id="tutorial-pending" style={{ display: 'grid', gridTemplateColumns: platform === 'threads' ? '1fr' : '1fr 1fr', gap: 16 }}>
-          {platform !== 'threads' && <PendingRequestsCard accounts={snapshot.pendingRequests ?? []} c={c} locked={locked} />}
+        <div id="tutorial-pending" style={{ display: 'grid', gridTemplateColumns: hasPendingRequests(platform) ? '1fr 1fr' : '1fr', gap: 16 }}>
+          {hasPendingRequests(platform) && <PendingRequestsCard accounts={snapshot.pendingRequests ?? []} c={c} locked={locked} />}
           <RecentlyUnfollowedCard accounts={snapshot.recentlyUnfollowed ?? []} c={c} dateLocale={dateLocale} locked={locked} />
         </div>
       </main>

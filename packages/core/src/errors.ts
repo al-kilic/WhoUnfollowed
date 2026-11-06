@@ -31,17 +31,25 @@ export interface ZipShape {
   hasMediaFolder: boolean;
   hasThreadsFolder: boolean;
   hasHtmlFiles: boolean;
+  // Optional so diagnostics recorded before TikTok support still type-check.
+  hasTikTokFiles?: boolean;
 }
+
+// Kept local (not imported from schemas) so errors.ts has no dependencies.
+export type ExportPlatform = 'instagram' | 'threads' | 'tiktok';
 
 export class MissingFilesError extends Error {
   readonly code = 'MISSING_FILES' as const;
-  readonly platform: 'instagram' | 'threads';
+  readonly platform: ExportPlatform;
   shape?: ZipShape;
-  constructor(missing: string[], platform: 'instagram' | 'threads' = 'instagram') {
+  constructor(missing: string[], platform: ExportPlatform = 'instagram') {
     super(
-      `Your ${platform === 'threads' ? 'Threads' : 'Instagram'} export is missing required files: ${missing.join(', ')}. ` +
-        'Make sure you selected "Followers and Following" when requesting your data, ' +
-        'and that you chose JSON format.',
+      platform === 'tiktok'
+        ? `Your TikTok export is missing the follower lists: ${missing.join(', ')}. ` +
+            'Make sure "Activity" (or "All data") was included when requesting your data.'
+        : `Your ${platform === 'threads' ? 'Threads' : 'Instagram'} export is missing required files: ${missing.join(', ')}. ` +
+            'Make sure you selected "Followers and Following" when requesting your data, ' +
+            'and that you chose JSON format.',
     );
     this.name = 'MissingFilesError';
     this.platform = platform;

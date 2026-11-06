@@ -4,6 +4,7 @@ import { useMemo, useState, useEffect } from 'react';
 import { Link, useRouter as useLocaleRouter } from '@/i18n/navigation';
 import { PLATFORM_NAME, snapshotPlatform, triageKeyOf, withApp, type Platform } from '@/lib/platform';
 import { PlatformHero } from './PlatformHero';
+import { TikTokCapNotice } from './TikTokCapNotice';
 import { usePlatformTheme } from '@/hooks/usePlatformTheme';
 import { format } from 'date-fns';
 import { es, pt } from 'date-fns/locale';
@@ -471,6 +472,7 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
             <span style={{ color: T.tealLight }}>{analysis.nonFollowers.length.toLocaleString()}</span>{' '}
             {c.headlineSuffix(analysis.nonFollowers.length, PLATFORM_NAME[platform])}
           </h1>
+          <TikTokCapNotice snapshot={snapshot} locale={locale} />
           {snapshot.format === 'html' && !snapshot.followers.some(a => a.followedAt !== null) && (
             <div style={{ marginTop: 16, padding: '12px 16px', borderRadius: 12, background: 'rgba(var(--t-accent-rgb),0.06)', border: '1px solid rgba(var(--t-accent-rgb),0.2)', display: 'flex', alignItems: 'flex-start', gap: 10, maxWidth: 560 }}>
               <span style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5 }}>

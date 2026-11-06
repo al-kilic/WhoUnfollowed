@@ -82,6 +82,7 @@ export const config = {
     '/what-is-whounfollowed/:path*',
     '/how-to-export/:path*',
     '/threads/:path*',
+    '/tiktok/:path*',
     '/accessibility/:path*',
     '/compare/:path*',
     '/privacy/:path*',

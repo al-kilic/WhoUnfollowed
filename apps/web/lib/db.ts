@@ -1,5 +1,5 @@
 import Dexie, { type Table } from 'dexie';
-import type { ParsedSnapshot } from '@ig-tracker/core';
+import type { Pace, ParsedSnapshot, Platform } from '@ig-tracker/core';
 
 export interface SnapshotRecord {
   id?: number;
@@ -28,9 +28,33 @@ export interface TriageRecord {
   updatedAt: number;
 }
 
+// A starred account ("one of my people"): never suggested for unfollowing,
+// flagged first if they leave. Pro, so always tied to a logged-in user.
+export interface StarRecord {
+  id?: number;
+  owner: string; // user id
+  platform: Platform;
+  username: string;
+  createdAt: number;
+}
+
+// The unfollow planner's saved plan and progress, one per user and platform.
+// Usernames stay here, in this browser; the server only ever gets counts.
+export interface PlanRecord {
+  owner: string;
+  platform: Platform;
+  pace: Pace;
+  batches: string[][];
+  done: string[];
+  createdAt: number;
+  updatedAt: number;
+}
+
 class IgTrackerDb extends Dexie {
   snapshots!: Table<SnapshotRecord, number>;
   triageStates!: Table<TriageRecord, number>;
+  stars!: Table<StarRecord, number>;
+  plans!: Table<PlanRecord, [string, Platform]>;
 
   constructor() {
     super('ig-tracker');
@@ -48,6 +72,13 @@ class IgTrackerDb extends Dexie {
     this.version(4).stores({
       snapshots: '++id, exportedAt, savedAt, cloudId, ownerUserId, anonSessionId',
       triageStates: '++id, [snapshotKey+username], snapshotKey',
+    });
+    // v5: stars and unfollow plans (tools). Adds tables only, nothing to migrate.
+    this.version(5).stores({
+      snapshots: '++id, exportedAt, savedAt, cloudId, ownerUserId, anonSessionId',
+      triageStates: '++id, [snapshotKey+username], snapshotKey',
+      stars: '++id, &[owner+platform+username], [owner+platform]',
+      plans: '[owner+platform]',
     });
   }
 }

@@ -53,20 +53,6 @@ export interface DashboardContent {
     labelsYearPlus: string[]; labelsHalfYear: string[]; labelsNinetyDays: string[]; labelsThirtyDays: string[];
   };
   recentlyUnfollowed: { sectionLabel: string; title: string; emptyMessage: string };
-  health: {
-    accountHealth: string;
-    gradeDesc: Record<'A' | 'B' | 'C' | 'D' | 'F', string>;
-    scoreSummary: { topTier: string; aboveAverage: string; roomToGrow: string; needsWork: string; critical: string };
-    breakdownLabels: { ratio: string; mutual: string; nonFollower: string; growth: string };
-    ratioNote: (tier: number, ratio: string) => string;
-    ratioAction: (tier: number, nonFollowers: number, improvedRatio: string) => string;
-    mutualNote: (tier: number, pct: number) => string;
-    mutualAction: (isHigh: boolean, toRemove: number) => string;
-    nfNote: (tier: number, pct: number, toHitTen: number) => string;
-    nfAction: (isLow: boolean, toHitTen: number) => string;
-    growthNote: (kind: 'noData' | 'strong' | 'positive' | 'flat' | 'slight' | 'drop', delta: number) => string;
-    growthAction: (kind: 'noData' | 'keepCadence' | 'uploadMore' | 'checkCompare') => string;
-  };
   growth: {
     sectionLabel: string; title: string; emptyMessage: string;
     sinceLastSnapshot: string;
@@ -160,60 +146,6 @@ const EN: DashboardContent = {
     sectionLabel: 'Recently unfollowed', title: 'Your recent clean-up',
     emptyMessage: "This wasn't included in your export.",
   },
-  health: {
-    accountHealth: 'ACCOUNT HEALTH',
-    gradeDesc: {
-      A: 'Top tier. Your account is clean, growing, and well-balanced.',
-      B: 'One focused cleanup session pushes this to an A.',
-      C: 'Average standing. Your non-follower list needs attention - start with the oldest.',
-      D: 'Multiple signals need work. Open the triage list now.',
-      F: 'Account health is critical. The triage list is your first priority today.',
-    },
-    scoreSummary: { topTier: 'Top tier', aboveAverage: 'Above average', roomToGrow: 'Room to grow', needsWork: 'Needs work', critical: 'Critical' },
-    breakdownLabels: { ratio: 'Follow ratio', mutual: 'Mutual health', nonFollower: 'Non-follower %', growth: 'Growth trend' },
-    ratioNote: (tier, ratio) => [
-      `${ratio}x ratio - top tier. Followers outnumber following 2:1.`,
-      `${ratio}x ratio - healthy. Unfollow non-followers to push toward 2x.`,
-      `${ratio}x ratio - you follow more than follow you. Triage the list.`,
-      `${ratio}x ratio - significantly one-sided. Needs a cleanup session.`,
-      `${ratio}x ratio - critical imbalance. Start with the oldest non-followers.`,
-    ][tier]!,
-    ratioAction: (tier, nonFollowers, improvedRatio) => [
-      'Maintain this.',
-      `Unfollow ${nonFollowers} non-followers → ratio hits ${improvedRatio}x.`,
-      `Unfollowing non-followers alone pushes ratio to ${improvedRatio}x.`,
-    ][tier]!,
-    mutualNote: (tier, pct) => [
-      `${pct}% mutual - elite account hygiene. Most follows are intentional.`,
-      `${pct}% mutual - above average. A small cleanup hits the 70% threshold.`,
-      `${pct}% mutual - below average. Half your following doesn't follow back.`,
-      `${pct}% mutual - most follows aren't returned. Worth a full audit.`,
-      `${pct}% mutual - almost no reciprocation. Start triaging today.`,
-    ][tier]!,
-    mutualAction: (isHigh, toRemove) => isHigh ? 'Nothing to do here.' : `Remove ${toRemove} one-sided follows → hits 70%.`,
-    nfNote: (tier, pct, toHitTen) => [
-      `Only ${pct}% don't follow back - already elite.`,
-      `${pct}% don't follow back. ${toHitTen} removals hit the <10% mark.`,
-      `${pct}% don't follow back. Triage the list - quick wins are in there.`,
-      `${pct}% don't follow back. Nearly half. This is the main thing to fix.`,
-      `${pct}% don't follow back - over half. This is the #1 priority.`,
-    ][tier]!,
-    nfAction: (isLow, toHitTen) => isLow ? 'Maintain this.' : `Unfollow ${toHitTen} accounts → non-follower rate drops to 10% (A-grade threshold).`,
-    growthNote: (kind, delta) => ({
-      noData: 'Only 1 snapshot - no trend to measure yet.',
-      strong: `+${delta} followers since last snapshot. Strong growth.`,
-      positive: `+${delta} followers since last snapshot. Positive momentum.`,
-      flat: 'No change since last snapshot. Neither growing nor declining.',
-      slight: `${delta} followers since last snapshot. Slight decline.`,
-      drop: `${delta} followers since last snapshot. Significant drop.`,
-    })[kind],
-    growthAction: (kind) => ({
-      noData: 'Upload again in 2 weeks - then trend data unlocks.',
-      keepCadence: 'Keep the cadence. Upload every 2 weeks to track momentum.',
-      uploadMore: 'Upload more snapshots to find your real pattern over time.',
-      checkCompare: 'Check who unfollowed in the Compare view - find the pattern.',
-    })[kind],
-  },
   growth: {
     sectionLabel: 'Growth', title: 'Follower growth over time',
     emptyMessage: 'Upload a second snapshot to see your growth trend.',
@@ -231,7 +163,7 @@ const EN: DashboardContent = {
     eyebrow: 'RADAR', title: 'What is Radar?',
     intro: "Radar is the intelligence layer on top of your Instagram or Threads export. While the results page tells you who doesn't follow you back right now, Radar tells you the full story - trends, health, history, and context. It turns a static snapshot into an ongoing picture of your account.",
     sections: [
-      { icon: '⬡', title: 'Account Health Score', body: 'Radar calculates a single A–F grade from four signals: your follow ratio, how many of your following are mutual, your non-follower rate, and your growth trend over time. One letter that tells the whole story - and gives you something to improve.' },
+      { icon: '⬡', title: 'Account Health Check', body: 'Radar runs a set of specific checks on your export: old pending requests, the follow year that never followed back, follow bursts, sudden drops, lost mutuals and more. Each one comes with your real numbers and one thing to do about it, ranked by impact.' },
       { icon: '↑', title: 'Follower Growth Over Time', body: 'Every time you upload a new export, Radar plots your follower count on a timeline. You can see exactly when you gained or lost followers, and which period had the biggest drop. It turns a static number into a story.' },
       { icon: '⧗', title: 'Follow Age Analysis', body: "Radar reads the timestamps in your export to tell you how long you've been following people who never followed back. Broken into buckets: under a month, 1–6 months, 6–12, 1–2 years, and 2+ years. The longer the wait, the colder the lead." },
       { icon: '◎', title: 'Audience Breakdown', body: "Not all followers are equal. Radar splits your audience into Mutuals (both follow each other), Non-followers (you follow them, they don't follow back), and Fans (they follow you, you don't follow back). A donut chart makes it instant." },
@@ -239,10 +171,10 @@ const EN: DashboardContent = {
       { icon: '✓', title: 'Recently Unfollowed', body: "Instagram and Threads log every account you've recently unfollowed. Radar shows it back to you - useful for confirming you already handled someone, or for seeing patterns in who you're cutting." },
     ],
     tipLabel: 'How to get more from Radar:',
-    tip: 'Upload a new export every few weeks. Each upload adds a data point to your timeline, sharpens your growth trend, and improves the accuracy of your health score.',
+    tip: 'Upload a new export every few weeks. Each upload adds a data point to your timeline, sharpens your growth trend, and unlocks the health checks that compare two exports.',
   },
   tutorial: [
-    { title: 'Account health score', body: 'A grade from your follow ratio, non-follower %, and triage progress. Improves as you work the list.' },
+    { title: 'Health check', body: 'Specific things to fix, with your real numbers, biggest impact first. Open any one to see the accounts behind it.' },
     { title: 'Growth chart', body: 'Upload a second export later and this fills in - followers gained, lost, and net change over time.' },
     { title: 'Audience breakdown', body: 'Your followers split into mutuals, fans, and non-followers - with a donut chart and follow ratio.' },
     { title: 'Follow age bars', body: "How long you've been following each non-follower. Tap a bar to expand it and see the accounts in that range." },
@@ -253,7 +185,7 @@ const EN: DashboardContent = {
   proLock: {
     eyebrow: 'Pro feature',
     title: 'Radar is a Pro feature',
-    description: 'Your account health score, growth over time, audience breakdown, and follow-age analysis. Unlock the full picture of your account.',
+    description: 'Your account health check, growth over time, audience breakdown, and follow-age analysis. Unlock the full picture of your account.',
     cta: 'Upgrade to Pro',
   },
   openOn: (u, app) => `Open @${u} on ${app}`,
@@ -332,60 +264,6 @@ const ES: DashboardContent = {
     sectionLabel: 'Dejados de seguir recientemente', title: 'Tu limpieza reciente',
     emptyMessage: 'Esto no se incluyó en tu exportación.',
   },
-  health: {
-    accountHealth: 'SALUD DE LA CUENTA',
-    gradeDesc: {
-      A: 'Nivel superior. Tu cuenta está limpia, creciendo y bien equilibrada.',
-      B: 'Una sesión de limpieza enfocada la lleva a un A.',
-      C: 'Nivel promedio. Tu lista de no seguidores necesita atención: empieza por los más antiguos.',
-      D: 'Varias señales necesitan trabajo. Abre la lista de clasificación ahora.',
-      F: 'La salud de la cuenta es crítica. La lista de clasificación es tu prioridad número uno hoy.',
-    },
-    scoreSummary: { topTier: 'Nivel superior', aboveAverage: 'Por encima del promedio', roomToGrow: 'Con margen de mejora', needsWork: 'Necesita trabajo', critical: 'Crítico' },
-    breakdownLabels: { ratio: 'Ratio de seguimiento', mutual: 'Salud de mutuos', nonFollower: '% sin seguimiento mutuo', growth: 'Tendencia de crecimiento' },
-    ratioNote: (tier, ratio) => [
-      `Ratio de ${ratio}x - nivel superior. Los seguidores superan 2 a 1 a los seguidos.`,
-      `Ratio de ${ratio}x - saludable. Deja de seguir a quienes no te siguen para acercarte a 2x.`,
-      `Ratio de ${ratio}x - sigues a más de los que te siguen. Clasifica la lista.`,
-      `Ratio de ${ratio}x - muy desequilibrado. Necesita una sesión de limpieza.`,
-      `Ratio de ${ratio}x - desequilibrio crítico. Empieza por los no seguidores más antiguos.`,
-    ][tier]!,
-    ratioAction: (tier, nonFollowers, improvedRatio) => [
-      'Mantén esto así.',
-      `Deja de seguir a ${nonFollowers} no seguidores → el ratio llega a ${improvedRatio}x.`,
-      `Solo con dejar de seguir a los no seguidores, el ratio sube a ${improvedRatio}x.`,
-    ][tier]!,
-    mutualNote: (tier, pct) => [
-      `${pct}% mutuo - higiene de cuenta de élite. La mayoría de tus follows son intencionales.`,
-      `${pct}% mutuo - por encima del promedio. Una pequeña limpieza alcanza el umbral del 70%.`,
-      `${pct}% mutuo - por debajo del promedio. La mitad de a quienes sigues no te sigue de vuelta.`,
-      `${pct}% mutuo - la mayoría de tus follows no se corresponden. Vale la pena una auditoría completa.`,
-      `${pct}% mutuo - casi ninguna reciprocidad. Empieza a clasificar hoy.`,
-    ][tier]!,
-    mutualAction: (isHigh, toRemove) => isHigh ? 'No hay nada que hacer aquí.' : `Elimina ${toRemove} follows unilaterales → alcanzas el 70%.`,
-    nfNote: (tier, pct, toHitTen) => [
-      `Solo el ${pct}% no te sigue de vuelta - ya eres de élite.`,
-      `${pct}% no te sigue de vuelta. ${toHitTen} eliminaciones alcanzan la marca del <10%.`,
-      `${pct}% no te sigue de vuelta. Clasifica la lista, ahí hay victorias rápidas.`,
-      `${pct}% no te sigue de vuelta. Casi la mitad. Esto es lo principal a corregir.`,
-      `${pct}% no te sigue de vuelta - más de la mitad. Esta es la prioridad número uno.`,
-    ][tier]!,
-    nfAction: (isLow, toHitTen) => isLow ? 'Mantén esto así.' : `Deja de seguir a ${toHitTen} cuentas → la tasa de no seguidores baja al 10% (umbral de grado A).`,
-    growthNote: (kind, delta) => ({
-      noData: 'Solo 1 snapshot - aún no hay tendencia que medir.',
-      strong: `+${delta} seguidores desde el último snapshot. Crecimiento fuerte.`,
-      positive: `+${delta} seguidores desde el último snapshot. Impulso positivo.`,
-      flat: 'Sin cambios desde el último snapshot. Ni crece ni decae.',
-      slight: `${delta} seguidores desde el último snapshot. Ligero descenso.`,
-      drop: `${delta} seguidores desde el último snapshot. Caída significativa.`,
-    })[kind],
-    growthAction: (kind) => ({
-      noData: 'Sube otra exportación en 2 semanas, entonces se desbloquean los datos de tendencia.',
-      keepCadence: 'Mantén el ritmo. Sube una exportación cada 2 semanas para seguir el impulso.',
-      uploadMore: 'Sube más snapshots para encontrar tu patrón real con el tiempo.',
-      checkCompare: 'Revisa quién te dejó de seguir en la vista de comparación, ahí está el patrón.',
-    })[kind],
-  },
   growth: {
     sectionLabel: 'Crecimiento', title: 'Crecimiento de seguidores en el tiempo',
     emptyMessage: 'Sube un segundo snapshot para ver tu tendencia de crecimiento.',
@@ -403,7 +281,7 @@ const ES: DashboardContent = {
     eyebrow: 'RADAR', title: '¿Qué es Radar?',
     intro: 'Radar es la capa de inteligencia sobre tu exportación de Instagram o Threads. Mientras la página de resultados te dice quién no te sigue de vuelta ahora mismo, Radar te cuenta la historia completa: tendencias, salud, historial y contexto. Convierte un snapshot estático en una imagen continua de tu cuenta.',
     sections: [
-      { icon: '⬡', title: 'Puntuación de salud de la cuenta', body: 'Radar calcula una única calificación de A a F a partir de cuatro señales: tu ratio de seguimiento, cuántos de tus seguidos son mutuos, tu tasa de no seguidores y tu tendencia de crecimiento en el tiempo. Una sola letra que cuenta toda la historia y te da algo que mejorar.' },
+      { icon: '⬡', title: 'Chequeo de salud de la cuenta', body: 'Radar hace una serie de chequeos concretos sobre tu exportación: solicitudes pendientes viejas, el año de follows que nunca te siguió, ráfagas de follows, caídas repentinas, mutuos perdidos y más. Cada uno trae tus números reales y una acción, ordenados por impacto.' },
       { icon: '↑', title: 'Crecimiento de seguidores en el tiempo', body: 'Cada vez que subes una nueva exportación, Radar traza tu número de seguidores en una línea de tiempo. Puedes ver exactamente cuándo ganaste o perdiste seguidores, y qué período tuvo la mayor caída. Convierte un número estático en una historia.' },
       { icon: '⧗', title: 'Análisis de antigüedad de seguimiento', body: 'Radar lee las marcas de tiempo en tu exportación para decirte cuánto tiempo llevas siguiendo a personas que nunca te siguieron de vuelta. Dividido en rangos: menos de un mes, 1–6 meses, 6–12, 1–2 años y 2+ años. Cuanto más larga la espera, más frío el interés.' },
       { icon: '◎', title: 'Desglose de audiencia', body: 'No todos los seguidores son iguales. Radar divide tu audiencia en Mutuos (se siguen entre sí), No seguidores (los sigues, no te siguen de vuelta) y Fans (te siguen, no los sigues). Un gráfico de dona lo hace instantáneo.' },
@@ -411,10 +289,10 @@ const ES: DashboardContent = {
       { icon: '✓', title: 'Dejados de seguir recientemente', body: 'Instagram y Threads registran cada cuenta que has dejado de seguir recientemente. Radar te lo muestra de nuevo, útil para confirmar que ya resolviste a alguien, o para ver patrones en a quién estás dejando de seguir.' },
     ],
     tipLabel: 'Cómo sacarle más provecho a Radar:',
-    tip: 'Sube una nueva exportación cada pocas semanas. Cada subida añade un punto de datos a tu línea de tiempo, afina tu tendencia de crecimiento y mejora la precisión de tu puntuación de salud.',
+    tip: 'Sube una nueva exportación cada pocas semanas. Cada subida añade un punto de datos a tu línea de tiempo, afina tu tendencia de crecimiento y activa los chequeos que comparan dos exportaciones.',
   },
   tutorial: [
-    { title: 'Puntuación de salud de la cuenta', body: 'Una calificación basada en tu ratio de seguimiento, % de no seguidores y progreso de clasificación. Mejora a medida que trabajas la lista.' },
+    { title: 'Chequeo de salud', body: 'Cosas concretas que arreglar, con tus números reales, primero lo que más impacta. Abre cualquiera para ver las cuentas detrás.' },
     { title: 'Gráfico de crecimiento', body: 'Sube una segunda exportación más adelante y esto se completa: seguidores ganados, perdidos y cambio neto en el tiempo.' },
     { title: 'Desglose de audiencia', body: 'Tus seguidores se dividen en mutuos, fans y no seguidores, con un gráfico de dona y ratio de seguimiento.' },
     { title: 'Barras de antigüedad de seguimiento', body: 'Cuánto tiempo llevas siguiendo a cada no seguidor. Toca una barra para expandirla y ver las cuentas en ese rango.' },
@@ -425,7 +303,7 @@ const ES: DashboardContent = {
   proLock: {
     eyebrow: 'Función Pro',
     title: 'Radar es una función Pro',
-    description: 'Tu puntuación de salud de cuenta, crecimiento en el tiempo, desglose de audiencia y análisis de antigüedad de seguimiento. Desbloquea el panorama completo de tu cuenta.',
+    description: 'Tu chequeo de salud de cuenta, crecimiento en el tiempo, desglose de audiencia y análisis de antigüedad de seguimiento. Desbloquea el panorama completo de tu cuenta.',
     cta: 'Mejorar a Pro',
   },
   openOn: (u, app) => `Abrir @${u} en ${app}`,
@@ -504,60 +382,6 @@ const PT: DashboardContent = {
     sectionLabel: 'Deixados de seguir recentemente', title: 'Sua limpeza recente',
     emptyMessage: 'Isso não foi incluído na sua exportação.',
   },
-  health: {
-    accountHealth: 'SAÚDE DA CONTA',
-    gradeDesc: {
-      A: 'Nível máximo. Sua conta está limpa, crescendo e bem equilibrada.',
-      B: 'Uma sessão de limpeza focada leva isso a um A.',
-      C: 'Nível médio. Sua lista de não seguidores precisa de atenção: comece pelos mais antigos.',
-      D: 'Vários sinais precisam de trabalho. Abra a lista de triagem agora.',
-      F: 'A saúde da conta é crítica. A lista de triagem é sua prioridade número um hoje.',
-    },
-    scoreSummary: { topTier: 'Nível máximo', aboveAverage: 'Acima da média', roomToGrow: 'Espaço para melhorar', needsWork: 'Precisa de trabalho', critical: 'Crítico' },
-    breakdownLabels: { ratio: 'Proporção de seguimento', mutual: 'Saúde de mútuos', nonFollower: '% sem seguir de volta', growth: 'Tendência de crescimento' },
-    ratioNote: (tier, ratio) => [
-      `Proporção de ${ratio}x - nível máximo. Seguidores superam seguindo em 2 para 1.`,
-      `Proporção de ${ratio}x - saudável. Deixe de seguir não seguidores para se aproximar de 2x.`,
-      `Proporção de ${ratio}x - você segue mais do que te seguem. Trie a lista.`,
-      `Proporção de ${ratio}x - significativamente desequilibrada. Precisa de uma sessão de limpeza.`,
-      `Proporção de ${ratio}x - desequilíbrio crítico. Comece pelos não seguidores mais antigos.`,
-    ][tier]!,
-    ratioAction: (tier, nonFollowers, improvedRatio) => [
-      'Mantenha assim.',
-      `Deixe de seguir ${nonFollowers} não seguidores → a proporção chega a ${improvedRatio}x.`,
-      `Só deixar de seguir os não seguidores já leva a proporção a ${improvedRatio}x.`,
-    ][tier]!,
-    mutualNote: (tier, pct) => [
-      `${pct}% mútuo - higiene de conta de elite. A maioria dos seus follows é intencional.`,
-      `${pct}% mútuo - acima da média. Uma pequena limpeza atinge o limite de 70%.`,
-      `${pct}% mútuo - abaixo da média. Metade de quem você segue não te segue de volta.`,
-      `${pct}% mútuo - a maioria dos seus follows não é correspondida. Vale uma auditoria completa.`,
-      `${pct}% mútuo - quase nenhuma reciprocidade. Comece a triagem hoje.`,
-    ][tier]!,
-    mutualAction: (isHigh, toRemove) => isHigh ? 'Nada a fazer aqui.' : `Remova ${toRemove} follows unilaterais → atinge 70%.`,
-    nfNote: (tier, pct, toHitTen) => [
-      `Apenas ${pct}% não te seguem de volta - já é elite.`,
-      `${pct}% não te seguem de volta. ${toHitTen} remoções atingem a marca de <10%.`,
-      `${pct}% não te seguem de volta. Trie a lista, há vitórias rápidas ali.`,
-      `${pct}% não te seguem de volta. Quase metade. Esse é o principal a corrigir.`,
-      `${pct}% não te seguem de volta - mais da metade. Essa é a prioridade número um.`,
-    ][tier]!,
-    nfAction: (isLow, toHitTen) => isLow ? 'Mantenha assim.' : `Deixe de seguir ${toHitTen} contas → a taxa de não seguidores cai para 10% (limite de grau A).`,
-    growthNote: (kind, delta) => ({
-      noData: 'Apenas 1 snapshot - ainda não há tendência para medir.',
-      strong: `+${delta} seguidores desde o último snapshot. Crescimento forte.`,
-      positive: `+${delta} seguidores desde o último snapshot. Momentum positivo.`,
-      flat: 'Sem mudanças desde o último snapshot. Nem crescendo nem caindo.',
-      slight: `${delta} seguidores desde o último snapshot. Leve declínio.`,
-      drop: `${delta} seguidores desde o último snapshot. Queda significativa.`,
-    })[kind],
-    growthAction: (kind) => ({
-      noData: 'Envie outra exportação em 2 semanas - aí os dados de tendência são desbloqueados.',
-      keepCadence: 'Mantenha o ritmo. Envie uma exportação a cada 2 semanas para acompanhar o momentum.',
-      uploadMore: 'Envie mais snapshots para encontrar seu padrão real ao longo do tempo.',
-      checkCompare: 'Veja quem deixou de te seguir na visão de comparação - encontre o padrão.',
-    })[kind],
-  },
   growth: {
     sectionLabel: 'Crescimento', title: 'Crescimento de seguidores ao longo do tempo',
     emptyMessage: 'Envie um segundo snapshot para ver sua tendência de crescimento.',
@@ -575,7 +399,7 @@ const PT: DashboardContent = {
     eyebrow: 'RADAR', title: 'O que é o Radar?',
     intro: 'O Radar é a camada de inteligência sobre sua exportação do Instagram ou do Threads. Enquanto a página de resultados diz quem não te segue de volta agora, o Radar conta a história completa: tendências, saúde, histórico e contexto. Ele transforma um snapshot estático em uma visão contínua da sua conta.',
     sections: [
-      { icon: '⬡', title: 'Pontuação de saúde da conta', body: 'O Radar calcula uma única nota de A a F a partir de quatro sinais: sua proporção de seguimento, quantos dos seus seguindo são mútuos, sua taxa de não seguidores e sua tendência de crescimento ao longo do tempo. Uma única letra que conta toda a história e te dá algo para melhorar.' },
+      { icon: '⬡', title: 'Check-up da conta', body: 'O Radar faz uma série de verificações concretas na sua exportação: pedidos pendentes antigos, o ano de follows que nunca seguiu de volta, rajadas de follows, quedas repentinas, mútuos perdidos e mais. Cada uma vem com seus números reais e uma ação, em ordem de impacto.' },
       { icon: '↑', title: 'Crescimento de seguidores ao longo do tempo', body: 'Toda vez que você envia uma nova exportação, o Radar plota seu número de seguidores em uma linha do tempo. Você pode ver exatamente quando ganhou ou perdeu seguidores, e qual período teve a maior queda. Transforma um número estático em uma história.' },
       { icon: '⧗', title: 'Análise de tempo de seguimento', body: 'O Radar lê os registros de data e hora da sua exportação para dizer há quanto tempo você segue pessoas que nunca te seguiram de volta. Dividido em faixas: menos de um mês, 1–6 meses, 6–12, 1–2 anos e 2+ anos. Quanto mais longa a espera, mais frio o interesse.' },
       { icon: '◎', title: 'Detalhamento de audiência', body: 'Nem todos os seguidores são iguais. O Radar divide sua audiência em Mútuos (se seguem mutuamente), Não seguidores (você os segue, eles não seguem de volta) e Fãs (te seguem, você não os segue). Um gráfico de rosca torna isso instantâneo.' },
@@ -583,10 +407,10 @@ const PT: DashboardContent = {
       { icon: '✓', title: 'Deixados de seguir recentemente', body: 'O Instagram e o Threads registram cada conta que você deixou de seguir recentemente. O Radar mostra isso de volta para você, útil para confirmar que você já resolveu alguém, ou para ver padrões em quem você está cortando.' },
     ],
     tipLabel: 'Como aproveitar mais o Radar:',
-    tip: 'Envie uma nova exportação a cada poucas semanas. Cada envio adiciona um ponto de dados à sua linha do tempo, refina sua tendência de crescimento e melhora a precisão da sua pontuação de saúde.',
+    tip: 'Envie uma nova exportação a cada poucas semanas. Cada envio adiciona um ponto de dados à sua linha do tempo, refina sua tendência de crescimento e libera as verificações que comparam duas exportações.',
   },
   tutorial: [
-    { title: 'Pontuação de saúde da conta', body: 'Uma nota baseada na sua proporção de seguimento, % de não seguidores e progresso de triagem. Melhora conforme você trabalha na lista.' },
+    { title: 'Check-up da conta', body: 'Coisas concretas para arrumar, com seus números reais, o que mais pesa primeiro. Abra qualquer uma para ver as contas por trás.' },
     { title: 'Gráfico de crescimento', body: 'Envie uma segunda exportação depois e isso se preenche: seguidores ganhos, perdidos e variação líquida ao longo do tempo.' },
     { title: 'Detalhamento de audiência', body: 'Seus seguidores divididos em mútuos, fãs e não seguidores, com um gráfico de rosca e proporção de seguimento.' },
     { title: 'Barras de tempo de seguimento', body: 'Há quanto tempo você segue cada não seguidor. Toque em uma barra para expandi-la e ver as contas nessa faixa.' },
@@ -597,7 +421,7 @@ const PT: DashboardContent = {
   proLock: {
     eyebrow: 'Recurso Pro',
     title: 'O Radar é um recurso Pro',
-    description: 'Sua pontuação de saúde da conta, crescimento ao longo do tempo, detalhamento de audiência e análise de tempo de seguimento. Desbloqueie o panorama completo da sua conta.',
+    description: 'Seu check-up da conta, crescimento ao longo do tempo, detalhamento de audiência e análise de tempo de seguimento. Desbloqueie o panorama completo da sua conta.',
     cta: 'Assinar Pro',
   },
   openOn: (u, app) => `Abrir @${u} no ${app}`,

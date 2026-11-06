@@ -24,6 +24,7 @@ import {
   type RelationshipEntry,
   type LabelValuesEntry,
 } from './schemas.js';
+import { hasTikTokFiles, parseTikTokJson, parseTikTokZip } from './tiktok.js';
 
 // ─── JSON helpers ─────────────────────────────────────────────────────────────
 
@@ -347,6 +348,10 @@ export async function parseExportZip(zipFile: File | Blob | ArrayBuffer): Promis
     }
   }
 
+  // TikTok's JSON download can arrive as the bare user_data_tiktok.json (some
+  // phones unzip it automatically). Accept that file on its own.
+  if (looksLikeJson(input)) return { snapshot: parseBareTikTokJson(input, filenameDate), skippedPlatforms: [] };
+
   let zip: JSZip;
   try {
     zip = await JSZip.loadAsync(input);
@@ -371,12 +376,19 @@ function zipShape(allFileNames: string[]): ZipShape {
     hasMediaFolder: allFileNames.some(n => /(?:^|\/)media\//i.test(n)),
     hasThreadsFolder: allFileNames.some(isThreadsPath),
     hasHtmlFiles: files.some(n => /\.html?$/i.test(n)),
+    hasTikTokFiles: hasTikTokFiles(files),
   };
 }
 
 async function parseZipContents(zip: JSZip, allFileNames: string[], filenameDate: number | null): Promise<ParseExportResult> {
 
   const instagramFileNames = allFileNames.filter(n => !isThreadsPath(n));
+
+  // TikTok's export shares no file names with Meta's, so it is only chosen
+  // when no Instagram or Threads relationship files are present.
+  if (hasTikTokFiles(allFileNames) && !hasInstagramRelationshipFiles(instagramFileNames) && !allFileNames.some(isThreadsPath)) {
+    return { snapshot: await parseTikTokZip(zip, allFileNames, filenameDate), skippedPlatforms: [] };
+  }
   const threadsFiles = detectThreadsFiles(allFileNames);
   const hasThreads = threadsFiles.followerFileNames.length > 0 || !!threadsFiles.followingFileName;
 
@@ -498,4 +510,32 @@ async function parseOptionalRelationships(
   } catch {
     return null;
   }
+}
+
+// ─── Bare TikTok JSON ─────────────────────────────────────────────────────────
+
+function looksLikeJson(buf: ArrayBuffer): boolean {
+  const head = new Uint8Array(buf, 0, Math.min(buf.byteLength, 64));
+  for (const b of head) {
+    if (b === 0x20 || b === 0x09 || b === 0x0a || b === 0x0d || b === 0xef || b === 0xbb || b === 0xbf) continue; // whitespace, BOM
+    return b === 0x7b; // '{'
+  }
+  return false;
+}
+
+function parseBareTikTokJson(buf: ArrayBuffer, filenameDate: number | null): ParsedSnapshot {
+  let data: unknown;
+  try {
+    data = JSON.parse(new TextDecoder('utf-8').decode(buf));
+  } catch {
+    throw new SchemaValidationError('user_data_tiktok.json', 'File is not valid JSON');
+  }
+  const { followers, following } = parseTikTokJson(data);
+  return {
+    exportedAt: filenameDate ?? Math.floor(Date.now() / 1000),
+    followers,
+    following,
+    format: 'json',
+    platform: 'tiktok',
+  };
 }

@@ -26,7 +26,7 @@ var MissingFilesError = class extends Error {
   shape;
   constructor(missing, platform = "instagram") {
     super(
-      `Your ${platform === "threads" ? "Threads" : "Instagram"} export is missing required files: ${missing.join(", ")}. Make sure you selected "Followers and Following" when requesting your data, and that you chose JSON format.`
+      platform === "tiktok" ? `Your TikTok export is missing the follower lists: ${missing.join(", ")}. Make sure "Activity" (or "All data") was included when requesting your data.` : `Your ${platform === "threads" ? "Threads" : "Instagram"} export is missing required files: ${missing.join(", ")}. Make sure you selected "Followers and Following" when requesting your data, and that you chose JSON format.`
     );
     this.name = "MissingFilesError";
     this.platform = platform;
@@ -93,7 +93,7 @@ var threadsFollowingFileSchema = z.object({
 var threadsRecentlyUnfollowedFileSchema = z.object({
   text_post_app_text_post_app_unfollowed_users: z.array(relationshipEntrySchema)
 });
-var platforms = ["instagram", "threads"];
+var platforms = ["instagram", "threads", "tiktok"];
 var platformSchema = z.enum(platforms);
 var accountSchema = z.object({
   username: z.string(),
@@ -165,6 +165,144 @@ var emailOptInSchema = z.object({
   // Must be an explicit true from the form, never inferred.
   consent: z.literal(true)
 });
+
+// src/tiktok.ts
+var FOLLOWER_LIST_KEYS = ["fanslist", "followerlist", "followers", "follower"];
+var FOLLOWING_LIST_KEYS = ["following", "followinglist"];
+var USERNAME_KEYS = ["username", "uniqueid", "user_name"];
+var DATE_KEYS = ["date", "time", "createtime"];
+var TIKTOK_USERNAME_RE = /^[A-Za-z0-9._]{1,64}$/;
+var TIKTOK_JSON_RE = /(?:^|\/)user_data(?:_tiktok)?\.json$/i;
+var TIKTOK_TXT_FOLLOWER_RE = /(?:^|\/)(?:follower|followers|fans)(?:[ _]list)?\.txt$/i;
+var TIKTOK_TXT_FOLLOWING_RE = /(?:^|\/)following(?:[ _]list)?\.txt$/i;
+function tiktokHref(username) {
+  return `https://www.tiktok.com/@${username}`;
+}
+function cleanUsername(raw) {
+  if (typeof raw !== "string") return null;
+  const u = raw.trim().replace(/^@/, "");
+  return TIKTOK_USERNAME_RE.test(u) ? u : null;
+}
+function parseTikTokDate(raw) {
+  if (typeof raw === "number" && Number.isFinite(raw) && raw > 0) {
+    return Math.floor(raw > 1e12 ? raw / 1e3 : raw);
+  }
+  if (typeof raw !== "string" || !raw.trim()) return null;
+  const s = raw.trim();
+  const m = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?/.exec(s);
+  if (m) {
+    const ms2 = Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +(m[6] ?? 0));
+    return Number.isFinite(ms2) && ms2 > 0 ? Math.floor(ms2 / 1e3) : null;
+  }
+  const ms = Date.parse(s);
+  return Number.isFinite(ms) && ms > 0 ? Math.floor(ms / 1e3) : null;
+}
+function pick(obj, keys) {
+  for (const [k, v] of Object.entries(obj)) {
+    if (keys.includes(k.toLowerCase().replace(/[\s_-]/g, ""))) return v;
+  }
+  return void 0;
+}
+function toAccount(item) {
+  if (!item || typeof item !== "object") return null;
+  const rec = item;
+  const username = cleanUsername(pick(rec, USERNAME_KEYS));
+  if (!username) return null;
+  return { username, href: tiktokHref(username), followedAt: parseTikTokDate(pick(rec, DATE_KEYS)) };
+}
+function isAccountArray(v) {
+  if (!Array.isArray(v)) return false;
+  if (v.length === 0) return true;
+  const first = v[0];
+  return !!first && typeof first === "object" && pick(first, USERNAME_KEYS) !== void 0;
+}
+function findList(node, keys, depth = 0) {
+  if (!node || typeof node !== "object" || depth > 6) return null;
+  if (Array.isArray(node)) return null;
+  for (const [k, v] of Object.entries(node)) {
+    const norm = k.toLowerCase().replace(/[\s_-]/g, "");
+    if (keys.includes(norm) && isAccountArray(v)) return v;
+  }
+  for (const v of Object.values(node)) {
+    const found = findList(v, keys, depth + 1);
+    if (found) return found;
+  }
+  return null;
+}
+function dedupe(accounts) {
+  const seen = /* @__PURE__ */ new Set();
+  return accounts.filter((a) => {
+    const key = a.username.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+function parseTikTokJson(data, fileName = "user_data_tiktok.json") {
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    throw new SchemaValidationError(fileName, "Expected a JSON object");
+  }
+  const followerList = findList(data, FOLLOWER_LIST_KEYS);
+  const followingList = findList(data, FOLLOWING_LIST_KEYS);
+  if (!followerList && !followingList) {
+    throw new MissingFilesError(["Follower", "Following"], "tiktok");
+  }
+  const map = (list) => dedupe((list ?? []).map(toAccount).filter((a) => a !== null));
+  return { followers: map(followerList), following: map(followingList) };
+}
+function parseTikTokTxt(text) {
+  const accounts = [];
+  for (const block of text.replace(/\r\n?/g, "\n").split(/\n\s*\n/)) {
+    const rec = {};
+    for (const line of block.split("\n")) {
+      const i = line.indexOf(":");
+      if (i <= 0) continue;
+      rec[line.slice(0, i).trim()] = line.slice(i + 1).trim();
+    }
+    const a = toAccount(rec);
+    if (a) accounts.push(a);
+  }
+  return dedupe(accounts);
+}
+function hasTikTokFiles(fileNames) {
+  return fileNames.some((n) => TIKTOK_JSON_RE.test(n) || TIKTOK_TXT_FOLLOWER_RE.test(n) || TIKTOK_TXT_FOLLOWING_RE.test(n));
+}
+var TIKTOK_LIST_CAP = 1e4;
+function tiktokListNearCap(snapshot) {
+  return snapshot.followers.length >= TIKTOK_LIST_CAP * 0.98 || snapshot.following.length >= TIKTOK_LIST_CAP * 0.98;
+}
+async function parseTikTokZip(zip, fileNames, filenameDate) {
+  const jsonName = fileNames.find((n) => TIKTOK_JSON_RE.test(n));
+  let lists;
+  if (jsonName) {
+    const raw = await zip.files[jsonName].async("string");
+    let parsed;
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      throw new SchemaValidationError(jsonName, "File is not valid JSON");
+    }
+    lists = parseTikTokJson(parsed, jsonName);
+  } else {
+    const followerName = fileNames.find((n) => TIKTOK_TXT_FOLLOWER_RE.test(n));
+    const followingName = fileNames.find((n) => TIKTOK_TXT_FOLLOWING_RE.test(n));
+    const missing = [];
+    if (!followerName) missing.push("Follower.txt");
+    if (!followingName) missing.push("Following.txt");
+    if (missing.length === 2) throw new MissingFilesError(missing, "tiktok");
+    lists = {
+      followers: followerName ? parseTikTokTxt(await zip.files[followerName].async("string")) : [],
+      following: followingName ? parseTikTokTxt(await zip.files[followingName].async("string")) : []
+    };
+  }
+  return {
+    exportedAt: filenameDate ?? Math.floor(Date.now() / 1e3),
+    followers: lists.followers,
+    following: lists.following,
+    format: "json",
+    platform: "tiktok"
+  };
+}
 
 // src/parser.ts
 function sanitizeIgHref(href, username) {
@@ -376,6 +514,7 @@ async function parseExportZip(zipFile) {
       throw new FileReadError(err);
     }
   }
+  if (looksLikeJson(input)) return { snapshot: parseBareTikTokJson(input, filenameDate), skippedPlatforms: [] };
   let zip;
   try {
     zip = await JSZip.loadAsync(input);
@@ -397,11 +536,15 @@ function zipShape(allFileNames) {
     hasConnectionsFolder: allFileNames.some((n) => /(?:^|\/)connections\//i.test(n)),
     hasMediaFolder: allFileNames.some((n) => /(?:^|\/)media\//i.test(n)),
     hasThreadsFolder: allFileNames.some(isThreadsPath),
-    hasHtmlFiles: files.some((n) => /\.html?$/i.test(n))
+    hasHtmlFiles: files.some((n) => /\.html?$/i.test(n)),
+    hasTikTokFiles: hasTikTokFiles(files)
   };
 }
 async function parseZipContents(zip, allFileNames, filenameDate) {
   const instagramFileNames = allFileNames.filter((n) => !isThreadsPath(n));
+  if (hasTikTokFiles(allFileNames) && !hasInstagramRelationshipFiles(instagramFileNames) && !allFileNames.some(isThreadsPath)) {
+    return { snapshot: await parseTikTokZip(zip, allFileNames, filenameDate), skippedPlatforms: [] };
+  }
   const threadsFiles = detectThreadsFiles(allFileNames);
   const hasThreads = threadsFiles.followerFileNames.length > 0 || !!threadsFiles.followingFileName;
   if (hasThreads && !hasInstagramRelationshipFiles(instagramFileNames)) {
@@ -493,6 +636,30 @@ async function parseOptionalRelationships(zip, fileNames, pattern, parse) {
   } catch {
     return null;
   }
+}
+function looksLikeJson(buf) {
+  const head = new Uint8Array(buf, 0, Math.min(buf.byteLength, 64));
+  for (const b of head) {
+    if (b === 32 || b === 9 || b === 10 || b === 13 || b === 239 || b === 187 || b === 191) continue;
+    return b === 123;
+  }
+  return false;
+}
+function parseBareTikTokJson(buf, filenameDate) {
+  let data;
+  try {
+    data = JSON.parse(new TextDecoder("utf-8").decode(buf));
+  } catch {
+    throw new SchemaValidationError("user_data_tiktok.json", "File is not valid JSON");
+  }
+  const { followers, following } = parseTikTokJson(data);
+  return {
+    exportedAt: filenameDate ?? Math.floor(Date.now() / 1e3),
+    followers,
+    following,
+    format: "json",
+    platform: "tiktok"
+  };
 }
 
 // src/delta.ts
@@ -623,24 +790,330 @@ function findGhostFollowers(snapshot, options) {
     return now - account.followedAt >= minTenureSeconds;
   }).sort(byUsername);
 }
+
+// src/tools/healthChecks.ts
+var DAY = 86400;
+var FOLLOWING_CAP = { instagram: 7500, tiktok: 1e4 };
+var clamp = (n) => Math.max(0, Math.min(100, Math.round(n)));
+var ageDays = (ts, now) => Math.floor((now - ts) / DAY);
+var stalePending = ({ current, now }) => {
+  const old = (current.pendingRequests ?? []).filter((a) => a.followedAt !== null && ageDays(a.followedAt, now) >= 180);
+  if (old.length === 0) return null;
+  const oldest = Math.max(...old.map((a) => ageDays(a.followedAt, now)));
+  return { id: "stale_pending", impact: clamp(40 + old.length * 2), params: { count: old.length, months: Math.floor(oldest / 30) }, accounts: old };
+};
+var followBackGapYear = ({ current, followerSet }) => {
+  const byYear = /* @__PURE__ */ new Map();
+  for (const a of current.following) {
+    if (a.followedAt === null) continue;
+    const y = new Date(a.followedAt * 1e3).getUTCFullYear();
+    const b = byYear.get(y) ?? { total: 0, oneWay: [] };
+    b.total++;
+    if (!followerSet.has(a.username)) b.oneWay.push(a);
+    byYear.set(y, b);
+  }
+  let worst = null;
+  for (const [year, b] of byYear) {
+    if (b.total < 10) continue;
+    const rate = b.oneWay.length / b.total;
+    if (rate < 0.6) continue;
+    if (!worst || rate > worst.oneWay.length / worst.total) worst = { year, ...b };
+  }
+  if (!worst) return null;
+  const pct = Math.round(worst.oneWay.length / worst.total * 100);
+  return { id: "follow_back_gap_year", impact: clamp(30 + pct / 2), params: { year: worst.year, total: worst.total, count: worst.oneWay.length, pct }, accounts: worst.oneWay };
+};
+var oldOneWay = ({ oneWay, now }) => {
+  const old = oneWay.filter((a) => a.followedAt !== null && ageDays(a.followedAt, now) >= 730);
+  if (old.length < 5) return null;
+  return { id: "old_one_way", impact: clamp(35 + old.length / 4), params: { count: old.length }, accounts: old };
+};
+var suddenDrop = ({ current, previous }) => {
+  if (!previous) return null;
+  const cmp = compareSnapshots(previous, current);
+  const lost = cmp.lostFollowers.length;
+  const base = previous.followers.length || 1;
+  if (lost < 10 || lost / base < 0.03) return null;
+  const pct = Math.round(lost / base * 1e3) / 10;
+  return { id: "sudden_drop", impact: clamp(60 + pct * 3), params: { count: lost, pct, days: Math.max(1, Math.round(cmp.periodDays)) }, accounts: cmp.lostFollowers };
+};
+var mutualsLost = ({ current, previous }) => {
+  if (!previous) return null;
+  const prevFollowing = new Set(previous.following.map((a) => a.username));
+  const nowFollowers = new Set(current.followers.map((a) => a.username));
+  const nowFollowing = new Set(current.following.map((a) => a.username));
+  const lost = previous.followers.filter((a) => prevFollowing.has(a.username) && nowFollowing.has(a.username) && !nowFollowers.has(a.username));
+  if (lost.length === 0) return null;
+  return { id: "mutuals_lost", impact: clamp(55 + lost.length * 3), params: { count: lost.length }, accounts: lost };
+};
+var followBurst = ({ current, now, followerSet }) => {
+  const byDay = /* @__PURE__ */ new Map();
+  for (const a of current.following) {
+    if (a.followedAt === null || ageDays(a.followedAt, now) > 730) continue;
+    const d = new Date(a.followedAt * 1e3).toISOString().slice(0, 10);
+    const list = byDay.get(d) ?? [];
+    list.push(a);
+    byDay.set(d, list);
+  }
+  let best = null;
+  for (const e of byDay) if (!best || e[1].length > best[1].length) best = e;
+  if (!best || best[1].length < 30) return null;
+  const back = best[1].filter((a) => followerSet.has(a.username)).length;
+  return { id: "follow_burst", impact: clamp(25 + best[1].length / 3), params: { date: best[0], count: best[1].length, followedBack: back }, accounts: best[1].filter((a) => !followerSet.has(a.username)) };
+};
+var fansUnanswered = ({ current, followingSet, now }) => {
+  const recent = current.followers.filter((a) => !followingSet.has(a.username) && a.followedAt !== null && ageDays(a.followedAt, now) <= 30);
+  if (recent.length < 3) return null;
+  return { id: "fans_unanswered", impact: clamp(20 + recent.length), params: { count: recent.length }, accounts: recent };
+};
+var ratioImbalance = ({ current, oneWay }) => {
+  const followers = current.followers.length;
+  const following = current.following.length;
+  if (following < 300 || following < followers * 1.5) return null;
+  return { id: "ratio_imbalance", impact: clamp(30 + following / Math.max(1, followers) * 8), params: { followers, following, oneWay: oneWay.length }, accounts: [] };
+};
+var followingLimit = ({ current, platform, oneWay }) => {
+  const cap = FOLLOWING_CAP[platform];
+  if (!cap || current.following.length < cap * 0.9) return null;
+  return { id: "following_limit", impact: 80, params: { following: current.following.length, cap, left: Math.max(0, cap - current.following.length), oneWay: oneWay.length }, accounts: [] };
+};
+var secondExport = ({ previous }) => previous ? null : { id: "second_export", impact: 15, params: {}, accounts: [] };
+var RULES = [
+  stalePending,
+  followBackGapYear,
+  oldOneWay,
+  suddenDrop,
+  mutualsLost,
+  followBurst,
+  fansUnanswered,
+  ratioImbalance,
+  followingLimit,
+  secondExport
+];
+function runHealthChecks({ current, previous, now = Math.floor(Date.now() / 1e3) }) {
+  const followerSet = new Set(current.followers.map((a) => a.username));
+  const followingSet = new Set(current.following.map((a) => a.username));
+  const ctx = {
+    current,
+    previous: previous && snapshotPlatform(previous) === snapshotPlatform(current) ? previous : void 0,
+    now,
+    platform: snapshotPlatform(current),
+    followerSet,
+    followingSet,
+    oneWay: current.following.filter((a) => !followerSet.has(a.username))
+  };
+  const ranked = RULES.map((r) => r(ctx)).filter((f) => f !== null).sort((a, b) => b.impact - a.impact);
+  return dropOverlapping(ranked);
+}
+var CLEANUP_LISTS = /* @__PURE__ */ new Set(["follow_back_gap_year", "old_one_way"]);
+function dropOverlapping(ranked) {
+  const kept = [];
+  const covered = /* @__PURE__ */ new Set();
+  for (const f of ranked) {
+    if (!CLEANUP_LISTS.has(f.id)) {
+      kept.push(f);
+      continue;
+    }
+    if (f.accounts.length > 0) {
+      const overlap = f.accounts.filter((a) => covered.has(a.username)).length;
+      if (overlap / f.accounts.length >= 0.8) continue;
+    }
+    kept.push(f);
+    for (const a of f.accounts) covered.add(a.username);
+  }
+  return kept;
+}
+
+// src/tools/growthTimeline.ts
+var monthKey = (ts) => new Date(ts * 1e3).toISOString().slice(0, 7);
+function nextMonth(key) {
+  const [y, m] = key.split("-").map(Number);
+  return m === 12 ? `${y + 1}-01` : `${y}-${String(m + 1).padStart(2, "0")}`;
+}
+function countByMonth(accounts) {
+  const out = /* @__PURE__ */ new Map();
+  for (const a of accounts) {
+    if (a.followedAt === null) continue;
+    const k = monthKey(a.followedAt);
+    out.set(k, (out.get(k) ?? 0) + 1);
+  }
+  return out;
+}
+function growthTimeline(snapshot) {
+  const f = countByMonth(snapshot.followers);
+  const g = countByMonth(snapshot.following);
+  const dated = snapshot.followers.filter((a) => a.followedAt !== null).length;
+  const undated = snapshot.followers.length - dated;
+  const keys = [...f.keys(), ...g.keys()].sort();
+  if (keys.length === 0) return { months: [], best: null, dated, undated, lastYearShare: 0 };
+  const end = monthKey(snapshot.exportedAt);
+  const last = keys[keys.length - 1] > end ? keys[keys.length - 1] : end;
+  const months = [];
+  for (let k = keys[0], i = 0; k <= last && i < 300; k = nextMonth(k), i++) {
+    months.push({ month: k, followers: f.get(k) ?? 0, following: g.get(k) ?? 0 });
+  }
+  let best = null;
+  for (const m of months) if (m.followers > 0 && (!best || m.followers > best.followers)) best = m;
+  const yearAgo = snapshot.exportedAt - 365 * 86400;
+  const recent = snapshot.followers.filter((a) => a.followedAt !== null && a.followedAt >= yearAgo).length;
+  return { months, best, dated, undated, lastYearShare: dated === 0 ? 0 : recent / dated };
+}
+
+// src/tools/verdict.ts
+var RULES2 = [
+  ["loyal_magnet", (s) => s.following >= 20 && s.followBackPct >= 85],
+  ["main_character", (s) => s.followers >= 500 && s.ratio >= 5],
+  ["quiet_icon", (s) => s.followers < 500 && s.ratio >= 2],
+  ["fair_trader", (s) => s.following >= 20 && s.ratio >= 0.95 && s.ratio <= 1.05],
+  ["generous_giver", (s) => s.following >= 50 && s.ratio < 0.5],
+  ["hopeful_romantic", (s) => s.following >= 30 && s.followBackPct < 40],
+  ["ghost_collector", (s) => s.oneWay >= 200],
+  ["tiny_circle", (s) => s.followers > 0 && s.followers < 100 && s.followBackPct >= 70],
+  ["open_house", (s) => s.following >= 2e3],
+  ["selective", (s) => s.following < 150 && s.followers >= 300],
+  ["rising", (s) => s.followers >= 50 && s.lastYearShare >= 0.5],
+  ["og", (s) => s.followers >= 50 && s.lastYearShare > 0 && s.lastYearShare < 0.1],
+  ["mutual_maximalist", (s) => s.followers >= 20 && s.mutuals / s.followers >= 0.8],
+  ["fan_club", (s) => s.followers >= 50 && s.fans / s.followers >= 0.6],
+  ["collector", (s) => s.followers > 0 && s.following > s.followers * 3],
+  ["drama_magnet", (s) => (s.lost ?? 0) >= 10],
+  ["untouchable", (s) => s.lost === 0],
+  ["comeback", (s) => s.gained !== void 0 && s.lost !== void 0 && s.lost > 0 && s.gained > s.lost * 2],
+  ["balanced", (s) => s.followBackPct >= 60 && s.followBackPct < 85],
+  ["steady", () => true]
+];
+var ARCHETYPE_IDS = RULES2.map(([id]) => id);
+function verdictStats(current, previous) {
+  const followerSet = new Set(current.followers.map((a) => a.username));
+  const followingSet = new Set(current.following.map((a) => a.username));
+  const mutuals = current.following.filter((a) => followerSet.has(a.username)).length;
+  const followers = current.followers.length;
+  const following = current.following.length;
+  const yearAgo = current.exportedAt - 365 * 86400;
+  const dated = current.followers.filter((a) => a.followedAt !== null);
+  const recent = dated.filter((a) => a.followedAt >= yearAgo).length;
+  let lost;
+  let gained;
+  if (previous) {
+    const prev = new Set(previous.followers.map((a) => a.username));
+    lost = [...prev].filter((u) => !followerSet.has(u)).length;
+    gained = [...followerSet].filter((u) => !prev.has(u)).length;
+  }
+  return {
+    followers,
+    following,
+    mutuals,
+    oneWay: following - mutuals,
+    fans: current.followers.filter((a) => !followingSet.has(a.username)).length,
+    followBackPct: following === 0 ? 0 : Math.round(mutuals / following * 100),
+    ratio: following === 0 ? followers : followers / following,
+    lastYearShare: dated.length === 0 ? 0 : recent / dated.length,
+    lost,
+    gained
+  };
+}
+function eligibleArchetypes(stats) {
+  const hits = RULES2.filter(([id, rule]) => id !== "steady" && rule(stats)).map(([id]) => id);
+  return hits.length > 0 ? hits : ["steady"];
+}
+function hashSeed(...parts) {
+  let h = 2166136261;
+  for (const ch of parts.join("|")) {
+    h ^= ch.charCodeAt(0);
+    h = Math.imul(h, 16777619) >>> 0;
+  }
+  return h >>> 0;
+}
+function pickVerdict(stats, exportedAt, spin = 0) {
+  const pool = eligibleArchetypes(stats);
+  const seed = hashSeed(stats.followers, stats.following, stats.mutuals, exportedAt, spin);
+  return { archetype: pool[seed % pool.length], lineSeed: Math.floor(seed / pool.length), stats };
+}
+
+// src/tools/unfollowPlanner.ts
+var PACE_PER_DAY = { gentle: 20, steady: 40, quick: 80 };
+var SUB_BATCH = 10;
+function buildPlan({ accounts, pace, starred, order = "oldest" }) {
+  const perDay = PACE_PER_DAY[pace];
+  const seen = /* @__PURE__ */ new Set();
+  let skippedStarred = 0;
+  const list = [];
+  for (const a of accounts) {
+    if (seen.has(a.username)) continue;
+    seen.add(a.username);
+    if (starred?.has(a.username)) {
+      skippedStarred++;
+      continue;
+    }
+    list.push(a);
+  }
+  list.sort(order === "az" ? (a, b) => a.username.localeCompare(b.username) : (a, b) => (a.followedAt ?? Infinity) - (b.followedAt ?? Infinity) || a.username.localeCompare(b.username));
+  const batches = [];
+  for (let i = 0; i < list.length; i += perDay) batches.push(list.slice(i, i + perDay).map((a) => a.username));
+  return { pace, perDay, batches, total: list.length, skippedStarred };
+}
+function planProgress(plan, done) {
+  let doneCount = 0;
+  let currentBatch = -1;
+  let currentBatchLeft = 0;
+  plan.batches.forEach((batch, i) => {
+    const left2 = batch.filter((u) => !done.has(u)).length;
+    doneCount += batch.length - left2;
+    if (currentBatch === -1 && left2 > 0) {
+      currentBatch = i;
+      currentBatchLeft = left2;
+    }
+  });
+  const left = plan.total - doneCount;
+  return {
+    done: doneCount,
+    left,
+    daysLeft: Math.ceil(left / plan.perDay),
+    currentBatch,
+    currentBatchLeft,
+    pct: plan.total === 0 ? 100 : Math.round(doneCount / plan.total * 100)
+  };
+}
+function daysAtEachPace(total) {
+  return {
+    gentle: Math.ceil(total / PACE_PER_DAY.gentle),
+    steady: Math.ceil(total / PACE_PER_DAY.steady),
+    quick: Math.ceil(total / PACE_PER_DAY.quick)
+  };
+}
 export {
+  ARCHETYPE_IDS,
   FileReadError,
   InvalidZipError,
   MissingFilesError,
   MixedFormatError,
+  PACE_PER_DAY,
+  SUB_BATCH,
   SchemaValidationError,
+  TIKTOK_LIST_CAP,
   analyzeSnapshot,
+  buildPlan,
   compareSnapshots,
   contactMessageSchema,
   contactSources,
+  daysAtEachPace,
   detectDeltaExport,
+  eligibleArchetypes,
   emailOptInSchema,
   emailOptInSources,
   feedbackSchema,
   feedbackSentiments,
   findGhostFollowers,
+  growthTimeline,
+  hashSeed,
   parseExportZip,
   parseInstagramZip,
+  pickVerdict,
+  planProgress,
   platforms,
-  snapshotPlatform
+  runHealthChecks,
+  snapshotPlatform,
+  tiktokHref,
+  tiktokListNearCap,
+  verdictStats
 };

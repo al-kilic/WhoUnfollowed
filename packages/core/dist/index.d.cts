@@ -20,10 +20,11 @@ declare const followingFileSchema: z.ZodObject<{
         }, z.core.$strip>>>;
     }, z.core.$strip>>;
 }, z.core.$strip>;
-declare const platforms: readonly ["instagram", "threads"];
+declare const platforms: readonly ["instagram", "threads", "tiktok"];
 declare const platformSchema: z.ZodEnum<{
     instagram: "instagram";
     threads: "threads";
+    tiktok: "tiktok";
 }>;
 declare const accountSchema: z.ZodObject<{
     username: z.ZodString;
@@ -59,6 +60,7 @@ declare const parsedSnapshotSchema: z.ZodObject<{
     platform: z.ZodOptional<z.ZodEnum<{
         instagram: "instagram";
         threads: "threads";
+        tiktok: "tiktok";
     }>>;
 }, z.core.$strip>;
 declare function snapshotPlatform(snapshot: Pick<ParsedSnapshot, 'platform'>): Platform;
@@ -165,12 +167,14 @@ interface ZipShape {
     hasMediaFolder: boolean;
     hasThreadsFolder: boolean;
     hasHtmlFiles: boolean;
+    hasTikTokFiles?: boolean;
 }
+type ExportPlatform = 'instagram' | 'threads' | 'tiktok';
 declare class MissingFilesError extends Error {
     readonly code: "MISSING_FILES";
-    readonly platform: 'instagram' | 'threads';
+    readonly platform: ExportPlatform;
     shape?: ZipShape;
-    constructor(missing: string[], platform?: 'instagram' | 'threads');
+    constructor(missing: string[], platform?: ExportPlatform);
 }
 declare class MixedFormatError extends Error {
     readonly code: "MIXED_FORMAT";
@@ -182,4 +186,88 @@ declare class SchemaValidationError extends Error {
     constructor(filename: string, detail: string);
 }
 
-export { type Account, type ContactMessageInput, type ContactSource, type DeltaDetectionResult, type DeltaReason, type EmailOptInInput, type EmailOptInSource, type FeedbackInput, type FeedbackSentiment, FileReadError, type FollowersFile, type FollowingFile, InvalidZipError, MissingFilesError, MixedFormatError, type ParseExportResult, type ParsedSnapshot, type Platform, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, type ZipShape, analyzeSnapshot, compareSnapshots, contactMessageSchema, contactSources, detectDeltaExport, emailOptInSchema, emailOptInSources, feedbackSchema, feedbackSentiments, findGhostFollowers, parseExportZip, parseInstagramZip, platforms, snapshotPlatform };
+declare function tiktokHref(username: string): string;
+declare const TIKTOK_LIST_CAP = 10000;
+declare function tiktokListNearCap(snapshot: Pick<ParsedSnapshot, 'followers' | 'following'>): boolean;
+
+type HealthCheckId = 'stale_pending' | 'follow_back_gap_year' | 'old_one_way' | 'sudden_drop' | 'mutuals_lost' | 'follow_burst' | 'fans_unanswered' | 'ratio_imbalance' | 'following_limit' | 'second_export';
+interface HealthFinding {
+    id: HealthCheckId;
+    impact: number;
+    params: Record<string, number | string>;
+    accounts: Account[];
+}
+interface HealthInput {
+    current: ParsedSnapshot;
+    previous?: ParsedSnapshot | undefined;
+    now?: number;
+}
+declare function runHealthChecks({ current, previous, now }: HealthInput): HealthFinding[];
+
+interface TimelineMonth {
+    month: string;
+    followers: number;
+    following: number;
+}
+interface GrowthTimeline {
+    months: TimelineMonth[];
+    best: TimelineMonth | null;
+    dated: number;
+    undated: number;
+    lastYearShare: number;
+}
+declare function growthTimeline(snapshot: Pick<ParsedSnapshot, 'followers' | 'following' | 'exportedAt'>): GrowthTimeline;
+
+type ArchetypeId = 'loyal_magnet' | 'main_character' | 'quiet_icon' | 'fair_trader' | 'generous_giver' | 'hopeful_romantic' | 'ghost_collector' | 'tiny_circle' | 'open_house' | 'selective' | 'rising' | 'og' | 'mutual_maximalist' | 'fan_club' | 'collector' | 'drama_magnet' | 'untouchable' | 'comeback' | 'balanced' | 'steady';
+interface VerdictStats {
+    followers: number;
+    following: number;
+    mutuals: number;
+    oneWay: number;
+    fans: number;
+    followBackPct: number;
+    ratio: number;
+    lastYearShare: number;
+    lost?: number | undefined;
+    gained?: number | undefined;
+}
+declare const ARCHETYPE_IDS: ArchetypeId[];
+declare function verdictStats(current: Pick<ParsedSnapshot, 'followers' | 'following' | 'exportedAt'>, previous?: Pick<ParsedSnapshot, 'followers'>): VerdictStats;
+declare function eligibleArchetypes(stats: VerdictStats): ArchetypeId[];
+declare function hashSeed(...parts: (string | number)[]): number;
+interface Verdict {
+    archetype: ArchetypeId;
+    lineSeed: number;
+    stats: VerdictStats;
+}
+declare function pickVerdict(stats: VerdictStats, exportedAt: number, spin?: number): Verdict;
+
+type Pace = 'gentle' | 'steady' | 'quick';
+declare const PACE_PER_DAY: Record<Pace, number>;
+declare const SUB_BATCH = 10;
+interface PlanOptions {
+    accounts: Account[];
+    pace: Pace;
+    starred?: ReadonlySet<string> | undefined;
+    order?: 'oldest' | 'az' | undefined;
+}
+interface UnfollowPlan {
+    pace: Pace;
+    perDay: number;
+    batches: string[][];
+    total: number;
+    skippedStarred: number;
+}
+declare function buildPlan({ accounts, pace, starred, order }: PlanOptions): UnfollowPlan;
+interface PlanProgress {
+    done: number;
+    left: number;
+    daysLeft: number;
+    currentBatch: number;
+    currentBatchLeft: number;
+    pct: number;
+}
+declare function planProgress(plan: Pick<UnfollowPlan, 'batches' | 'perDay' | 'total'>, done: ReadonlySet<string>): PlanProgress;
+declare function daysAtEachPace(total: number): Record<Pace, number>;
+
+export { ARCHETYPE_IDS, type Account, type ArchetypeId, type ContactMessageInput, type ContactSource, type DeltaDetectionResult, type DeltaReason, type EmailOptInInput, type EmailOptInSource, type ExportPlatform, type FeedbackInput, type FeedbackSentiment, FileReadError, type FollowersFile, type FollowingFile, type GrowthTimeline, type HealthCheckId, type HealthFinding, type HealthInput, InvalidZipError, MissingFilesError, MixedFormatError, PACE_PER_DAY, type Pace, type ParseExportResult, type ParsedSnapshot, type PlanOptions, type PlanProgress, type Platform, SUB_BATCH, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, TIKTOK_LIST_CAP, type TimelineMonth, type UnfollowPlan, type Verdict, type VerdictStats, type ZipShape, analyzeSnapshot, buildPlan, compareSnapshots, contactMessageSchema, contactSources, daysAtEachPace, detectDeltaExport, eligibleArchetypes, emailOptInSchema, emailOptInSources, feedbackSchema, feedbackSentiments, findGhostFollowers, growthTimeline, hashSeed, parseExportZip, parseInstagramZip, pickVerdict, planProgress, platforms, runHealthChecks, snapshotPlatform, tiktokHref, tiktokListNearCap, verdictStats };

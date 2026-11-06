@@ -5,14 +5,19 @@ import { PlatformIcon } from '@/components/PlatformIcon';
 // Big app mark for the results header, so the platform reads at a glance.
 function PlatformMark({ platform }: { platform: Platform }) {
   const threads = platform === 'threads';
+  const tiktok = platform === 'tiktok';
   return (
     <div className="size-10 xl:size-[52px]" style={{
       flexShrink: 0,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       borderRadius: threads ? '50%' : 13,
-      background: threads ? T.ink : 'linear-gradient(140deg, #02888f 0%, #01494d 100%)',
-      color: threads ? T.bg : '#f4f0e8',
-      boxShadow: threads ? '0 0 0 6px var(--t-surface2)' : '0 10px 28px rgba(2,136,143,0.28)',
+      background: threads || tiktok ? T.ink : 'linear-gradient(140deg, #02888f 0%, #01494d 100%)',
+      color: threads || tiktok ? T.bg : '#f4f0e8',
+      // TikTok: two offset brand-palette shadows (teal and terra), a nod to
+      // its split-colour look without using its logo.
+      boxShadow: threads ? '0 0 0 6px var(--t-surface2)'
+        : tiktok ? '-3px -3px 0 #02888f, 3px 3px 0 #a84b2f'
+        : '0 10px 28px rgba(2,136,143,0.28)',
     }}>
       <PlatformIcon platform={platform} size={22} />
     </div>

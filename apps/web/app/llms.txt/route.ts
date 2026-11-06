@@ -48,6 +48,7 @@ const LOCALIZED_PATH_LABEL: Record<string, string> = {
   '/what-is-whounfollowed': 'What is WhoUnfollowed',
   '/how-to-export': 'How to export your Instagram or Threads data',
   '/threads': 'Who unfollowed you on Threads',
+  '/tiktok': 'Who unfollowed you on TikTok',
   '/about': 'About',
   '/contact': 'Contact',
   '/accessibility': 'Accessibility',
@@ -79,6 +80,7 @@ Author: Alan Kilic, an independent developer building privacy-first software und
 - [What is WhoUnfollowed](${SITE_URL}/what-is-whounfollowed): Overview and FAQ.
 - [How to export your Instagram or Threads data](${SITE_URL}/how-to-export): Step-by-step guide to requesting your ZIP from Meta's Accounts Center.
 - [Who unfollowed you on Threads](${SITE_URL}/threads): Threads support, the Threads export steps, and exactly which files are read from a Threads ZIP.
+- [Who unfollowed you on TikTok](${SITE_URL}/tiktok): TikTok support, how to request the TikTok data download, and which lists are read from it.
 - [Pricing](${SITE_URL}/pricing): Free tier and the one-time Pro unlock.
 - [About](${SITE_URL}/about): Who builds WhoUnfollowed and why.
 - [Blog](${SITE_URL}/blog): Guides on Instagram followers, unfollowers, and privacy.
@@ -102,7 +104,8 @@ ${comparisonsSection()}
 ## Key facts
 - Fully open source: the web app is AGPL-3.0 and the parser is MPL-2.0, both public at https://github.com/al-kilic/WhoUnfollowed. Anyone can audit exactly how data is processed.
 - No Instagram or Threads password is ever required. The tool reads a data export the user already owns.
-- Supports Instagram and Threads. Threads exports use the same Accounts Center flow (JSON, All time, Followers and Following); only threads/followers.json, threads/following.json, and threads/recently_unfollowed_profiles.json are read.
+- Supports Instagram, Threads and TikTok. Threads exports use the same Accounts Center flow (JSON, All time, Followers and Following); only threads/followers.json, threads/following.json, and threads/recently_unfollowed_profiles.json are read.
+- TikTok: upload the file from TikTok's own Download your data (JSON or TXT, zipped or the bare user_data_tiktok.json). Only the follower and following lists are read. TikTok's download lists up to about 10,000 followers.
 - The free tier processes data entirely in the browser. Nothing is sent to a server, and no account is needed.
 - Pro is a one-time unlock (${UNLOCK_PRICE_SUMMARY}). It never auto-renews.${priceIdForLifetime() ? ` There is also a one-time Lifetime "Insider" option with no expiry, sold in a limited number of seats starting at $${LIFETIME_PRICE_USD}; the price rises as seats sell and Lifetime closes when they are gone.` : ''}
 - Cloud snapshots, a Pro feature, are encrypted in the browser before they leave the device.

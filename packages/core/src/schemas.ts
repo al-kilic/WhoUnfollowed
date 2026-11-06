@@ -51,7 +51,7 @@ export const threadsRecentlyUnfollowedFileSchema = z.object({
   text_post_app_text_post_app_unfollowed_users: z.array(relationshipEntrySchema),
 });
 
-export const platforms = ['instagram', 'threads'] as const;
+export const platforms = ['instagram', 'threads', 'tiktok'] as const;
 export const platformSchema = z.enum(platforms);
 
 export const accountSchema = z.object({

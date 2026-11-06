@@ -80,6 +80,7 @@ interface HeroContent {
     unzippedFile: string;
     missingData: string;
     missingThreadsData: string;
+    missingTikTokData: string;
     mixedFormat: string;
     invalidZip: string;
     schemaChanged: string;
@@ -101,7 +102,7 @@ interface HeroContent {
 function classifyError(err: unknown, content: HeroContent): { message: string; kind: ErrorKind; showGuideCta: boolean; props?: FailProps } {
   if (err instanceof MissingFilesError) {
     return {
-      message: err.platform === 'threads' ? content.errors.missingThreadsData : content.errors.missingData,
+      message: err.platform === 'threads' ? content.errors.missingThreadsData : err.platform === 'tiktok' ? content.errors.missingTikTokData : content.errors.missingData,
       kind: 'missing_data',
       showGuideCta: true,
       ...(err.shape ? { props: shapeProps(err.shape) } : {}),
@@ -220,7 +221,11 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
   const processFile = async (file: File, { skipSizeCheck = false } = {}) => {
     const size = sizeBucket(file.size);
     const ext = fileExt(file.name);
-    if (!file.name.toLowerCase().endsWith('.zip') &&
+    // TikTok's JSON download can arrive as a bare user_data_tiktok.json; the
+    // parser reads that directly.
+    const isTikTokJson = ext === 'json' && /user_data/i.test(file.name);
+    if (!isTikTokJson &&
+        !file.name.toLowerCase().endsWith('.zip') &&
         file.type !== 'application/zip' &&
         file.type !== 'application/x-zip-compressed') {
       // A single JSON/HTML file is almost always a file from inside an export
@@ -478,7 +483,7 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
       <input
         ref={inputRef}
         type="file"
-        accept=".zip,application/zip,application/x-zip-compressed"
+        accept=".zip,application/zip,application/x-zip-compressed,.json,application/json"
         className="sr-only"
         aria-hidden="true"
         tabIndex={-1}

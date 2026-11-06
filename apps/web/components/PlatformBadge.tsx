@@ -4,7 +4,7 @@ import { PlatformIcon } from '@/components/PlatformIcon';
 
 // Pill naming which app a snapshot came from, with its glyph.
 export function PlatformBadge({ platform }: { platform: Platform }) {
-  const threads = platform === 'threads';
+  const threads = platform !== 'instagram'; // neutral pill for Threads and TikTok
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 5,

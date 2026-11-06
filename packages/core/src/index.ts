@@ -26,3 +26,16 @@ export { feedbackSchema, feedbackSentiments, platforms, snapshotPlatform } from 
 export { contactMessageSchema, contactSources } from './schemas.js';
 export { emailOptInSchema, emailOptInSources } from './schemas.js';
 export type { SingleSnapshotAnalysis, SnapshotComparison } from './diff.js';
+// TikTok export helpers.
+export { TIKTOK_LIST_CAP, tiktokHref, tiktokListNearCap } from './tiktok.js';
+export type { ExportPlatform } from './errors.js';
+
+// Tools: all run in the browser on the user's own export.
+export { runHealthChecks } from './tools/healthChecks.js';
+export type { HealthCheckId, HealthFinding, HealthInput } from './tools/healthChecks.js';
+export { growthTimeline } from './tools/growthTimeline.js';
+export type { GrowthTimeline, TimelineMonth } from './tools/growthTimeline.js';
+export { ARCHETYPE_IDS, eligibleArchetypes, hashSeed, pickVerdict, verdictStats } from './tools/verdict.js';
+export type { ArchetypeId, Verdict, VerdictStats } from './tools/verdict.js';
+export { PACE_PER_DAY, SUB_BATCH, buildPlan, daysAtEachPace, planProgress } from './tools/unfollowPlanner.js';
+export type { Pace, PlanOptions, PlanProgress, UnfollowPlan } from './tools/unfollowPlanner.js';

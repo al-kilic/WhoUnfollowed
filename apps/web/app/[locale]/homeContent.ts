@@ -55,6 +55,7 @@ export interface HomeContent {
       unzippedFile: string;
       missingData: string;
       missingThreadsData: string;
+      missingTikTokData: string;
       mixedFormat: string;
       invalidZip: string;
       schemaChanged: string;
@@ -228,6 +229,7 @@ const EN: HomeContent = {
       unzippedFile: 'This is a file from inside your export, not the ZIP itself. On Mac, Safari unzips downloads automatically: upload the original .zip from your Downloads folder, or right-click the unzipped folder and choose Compress to make a new ZIP.',
       missingData: 'This ZIP does not include your followers and following lists (the connections/followers_and_following folder). Request a new export with Followers and Following selected. If your export came in several parts, upload the part that contains that folder.',
       missingThreadsData: 'This Threads export is missing your followers or following list. Request a new export with Followers and following selected, in JSON format.',
+      missingTikTokData: 'This TikTok file has no follower or following list. Request your data again with All data (or your activity) included, in JSON format.',
       mixedFormat: 'This export mixes JSON and HTML files. Please request the JSON version again, then upload the ZIP.',
       invalidZip: 'We could not read this ZIP. Download the original file again and upload it without unzipping it.',
       schemaChanged: 'Meta may have changed the export format, so we could not read part of this file. Try requesting a fresh export.',
@@ -461,6 +463,7 @@ const ES: HomeContent = {
       unzippedFile: 'Este es un archivo de dentro de tu export, no el ZIP en sí. En Mac, Safari descomprime las descargas automáticamente: sube el .zip original de tu carpeta Descargas, o haz clic derecho en la carpeta descomprimida y elige Comprimir para crear un ZIP nuevo.',
       missingData: 'Este ZIP no incluye tus listas de seguidores y seguidos (la carpeta connections/followers_and_following). Solicita un export nuevo con Seguidores y Seguidos seleccionado. Si tu export llegó en varias partes, sube la parte que contiene esa carpeta.',
       missingThreadsData: 'A este export de Threads le falta tu lista de seguidores o seguidos. Solicita un export nuevo con Seguidores y seguidos seleccionado, en formato JSON.',
+      missingTikTokData: 'Este archivo de TikTok no tiene tu lista de seguidores ni de seguidos. Vuelve a pedir tus datos con Todos los datos (o tu actividad) incluidos, en formato JSON.',
       mixedFormat: 'Este export mezcla archivos JSON y HTML. Vuelve a solicitar la versión JSON y sube el ZIP.',
       invalidZip: 'No pudimos leer este ZIP. Descarga de nuevo el archivo original y súbelo sin descomprimirlo.',
       schemaChanged: 'Es posible que Meta haya cambiado el formato del export, así que no pudimos leer parte de este archivo. Intenta solicitar un export nuevo.',
@@ -694,6 +697,7 @@ const PT: HomeContent = {
       unzippedFile: 'Este é um arquivo de dentro do seu export, não o ZIP em si. No Mac, o Safari descompacta os downloads automaticamente: envie o .zip original da sua pasta Downloads, ou clique com o botão direito na pasta descompactada e escolha Comprimir para criar um novo ZIP.',
       missingData: 'Este ZIP não inclui suas listas de seguidores e seguindo (a pasta connections/followers_and_following). Solicite um novo export com Seguidores e Seguindo selecionado. Se o seu export veio em várias partes, envie a parte que contém essa pasta.',
       missingThreadsData: 'Este export do Threads não tem sua lista de seguidores ou seguindo. Solicite um novo export com Seguidores e seguindo selecionado, em formato JSON.',
+      missingTikTokData: 'Este arquivo do TikTok não tem sua lista de seguidores nem de seguindo. Peça seus dados de novo com Todos os dados (ou sua atividade) incluídos, em formato JSON.',
       mixedFormat: 'Este export mistura arquivos JSON e HTML. Solicite a versão JSON de novo e envie o ZIP.',
       invalidZip: 'Não conseguimos ler este ZIP. Baixe o arquivo original novamente e envie sem descompactar.',
       schemaChanged: 'A Meta pode ter mudado o formato do export, então não conseguimos ler parte deste arquivo. Tente solicitar um export novo.',

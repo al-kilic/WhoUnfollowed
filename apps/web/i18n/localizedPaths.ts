@@ -16,6 +16,7 @@ export const LOCALIZED_PATHS: string[] = [
   '/what-is-whounfollowed',
   '/how-to-export',
   '/threads',
+  '/tiktok',
   '/accessibility',
   '/compare',
   '/privacy',

@@ -57,6 +57,7 @@ export function shapeProps(shape: ZipShape) {
     has_media: yn(shape.hasMediaFolder),
     has_threads: yn(shape.hasThreadsFolder),
     has_html: yn(shape.hasHtmlFiles),
+    has_tiktok: yn(shape.hasTikTokFiles ?? false),
   };
 }
 

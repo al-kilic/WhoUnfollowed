@@ -126,7 +126,7 @@ describe('parseExportZip: Threads export', () => {
     const err = await parseExportZip(await toBuffer(z)).catch((e: unknown) => e);
     expect(err).toBeInstanceOf(MissingFilesError);
     expect((err as MissingFilesError).shape).toEqual({
-      fileCount: 2, hasConnectionsFolder: false, hasMediaFolder: true, hasThreadsFolder: false, hasHtmlFiles: false,
+      fileCount: 2, hasConnectionsFolder: false, hasMediaFolder: true, hasThreadsFolder: false, hasHtmlFiles: false, hasTikTokFiles: false,
     });
   });
 
