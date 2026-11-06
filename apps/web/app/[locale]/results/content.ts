@@ -111,7 +111,7 @@ const EN: ResultsContent = {
     oldRequestsLabel: 'follow requests waiting 6+ months',
   },
   radarPulse: {
-    prefix: 'See your account health score in',
+    prefix: 'See your summary, verdict and fixes in',
     linkText: 'Radar ↗',
   },
 };
@@ -185,7 +185,7 @@ const ES: ResultsContent = {
     oldRequestsLabel: 'solicitudes esperando 6+ meses',
   },
   radarPulse: {
-    prefix: 'Mira la puntuación de salud de tu cuenta en',
+    prefix: 'Mira tu resumen, veredicto y qué arreglar en',
     linkText: 'Radar ↗',
   },
 };
@@ -259,7 +259,7 @@ const PT: ResultsContent = {
     oldRequestsLabel: 'pedidos esperando há 6+ meses',
   },
   radarPulse: {
-    prefix: 'Veja a pontuação de saúde da sua conta no',
+    prefix: 'Veja seu resumo, veredito e o que arrumar no',
     linkText: 'Radar ↗',
   },
 };
