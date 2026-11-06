@@ -297,6 +297,7 @@ export function LandingFooter() {
       { label: t('whatIsLabel'),  href: '/what-is-whounfollowed' },
       { label: t('howToExport'), href: '/how-to-export' },
       { label: t('threadsLabel'), href: '/threads' },
+      { label: t('tiktokLabel'), href: '/tiktok' },
       { label: t('sourceCode'),             href: 'https://github.com/al-kilic/WhoUnfollowed' },
       { label: t('changelog'),               href: '/changelog' },
       { label: t('llmsTxt'),                 href: '/llms.txt' },
