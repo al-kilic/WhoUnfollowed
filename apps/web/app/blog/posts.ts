@@ -4201,7 +4201,9 @@ Ready to check your own list? [Download your Instagram data](/blog/how-to-downlo
     tag: 'Guide',
     primaryKeyword: 'who unfollowed me on TikTok',
     art: 'search',
-    imageAlt: 'Abstract geometric illustration of a search lens over a follower list, representing checking who unfollowed you on TikTok',
+    // Pexels: 4843115 (TikTok app icon on a phone home screen)
+    image: '/blog/tiktok-who-unfollowed-hero.jpg',
+    imageAlt: 'The TikTok app icon on a phone home screen, representing checking who unfollowed you on TikTok',
     cta: {
       heading: 'See exactly who unfollowed you on TikTok.',
       body: 'No login, no password. Upload the file TikTok already gives you and WhoUnfollowed shows the names in your browser. The parser is open source, so you can check what it reads.',
@@ -4270,7 +4272,9 @@ On Instagram too? The [same method works there](/blog/how-to-see-who-unfollowed-
     tag: 'Guide',
     primaryKeyword: 'does TikTok notify when someone unfollows you',
     art: 'bell',
-    imageAlt: 'Abstract geometric illustration of a notification bell with no alert, representing the unfollow TikTok never tells you about',
+    // Pexels: 14979023 (phone lock screen with notifications on a dark background)
+    image: '/blog/tiktok-notify-unfollow-hero.jpg',
+    imageAlt: 'A phone lock screen with a few notifications on a dark background, representing the unfollow alert TikTok never sends',
     cta: {
       heading: 'Stop waiting for a notification that never comes.',
       body: 'TikTok keeps unfollows silent. Upload your TikTok data download and WhoUnfollowed shows you exactly who left, in your browser. No password, nothing uploaded.',
@@ -4326,7 +4330,9 @@ Apps that claim to alert you the moment someone unfollows you on TikTok need to 
     tag: 'Guide',
     primaryKeyword: 'losing followers on TikTok',
     art: 'ratio',
-    imageAlt: 'Abstract geometric illustration of a follower ratio tipping downward, representing losing followers on TikTok',
+    // Pexels: 13709178 (phone on a tripod showing the TikTok app)
+    image: '/blog/tiktok-losing-followers-hero.jpg',
+    imageAlt: 'A phone on a creator tripod showing the TikTok logo, representing a creator losing followers on TikTok',
     cta: {
       heading: 'Put names to the drop.',
       body: 'A lower number tells you nothing. Upload your TikTok data download and WhoUnfollowed shows exactly who left, in your browser, with no password and nothing uploaded.',
