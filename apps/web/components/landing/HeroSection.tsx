@@ -24,6 +24,11 @@ import { CombinedExportNotice } from '@/components/CombinedExportNotice';
 import { LargeFileNotice, type LargeFileNoticeContent } from '@/components/LargeFileNotice';
 import { errorName, fileExt, isLikelyMobile, largeFileThreshold, shapeProps, sizeBucket } from '@/lib/uploadDiagnostics';
 import { UpgradeDialog, type UpgradeDialogContent } from '@/components/UpgradeDialog';
+import { RevealDialog } from '@/components/RevealDialog';
+import { useLocale } from 'next-intl';
+import type { AppLocale } from '@/i18n/routing';
+import { savePendingReveal } from '@/lib/pendingReveal';
+import { compareSnapshots, type SnapshotComparison } from '@ig-tracker/core';
 import { createPortal } from 'react-dom';
 import { T } from './tokens';
 import { Icon, CountUp, GridBg, MagneticCTA } from './atoms';
@@ -144,6 +149,7 @@ function classifyError(err: unknown, content: HeroContent): { message: string; k
 export function HeroSection({ isPro = false, initialStats, content }: { isPro?: boolean; initialStats: { snapshots: number; avgNonFollowers: number }; content: HeroContent }) {
   const router       = useRouter();
   const { userId }   = useAuth();
+  const locale       = useLocale() as AppLocale;
   const setSnapshot  = useSnapshotStore((s) => s.setSnapshot);
   const snapshots    = useSnapshotList(userId);
 
@@ -151,6 +157,10 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
   const [progress, setProgress] = useState(0);
   const [errInfo, setErrInfo] = useState<{ message: string; kind: ErrorKind; showGuideCta: boolean } | null>(null);
   const [pending, setPending] = useState<ParsedSnapshot | null>(null);
+  // Free user's second export of the same account: compared with the last one
+  // and shown as the (mostly blurred) unfollower reveal. Both exports are kept
+  // locally so the comparison survives a trip through checkout.
+  const [reveal, setReveal] = useState<{ snap: ParsedSnapshot; comparison: SnapshotComparison; oldId: number; newId: number; sinceLabel: string } | null>(null);
   const [mounted, setMounted] = useState(false);
   const [deltaWarning, setDeltaWarning] = useState<{ snapshot: ParsedSnapshot; reasons: DeltaReason[] } | null>(null);
   // Set when the ZIP also held Threads data we didn't parse: tell the user
@@ -284,11 +294,38 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
 
     if (!isPro && snapshots.length >= FREE_SNAPSHOT_LIMIT) {
       setPhase('idle');
+      if (await tryReveal(snap)) return;
       setPending(snap);
     } else {
       await commit(snap);
     }
   };
+
+  // A newer export of the same platform than the one already saved: show what
+  // changed instead of asking which one to delete.
+  const tryReveal = async (snap: ParsedSnapshot): Promise<boolean> => {
+    const platform = snapshotPlatform(snap);
+    const previous = snapshots.find(s => snapshotPlatform(s.data) === platform);
+    if (!previous?.id || snap.exportedAt <= previous.exportedAt) return false;
+    try {
+      const newId = await saveSnapshot(snap, userId);
+      const sinceLabel = new Date(previous.exportedAt * 1000).toLocaleDateString(locale, { day: 'numeric', month: 'short' });
+      setReveal({ snap, comparison: compareSnapshots(previous.data, snap), oldId: previous.id, newId, sinceLabel });
+      trackFunnel('Analysis Completed', { analysis_type: 'comparison' });
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  // "Continue free" from the reveal: keep only the new export, as before.
+  const revealContinueFree = useCallback(async () => {
+    if (!reveal) return;
+    await deleteSnapshot(reveal.oldId, userId);
+    setSnapshot(reveal.snap);
+    setReveal(null);
+    router.push('/results');
+  }, [reveal, userId, setSnapshot, router]);
 
   // ── Upgrade dialog callbacks ──────────────────────────────────────────────
   const handleDeleteOldest = useCallback(async () => {
@@ -413,6 +450,18 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
 
   return (
     <section id="upload" className="relative px-4 sm:px-12 pb-6 sm:pb-10">
+      {mounted && reveal && createPortal(
+        <RevealDialog
+          comparison={reveal.comparison}
+          sinceLabel={reveal.sinceLabel}
+          locale={locale}
+          onContinueFree={() => void revealContinueFree()}
+          onClose={() => setReveal(null)}
+          onCheckoutStart={() => savePendingReveal({ oldId: reveal.oldId, newId: reveal.newId })}
+        />,
+        document.body,
+      )}
+
       {/* Portal for upgrade dialog */}
       {mounted && pending && oldest && createPortal(
         <UpgradeDialog

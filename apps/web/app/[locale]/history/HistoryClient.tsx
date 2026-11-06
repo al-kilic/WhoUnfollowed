@@ -21,6 +21,7 @@ import { PlatformBadge } from '@/components/PlatformBadge';
 import { Icon } from '@/components/landing/atoms';
 import { trackUpgradeClick, trackFunnel } from '@/lib/analytics';
 import { getHistoryContent, type HistoryContent } from './content';
+import { PendingRevealBanner } from './PendingRevealBanner';
 
 const DATE_FNS_LOCALES: Partial<Record<AppLocale, DateFnsLocale>> = { es, pt };
 
@@ -149,6 +150,7 @@ export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionSt
       )}
 
       <main className="px-4 sm:px-8 py-10 sm:py-12" style={{ maxWidth: 800, margin: '0 auto' }}>
+        <PendingRevealBanner locale={locale} isPro={isPro} snapshotIds={snapshots.flatMap(s => (s.id != null ? [s.id] : []))} />
         {/* Header */}
         <div style={{ marginBottom: 40 }}>
           <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 12 }}>{c.eyebrow}</div>

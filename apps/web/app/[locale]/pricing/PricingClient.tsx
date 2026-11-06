@@ -5,8 +5,10 @@ import Link from 'next/link';
 import { SiteNav } from '@/components/landing/SiteNav';
 import { GridBg, ProfileCard } from '@/components/landing/atoms';
 import { T } from '@/components/landing/tokens';
-import { track, Events, trackFunnel } from '@/lib/analytics';
-import { UNLOCK_PRICE_USD } from '@/lib/pricing';
+import { track } from '@/lib/analytics';
+import { unlockPricesAt, isLaunchPricing, perMonth, STANDARD_UNLOCK_PRICE_USD, type LifetimeOffer } from '@/lib/pricing';
+import { startCheckout, type CheckoutPlan } from '@/lib/checkoutClient';
+import { CreatorAiTeaser } from '@/components/CreatorAiTeaser';
 import { getPathname } from '@/i18n/navigation';
 import type { AppLocale } from '@/i18n/routing';
 import type { PricingFaqItem } from './faq';
@@ -17,7 +19,8 @@ interface Props {
   userEmail: string | null;
   paymentsEnabled: boolean;
   isPro?: boolean;
-  lifetimeAvailable?: boolean;
+  // 'open' with the current seat-ladder step, 'sold_out', or 'off'.
+  lifetime: { status: 'open'; offer: LifetimeOffer } | { status: 'sold_out' } | { status: 'off' };
   isLifetimeMember?: boolean;
   content: PricingContent;
   faq: PricingFaqItem[];
@@ -45,60 +48,37 @@ function Perk({ label, note }: { label: string; note: string }) {
   );
 }
 
-export function PricingClient({ userEmail, paymentsEnabled, isPro = false, lifetimeAvailable = false, isLifetimeMember = false, content, faq, locale }: Props) {
-  const [duration, setDuration] = useState<'monthly' | 'yearly'>('monthly');
+export function PricingClient({ userEmail, paymentsEnabled, isPro = false, lifetime, isLifetimeMember = false, content, faq, locale }: Props) {
   const [showAll, setShowAll] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<CheckoutPlan | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleUnlock() {
-    trackFunnel('Upgrade CTA Clicked', { placement: 'pricing' });
+  // Prices are read at render time in the browser, so the switch on Jan 1
+  // shows up without a deploy.
+  const prices = unlockPricesAt();
+  const launch = isLaunchPricing();
+  const stdYearly = `$${STANDARD_UNLOCK_PRICE_USD.yearly}`;
+
+  async function buy(plan: Exclude<CheckoutPlan, 'lifetime'>) {
     if (!paymentsEnabled) {
       window.location.href = getPathname({ href: userEmail ? '/history' : '/signup', locale });
       return;
     }
-    track(Events.checkoutStart, { billing: `unlock-${duration}` });
-    setLoading(true);
+    setLoading(plan);
     setError(null);
-    try {
-      let acquisitionSource: string | undefined;
-      try { acquisitionSource = sessionStorage.getItem('wu:acq_source') ?? undefined; } catch {}
-
-      const res = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mode: 'unlock', billing: duration, acquisitionSource, locale }),
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        setError(content.errorGeneric);
-      }
-    } catch {
+    const ok = await startCheckout({ plan, placement: 'pricing', locale });
+    if (!ok) {
       setError(content.errorGeneric);
-    } finally {
-      setLoading(false);
+      setLoading(null);
     }
   }
 
-  // One-time unlocks, not recurring billing: $1.99 unlocks Pro for 30 days,
-  // $9.99 for 365 days. The "save X%" figure compares the yearly unlock
-  // against buying the 30-day one repeatedly for a year.
-  const unlock30Price = UNLOCK_PRICE_USD.monthly;
-  const unlock365Price = UNLOCK_PRICE_USD.yearly;
-  const annualizedFromMonthly = unlock30Price * (365 / 30);
-  const saving = Math.round((1 - unlock365Price / annualizedFromMonthly) * 100);
-  const price = duration === 'yearly' ? unlock365Price : unlock30Price;
-  const period = duration === 'yearly' ? content.periodYear : content.period30Days;
-
-  const ctaLabel = loading
+  const yearlyCta = loading === 'yearly'
     ? content.ctaRedirecting
-    : paymentsEnabled
-      ? fillTemplate(content.ctaUnlockForTemplate, { period })
-      : userEmail
-        ? content.ctaGoToDashboard
-        : content.ctaTryProFree;
+    : !paymentsEnabled
+      ? (userEmail ? content.ctaGoToDashboard : content.ctaTryProFree)
+      : `${isPro ? content.ctaExtendYear : content.ctaYearly} · $${prices.yearly}`;
+  const showLifetime = paymentsEnabled && lifetime.status !== 'off';
 
   return (
     <div style={{ position: 'relative', minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans, overflow: 'hidden' }}>
@@ -145,6 +125,18 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, lifet
           </div>
         )}
 
+        {paymentsEnabled && launch && (
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 14 }}>
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 14px', borderRadius: 100,
+              background: 'rgba(168,75,47,0.08)', border: '1px solid rgba(168,75,47,0.28)',
+            }}>
+              <span aria-hidden style={{ width: 6, height: 6, borderRadius: '50%', background: T.terra, flexShrink: 0, animation: 'save-pulse 2.2s ease-in-out infinite' }} />
+              <span style={{ fontSize: 12.5, color: T.terraText, fontWeight: 600 }}>{fillTemplate(content.launchBanner, { std: stdYearly })}</span>
+            </div>
+          </div>
+        )}
+
         {/* Slogan / value header */}
         <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto 28px' }}>
           <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(30px, 4.5vw, 46px)', fontWeight: 400, letterSpacing: '-0.03em', lineHeight: 1.05, marginBottom: 12 }}>
@@ -156,7 +148,7 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, lifet
         </div>
 
         {/* Free + Pro, side by side */}
-        <div className={`plan-grid ${lifetimeAvailable && paymentsEnabled ? 'plan-grid-3' : 'plan-grid-2'}`}>
+        <div className={`plan-grid ${showLifetime ? 'plan-grid-3' : 'plan-grid-2'}`}>
 
           {/* FREE card */}
           <div className="plan-card" style={{
@@ -195,65 +187,37 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, lifet
             </Link>
           </div>
 
-          {/* PRO card */}
+          {/* PRO card: one year is the main offer, 30 days is a small link */}
           <div className="plan-card" style={{
             position: 'relative',
             background: `linear-gradient(180deg, rgba(2,136,143,0.12) 0%, rgba(2,136,143,0.03) 100%)`,
-            border: `1px solid ${T.tealMid}`, borderRadius: 20,
+            border: `1.5px solid ${T.tealMid}`, borderRadius: 20,
             padding: '30px 28px',
-            boxShadow: '0 18px 50px rgba(2,136,143,0.14)',
+            boxShadow: '0 18px 50px rgba(2,136,143,0.16)',
           }}>
             <div className="plan-head pc-1">
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>{content.proLabel}</div>
-
-              {/* Animated 30-day / 365-day toggle with a pulsing savings badge */}
-              <div style={{ position: 'relative', display: 'inline-flex', background: T.surface2, borderRadius: 9, padding: 3 }}>
-                <div style={{
-                  position: 'absolute', top: 3, bottom: 3, left: 3, width: 'calc(50% - 3px)',
-                  background: T.teal, borderRadius: 6,
-                  transform: duration === 'yearly' ? 'translateX(100%)' : 'translateX(0)',
-                  transition: 'transform 0.25s cubic-bezier(0.4,0,0.2,1)',
-                }} />
-                {(['monthly', 'yearly'] as const).map((b) => (
-                  <button
-                    key={b}
-                    onClick={() => { setDuration(b); track('pricing-duration-toggled', { duration: b }); }}
-                    style={{
-                      position: 'relative', zIndex: 1, width: 78, textAlign: 'center',
-                      padding: '6px 0', border: 'none', background: 'transparent', cursor: 'pointer',
-                      fontSize: 12, fontWeight: 600, fontFamily: T.sans,
-                      color: duration === b ? T.cream : T.inkDim, transition: 'color 0.2s',
-                    }}
-                  >
-                    {content.durationLabels[b]}
-                  </button>
-                ))}
-                {/* Savings badge floating over the Yearly side: terra accent + pulse */}
-                <div style={{
-                  position: 'absolute', top: -11, right: -9, zIndex: 2,
-                  background: T.terra, color: '#fff',
-                  fontSize: 8.5, fontWeight: 800, letterSpacing: '0.05em',
-                  padding: '3px 7px', borderRadius: 100, fontFamily: T.sans, whiteSpace: 'nowrap',
-                  animation: 'save-pulse 2.2s ease-in-out infinite',
-                }}>
-                  {fillTemplate(content.saveBadgeTemplate, { pct: saving })}
-                </div>
+              <div style={{ background: T.teal, color: T.cream, fontSize: 9, fontWeight: 800, letterSpacing: '0.05em', padding: '3px 8px', borderRadius: 100, whiteSpace: 'nowrap', textTransform: 'uppercase' }}>
+                {content.proBadge}
               </div>
             </div>
 
-            <div className="pc-2" style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 2 }}>
-              <span style={{ fontFamily: T.serif, fontSize: 50, fontWeight: 400, lineHeight: 1 }}>
-                ${price}
-              </span>
+            <div className="pc-2" style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 2, flexWrap: 'wrap' }}>
+              <span style={{ fontFamily: T.serif, fontSize: 50, fontWeight: 400, lineHeight: 1 }}>${prices.yearly}</span>
+              {launch && (
+                <span style={{ fontFamily: T.serif, fontSize: 22, color: T.inkMute, textDecoration: 'line-through', lineHeight: 1 }}>{stdYearly}</span>
+              )}
               <span style={{ color: T.inkMute, fontSize: 14 }}>{content.oneTime}</span>
             </div>
             <div className="pc-3" style={{ marginBottom: 22 }}>
-              <div style={{ fontSize: 13, color: T.inkDim, marginBottom: 8, minHeight: 18 }}>
-                {duration === 'yearly' ? fillTemplate(content.unlockDescYearlyTemplate, { pct: saving }) : content.unlockDescMonthly}
+              <div style={{ fontSize: 13, color: T.inkDim, marginBottom: 6 }}>
+                {fillTemplate(content.perMonthTemplate, { price: `$${perMonth(prices.yearly)}` })}
               </div>
-              <div style={{ fontSize: 12, color: T.tealMid }}>
-                {content.competitorAnchor}
-              </div>
+              {launch && (
+                <div style={{ fontSize: 12, color: T.terraText, fontWeight: 600 }}>
+                  {fillTemplate(content.launchNoteTemplate, { std: stdYearly })}
+                </div>
+              )}
             </div>
 
             <div className="pc-4" style={{ marginBottom: 22 }}>
@@ -284,35 +248,49 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, lifet
               )}
             </div>
 
-            {error && <p className="pc-5" style={{ color: '#ef4444', fontSize: 13, marginBottom: 12 }}>{error}</p>}
+            <div className="pc-5">
+              {error && <p role="alert" style={{ color: T.terraText, fontSize: 13, marginBottom: 12 }}>{error}</p>}
+            </div>
 
             {!isLifetimeMember && (
-            <button
-              className="pc-6"
-              onClick={handleUnlock}
-              disabled={loading}
-              style={{
-                width: '100%', padding: '13px 24px', borderRadius: 12, border: 'none', alignSelf: 'end',
-                cursor: loading ? 'not-allowed' : 'pointer', background: T.teal, color: T.cream,
-                fontSize: 15, fontWeight: 600, fontFamily: T.sans, opacity: loading ? 0.7 : 1,
-              }}
-            >
-              {isPro
-                ? (loading ? content.ctaRedirecting : fillTemplate(content.ctaExtendByTemplate, { period }))
-                : ctaLabel}
-            </button>
+              <button
+                className="pc-6"
+                onClick={() => void buy('yearly')}
+                disabled={loading !== null}
+                style={{
+                  width: '100%', padding: '13px 24px', borderRadius: 12, border: 'none', alignSelf: 'end',
+                  cursor: loading ? 'not-allowed' : 'pointer', background: T.teal, color: T.cream,
+                  fontSize: 15, fontWeight: 600, fontFamily: T.sans, opacity: loading ? 0.7 : 1,
+                }}
+              >
+                {yearlyCta}
+              </button>
             )}
 
             {!isLifetimeMember && (
-            <p className="pc-7" style={{ fontSize: 12, color: T.inkMute, textAlign: 'center', marginTop: 10, minHeight: 32 }}>
-              {paymentsEnabled ? content.onetimeNote : content.betaNote}
-            </p>
+              <div className="pc-7" style={{ textAlign: 'center', marginTop: 10, minHeight: 32, display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'center' }}>
+                {paymentsEnabled && (
+                  <button
+                    onClick={() => void buy('monthly')}
+                    disabled={loading !== null}
+                    style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', fontSize: 13, color: T.tealMid, fontWeight: 600, fontFamily: T.sans, textDecoration: 'underline', textUnderlineOffset: 3 }}
+                  >
+                    {loading === 'monthly'
+                      ? content.ctaRedirecting
+                      : fillTemplate(isPro ? content.monthlyExtendTemplate : content.monthlyLinkTemplate, { price: `$${prices.monthly}` })}
+                  </button>
+                )}
+                <p style={{ fontSize: 12, color: T.inkMute, margin: 0 }}>
+                  {paymentsEnabled ? content.onetimeNote : content.betaNote}
+                </p>
+              </div>
             )}
           </div>
 
-          {/* LIFETIME card: only while STRIPE_PRICE_LIFETIME is set and payments are live */}
-          {lifetimeAvailable && paymentsEnabled && (
+          {/* LIFETIME card: seat ladder, shown while STRIPE_PRICE_LIFETIME is set and payments are live */}
+          {showLifetime && (
             <LifetimeCard
+              lifetime={lifetime}
               content={content.lifetime}
               errorGeneric={content.errorGeneric}
               ctaRedirecting={content.ctaRedirecting}
@@ -320,6 +298,10 @@ export function PricingClient({ userEmail, paymentsEnabled, isPro = false, lifet
               locale={locale}
             />
           )}
+        </div>
+
+        <div style={{ maxWidth: 880, margin: '40px auto 0' }}>
+          <CreatorAiTeaser locale={locale} placement="pricing" defaultEmail={userEmail ?? undefined} />
         </div>
 
         {/* Privacy / why-different: value, not sales */}

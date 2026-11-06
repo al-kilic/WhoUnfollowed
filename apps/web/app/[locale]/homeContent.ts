@@ -369,7 +369,7 @@ const EN: HomeContent = {
     mobileTab: 'Mobile',
     paymentNotes: ['Stripe checkout', 'SCA compliant', 'EU VAT included'],
     learnMore: 'Get more information about Pro →',
-    lifetimeBanner: { badge: 'Insider · Lifetime', text: 'Pay $19.99 once and get Pro free for life. No renewals, no expiry, plus Pro perks on future Alcatraz Studio tools. Limited time.', cta: 'See the Lifetime offer' },
+    lifetimeBanner: { badge: 'Insider · Lifetime', text: 'Pay once, keep Pro for life. Limited seats, and the price goes up as they go. Insiders also get a private community.', cta: 'See the Lifetime seats' },
   },
   faq: {
     eyebrow: 'QUESTIONS',
@@ -602,7 +602,7 @@ const ES: HomeContent = {
     mobileTab: 'Móvil',
     paymentNotes: ['Pago con Stripe', 'Cumple con SCA', 'IVA de la UE incluido'],
     learnMore: 'Más información sobre Pro →',
-    lifetimeBanner: { badge: 'Insider · Lifetime', text: 'Paga $19.99 una vez y ten Pro gratis de por vida. Sin renovaciones ni vencimiento, y ventajas Pro en futuras herramientas de Alcatraz Studio. Tiempo limitado.', cta: 'Ver la oferta Lifetime' },
+    lifetimeBanner: { badge: 'Insider · Lifetime', text: 'Paga una vez y conserva Pro de por vida. Plazas limitadas, y el precio sube a medida que se agotan. Los Insiders también tienen una comunidad privada.', cta: 'Ver las plazas Lifetime' },
   },
   faq: {
     eyebrow: 'PREGUNTAS',
@@ -835,7 +835,7 @@ const PT: HomeContent = {
     mobileTab: 'Móvel',
     paymentNotes: ['Checkout via Stripe', 'Compatível com SCA', 'IVA da UE incluído'],
     learnMore: 'Mais informações sobre o Pro →',
-    lifetimeBanner: { badge: 'Insider · Lifetime', text: 'Pague $19.99 uma vez e tenha o Pro grátis para a vida toda. Sem renovações nem vencimento, e vantagens Pro em futuras ferramentas da Alcatraz Studio. Tempo limitado.', cta: 'Ver a oferta Lifetime' },
+    lifetimeBanner: { badge: 'Insider · Lifetime', text: 'Pague uma vez e fique com o Pro para sempre. Vagas limitadas, e o preço sobe conforme acabam. Insiders também têm uma comunidade privada.', cta: 'Ver as vagas Lifetime' },
   },
   faq: {
     eyebrow: 'PERGUNTAS',

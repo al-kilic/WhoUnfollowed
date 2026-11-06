@@ -2,6 +2,9 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { extendUnlockExpiry, priceIdForUnlock, priceIdForLifetime, isStripeConfigured, UNLOCK_DURATION_DAYS } from './stripe';
 
+// Pinned inside the launch-price window so these don't flip on Jan 1.
+const LAUNCH = new Date('2026-11-01T00:00:00Z');
+
 describe('extendUnlockExpiry', () => {
   const now = new Date('2026-01-01T00:00:00.000Z');
 
@@ -48,18 +51,18 @@ describe('priceIdForUnlock', () => {
   it('returns the monthly price id for the monthly duration', () => {
     process.env.STRIPE_PRICE_UNLOCK_MONTHLY = 'price_monthly_123';
     process.env.STRIPE_PRICE_UNLOCK_YEARLY = 'price_yearly_456';
-    expect(priceIdForUnlock('monthly')).toBe('price_monthly_123');
+    expect(priceIdForUnlock('monthly', LAUNCH)).toBe('price_monthly_123');
   });
 
   it('returns the yearly price id for the yearly duration', () => {
     process.env.STRIPE_PRICE_UNLOCK_MONTHLY = 'price_monthly_123';
     process.env.STRIPE_PRICE_UNLOCK_YEARLY = 'price_yearly_456';
-    expect(priceIdForUnlock('yearly')).toBe('price_yearly_456');
+    expect(priceIdForUnlock('yearly', LAUNCH)).toBe('price_yearly_456');
   });
 
   it('returns null when the corresponding env var is not configured', () => {
     delete process.env.STRIPE_PRICE_UNLOCK_MONTHLY;
-    expect(priceIdForUnlock('monthly')).toBeNull();
+    expect(priceIdForUnlock('monthly', LAUNCH)).toBeNull();
   });
 });
 
@@ -105,5 +108,23 @@ describe('priceIdForLifetime', () => {
   it('returns null when unset (the kill switch that hides the tier)', () => {
     delete process.env.STRIPE_PRICE_LIFETIME;
     expect(priceIdForLifetime()).toBeNull();
+  });
+});
+
+describe('price switch on Jan 1', () => {
+  const ENV = { ...process.env };
+  beforeEach(() => {
+    process.env = { ...ENV, STRIPE_PRICE_UNLOCK_YEARLY: 'price_launch_y', STRIPE_PRICE_UNLOCK_YEARLY_STANDARD: 'price_std_y' };
+  });
+  afterEach(() => { process.env = ENV; });
+
+  it('uses the launch price until Dec 31 ends, then the standard price', () => {
+    expect(priceIdForUnlock('yearly', new Date('2026-12-31T23:00:00Z'))).toBe('price_launch_y');
+    expect(priceIdForUnlock('yearly', new Date('2027-01-01T00:00:00Z'))).toBe('price_std_y');
+  });
+
+  it('returns null after the switch if the standard price is missing, never the old one', () => {
+    delete process.env.STRIPE_PRICE_UNLOCK_YEARLY_STANDARD;
+    expect(priceIdForUnlock('yearly', new Date('2027-02-01T00:00:00Z'))).toBeNull();
   });
 });

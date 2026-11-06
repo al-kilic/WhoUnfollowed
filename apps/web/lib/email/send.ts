@@ -24,6 +24,8 @@ export async function sendEmail(opts: {
   // (used for the contact-form/quick-feedback notification, so replying to
   // the founder's copy goes straight back to the visitor who wrote in).
   replyTo?: string;
+  // Extra headers, e.g. List-Unsubscribe on reminder emails.
+  headers?: Record<string, string>;
 }): Promise<{ ok: true } | { ok: false; error: string }> {
   if (!resend) {
     // Not configured: log so dev can see what would have been sent, don't throw.
@@ -38,6 +40,7 @@ export async function sendEmail(opts: {
       html: opts.html,
       ...(opts.text ? { text: opts.text } : {}),
       ...(opts.replyTo ? { replyTo: opts.replyTo } : {}),
+      ...(opts.headers ? { headers: opts.headers } : {}),
     });
     if (error) return { ok: false, error: error.message };
     return { ok: true };

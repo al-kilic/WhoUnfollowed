@@ -7,6 +7,7 @@ import { routing, type AppLocale } from '@/i18n/routing';
 import { sendEmail, isEmailConfigured } from '@/lib/email/send';
 import { unlockExpiringSoonEmail, unlockExpiredEmail } from '@/lib/email/templates';
 import { isAuthorizedBySecretHeader } from '@/lib/auth/secretHeader';
+import { sendDueReminders } from '@/lib/reminders/send';
 
 // Called daily by a server cron (e.g. `curl -X POST -H "x-cron-secret: $CRON_SECRET"
 // https://yourdomain.com/api/cron/unlock-expiry`). POST-only, unlike a plain
@@ -17,6 +18,8 @@ import { isAuthorizedBySecretHeader } from '@/lib/auth/secretHeader';
 //      (expiryReminderSentAt marks it sent).
 //   2. The day subscriptionExpiresAt passes: send an "access ended" email once
 //      (expiredEmailSentAt marks it sent).
+//   3. "Time to check again" reminder emails that are due (lib/reminders).
+//      They ride on this existing daily cron so no new crontab line is needed.
 //
 // subscriptionStatus itself is never flipped here — getSubscriptionStatus()
 // already treats a past subscriptionExpiresAt as expired at read time, and a
@@ -105,5 +108,14 @@ export async function POST(request: NextRequest) {
     reminderSent++;
   }
 
-  return NextResponse.json({ expiredSent, reminderSent });
+  // Pass 3: reminder emails. A failure here must not hide the passes above.
+  let reminders: { sent: number; failed: number } | { error: string };
+  try {
+    reminders = await sendDueReminders(now);
+  } catch (err) {
+    console.error('[cron/unlock-expiry] reminders failed:', err);
+    reminders = { error: 'reminders_failed' };
+  }
+
+  return NextResponse.json({ expiredSent, reminderSent, reminders });
 }

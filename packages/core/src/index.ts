@@ -19,7 +19,10 @@ export type {
   FeedbackSentiment,
   ContactMessageInput,
   ContactSource,
+  EmailOptInInput,
+  EmailOptInSource,
 } from './schemas.js';
 export { feedbackSchema, feedbackSentiments, platforms, snapshotPlatform } from './schemas.js';
 export { contactMessageSchema, contactSources } from './schemas.js';
+export { emailOptInSchema, emailOptInSources } from './schemas.js';
 export type { SingleSnapshotAnalysis, SnapshotComparison } from './diff.js';

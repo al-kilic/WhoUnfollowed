@@ -74,6 +74,14 @@ export function SignupForm({ locale }: { locale: AppLocale }) {
           hint={c.passwordHint}
         />
 
+        <label htmlFor="reminders" style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer' }}>
+          <input id="reminders" name="reminders" type="checkbox" defaultChecked style={{ marginTop: 3, accentColor: T.teal, width: 16, height: 16, flexShrink: 0 }} />
+          <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <span style={{ fontSize: 13.5, color: T.ink, fontWeight: 500, lineHeight: 1.4 }}>{c.remindersLabel}</span>
+            <span style={{ fontSize: 12, color: T.inkMute, lineHeight: 1.45 }}>{c.remindersHint}</span>
+          </span>
+        </label>
+
         {error && <AuthError>{error}</AuthError>}
 
         <AuthButton pending={pending}>{pending ? c.creatingAccount : c.createAccount}</AuthButton>

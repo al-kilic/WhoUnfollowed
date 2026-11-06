@@ -35,4 +35,5 @@ export const LOCALIZED_PATHS: string[] = [
   '/verify-email',
   '/welcome',
   '/diff',
+  '/unsubscribe',
 ];

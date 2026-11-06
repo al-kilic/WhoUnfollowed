@@ -17,7 +17,7 @@ import type { UnlockDuration } from '@/lib/stripe';
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://whounfollowed.co';
 
-const C = {
+export const C = {
   bg: '#f4f0e8',
   card: '#ffffff',
   border: '#e7e0d3',
@@ -44,7 +44,7 @@ function escapeHtml(value: string): string {
 }
 
 // Shared branded shell: logo header, content slot, legal footer.
-function emailLayout(opts: { locale: AppLocale; preview: string; contentHtml: string }): string {
+export function emailLayout(opts: { locale: AppLocale; preview: string; contentHtml: string }): string {
   return `<!DOCTYPE html>
 <html lang="${opts.locale}">
   <head>
@@ -87,11 +87,11 @@ function emailLayout(opts: { locale: AppLocale; preview: string; contentHtml: st
 }
 
 // Locale-aware date formatting for the (English-brand, translated-copy) emails.
-function formatDate(date: Date, locale: AppLocale): string {
+export function formatDate(date: Date, locale: AppLocale): string {
   return new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', day: 'numeric' }).format(date);
 }
 
-interface EmailResult {
+export interface EmailResult {
   subject: string;
   html: string;
   text: string;

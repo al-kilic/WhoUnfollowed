@@ -3,7 +3,8 @@ import { eq } from 'drizzle-orm';
 import { hasLocale } from 'next-intl';
 import { validateRequest } from '@/lib/auth/session';
 import { isPaidFeaturesEnabled } from '@/lib/flags';
-import { getStripe, isStripeConfigured, priceIdForUnlock, priceIdForLifetime, type UnlockDuration } from '@/lib/stripe';
+import { getStripe, isStripeConfigured, priceIdForUnlock, type UnlockDuration } from '@/lib/stripe';
+import { getLifetimeAvailability } from '@/lib/lifetimeSeats';
 import { db } from '@/lib/db/index';
 import { profiles } from '@/lib/db/schema';
 import { routing } from '@/i18n/routing';
@@ -40,7 +41,20 @@ export async function POST(request: NextRequest) {
   // value, and it's purely informational, never gates the purchase itself.
   const marketingOptIn = body.marketingOptIn === true;
 
-  const price = isLifetime ? priceIdForLifetime() : priceIdForUnlock(unlockDuration);
+  // Lifetime sells in a seat ladder, so its price depends on how many seats
+  // are already sold at the moment of checkout.
+  let price: string | null;
+  let lifetimePrice: number | null = null;
+  if (isLifetime) {
+    const availability = await getLifetimeAvailability();
+    if (availability.status === 'sold_out') {
+      return NextResponse.json({ error: 'Lifetime is sold out' }, { status: 410 });
+    }
+    price = availability.status === 'open' ? availability.priceId : null;
+    lifetimePrice = availability.status === 'open' ? availability.offer.price : null;
+  } else {
+    price = priceIdForUnlock(unlockDuration);
+  }
   if (!price) {
     return NextResponse.json({ error: 'Plan is not configured' }, { status: 500 });
   }
@@ -64,7 +78,7 @@ export async function POST(request: NextRequest) {
   };
 
   const metadata: Record<string, string> = isLifetime
-    ? { type: 'lifetime', locale }
+    ? { type: 'lifetime', locale, ...(lifetimePrice !== null && { lifetimePrice: String(lifetimePrice) }) }
     : { type: 'unlock', unlockDuration, locale };
   if (acquisitionSource) metadata.acquisitionSource = acquisitionSource;
   if (isLifetime && marketingOptIn) metadata.marketingOptIn = 'true';

@@ -11,6 +11,8 @@ import { generateAndSendVerification } from '@/lib/auth/verification';
 import { headers } from 'next/headers';
 import { hasLocale } from 'next-intl';
 import { routing } from '@/i18n/routing';
+import { isDisposableEmail } from '@/lib/disposableEmail';
+import { enableReminders } from '@/lib/reminders/store';
 
 const ARGON2_OPTIONS = {
   memoryCost: 19456,
@@ -24,6 +26,10 @@ export async function signupAction(formData: FormData) {
 
   if (!email || !password) {
     return { error: 'missing_fields' as const };
+  }
+
+  if (isDisposableEmail(email)) {
+    return { error: 'disposable_email' as const };
   }
 
   if (password.length < 8) {
@@ -68,6 +74,17 @@ export async function signupAction(formData: FormData) {
   // New accounts start on Free. Pro is granted only by a real Stripe
   // subscription (via the webhook) or an explicit grandfather/comp update.
   await db.insert(profiles).values({ userId: user.id, subscriptionStatus: 'none' });
+
+  // "Remind me every 2 weeks" is ticked by default on the form. These are
+  // service reminders about re-checking, not marketing, and every one has a
+  // one-click stop. Best-effort: a failure here never blocks the signup.
+  if (formData.get('reminders') === 'on') {
+    try {
+      await enableReminders({ email, source: 'signup', locale, userId: user.id });
+    } catch (err) {
+      console.error('[signup] enabling reminders failed:', err);
+    }
+  }
 
   await createSession(user.id);
 

@@ -14,6 +14,8 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { AccountList } from '@/components/AccountList';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { getDiffContent } from './content';
+import { UnfollowerReveal } from '@/components/UnfollowerReveal';
+import { savePendingReveal } from '@/lib/pendingReveal';
 import { getListToolbarContent } from '@/components/listToolbar.content';
 import type { AppLocale } from '@/i18n/routing';
 
@@ -109,7 +111,7 @@ function DiffPageInner({ locale }: { locale: AppLocale }) {
   const c = getDiffContent(locale);
   const toolbarContent = getListToolbarContent(locale);
   const searchParams = useSearchParams();
-  const { userId } = useAuth();
+  const { userId, isPro, ready } = useAuth();
 
   const oldId     = Number(searchParams.get('old'));
   const currentId = Number(searchParams.get('current'));
@@ -192,6 +194,22 @@ function DiffPageInner({ locale }: { locale: AppLocale }) {
           </div>
         </div>
 
+        {/* Free users get the reveal here too: the counts are real, most
+            names stay hidden. Without this, /diff would be a way around it. */}
+        {!isPro ? (
+          <div style={{ maxWidth: 460, padding: '24px 22px', borderRadius: 20, background: T.bgCard, border: `1px solid ${T.border2}` }}>
+            {ready && (
+              <UnfollowerReveal
+                lostFollowers={diff.lostFollowers}
+                newFollowersCount={diff.newFollowers.length}
+                sinceLabel={oldDate}
+                locale={locale}
+                placement="diff"
+                onCheckoutStart={() => savePendingReveal({ oldId, newId: currentId })}
+              />
+            )}
+          </div>
+        ) : (<>
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4" style={{ gap: 10, marginBottom: 40 }}>
           <StatChip label={c.statUnfollowedYou}  value={-diff.lostFollowers.length} positive={false} />
@@ -242,6 +260,7 @@ function DiffPageInner({ locale }: { locale: AppLocale }) {
             toolbarContent={toolbarContent}
           />
         </div>
+        </>)}
       </main>
 
       <LandingFooter />

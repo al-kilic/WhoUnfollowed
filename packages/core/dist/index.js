@@ -151,6 +151,20 @@ var contactMessageSchema = z.object({
   source: z.enum(contactSources),
   page: z.string().trim().max(200).optional()
 });
+var emailOptInSources = [
+  "results",
+  "snapshot-limit",
+  "reveal",
+  "welcome",
+  "creator-ai-waitlist"
+];
+var emailOptInSchema = z.object({
+  email: z.string().trim().toLowerCase().email().max(320),
+  source: z.enum(emailOptInSources),
+  locale: z.enum(["en", "es", "pt"]).optional(),
+  // Must be an explicit true from the form, never inferred.
+  consent: z.literal(true)
+});
 
 // src/parser.ts
 function sanitizeIgHref(href, username) {
@@ -620,6 +634,8 @@ export {
   contactMessageSchema,
   contactSources,
   detectDeltaExport,
+  emailOptInSchema,
+  emailOptInSources,
   feedbackSchema,
   feedbackSentiments,
   findGhostFollowers,

@@ -11,7 +11,7 @@ import { PricingClient } from './PricingClient';
 import { getPricingFaq } from './faq';
 import { getPricingContent } from './content';
 import { UNLOCK_PRICE_SUMMARY } from '@/lib/pricing';
-import { priceIdForLifetime } from '@/lib/stripe';
+import { getLifetimeAvailability } from '@/lib/lifetimeSeats';
 import { isLifetimeMember } from '@/lib/flags';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
@@ -19,7 +19,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 const SEO_META: Record<AppLocale, { title: string; description: string; ogDescription: string; home: string; pricing: string }> = {
   en: {
     title: 'Pricing',
-    description: `Free forever, no account needed. Pro is a one-time unlock (${UNLOCK_PRICE_SUMMARY}) that adds snapshot history, cloud sync, and trends. No auto-renewal.`,
+    description: `Free to check who doesn't follow you back, no account needed. Pro is a one-time unlock (${UNLOCK_PRICE_SUMMARY}) that shows exactly who unfollowed you and when. No auto-renewal.`,
     ogDescription: `Free forever, no account needed. Pro is a one-time unlock (${UNLOCK_PRICE_SUMMARY}). No subscription, no auto-renewal.`,
     home: 'Home',
     pricing: 'Pricing',
@@ -78,7 +78,9 @@ export default async function PricingPage({ params }: PageProps) {
   const { user } = await validateRequest();
   const paymentsEnabled = isPaidFeaturesEnabled();
   const isPro = await isPaidSubscriber();
-  const lifetimeAvailable = priceIdForLifetime() !== null;
+  const availability = await getLifetimeAvailability();
+  // Only what the card needs; the Stripe price ID stays on the server.
+  const lifetime = availability.status === 'open' ? { status: 'open' as const, offer: availability.offer } : availability;
   const lifetimeMember = await isLifetimeMember();
   const meta = SEO_META[locale];
   const faq = getPricingFaq(locale);
@@ -120,7 +122,7 @@ export default async function PricingPage({ params }: PageProps) {
         userEmail={user?.email ?? null}
         paymentsEnabled={paymentsEnabled}
         isPro={isPro}
-        lifetimeAvailable={lifetimeAvailable}
+        lifetime={lifetime}
         isLifetimeMember={lifetimeMember}
         content={content}
         faq={faq}

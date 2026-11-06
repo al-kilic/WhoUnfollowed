@@ -5,8 +5,11 @@ import {
   text,
   timestamp,
   boolean,
+  integer,
   customType,
+  index,
 } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 
 const bytea = customType<{ data: Buffer; driverData: Buffer }>({
   dataType() {
@@ -145,14 +148,38 @@ export const emailSubscribers = pgTable('email_subscribers', {
   id: uuid('id').primaryKey().defaultRandom(),
   // Stored lowercased; unique, so re-subscribing updates the row instead of duplicating it.
   email: text('email').notNull().unique(),
-  // 'mobile-waitlist' | 'csv'
+  // Where the address first came from: 'mobile-waitlist' | 'csv' | 'signup'
+  // | an EmailOptInSource from packages/core.
   source: text('source').notNull(),
   consentedAt: timestamp('consented_at').notNull().defaultNow(),
   // Tag of the consent wording shown, see lib/marketingConsent.ts.
   consentVersion: text('consent_version').notNull(),
   optedOutAt: timestamp('opted_out_at'),
+  // UI language at sign-up, so reminder emails go out in the right one.
+  locale: text('locale'),
+  // Account this address belongs to, when it came from signup or a logged-in
+  // opt-in. Deleting the account deletes the row (and its reminders).
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }),
+  // "Time to check again" reminder emails (see lib/reminders.ts). Null
+  // reminderNextAt = no reminder scheduled. Only an email, dates and counts
+  // live here; never anything from the user's export.
+  reminderNextAt: timestamp('reminder_next_at'),
+  reminderSentCount: integer('reminder_sent_count').notNull().default(0),
+  reminderLastSentAt: timestamp('reminder_last_sent_at'),
+  // Last click on a reminder's link. Reminders keep going monthly only while
+  // people actually use them.
+  reminderEngagedAt: timestamp('reminder_engaged_at'),
+  reminderOptedOutAt: timestamp('reminder_opted_out_at'),
+  // Random token in every reminder's unsubscribe and open links, so those
+  // links work without logging in and without exposing the email address.
+  token: text('token').unique(),
+  // Joined the Creator AI waitlist from a teaser.
+  creatorWaitlistAt: timestamp('creator_waitlist_at'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
-});
+}, (t) => [
+  // The daily cron only looks at rows with a reminder scheduled.
+  index('email_subscribers_reminder_next_at_idx').on(t.reminderNextAt).where(sql`${t.reminderNextAt} IS NOT NULL`),
+]);
 
 export const feedback = pgTable('feedback', {
   id: uuid('id').primaryKey().defaultRandom(),

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db/index';
-import { profiles, users } from '@/lib/db/schema';
+import { profiles, users, emailSubscribers } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { hasLocale } from 'next-intl';
 import { getStripe, isStripeConfigured, extendUnlockExpiry, type UnlockDuration } from '@/lib/stripe';
@@ -11,6 +11,7 @@ import { sendEmail } from '@/lib/email/send';
 import { purchaseConfirmationEmail, insiderTierConfirmationEmail } from '@/lib/email/templates';
 import { routing, type AppLocale } from '@/i18n/routing';
 import { MARKETING_CONSENT_VERSION } from '@/lib/marketingConsent';
+import { enableReminders } from '@/lib/reminders/store';
 
 interface CheckoutSession {
   customer: string;
@@ -57,6 +58,13 @@ export async function POST(request: NextRequest) {
   // matters.
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as CheckoutSession;
+
+    // Buyers get the "time to check again" reminders that make Pro useful
+    // (service emails, one-click stop in every one). Best-effort, and an
+    // address that already has reminders, or turned them off, is left alone.
+    if (session.metadata?.type === 'unlock' || session.metadata?.type === 'lifetime') {
+      await enableBuyerReminders(session);
+    }
 
     // Donation checkouts share this webhook but carry no account/profile
     // implications — Stripe's own dashboard is the record of them.
@@ -290,4 +298,17 @@ async function handleLifetimePurchase(session: CheckoutSession): Promise<void> {
     '/welcome',
     { plan: 'lifetime', ...(acquisitionSource ? { source: acquisitionSource } : {}) },
   );
+}
+
+async function enableBuyerReminders(session: CheckoutSession): Promise<void> {
+  const email = session.customer_email ?? session.customer_details?.email ?? null;
+  if (!email) return;
+  const locale: AppLocale = hasLocale(routing.locales, session.metadata?.locale) ? session.metadata.locale : routing.defaultLocale;
+  try {
+    const existing = await db.query.emailSubscribers.findFirst({ where: eq(emailSubscribers.email, email.toLowerCase()) });
+    if (existing?.reminderOptedOutAt) return;
+    await enableReminders({ email, source: 'purchase', locale, userId: session.metadata?.userId ?? null });
+  } catch (err) {
+    console.error('[stripe webhook] enabling reminders failed:', err);
+  }
 }

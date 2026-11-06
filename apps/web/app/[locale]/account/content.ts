@@ -76,6 +76,15 @@ export interface AccountContent {
     toggleOff: string;
     updating: string;
   };
+  reminders: {
+    title: string;
+    // {date} is replaced client-side; functions can't reach a client component.
+    onDesc: string;
+    offDesc: string;
+    turnOn: string;
+    turnOff: string;
+    updating: string;
+  };
 }
 
 const EN: AccountContent = {
@@ -113,7 +122,7 @@ const EN: AccountContent = {
     { title: 'Triage that carries over', desc: 'Never re-triage the same accounts after a new export.' },
     { title: 'Ghost-follower radar', desc: 'Surface long-tenure accounts that never engage back.' },
     { title: 'Unlimited CSV export', desc: 'Pull any list, as often as you like.' },
-    { title: 'Email alerts', desc: 'Get pinged when a new export reveals unfollowers. (soon)' },
+    { title: 'Reminder emails', desc: 'A nudge every 2 weeks when a new export will show who left.' },
   ],
   pricingLine: (monthlyDays, yearlyPrice) =>
     `for ${monthlyDays}, or $${yearlyPrice} for a year · one-time, no auto-renewal`,
@@ -173,6 +182,14 @@ const EN: AccountContent = {
     toggleOff: 'Turn off',
     updating: 'Updating…',
   },
+  reminders: {
+    title: 'Reminder emails',
+    onDesc: 'On. Next reminder to check who unfollowed you: {date}. Then every few weeks while you use them.',
+    offDesc: 'Off. Turn on to get an email every 2 weeks when a new export is worth it.',
+    turnOn: 'Turn on',
+    turnOff: 'Turn off',
+    updating: 'Updating…',
+  },
 };
 
 const ES: AccountContent = {
@@ -210,7 +227,7 @@ const ES: AccountContent = {
     { title: 'Triaje que se conserva', desc: 'No vuelvas a clasificar las mismas cuentas después de una nueva exportación.' },
     { title: 'Radar de seguidores fantasma', desc: 'Detecta cuentas de larga duración que nunca interactúan.' },
     { title: 'Exportación CSV ilimitada', desc: 'Descarga cualquier lista, tantas veces como quieras.' },
-    { title: 'Alertas por correo', desc: 'Recibe un aviso cuando una nueva exportación revele quién dejó de seguirte. (próximamente)' },
+    { title: 'Emails de recordatorio', desc: 'Un aviso cada 2 semanas cuando una nueva exportación mostrará quién se fue.' },
   ],
   pricingLine: (monthlyDays, yearlyPrice) =>
     `durante ${monthlyDays}, o $${yearlyPrice} al año · pago único, sin renovación automática`,
@@ -270,6 +287,14 @@ const ES: AccountContent = {
     toggleOff: 'Desactivar',
     updating: 'Actualizando…',
   },
+  reminders: {
+    title: 'Emails de recordatorio',
+    onDesc: 'Activados. Próximo recordatorio para ver quién te dejó de seguir: {date}. Luego cada pocas semanas mientras los uses.',
+    offDesc: 'Desactivados. Actívalos para recibir un email cada 2 semanas cuando valga la pena una nueva exportación.',
+    turnOn: 'Activar',
+    turnOff: 'Desactivar',
+    updating: 'Actualizando…',
+  },
 };
 
 const PT: AccountContent = {
@@ -307,7 +332,7 @@ const PT: AccountContent = {
     { title: 'Triagem que continua', desc: 'Nunca mais re-triagem as mesmas contas após uma nova exportação.' },
     { title: 'Radar de seguidores fantasmas', desc: 'Identifique contas antigas que nunca interagem de volta.' },
     { title: 'Exportação CSV ilimitada', desc: 'Baixe qualquer lista, quantas vezes quiser.' },
-    { title: 'Alertas por e-mail', desc: 'Seja avisado quando uma nova exportação revelar quem deixou de te seguir. (em breve)' },
+    { title: 'Emails de lembrete', desc: 'Um aviso a cada 2 semanas quando uma nova exportação vai mostrar quem saiu.' },
   ],
   pricingLine: (monthlyDays, yearlyPrice) =>
     `por ${monthlyDays}, ou $${yearlyPrice} por ano · pagamento único, sem renovação automática`,
@@ -365,6 +390,14 @@ const PT: AccountContent = {
     optedInDesc: 'Você optou por receber novidades sobre futuros produtos da Alcatraz Studio. Cancele quando quiser, aqui mesmo.',
     optedOutDesc: 'Você não está inscrito para novidades de futuros produtos.',
     toggleOff: 'Desativar',
+    updating: 'Atualizando…',
+  },
+  reminders: {
+    title: 'Emails de lembrete',
+    onDesc: 'Ativados. Próximo lembrete para ver quem deixou de te seguir: {date}. Depois a cada poucas semanas enquanto você usar.',
+    offDesc: 'Desativados. Ative para receber um email a cada 2 semanas quando valer a pena uma nova exportação.',
+    turnOn: 'Ativar',
+    turnOff: 'Desativar',
     updating: 'Atualizando…',
   },
 };

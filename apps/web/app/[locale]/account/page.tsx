@@ -21,6 +21,8 @@ import { ChangePassword } from './ChangePassword';
 import { SyncSetup } from './SyncSetup';
 import { DeleteAccountButton } from './DeleteAccountButton';
 import { MarketingConsent } from './MarketingConsent';
+import { ReminderToggle } from './ReminderToggle';
+import { getReminderStateForUser } from '@/lib/reminders/store';
 import { getAccountContent } from './content';
 
 // Personalized, auth-gated content (session, subscription, billing). Never
@@ -80,6 +82,8 @@ export default async function AccountPage({ params }: PageProps) {
     preview ? Promise.resolve(undefined) : db.query.syncSettings.findFirst({ where: eq(syncSettings.userId, user.id) }),
     isProUser(),
   ]);
+  const reminderRow = preview ? undefined : await getReminderStateForUser(user.id, user.email).catch(() => undefined);
+  const reminderNextAt = reminderRow?.reminderNextAt && !reminderRow.reminderOptedOutAt ? reminderRow.reminderNextAt.toISOString() : null;
   const isPro = hasProAccess;
   // Lifetime purchase (lifetimePurchasedAt) is the only Insider signal.
   const isInsider = isInsiderProfile(profile);
@@ -240,6 +244,13 @@ export default async function AccountPage({ params }: PageProps) {
             </div>
           </section>
         </div>
+
+        <section style={{ marginBottom: 28 }}>
+          <div style={sectionLabel}>{c.reminders.title}</div>
+          <div style={card}>
+            <ReminderToggle nextAt={reminderNextAt} locale={locale} c={c.reminders} />
+          </div>
+        </section>
 
         {isInsider && (
           <section style={{ marginBottom: 28 }}>

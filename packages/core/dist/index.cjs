@@ -40,6 +40,8 @@ __export(index_exports, {
   contactMessageSchema: () => contactMessageSchema,
   contactSources: () => contactSources,
   detectDeltaExport: () => detectDeltaExport,
+  emailOptInSchema: () => emailOptInSchema,
+  emailOptInSources: () => emailOptInSources,
   feedbackSchema: () => feedbackSchema,
   feedbackSentiments: () => feedbackSentiments,
   findGhostFollowers: () => findGhostFollowers,
@@ -202,6 +204,20 @@ var contactMessageSchema = import_zod.z.object({
   topic: import_zod.z.string().trim().max(60).optional(),
   source: import_zod.z.enum(contactSources),
   page: import_zod.z.string().trim().max(200).optional()
+});
+var emailOptInSources = [
+  "results",
+  "snapshot-limit",
+  "reveal",
+  "welcome",
+  "creator-ai-waitlist"
+];
+var emailOptInSchema = import_zod.z.object({
+  email: import_zod.z.string().trim().toLowerCase().email().max(320),
+  source: import_zod.z.enum(emailOptInSources),
+  locale: import_zod.z.enum(["en", "es", "pt"]).optional(),
+  // Must be an explicit true from the form, never inferred.
+  consent: import_zod.z.literal(true)
 });
 
 // src/parser.ts
@@ -673,6 +689,8 @@ function findGhostFollowers(snapshot, options) {
   contactMessageSchema,
   contactSources,
   detectDeltaExport,
+  emailOptInSchema,
+  emailOptInSources,
   feedbackSchema,
   feedbackSentiments,
   findGhostFollowers,

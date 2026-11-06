@@ -33,6 +33,8 @@ export interface ResultsContent {
     dontFollowBackLabel: (n: string) => string;
     today: string;
     nextExport: string;
+    longNonFollowersLabel: string;
+    oldRequestsLabel: string;
   };
   radarPulse: {
     prefix: string;
@@ -105,6 +107,8 @@ const EN: ResultsContent = {
     dontFollowBackLabel: (n) => `${n} don't follow back`,
     today: 'today',
     nextExport: 'your next export plots here',
+    longNonFollowersLabel: "you've followed 3+ years, never followed back",
+    oldRequestsLabel: 'follow requests waiting 6+ months',
   },
   radarPulse: {
     prefix: 'See your account health score in',
@@ -177,6 +181,8 @@ const ES: ResultsContent = {
     dontFollowBackLabel: (n) => `${n} no te siguen de vuelta`,
     today: 'hoy',
     nextExport: 'tu próxima exportación se grafica aquí',
+    longNonFollowersLabel: 'sigues hace 3+ años y nunca te siguieron',
+    oldRequestsLabel: 'solicitudes esperando 6+ meses',
   },
   radarPulse: {
     prefix: 'Mira la puntuación de salud de tu cuenta en',
@@ -249,6 +255,8 @@ const PT: ResultsContent = {
     dontFollowBackLabel: (n) => `${n} não te seguem de volta`,
     today: 'hoje',
     nextExport: 'sua próxima exportação aparece aqui',
+    longNonFollowersLabel: 'você segue há 3+ anos e nunca te seguiram',
+    oldRequestsLabel: 'pedidos esperando há 6+ meses',
   },
   radarPulse: {
     prefix: 'Veja a pontuação de saúde da sua conta no',

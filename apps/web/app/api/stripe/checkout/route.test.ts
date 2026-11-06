@@ -5,8 +5,14 @@ import { NextRequest } from 'next/server';
 const { validateRequest } = vi.hoisted(() => ({ validateRequest: vi.fn().mockResolvedValue({ user: null }) }));
 vi.mock('@/lib/auth/session', () => ({ validateRequest }));
 
-const { profilesFindFirst } = vi.hoisted(() => ({ profilesFindFirst: vi.fn() }));
-vi.mock('@/lib/db/index', () => ({ db: { query: { profiles: { findFirst: profilesFindFirst } } } }));
+const { profilesFindFirst, seatsSold } = vi.hoisted(() => ({ profilesFindFirst: vi.fn(), seatsSold: { n: 0 } }));
+vi.mock('@/lib/db/index', () => ({
+  db: {
+    query: { profiles: { findFirst: profilesFindFirst } },
+    // Lifetime seat count: select({ n: count() }).from(profiles).where(...)
+    select: () => ({ from: () => ({ where: () => Promise.resolve([{ n: seatsSold.n }]) }) }),
+  },
+}));
 
 const { isPaidFeaturesEnabled } = vi.hoisted(() => ({ isPaidFeaturesEnabled: vi.fn().mockReturnValue(true) }));
 vi.mock('@/lib/flags', () => ({ isPaidFeaturesEnabled }));
@@ -37,6 +43,9 @@ const BASE_ENV = { ...process.env };
 
 describe('POST /api/stripe/checkout', () => {
   beforeEach(() => {
+    // Inside the launch-price window, so the price IDs below stay the ones used.
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-11-01T00:00:00Z'));
     process.env = { ...BASE_ENV, STRIPE_PRICE_UNLOCK_MONTHLY: 'price_monthly', STRIPE_PRICE_UNLOCK_YEARLY: 'price_yearly' };
     isPaidFeaturesEnabled.mockReturnValue(true);
     validateRequest.mockResolvedValue({ user: null });
@@ -44,6 +53,7 @@ describe('POST /api/stripe/checkout', () => {
     sessionsCreate.mockResolvedValue({ url: 'https://checkout.stripe.com/fake' });
   });
   afterEach(() => {
+    vi.useRealTimers();
     process.env = BASE_ENV;
     vi.resetAllMocks();
   });
@@ -123,7 +133,42 @@ describe('POST /api/stripe/checkout', () => {
   });
 
   describe('lifetime plan', () => {
-    beforeEach(() => { process.env.STRIPE_PRICE_LIFETIME = 'price_lifetime'; });
+    beforeEach(() => {
+      seatsSold.n = 0;
+      process.env.STRIPE_PRICE_LIFETIME = 'price_lifetime';
+      process.env.STRIPE_PRICE_LIFETIME_39 = 'price_lifetime_39';
+      process.env.STRIPE_PRICE_LIFETIME_99 = 'price_lifetime_99';
+    });
+
+    it('moves up the seat ladder as seats sell', async () => {
+      seatsSold.n = 4;
+      await POST(makeRequest({ plan: 'lifetime' }));
+      expect(sessionsCreate.mock.calls[0]![0].line_items).toEqual([{ price: 'price_lifetime', quantity: 1 }]);
+      expect(sessionsCreate.mock.calls[0]![0].metadata.lifetimePrice).toBe('19.99');
+      sessionsCreate.mockClear();
+      seatsSold.n = 5;
+      await POST(makeRequest({ plan: 'lifetime' }));
+      expect(sessionsCreate.mock.calls[0]![0].line_items).toEqual([{ price: 'price_lifetime_39', quantity: 1 }]);
+      sessionsCreate.mockClear();
+      seatsSold.n = 15;
+      await POST(makeRequest({ plan: 'lifetime' }));
+      expect(sessionsCreate.mock.calls[0]![0].line_items).toEqual([{ price: 'price_lifetime_99', quantity: 1 }]);
+    });
+
+    it('closes Lifetime once every seat is sold', async () => {
+      seatsSold.n = 40;
+      const res = await POST(makeRequest({ plan: 'lifetime' }));
+      expect(res.status).toBe(410);
+      expect(sessionsCreate).not.toHaveBeenCalled();
+    });
+
+    it('refuses rather than undercharging when the next step has no price set', async () => {
+      seatsSold.n = 5;
+      delete process.env.STRIPE_PRICE_LIFETIME_39;
+      const res = await POST(makeRequest({ plan: 'lifetime' }));
+      expect(res.status).toBe(500);
+      expect(sessionsCreate).not.toHaveBeenCalled();
+    });
 
     it('uses the lifetime price in payment mode with lifetime metadata and success URL', async () => {
       await POST(makeRequest({ plan: 'lifetime', billing: 'yearly' }));

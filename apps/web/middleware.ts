@@ -97,6 +97,7 @@ export const config = {
     '/verify-email/:path*',
     '/welcome/:path*',
     '/diff/:path*',
+    '/unsubscribe/:path*',
     '/(es|pt)/:path*',
   ],
 };

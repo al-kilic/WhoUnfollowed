@@ -1,5 +1,6 @@
 import 'server-only';
 import Stripe from 'stripe';
+import { isLaunchPricing } from './pricing';
 
 // Single Stripe API version used across checkout, portal, and webhook so event
 // shapes and request behaviour stay consistent.
@@ -37,17 +38,34 @@ export const UNLOCK_DURATION_DAYS: Record<UnlockDuration, number> = {
   yearly: 365,
 };
 
-export function priceIdForUnlock(duration: UnlockDuration): string | null {
+// Launch prices until PRICE_INCREASE_AT (lib/pricing.ts), then the
+// *_STANDARD prices. Create the standard prices in Stripe ahead of time and
+// set both env vars on the VPS, or checkout returns "not configured" after
+// the switch instead of silently charging the old price.
+export function priceIdForUnlock(duration: UnlockDuration, now: Date = new Date()): string | null {
+  if (isLaunchPricing(now)) {
+    return duration === 'yearly'
+      ? (process.env.STRIPE_PRICE_UNLOCK_YEARLY ?? null)
+      : (process.env.STRIPE_PRICE_UNLOCK_MONTHLY ?? null);
+  }
   return duration === 'yearly'
-    ? (process.env.STRIPE_PRICE_UNLOCK_YEARLY ?? null)
-    : (process.env.STRIPE_PRICE_UNLOCK_MONTHLY ?? null);
+    ? (process.env.STRIPE_PRICE_UNLOCK_YEARLY_STANDARD ?? null)
+    : (process.env.STRIPE_PRICE_UNLOCK_MONTHLY_STANDARD ?? null);
 }
 
-// Unset STRIPE_PRICE_LIFETIME on the VPS to pull the Lifetime tier from sale
-// at any time, with no deploy: /pricing's lifetimeAvailable flag reads the
-// same env var, so the two stay in sync automatically.
+// One Stripe price per step of the Lifetime seat ladder (LIFETIME_TIERS in
+// lib/pricing.ts): $19.99, then $39, then $99. Unset STRIPE_PRICE_LIFETIME on
+// the VPS to pull Lifetime from sale at any time, with no deploy.
+const LIFETIME_PRICE_ENV = ['STRIPE_PRICE_LIFETIME', 'STRIPE_PRICE_LIFETIME_39', 'STRIPE_PRICE_LIFETIME_99'] as const;
+
+export function priceIdForLifetimeTier(tierIndex: number): string | null {
+  const key = LIFETIME_PRICE_ENV[tierIndex];
+  return key ? (process.env[key] ?? null) : null;
+}
+
+// True while Lifetime is switched on at all (the opening price is set).
 export function priceIdForLifetime(): string | null {
-  return process.env.STRIPE_PRICE_LIFETIME ?? null;
+  return priceIdForLifetimeTier(0);
 }
 
 // Extends from the later of "now" and any unexpired unlock already on the

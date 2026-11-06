@@ -4,35 +4,39 @@ import type { AppLocale } from '@/i18n/routing';
 // message catalogs) so it lives next to the other marketing content modules
 // in this codebase (blog posts.ts, compare comparisons.ts) rather than mixing
 // two different i18n patterns for one page.
+//
+// Templates use {placeholders} instead of functions: content objects are
+// passed from a Server Component (page.tsx) to a Client Component
+// (PricingClient), and functions cannot cross that boundary.
 export interface PricingContent {
   betaBadge: string;
   headline: string;
   subhead: string;
+  // {std} = the yearly price from Jan 1.
+  launchBanner: string;
   freeBadge: string;
   freeNoSignup: string;
   freeBullets: string[];
   freeCta: string;
   proLabel: string;
-  durationLabels: { monthly: string; yearly: string };
-  // Templates use {pct}/{period} placeholders instead of functions: content
-  // objects are passed from a Server Component (page.tsx) to a Client
-  // Component (PricingClient), and functions cannot cross that boundary.
-  saveBadgeTemplate: string;
+  proBadge: string;
   oneTime: string;
-  unlockDescMonthly: string;
-  unlockDescYearlyTemplate: string;
-  competitorAnchor: string;
+  // {price} = yearly price spread over 12 months.
+  perMonthTemplate: string;
+  // {std} = the yearly price from Jan 1.
+  launchNoteTemplate: string;
   proCore: { label: string; note: string }[];
   proMore: { label: string; note: string }[];
   seeEverything: string;
   errorGeneric: string;
   ctaRedirecting: string;
-  ctaUnlockForTemplate: string;
+  ctaYearly: string;
+  ctaExtendYear: string;
+  // {price} = 30-day price.
+  monthlyLinkTemplate: string;
+  monthlyExtendTemplate: string;
   ctaGoToDashboard: string;
   ctaTryProFree: string;
-  ctaExtendByTemplate: string;
-  periodYear: string;
-  period30Days: string;
   onetimeNote: string;
   betaNote: string;
   privacyTitle: string;
@@ -40,66 +44,70 @@ export interface PricingContent {
   faqTitle: string;
   lifetime: {
     badge: string;
-    limitedNote: string;
     oneTime: string;
     desc: string;
-    valueLine: string;
+    seatsLeftTemplate: string;
+    // {price} = the next step's price.
+    nextPriceTemplate: string;
+    lastStep: string;
     bullets: string[];
     consentLabel: string;
     cta: string;
     note: string;
     alreadyMember: string;
+    soldOutTitle: string;
+    soldOutBody: string;
   };
 }
 
 const EN: PricingContent = {
   betaBadge: 'Pro is free during beta. Try everything for now.',
-  headline: 'Always free. Pro helps keep it alive.',
+  headline: 'Free to check. Pro to keep watch.',
   subhead:
-    'See when someone unfollows you, who never follows back, and how your audience shifts over time. WhoUnfollowed is free, open source, and runs entirely in your browser. Pro adds memory and depth (history, trends, and cloud sync) and keeps the servers running so the free app stays free.',
+    'See who doesn\'t follow you back for free, right in your browser. Pro remembers every export, so each new one shows exactly who unfollowed you and when.',
+  launchBanner: 'Launch prices until December 31. From January 1, a year of Pro is {std}.',
   freeBadge: 'Free forever',
   freeNoSignup: 'no sign up required',
   freeBullets: [
     'Works with Instagram and Threads',
-    'See who unfollowed you',
-    'Full non-followers list',
+    'Who doesn\'t follow you back, today',
+    'Sort the list: keep, unfollow, decide later',
+    'Reminder emails when it\'s time to check again',
     'One snapshot at a time',
-    'CSV export',
+    'One CSV export',
     'No account needed',
   ],
   freeCta: 'Use it free',
-  proLabel: 'Pro',
-  durationLabels: { monthly: '30 days', yearly: '365 days' },
-  saveBadgeTemplate: 'SAVE {pct}%',
+  proLabel: 'Pro · 1 year',
+  proBadge: 'Best value',
   oneTime: 'one-time',
-  unlockDescMonthly: 'Unlocks Pro for 30 days',
-  unlockDescYearlyTemplate: 'Unlocks Pro for 365 days · save {pct}% vs. buying 30 days at a time',
-  competitorAnchor: 'Other Instagram trackers charge $2 to $4.50 a month, every month. This is a one-time payment.',
+  perMonthTemplate: 'About {price} a month.',
+  launchNoteTemplate: 'Launch price. {std} from January 1.',
   proCore: [
-    { label: 'Keep every snapshot forever', note: 'unlimited history' },
     { label: 'See exactly who unfollowed you, and when', note: '' },
-    { label: 'Cloud sync across all your devices', note: 'encrypted in your browser' },
-    { label: 'Watch your follower count trend over time', note: '' },
-    { label: 'Catch the ghosts who never engage', note: '' },
+    { label: 'Every export kept, each new one compared for you', note: 'unlimited history' },
+    { label: 'Reminders every 2 weeks, so you never miss a check', note: '' },
+    { label: 'Radar: ghost followers, follow age, old requests', note: '' },
+    { label: 'Your follower trend over time', note: '' },
   ],
   proMore: [
-    { label: 'Get alerted the moment someone drops', note: 'email alerts, soon' },
+    { label: 'Cloud sync across all your devices', note: 'encrypted in your browser' },
     { label: 'See pending follow requests, and how long they\'ve been waiting', note: '' },
     { label: 'Compare any two snapshots side by side', note: '' },
     { label: 'Surface restricted, blocked, and close-friends lists', note: '' },
-    { label: 'Clean up fast: batch-open everyone who left', note: '' },
-    { label: 'Mobile app included', note: 'iOS + Android, soon' },
-    { label: 'Keep the app free and independent', note: 'no ads, no investors' },
+    { label: 'Clean up fast: open everyone who left in batches', note: '' },
+    { label: 'Unlimited CSV exports of every list', note: '' },
+    { label: 'Keeps the app free and independent', note: 'no ads, no investors' },
   ],
   seeEverything: 'See everything you get',
   errorGeneric: 'Something went wrong. Please try again.',
   ctaRedirecting: 'Redirecting...',
-  ctaUnlockForTemplate: 'Unlock for {period}',
+  ctaYearly: 'Get Pro for a year',
+  ctaExtendYear: 'Add another year',
+  monthlyLinkTemplate: 'Only need one check? {price} for 30 days',
+  monthlyExtendTemplate: 'Or add 30 days for {price}',
   ctaGoToDashboard: 'Go to dashboard',
   ctaTryProFree: 'Try Pro free',
-  ctaExtendByTemplate: 'Extend by {period}',
-  periodYear: 'a year',
-  period30Days: '30 days',
   onetimeNote: 'One-time payment. No auto-renewal.',
   betaNote: 'No credit card required during beta.',
   privacyTitle: 'WHY PEOPLE TRUST IT',
@@ -111,72 +119,76 @@ const EN: PricingContent = {
   faqTitle: 'COMMON QUESTIONS',
   lifetime: {
     badge: 'Insider · Lifetime',
-    limitedNote: 'Limited-time offer',
     oneTime: 'once, yours for life',
-    desc: 'Pay once. Pro is yours for life. No renewals, no expiry date, ever.',
-    valueLine: 'Other trackers charge $2 to $4.50 a month. This pays for itself in 5 to 10 months, then it is free for life.',
+    desc: 'Pay once. Pro is yours for life. Limited seats, and the price goes up as they go.',
+    seatsLeftTemplate: 'Seats left at this price',
+    nextPriceTemplate: 'Then {price}. Be quick.',
+    lastStep: 'Last seats. After these, Lifetime closes for good.',
     bullets: [
       'Pro for life: every Pro feature, no expiry, no renewals',
-      'Every Pro feature we add later, included at no extra cost',
-      'Pro benefits on future Alcatraz Studio tools, at no extra cost',
-      'First to hear when each new tool ships',
+      'Every Pro feature we add later, included',
+      'Private Insider community on Discord: growth, open-source apps, ideas',
+      'Pro benefits on future Alcatraz Studio tools',
+      'First to hear about new launches',
       'Insider badge and title on your account',
     ],
     consentLabel: 'Email me when new Alcatraz Studio tools launch, so I can claim my Insider perks. Optional. Unsubscribe any time.',
     cta: 'Become an Insider',
     note: 'One-time payment. No subscription, nothing to renew, ever.',
     alreadyMember: 'You are an Insider. Thank you.',
+    soldOutTitle: 'Lifetime is closed',
+    soldOutBody: 'Every Insider seat is taken. Thank you to everyone who backed it early. Pro for a year is still open.',
   },
 };
 
 const ES: PricingContent = {
   betaBadge: 'Pro es gratis durante la beta. Prueba todo por ahora.',
-  headline: 'Siempre gratis. Pro ayuda a mantenerlo vivo.',
+  headline: 'Gratis para revisar. Pro para no perderte nada.',
   subhead:
-    'Descubre cuándo alguien te deja de seguir, quién nunca te sigue de vuelta y cómo cambia tu audiencia con el tiempo. WhoUnfollowed es gratis, de código abierto y funciona por completo en tu navegador. Pro añade memoria y profundidad (historial, tendencias y sincronización en la nube) y mantiene los servidores funcionando para que la app gratuita siga siendo gratis.',
+    'Mira gratis quién no te sigue de vuelta, dentro de tu navegador. Pro recuerda cada exportación, así cada nueva te muestra exactamente quién te dejó de seguir y cuándo.',
+  launchBanner: 'Precios de lanzamiento hasta el 31 de diciembre. Desde el 1 de enero, un año de Pro cuesta {std}.',
   freeBadge: 'Gratis para siempre',
   freeNoSignup: 'sin necesidad de registrarte',
   freeBullets: [
     'Funciona con Instagram y Threads',
-    'Ver quién te dejó de seguir',
-    'Lista completa de quienes no te siguen de vuelta',
+    'Quién no te sigue de vuelta, hoy',
+    'Ordena la lista: mantener, dejar de seguir, decidir luego',
+    'Emails de recordatorio cuando toque revisar de nuevo',
     'Un snapshot a la vez',
-    'Exportar a CSV',
+    'Una exportación CSV',
     'Sin cuenta necesaria',
   ],
   freeCta: 'Usarlo gratis',
-  proLabel: 'Pro',
-  durationLabels: { monthly: '30 días', yearly: '365 días' },
-  saveBadgeTemplate: 'AHORRA {pct}%',
+  proLabel: 'Pro · 1 año',
+  proBadge: 'Mejor valor',
   oneTime: 'pago único',
-  unlockDescMonthly: 'Desbloquea Pro por 30 días',
-  unlockDescYearlyTemplate: 'Desbloquea Pro por 365 días · ahorra {pct}% frente a comprar cada 30 días',
-  competitorAnchor: 'Otros rastreadores de Instagram cobran entre $2 y $4.50 al mes, cada mes. Esto es un pago único.',
+  perMonthTemplate: 'Unos {price} al mes.',
+  launchNoteTemplate: 'Precio de lanzamiento. {std} desde el 1 de enero.',
   proCore: [
-    { label: 'Guarda cada snapshot para siempre', note: 'historial ilimitado' },
     { label: 'Ve exactamente quién te dejó de seguir, y cuándo', note: '' },
-    { label: 'Sincronización en la nube en todos tus dispositivos', note: 'cifrada en tu navegador' },
-    { label: 'Observa la tendencia de tus seguidores con el tiempo', note: '' },
-    { label: 'Detecta a los fantasmas que nunca interactúan', note: '' },
+    { label: 'Cada exportación guardada, cada nueva comparada por ti', note: 'historial ilimitado' },
+    { label: 'Recordatorios cada 2 semanas, para no saltarte ninguna revisión', note: '' },
+    { label: 'Radar: seguidores fantasma, antigüedad, solicitudes viejas', note: '' },
+    { label: 'La tendencia de tus seguidores con el tiempo', note: '' },
   ],
   proMore: [
-    { label: 'Recibe una alerta en el momento en que alguien se va', note: 'alertas por email, pronto' },
+    { label: 'Sincronización en la nube en todos tus dispositivos', note: 'cifrada en tu navegador' },
     { label: 'Ve las solicitudes de seguimiento pendientes y cuánto tiempo llevan esperando', note: '' },
     { label: 'Compara dos snapshots cualquiera lado a lado', note: '' },
     { label: 'Muestra listas de restringidos, bloqueados y mejores amigos', note: '' },
-    { label: 'Limpia rápido: abre en lote a todos los que se fueron', note: '' },
-    { label: 'App móvil incluida', note: 'iOS + Android, pronto' },
-    { label: 'Mantén la app gratuita e independiente', note: 'sin anuncios, sin inversores' },
+    { label: 'Limpia rápido: abre por lotes a todos los que se fueron', note: '' },
+    { label: 'Exportaciones CSV ilimitadas de cada lista', note: '' },
+    { label: 'Mantiene la app gratuita e independiente', note: 'sin anuncios, sin inversores' },
   ],
   seeEverything: 'Ver todo lo que incluye',
   errorGeneric: 'Algo salió mal. Inténtalo de nuevo.',
   ctaRedirecting: 'Redirigiendo...',
-  ctaUnlockForTemplate: 'Desbloquear por {period}',
+  ctaYearly: 'Obtener Pro por un año',
+  ctaExtendYear: 'Añadir otro año',
+  monthlyLinkTemplate: '¿Solo una revisión? {price} por 30 días',
+  monthlyExtendTemplate: 'O añade 30 días por {price}',
   ctaGoToDashboard: 'Ir al panel',
   ctaTryProFree: 'Probar Pro gratis',
-  ctaExtendByTemplate: 'Extender por {period}',
-  periodYear: 'un año',
-  period30Days: '30 días',
   onetimeNote: 'Pago único. Sin renovación automática.',
   betaNote: 'No se necesita tarjeta durante la beta.',
   privacyTitle: 'POR QUÉ CONFÍAN EN NOSOTROS',
@@ -188,75 +200,79 @@ const ES: PricingContent = {
   faqTitle: 'PREGUNTAS FRECUENTES',
   lifetime: {
     badge: 'Insider · Lifetime',
-    limitedNote: 'Oferta por tiempo limitado',
     oneTime: 'una vez, tuyo de por vida',
-    desc: 'Paga una vez. Pro es tuyo de por vida. Sin renovaciones, sin fecha de vencimiento, nunca.',
-    valueLine: 'Otros rastreadores cobran de $2 a $4.50 al mes. Esto se paga solo en 5 a 10 meses, y después es gratis de por vida.',
+    desc: 'Paga una vez. Pro es tuyo de por vida. Plazas limitadas, y el precio sube a medida que se agotan.',
+    seatsLeftTemplate: 'Plazas que quedan a este precio',
+    nextPriceTemplate: 'Luego {price}. Date prisa.',
+    lastStep: 'Últimas plazas. Después, Lifetime cierra para siempre.',
     bullets: [
       'Pro de por vida: todas las funciones Pro, sin vencimiento ni renovaciones',
-      'Cada función Pro que añadamos después, incluida sin costo extra',
-      'Beneficios Pro en futuras herramientas de Alcatraz Studio, sin costo extra',
-      'Serás de los primeros en enterarte cuando salga cada herramienta nueva',
+      'Cada función Pro que añadamos después, incluida',
+      'Comunidad privada de Insiders en Discord: crecimiento, apps de código abierto, ideas',
+      'Beneficios Pro en futuras herramientas de Alcatraz Studio',
+      'Te enteras primero de cada lanzamiento',
       'Insignia y título de Insider en tu cuenta',
     ],
-    consentLabel: 'Avísame por email cuando salgan nuevas herramientas de Alcatraz Studio para reclamar mis ventajas de Insider. Opcional. Puedes darte de baja cuando quieras.',
+    consentLabel: 'Avísame por email cuando salgan nuevas herramientas de Alcatraz Studio para reclamar mis beneficios de Insider. Opcional. Puedes darte de baja cuando quieras.',
     cta: 'Hazte Insider',
     note: 'Pago único. Sin suscripción, nada que renovar, nunca.',
     alreadyMember: 'Eres Insider. Gracias.',
+    soldOutTitle: 'Lifetime está cerrado',
+    soldOutBody: 'Todas las plazas de Insider están ocupadas. Gracias a quienes lo apoyaron pronto. Pro por un año sigue disponible.',
   },
 };
 
 const PT: PricingContent = {
-  betaBadge: 'O Pro é grátis durante a beta. Experimente tudo por enquanto.',
-  headline: 'Sempre grátis. O Pro ajuda a manter tudo funcionando.',
+  betaBadge: 'O Pro é grátis durante o beta. Experimente tudo por enquanto.',
+  headline: 'Grátis para conferir. Pro para não perder nada.',
   subhead:
-    'Veja quando alguém deixa de te seguir, quem nunca te segue de volta e como sua audiência muda com o tempo. O WhoUnfollowed é gratuito, de código aberto e roda inteiramente no seu navegador. O Pro adiciona memória e profundidade (histórico, tendências e sincronização na nuvem) e mantém os servidores no ar para que o app gratuito continue grátis.',
+    'Veja de graça quem não te segue de volta, no seu navegador. O Pro lembra cada exportação, então cada nova mostra exatamente quem deixou de te seguir e quando.',
+  launchBanner: 'Preços de lançamento até 31 de dezembro. A partir de 1º de janeiro, um ano de Pro custa {std}.',
   freeBadge: 'Grátis para sempre',
-  freeNoSignup: 'sem necessidade de cadastro',
+  freeNoSignup: 'sem precisar de cadastro',
   freeBullets: [
     'Funciona com Instagram e Threads',
-    'Ver quem deixou de te seguir',
-    'Lista completa de quem não te segue de volta',
+    'Quem não te segue de volta, hoje',
+    'Organize a lista: manter, deixar de seguir, decidir depois',
+    'Emails de lembrete quando for hora de conferir de novo',
     'Um snapshot por vez',
-    'Exportar CSV',
-    'Sem necessidade de conta',
+    'Uma exportação CSV',
+    'Sem precisar de conta',
   ],
   freeCta: 'Usar grátis',
-  proLabel: 'Pro',
-  durationLabels: { monthly: '30 dias', yearly: '365 dias' },
-  saveBadgeTemplate: 'ECONOMIZE {pct}%',
+  proLabel: 'Pro · 1 ano',
+  proBadge: 'Melhor valor',
   oneTime: 'pagamento único',
-  unlockDescMonthly: 'Libera o Pro por 30 dias',
-  unlockDescYearlyTemplate: 'Libera o Pro por 365 dias · economize {pct}% em vez de comprar a cada 30 dias',
-  competitorAnchor: 'Outros rastreadores do Instagram cobram entre $2 e $4.50 por mês, todo mês. Isso é um pagamento único.',
+  perMonthTemplate: 'Cerca de {price} por mês.',
+  launchNoteTemplate: 'Preço de lançamento. {std} a partir de 1º de janeiro.',
   proCore: [
-    { label: 'Guarde cada snapshot para sempre', note: 'histórico ilimitado' },
     { label: 'Veja exatamente quem deixou de te seguir, e quando', note: '' },
-    { label: 'Sincronização na nuvem em todos os seus dispositivos', note: 'criptografada no seu navegador' },
-    { label: 'Acompanhe a tendência dos seus seguidores ao longo do tempo', note: '' },
-    { label: 'Encontre os fantasmas que nunca interagem', note: '' },
+    { label: 'Cada exportação guardada, cada nova comparada para você', note: 'histórico ilimitado' },
+    { label: 'Lembretes a cada 2 semanas, para nunca pular uma conferida', note: '' },
+    { label: 'Radar: seguidores fantasmas, tempo de follow, pedidos antigos', note: '' },
+    { label: 'A tendência dos seus seguidores ao longo do tempo', note: '' },
   ],
   proMore: [
-    { label: 'Seja avisado no momento em que alguém deixa de seguir', note: 'alertas por email, em breve' },
-    { label: 'Veja solicitações de seguidor pendentes e há quanto tempo esperam', note: '' },
+    { label: 'Sincronização na nuvem em todos os seus dispositivos', note: 'criptografada no seu navegador' },
+    { label: 'Veja pedidos para seguir pendentes e há quanto tempo estão esperando', note: '' },
     { label: 'Compare dois snapshots quaisquer lado a lado', note: '' },
-    { label: 'Veja listas de restritos, bloqueados e melhores amigos', note: '' },
-    { label: 'Limpe rápido: abra em lote todos que saíram', note: '' },
-    { label: 'App móvel incluído', note: 'iOS + Android, em breve' },
-    { label: 'Mantenha o app gratuito e independente', note: 'sem anúncios, sem investidores' },
+    { label: 'Mostre listas de restritos, bloqueados e melhores amigos', note: '' },
+    { label: 'Limpe rápido: abra em lotes todos que saíram', note: '' },
+    { label: 'Exportações CSV ilimitadas de cada lista', note: '' },
+    { label: 'Mantém o app gratuito e independente', note: 'sem anúncios, sem investidores' },
   ],
-  seeEverything: 'Ver tudo que está incluído',
+  seeEverything: 'Ver tudo o que está incluído',
   errorGeneric: 'Algo deu errado. Tente novamente.',
   ctaRedirecting: 'Redirecionando...',
-  ctaUnlockForTemplate: 'Desbloquear por {period}',
+  ctaYearly: 'Pegar o Pro por um ano',
+  ctaExtendYear: 'Adicionar mais um ano',
+  monthlyLinkTemplate: 'Só precisa de uma conferida? {price} por 30 dias',
+  monthlyExtendTemplate: 'Ou adicione 30 dias por {price}',
   ctaGoToDashboard: 'Ir para o painel',
-  ctaTryProFree: 'Testar o Pro grátis',
-  ctaExtendByTemplate: 'Estender por {period}',
-  periodYear: 'um ano',
-  period30Days: '30 dias',
+  ctaTryProFree: 'Experimentar o Pro grátis',
   onetimeNote: 'Pagamento único. Sem renovação automática.',
-  betaNote: 'Nenhum cartão necessário durante a beta.',
-  privacyTitle: 'POR QUE CONFIAM NA GENTE',
+  betaNote: 'Não precisa de cartão durante o beta.',
+  privacyTitle: 'POR QUE AS PESSOAS CONFIAM',
   privacy: [
     'Seu ZIP é processado inteiramente no seu navegador. Nada é enviado para análise.',
     'Os snapshots na nuvem são criptografados no seu navegador antes de sair do dispositivo.',
@@ -265,21 +281,25 @@ const PT: PricingContent = {
   faqTitle: 'PERGUNTAS FREQUENTES',
   lifetime: {
     badge: 'Insider · Lifetime',
-    limitedNote: 'Oferta por tempo limitado',
-    oneTime: 'uma vez, seu para a vida toda',
-    desc: 'Pague uma vez. O Pro é seu para a vida toda. Sem renovações, sem data de vencimento, nunca.',
-    valueLine: 'Outros rastreadores cobram de $2 a $4,50 por mês. Isto se paga sozinho em 5 a 10 meses, e depois é grátis para sempre.',
+    oneTime: 'uma vez, seu para sempre',
+    desc: 'Pague uma vez. O Pro é seu para sempre. Vagas limitadas, e o preço sobe conforme acabam.',
+    seatsLeftTemplate: 'Vagas restantes neste preço',
+    nextPriceTemplate: 'Depois {price}. Corra.',
+    lastStep: 'Últimas vagas. Depois delas, o Lifetime fecha de vez.',
     bullets: [
-      'Pro para a vida toda: todos os recursos Pro, sem vencimento nem renovações',
-      'Todo recurso Pro que adicionarmos depois, incluído sem custo extra',
-      'Benefícios Pro nas futuras ferramentas da Alcatraz Studio, sem custo extra',
-      'Você será um dos primeiros a saber quando cada nova ferramenta sair',
+      'Pro para sempre: todos os recursos Pro, sem vencimento nem renovação',
+      'Todo recurso Pro que adicionarmos depois, incluído',
+      'Comunidade privada de Insiders no Discord: crescimento, apps de código aberto, ideias',
+      'Benefícios Pro em futuras ferramentas da Alcatraz Studio',
+      'Primeiro a saber de cada lançamento',
       'Selo e título de Insider na sua conta',
     ],
-    consentLabel: 'Avise-me por email quando novas ferramentas da Alcatraz Studio forem lançadas, para eu aproveitar minhas vantagens de Insider. Opcional. Cancele quando quiser.',
-    cta: 'Torne-se Insider',
+    consentLabel: 'Me avise por email quando novas ferramentas da Alcatraz Studio forem lançadas, para eu resgatar meus benefícios de Insider. Opcional. Cancele quando quiser.',
+    cta: 'Virar Insider',
     note: 'Pagamento único. Sem assinatura, nada para renovar, nunca.',
     alreadyMember: 'Você é Insider. Obrigado.',
+    soldOutTitle: 'O Lifetime fechou',
+    soldOutBody: 'Todas as vagas de Insider foram preenchidas. Obrigado a quem apoiou cedo. O Pro por um ano continua disponível.',
   },
 };
 

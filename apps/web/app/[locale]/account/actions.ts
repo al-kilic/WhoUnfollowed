@@ -109,3 +109,24 @@ export async function deleteAccountAction() {
 
   redirect('/');
 }
+
+// Turns "time to check again" reminder emails on or off for the logged-in
+// account (see lib/reminders). Turning them on starts a fresh 2-week timer.
+export async function setRemindersEnabled(on: boolean, locale: string): Promise<{ ok: boolean; nextAt?: string }> {
+  const { user } = await validateRequest();
+  if (!user) return { ok: false };
+  const { enableReminders, disableRemindersForUser } = await import('@/lib/reminders/store');
+  const { hasLocale } = await import('next-intl');
+  const { routing } = await import('@/i18n/routing');
+  if (!on) {
+    await disableRemindersForUser(user.id, user.email);
+    return { ok: true };
+  }
+  const { nextAt } = await enableReminders({
+    email: user.email,
+    source: 'account',
+    locale: hasLocale(routing.locales, locale) ? locale : routing.defaultLocale,
+    userId: user.id,
+  });
+  return { ok: true, nextAt: nextAt.toISOString() };
+}

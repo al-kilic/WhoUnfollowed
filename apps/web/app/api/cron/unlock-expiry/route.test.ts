@@ -22,6 +22,8 @@ vi.mock('@/lib/db/index', () => ({
   },
 }));
 vi.mock('@/lib/email/send', () => ({ sendEmail, isEmailConfigured }));
+const { sendDueReminders } = vi.hoisted(() => ({ sendDueReminders: vi.fn() }));
+vi.mock('@/lib/reminders/send', () => ({ sendDueReminders }));
 
 import { POST } from './route';
 
@@ -36,6 +38,7 @@ const BASE_ENV = { ...process.env };
 describe('POST /api/cron/unlock-expiry', () => {
   beforeEach(() => {
     process.env = { ...BASE_ENV, CRON_SECRET: 'cron_secret_test' };
+    sendDueReminders.mockResolvedValue({ sent: 0, failed: 0 });
   });
   afterEach(() => {
     process.env = BASE_ENV;
@@ -57,7 +60,7 @@ describe('POST /api/cron/unlock-expiry', () => {
     const res = await POST(makeRequest());
 
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ expiredSent: 1, reminderSent: 0 });
+    expect(await res.json()).toEqual({ expiredSent: 1, reminderSent: 0, reminders: { sent: 0, failed: 0 } });
     expect(sendEmail).toHaveBeenCalledWith(expect.objectContaining({ to: 'lapsed@example.com' }));
     expect(updateSet).toHaveBeenCalledWith(expect.objectContaining({ expiredEmailSentAt: expect.any(Date) }));
     expect(updateSet.mock.calls[0]![0]).not.toHaveProperty('subscriptionStatus');
@@ -73,7 +76,7 @@ describe('POST /api/cron/unlock-expiry', () => {
     const res = await POST(makeRequest());
 
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 1 });
+    expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 1, reminders: { sent: 0, failed: 0 } });
     expect(sendEmail).toHaveBeenCalledWith(expect.objectContaining({ to: 'soon@example.com' }));
     expect(updateSet).toHaveBeenCalledWith(expect.objectContaining({ expiryReminderSentAt: expect.any(Date) }));
   });
@@ -82,7 +85,7 @@ describe('POST /api/cron/unlock-expiry', () => {
     profilesFindMany.mockResolvedValue([]);
     const res = await POST(makeRequest());
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 0 });
+    expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 0, reminders: { sent: 0, failed: 0 } });
     expect(sendEmail).not.toHaveBeenCalled();
     expect(update).not.toHaveBeenCalled();
   });
@@ -106,5 +109,28 @@ describe('POST /api/cron/unlock-expiry when email is not configured', () => {
     expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 0, skipped: 'email_not_configured' });
     expect(profilesFindMany).not.toHaveBeenCalled();
     expect(update).not.toHaveBeenCalled();
+  });
+});
+
+describe('POST /api/cron/unlock-expiry reminder pass', () => {
+  const ENV = { ...process.env };
+  beforeEach(() => {
+    process.env = { ...ENV, CRON_SECRET: 'cron_secret_test' };
+    isEmailConfigured.mockReturnValue(true);
+    profilesFindMany.mockResolvedValue([]);
+  });
+  afterEach(() => { process.env = ENV; vi.clearAllMocks(); });
+
+  it('reports reminder results alongside the unlock emails', async () => {
+    sendDueReminders.mockResolvedValue({ sent: 3, failed: 1 });
+    const res = await POST(makeRequest());
+    expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 0, reminders: { sent: 3, failed: 1 } });
+  });
+
+  it('still answers when the reminder pass throws', async () => {
+    sendDueReminders.mockRejectedValue(new Error('db down'));
+    const res = await POST(makeRequest());
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 0, reminders: { error: 'reminders_failed' } });
   });
 });

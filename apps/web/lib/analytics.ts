@@ -41,6 +41,11 @@ export const Events = {
   emailCaptured: 'email-captured',    // { context }
   snapshotLimitHit: 'snapshot-limit-hit',
   blogCtaClick: 'blog-cta-click',     // { slug } — the post's main "upload your export" CTA, not an upgrade click
+  // V2 return loop and offers.
+  offerView: 'offer-view',            // { placement }
+  reminderOptin: 'reminder-optin',    // { source }
+  revealView: 'reveal-view',          // { count_bucket }
+  creatorWaitlist: 'creator-waitlist', // { placement }
 } as const;
 
 // The most important conversion signal: which surface drove an upgrade intent.
@@ -82,7 +87,7 @@ type FunnelEventMap = {
   'Export Warning Shown': { reason: DeltaReason | 'multiple' };
   'Export Warning Choice': { choice: 're_export' | 'new_account' | 'proceed_anyway' };
   'Snapshot Saved': { storage: 'local' | 'cloud' };
-  'Upgrade CTA Clicked': { placement: 'results' | 'pricing' };
+  'Upgrade CTA Clicked': { placement: 'results' | 'pricing' | 'reveal' | 'diff' | 'home' };
 };
 
 export function trackFunnel<E extends keyof FunnelEventMap>(

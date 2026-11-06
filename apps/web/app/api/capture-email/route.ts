@@ -4,6 +4,7 @@ import { exportConfirmationEmail } from '@/lib/email/templates';
 import { db } from '@/lib/db/index';
 import { emailSubscribers } from '@/lib/db/schema';
 import { SUBSCRIBER_CONSENT_VERSION } from '@/lib/marketingConsent';
+import { isDisposableEmail } from '@/lib/disposableEmail';
 
 const SOURCES = ['mobile-waitlist', 'csv'] as const;
 
@@ -52,6 +53,10 @@ export async function POST(req: Request) {
   // Consent must be an explicit boolean true from the client, never inferred.
   if (!email || !email.includes('@') || !source || body.consent !== true) {
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
+  }
+
+  if (isDisposableEmail(email)) {
+    return NextResponse.json({ error: 'disposable' }, { status: 400 });
   }
 
   try {

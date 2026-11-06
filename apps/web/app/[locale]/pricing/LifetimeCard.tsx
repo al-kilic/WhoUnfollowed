@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import { T } from '@/components/landing/tokens';
-import { track, Events, trackFunnel } from '@/lib/analytics';
-import { LIFETIME_PRICE_USD } from '@/lib/pricing';
+import { startCheckout } from '@/lib/checkoutClient';
+import type { LifetimeOffer } from '@/lib/pricing';
 import type { AppLocale } from '@/i18n/routing';
 import type { PricingContent } from './content';
 
 interface Props {
+  lifetime: { status: 'open'; offer: LifetimeOffer } | { status: 'sold_out' } | { status: 'off' };
   content: PricingContent['lifetime'];
   errorGeneric: string;
   ctaRedirecting: string;
@@ -15,37 +16,36 @@ interface Props {
   locale: AppLocale;
 }
 
-export function LifetimeCard({ content, errorGeneric, ctaRedirecting, isLifetimeMember, locale }: Props) {
+export function LifetimeCard({ lifetime, content, errorGeneric, ctaRedirecting, isLifetimeMember, locale }: Props) {
   const [optIn, setOptIn] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function handleBuy() {
-    trackFunnel('Upgrade CTA Clicked', { placement: 'pricing' });
-    track(Events.checkoutStart, { billing: 'lifetime' });
     setLoading(true);
     setError(null);
-    try {
-      let acquisitionSource: string | undefined;
-      try { acquisitionSource = sessionStorage.getItem('wu:acq_source') ?? undefined; } catch {}
-
-      const res = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan: 'lifetime', marketingOptIn: optIn, acquisitionSource, locale }),
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        setError(errorGeneric);
-      }
-    } catch {
+    const ok = await startCheckout({ plan: 'lifetime', placement: 'pricing', locale, marketingOptIn: optIn });
+    if (!ok) {
       setError(errorGeneric);
-    } finally {
       setLoading(false);
     }
   }
+
+  if (lifetime.status !== 'open') {
+    return (
+      <div className="plan-card" style={{ background: T.surface1, border: `1px dashed ${T.border3}`, borderRadius: 20, padding: '30px 28px' }}>
+        <div className="plan-head pc-1">
+          <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: T.inkMute, fontFamily: T.mono }}>{content.badge}</div>
+        </div>
+        <div className="pc-2" style={{ fontFamily: T.serif, fontSize: 30, lineHeight: 1.1, marginBottom: 8 }}>{content.soldOutTitle}</div>
+        <p className="pc-3" style={{ fontSize: 13.5, color: T.inkDim, lineHeight: 1.55, margin: 0 }}>{content.soldOutBody}</p>
+      </div>
+    );
+  }
+
+  const { offer } = lifetime;
+  const fill = (template: string, values: Record<string, string>) =>
+    Object.entries(values).reduce((acc, [k, v]) => acc.replaceAll(`{${k}}`, v), template);
 
   return (
     <div className="plan-card" style={{
@@ -56,18 +56,29 @@ export function LifetimeCard({ content, errorGeneric, ctaRedirecting, isLifetime
         <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: T.terra, fontFamily: T.mono }}>
           {content.badge}
         </div>
-        <div style={{ background: T.terra, color: '#fff', fontSize: 9, fontWeight: 800, letterSpacing: '0.05em', padding: '3px 8px', borderRadius: 100, whiteSpace: 'nowrap' }}>
-          {content.limitedNote}
-        </div>
+
       </div>
 
       <div className="pc-2" style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 2 }}>
-        <span style={{ fontFamily: T.serif, fontSize: 50, fontWeight: 400, lineHeight: 1 }}>${LIFETIME_PRICE_USD}</span>
+        <span style={{ fontFamily: T.serif, fontSize: 50, fontWeight: 400, lineHeight: 1 }}>${offer.price}</span>
         <span style={{ color: T.inkMute, fontSize: 14 }}>{content.oneTime}</span>
       </div>
       <div className="pc-3" style={{ marginBottom: 22 }}>
         <div style={{ fontSize: 13, color: T.inkDim, marginBottom: 8, lineHeight: 1.5 }}>{content.desc}</div>
-        <div style={{ fontSize: 12, color: T.terra, lineHeight: 1.5 }}>{content.valueLine}</div>
+        {/* Seat meter: the share of this price step that's still available */}
+        <div style={{ display: 'grid', gap: 6 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, fontSize: 12, fontWeight: 600, color: T.terraText }}>
+            <span>{content.seatsLeftTemplate}</span>
+            <span style={{ fontFamily: T.mono, fontVariantNumeric: 'tabular-nums' }}>{offer.pctLeft}%</span>
+          </div>
+          <div role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={offer.pctLeft} aria-label={`${content.seatsLeftTemplate}: ${offer.pctLeft}%`}
+            style={{ height: 7, borderRadius: 99, background: 'rgba(168,75,47,0.14)', overflow: 'hidden' }}>
+            <div style={{ width: `${offer.pctLeft}%`, height: '100%', borderRadius: 99, background: T.terra, transition: 'width 0.6s ease' }} />
+          </div>
+          <span style={{ fontSize: 12, color: T.inkDim }}>
+            {offer.nextPrice !== null ? fill(content.nextPriceTemplate, { price: `$${offer.nextPrice}` }) : content.lastStep}
+          </span>
+        </div>
       </div>
 
       <ul className="pc-4" style={{ listStyle: 'none', padding: 0, margin: '0 0 22px', display: 'flex', flexDirection: 'column', gap: 11 }}>

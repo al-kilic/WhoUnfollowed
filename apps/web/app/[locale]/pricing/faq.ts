@@ -1,4 +1,7 @@
 import type { AppLocale } from '@/i18n/routing';
+import { LAUNCH_UNLOCK_PRICE_USD as L, STANDARD_UNLOCK_PRICE_USD as S, LIFETIME_TIERS, LIFETIME_TOTAL_SEATS } from '@/lib/pricing';
+
+const [T1, T2, T3] = LIFETIME_TIERS.map((t) => t.price);
 
 /**
  * Pricing page FAQ, per locale.
@@ -16,7 +19,7 @@ export interface PricingFaqItem {
 const PRICING_FAQ_EN: PricingFaqItem[] = [
   {
     q: 'Is it really free?',
-    a: 'Yes. The core app (see who unfollowed you, who doesn\'t follow back, CSV export) is free forever and needs no account. Pro is optional and adds history, cloud sync, and trends.',
+    a: 'Yes. Seeing who doesn\'t follow you back, sorting that list, and one CSV export are free forever, with no account. Pro remembers every export, so each new one shows exactly who unfollowed you and when.',
   },
   {
     q: 'Does Pro auto-renew?',
@@ -24,11 +27,11 @@ const PRICING_FAQ_EN: PricingFaqItem[] = [
   },
   {
     q: 'What is the Lifetime Insider option?',
-    a: 'For a limited time, you can pay $19.99 once and keep Pro with no expiry date. It is meant to support an independent product. Insiders get a badge and title, Pro benefits on my next tools, and hear first when they launch. It may be removed at any time, and existing Insiders keep their access.',
+    a: `Pay once, keep Pro forever. Lifetime sells in a fixed number of seats: the first ones cost $${T1}, the next $${T2}, the last $${T3}. When all ${LIFETIME_TOTAL_SEATS} are gone, Lifetime closes for good. Insiders also get a private community, Pro benefits on future tools, and hear first about new launches.`,
   },
   {
-    q: 'Why charge for Pro at all?',
-    a: 'To keep the lights on. Pro covers servers and storage so the free app stays free, fast, and independent. No ads, no investors, no selling your data.',
+    q: 'Will the price go up?',
+    a: `Yes. Launch prices ($${L.monthly} for 30 days, $${L.yearly} for a year) last until December 31. From January 1 they are $${S.monthly} and $${S.yearly}. Anything you buy before then keeps its full time.`,
   },
   {
     q: 'Do I need to give you my Instagram or Threads password?',
@@ -43,7 +46,7 @@ const PRICING_FAQ_EN: PricingFaqItem[] = [
 const PRICING_FAQ_ES: PricingFaqItem[] = [
   {
     q: '¿De verdad es gratis?',
-    a: 'Sí. La app principal (ver quién te dejó de seguir, quién no te sigue de vuelta, exportar a CSV) es gratis para siempre y no necesita cuenta. Pro es opcional y añade historial, sincronización en la nube y tendencias.',
+    a: 'Sí. Ver quién no te sigue de vuelta, ordenar esa lista y una exportación CSV son gratis para siempre, sin cuenta. Pro recuerda cada exportación, así cada nueva te muestra exactamente quién te dejó de seguir y cuándo.',
   },
   {
     q: '¿Pro se renueva automáticamente?',
@@ -51,11 +54,11 @@ const PRICING_FAQ_ES: PricingFaqItem[] = [
   },
   {
     q: '¿Qué es la opción Lifetime de Insider?',
-    a: 'Por tiempo limitado, puedes pagar $19.99 una vez y conservar Pro sin fecha de vencimiento. Sirve para apoyar un producto independiente. Los Insiders reciben una insignia y un título, beneficios Pro en mis próximas herramientas y son los primeros en enterarse cuando se lancen. Puede retirarse en cualquier momento, y quienes ya son Insiders conservan su acceso.',
+    a: `Paga una vez y conserva Pro para siempre. Lifetime se vende en un número fijo de plazas: las primeras cuestan $${T1}, las siguientes $${T2} y las últimas $${T3}. Cuando se acaben las ${LIFETIME_TOTAL_SEATS}, Lifetime cierra para siempre. Los Insiders también tienen una comunidad privada, beneficios Pro en futuras herramientas y se enteran primero de cada lanzamiento.`,
   },
   {
-    q: '¿Por qué cobrar por Pro?',
-    a: 'Para mantener el servicio funcionando. Pro cubre los servidores y el almacenamiento para que la app gratuita siga siendo gratis, rápida e independiente. Sin anuncios, sin inversores, sin vender tus datos.',
+    q: '¿Va a subir el precio?',
+    a: `Sí. Los precios de lanzamiento ($${L.monthly} por 30 días, $${L.yearly} por un año) duran hasta el 31 de diciembre. Desde el 1 de enero son $${S.monthly} y $${S.yearly}. Lo que compres antes conserva todo su tiempo.`,
   },
   {
     q: '¿Tengo que darles mi contraseña de Instagram o Threads?',
@@ -70,7 +73,7 @@ const PRICING_FAQ_ES: PricingFaqItem[] = [
 const PRICING_FAQ_PT: PricingFaqItem[] = [
   {
     q: 'É mesmo gratuito?',
-    a: 'Sim. O app principal (ver quem deixou de te seguir, quem não te segue de volta, exportar CSV) é gratuito para sempre e não precisa de conta. O Pro é opcional e adiciona histórico, sincronização na nuvem e tendências.',
+    a: 'Sim. Ver quem não te segue de volta, organizar essa lista e uma exportação CSV são grátis para sempre, sem conta. O Pro lembra cada exportação, então cada nova mostra exatamente quem deixou de te seguir e quando.',
   },
   {
     q: 'O Pro renova automaticamente?',
@@ -78,11 +81,11 @@ const PRICING_FAQ_PT: PricingFaqItem[] = [
   },
   {
     q: 'O que é a opção Lifetime de Insider?',
-    a: 'Por tempo limitado, você pode pagar $19.99 uma vez e manter o Pro sem data de vencimento. Serve para apoiar um produto independente. Os Insiders recebem um selo e um título, benefícios Pro nas minhas próximas ferramentas e são os primeiros a saber quando forem lançadas. Pode ser retirada a qualquer momento, e quem já é Insider mantém o acesso.',
+    a: `Pague uma vez e fique com o Pro para sempre. O Lifetime é vendido em um número fixo de vagas: as primeiras custam $${T1}, as seguintes $${T2} e as últimas $${T3}. Quando as ${LIFETIME_TOTAL_SEATS} acabarem, o Lifetime fecha de vez. Insiders também têm uma comunidade privada, benefícios Pro em ferramentas futuras e ficam sabendo primeiro de cada lançamento.`,
   },
   {
-    q: 'Por que cobrar pelo Pro?',
-    a: 'Para manter o serviço no ar. O Pro cobre servidores e armazenamento para que o app gratuito continue grátis, rápido e independente. Sem anúncios, sem investidores, sem venda dos seus dados.',
+    q: 'O preço vai subir?',
+    a: `Sim. Os preços de lançamento ($${L.monthly} por 30 dias, $${L.yearly} por um ano) valem até 31 de dezembro. A partir de 1º de janeiro são $${S.monthly} e $${S.yearly}. O que você comprar antes mantém todo o tempo.`,
   },
   {
     q: 'Preciso dar minha senha do Instagram ou do Threads?',

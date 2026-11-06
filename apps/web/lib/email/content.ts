@@ -131,7 +131,7 @@ const purchase: Record<AppLocale, PurchaseEmailContent> = {
     titleNew: 'Welcome to Pro',
     titleRenewal: 'Pro access renewed',
     bodyNew: (planLabel, expiresOn) =>
-      `Thanks for upgrading. Your ${planLabel} Pro access is active now and runs through ${expiresOn}.`,
+      `Thanks for upgrading. Your ${planLabel} Pro access is active now and runs through ${expiresOn}. We'll email you every 2 weeks when it's time for a new export, so you always see who unfollowed you. One click in any of those emails stops them.`,
     bodyRenewal: (planLabel, expiresOn) =>
       `Your ${planLabel} unlock went through. Pro access now runs through ${expiresOn}.`,
     button: 'Open WhoUnfollowed',
@@ -147,7 +147,7 @@ const purchase: Record<AppLocale, PurchaseEmailContent> = {
     titleNew: 'Bienvenido a Pro',
     titleRenewal: 'Acceso Pro renovado',
     bodyNew: (planLabel, expiresOn) =>
-      `Gracias por mejorar tu cuenta. Tu acceso Pro ${planLabel} ya está activo y dura hasta el ${expiresOn}.`,
+      `Gracias por mejorar tu cuenta. Tu acceso Pro ${planLabel} ya está activo y dura hasta el ${expiresOn}. Te escribiremos cada 2 semanas cuando toque una nueva exportación, para que siempre veas quién te dejó de seguir. Un clic en cualquiera de esos emails los detiene.`,
     bodyRenewal: (planLabel, expiresOn) =>
       `Tu compra ${planLabel} se procesó correctamente. Tu acceso Pro ahora dura hasta el ${expiresOn}.`,
     button: 'Abrir WhoUnfollowed',
@@ -163,7 +163,7 @@ const purchase: Record<AppLocale, PurchaseEmailContent> = {
     titleNew: 'Bem-vindo ao Pro',
     titleRenewal: 'Acesso Pro renovado',
     bodyNew: (planLabel, expiresOn) =>
-      `Obrigado por assinar o Pro. Seu acesso ${planLabel} já está ativo e vale até ${expiresOn}.`,
+      `Obrigado por assinar o Pro. Seu acesso ${planLabel} já está ativo e vale até ${expiresOn}. Vamos te enviar um email a cada 2 semanas quando for hora de uma nova exportação, para você sempre ver quem deixou de te seguir. Um clique em qualquer um desses emails os interrompe.`,
     bodyRenewal: (planLabel, expiresOn) =>
       `Sua compra ${planLabel} foi confirmada. Seu acesso Pro agora vale até ${expiresOn}.`,
     button: 'Abrir WhoUnfollowed',

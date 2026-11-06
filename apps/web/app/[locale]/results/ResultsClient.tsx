@@ -21,6 +21,7 @@ import { SiteNav } from '@/components/landing/SiteNav';
 import { Tutorial } from '@/components/Tutorial';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { UpgradeLink } from '@/app/account/UpgradeLink';
+import { NextCheckSection } from './NextCheckSection';
 import { trackLockedView } from '@/lib/analytics';
 import type { AppLocale } from '@/i18n/routing';
 import { getResultsContent, type ResultsContent } from './content';
@@ -154,10 +155,11 @@ function CheckItem({ label }: { label: string }) {
 
 // Small live "Radar preview" built from the visitor's own numbers, not demo
 // data, so it reads as their report rather than a generic ad.
-function RadarPreviewCard({ mutualsCount, nonFollowersCount, totalFollowing, c }: {
+function RadarPreviewCard({ mutualsCount, nonFollowersCount, totalFollowing, signals, c }: {
   mutualsCount: number;
   nonFollowersCount: number;
   totalFollowing: number;
+  signals: RadarSignals;
   c: ResultsContent;
 }) {
   const followBackRate = totalFollowing > 0 ? Math.round((mutualsCount / totalFollowing) * 100) : 0;
@@ -195,6 +197,25 @@ function RadarPreviewCard({ mutualsCount, nonFollowersCount, totalFollowing, c }
         <span>{c.radarTeaser.dontFollowBackLabel(nonFollowersCount.toLocaleString())}</span>
       </div>
 
+      {/* Counts Radar would act on, from this export. Numbers only: the names
+          behind them are what Pro unlocks. */}
+      {(signals.oldRequests > 0 || signals.longNonFollowers > 0) && (
+        <div style={{ display: 'grid', gap: 6, marginBottom: 16 }}>
+          {signals.longNonFollowers > 0 && (
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, fontSize: 12, color: 'rgba(244,240,232,0.75)' }}>
+              <span style={{ fontFamily: T.serif, fontSize: 20, color: '#e08a6d', lineHeight: 1 }}>{signals.longNonFollowers.toLocaleString()}</span>
+              <span>{c.radarTeaser.longNonFollowersLabel}</span>
+            </div>
+          )}
+          {signals.oldRequests > 0 && (
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, fontSize: 12, color: 'rgba(244,240,232,0.75)' }}>
+              <span style={{ fontFamily: T.serif, fontSize: 20, color: '#e08a6d', lineHeight: 1 }}>{signals.oldRequests.toLocaleString()}</span>
+              <span>{c.radarTeaser.oldRequestsLabel}</span>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Timeline hint: this is the one number we can't show yet, it needs a second export */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, paddingTop: 14, borderTop: '1px solid rgba(244,240,232,0.08)' }}>
         <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'rgb(var(--t-previewAccent-rgb))', flexShrink: 0 }} />
@@ -209,7 +230,15 @@ function RadarPreviewCard({ mutualsCount, nonFollowersCount, totalFollowing, c }
   );
 }
 
-function RadarTeaser({ isPro, mutualsCount, nonFollowersCount, totalFollowing, platform, c }: {
+interface RadarSignals {
+  // Follow requests you sent that have waited 6+ months.
+  oldRequests: number;
+  // Accounts you've followed 3+ years that never followed back.
+  longNonFollowers: number;
+}
+
+function RadarTeaser({ isPro, mutualsCount, nonFollowersCount, totalFollowing, signals, platform, c }: {
+  signals: RadarSignals;
   platform: Platform;
   isPro: boolean;
   mutualsCount: number;
@@ -275,7 +304,7 @@ function RadarTeaser({ isPro, mutualsCount, nonFollowersCount, totalFollowing, p
         </div>
       </div>
 
-      <RadarPreviewCard mutualsCount={mutualsCount} nonFollowersCount={nonFollowersCount} totalFollowing={totalFollowing} c={c} />
+      <RadarPreviewCard mutualsCount={mutualsCount} nonFollowersCount={nonFollowersCount} totalFollowing={totalFollowing} signals={signals} c={c} />
     </section>
   );
 }
@@ -367,7 +396,7 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
   const dateLocale    = DATE_FNS_LOCALES[locale];
   const localeRouter = useLocaleRouter();
   const snapshot     = useSnapshotStore(s => s.currentSnapshot);
-  const { isPro }    = useAuth();
+  const { isPro, userEmail } = useAuth();
   const [activeTabId, setActiveTabId] = useState('non-followers');
   const [tutorialDone, setTutorialDone] = useState(false);
 
@@ -382,6 +411,16 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
     () => [...triage.values()].filter(s => s === 'done').length,
     [triage],
   );
+
+  const signals = useMemo<RadarSignals>(() => {
+    if (!snapshot || !analysis) return { oldRequests: 0, longNonFollowers: 0 };
+    const ref = snapshot.exportedAt;
+    const olderThan = (ts: number | null, days: number) => ts !== null && ref - ts > days * 86_400;
+    return {
+      oldRequests: (snapshot.pendingRequests ?? []).filter(a => olderThan(a.followedAt, 180)).length,
+      longNonFollowers: analysis.nonFollowers.filter(a => olderThan(a.followedAt, 3 * 365)).length,
+    };
+  }, [snapshot, analysis]);
 
   if (!snapshot || !analysis) return null;
 
@@ -484,8 +523,16 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
           )}
         </div>
 
+        <NextCheckSection
+          locale={locale}
+          isPro={isPro}
+          userEmail={userEmail}
+          nonFollowersCount={analysis.nonFollowers.length}
+        />
+
         <RadarTeaser
           isPro={isPro}
+          signals={signals}
           mutualsCount={analysis.mutuals.length}
           nonFollowersCount={analysis.nonFollowers.length}
           totalFollowing={analysis.totalFollowing}

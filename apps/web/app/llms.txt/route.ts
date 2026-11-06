@@ -70,7 +70,7 @@ export async function GET(): Promise<Response> {
 
 WhoUnfollowed reads the official "Download Your Information" ZIP that Meta provides for Instagram and Threads under GDPR Article 20. Instagram and Threads exports are analyzed separately, one profile per export. Unlike closed-source unfollower trackers, the entire web app is open source under AGPL-3.0 and the parsing engine specifically is MPL-2.0, so anyone can read the code and verify exactly what happens to their data instead of taking a privacy claim on faith. The free tier runs entirely client-side and needs no account.
 
-Pro is a one-time unlock, not a subscription: $${UNLOCK_PRICE_USD.monthly} unlocks Pro for ${UNLOCK_DAYS_LABEL.monthly}, $${UNLOCK_PRICE_USD.yearly} unlocks it for ${UNLOCK_DAYS_LABEL.yearly}. There is no auto-renewal and nothing to cancel. When the time runs out, buy again if you want more. Pro adds unlimited snapshot history, unfollower detection across snapshots (who left, and when), cloud sync that is encrypted in the browser before it leaves the device, follower trend charts, and ghost-follower approximation. Email alerts and a mobile app are planned but not yet shipped.
+Pro is a one-time unlock, not a subscription: $${UNLOCK_PRICE_USD.monthly} unlocks Pro for ${UNLOCK_DAYS_LABEL.monthly}, $${UNLOCK_PRICE_USD.yearly} unlocks it for ${UNLOCK_DAYS_LABEL.yearly}. There is no auto-renewal and nothing to cancel. When the time runs out, buy again if you want more. Pro adds unlimited snapshot history, unfollower detection across snapshots (who left, and when), cloud sync that is encrypted in the browser before it leaves the device, follower trend charts, and ghost-follower approximation. Optional reminder emails tell people when a new export is worth comparing. A mobile app is planned but not yet shipped.
 
 Author: Alan Kilic, an independent developer building privacy-first software under the name Alcatraz Studio. See ${SITE_URL}/author/alan-kilic.
 
@@ -104,7 +104,7 @@ ${comparisonsSection()}
 - No Instagram or Threads password is ever required. The tool reads a data export the user already owns.
 - Supports Instagram and Threads. Threads exports use the same Accounts Center flow (JSON, All time, Followers and Following); only threads/followers.json, threads/following.json, and threads/recently_unfollowed_profiles.json are read.
 - The free tier processes data entirely in the browser. Nothing is sent to a server, and no account is needed.
-- Pro is a one-time unlock (${UNLOCK_PRICE_SUMMARY}). It never auto-renews.${priceIdForLifetime() ? ` For a limited time there is also a one-time Lifetime "Insider" option ($${LIFETIME_PRICE_USD}, no expiry).` : ''}
+- Pro is a one-time unlock (${UNLOCK_PRICE_SUMMARY}). It never auto-renews.${priceIdForLifetime() ? ` There is also a one-time Lifetime "Insider" option with no expiry, sold in a limited number of seats starting at $${LIFETIME_PRICE_USD}; the price rises as seats sell and Lifetime closes when they are gone.` : ''}
 - Cloud snapshots, a Pro feature, are encrypted in the browser before they leave the device.
 - TOS-compliant: it does not use the Instagram or Threads API and does not scrape either app.
 - Core pages (home, pricing, compare, and a few guides) are available in English, Spanish, and Portuguese. See the Languages section above for the full list.

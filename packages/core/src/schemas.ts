@@ -131,6 +131,27 @@ export const contactMessageSchema = z.object({
 export type ContactSource = (typeof contactSources)[number];
 export type ContactMessageInput = z.infer<typeof contactMessageSchema>;
 
+// Where an email address was handed over for reminder emails or the Creator
+// AI waitlist. Kept in the schema so the API rejects anything else.
+export const emailOptInSources = [
+  'results',
+  'snapshot-limit',
+  'reveal',
+  'welcome',
+  'creator-ai-waitlist',
+] as const;
+
+export const emailOptInSchema = z.object({
+  email: z.string().trim().toLowerCase().email().max(320),
+  source: z.enum(emailOptInSources),
+  locale: z.enum(['en', 'es', 'pt']).optional(),
+  // Must be an explicit true from the form, never inferred.
+  consent: z.literal(true),
+});
+
+export type EmailOptInSource = (typeof emailOptInSources)[number];
+export type EmailOptInInput = z.infer<typeof emailOptInSchema>;
+
 export type StringListItem = z.infer<typeof stringListItemSchema>;
 export type RelationshipEntry = z.infer<typeof relationshipEntrySchema>;
 export type FollowersFile = z.infer<typeof followersFileSchema>;

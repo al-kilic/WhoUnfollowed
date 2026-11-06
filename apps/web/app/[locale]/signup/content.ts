@@ -2,7 +2,7 @@ import type { AppLocale } from '@/i18n/routing';
 
 // signupAction (actions.ts) returns one of these codes instead of English
 // text, so the client component can translate it via this content file.
-export type SignupErrorCode = 'missing_fields' | 'password_too_short' | 'rate_limited' | 'email_taken' | 'create_failed';
+export type SignupErrorCode = 'missing_fields' | 'password_too_short' | 'rate_limited' | 'email_taken' | 'create_failed' | 'disposable_email';
 
 export interface SignupContent {
   title: string;
@@ -15,6 +15,8 @@ export interface SignupContent {
   passwordHint: string;
   creatingAccount: string;
   createAccount: string;
+  remindersLabel: string;
+  remindersHint: string;
   errors: Record<SignupErrorCode, string>;
 }
 
@@ -29,12 +31,15 @@ const EN: SignupContent = {
   passwordHint: 'Minimum 8 characters.',
   creatingAccount: 'Creating account...',
   createAccount: 'Create account',
+  remindersLabel: 'Remind me every 2 weeks to check who unfollowed me',
+  remindersHint: 'A short email when a new export is worth it. One click to stop.',
   errors: {
     missing_fields: 'Email and password are required.',
     password_too_short: 'Password must be at least 8 characters.',
     rate_limited: 'Too many attempts. Try again in 15 minutes.',
     email_taken: 'An account with this email already exists.',
     create_failed: 'Failed to create account. Please try again.',
+    disposable_email: 'Please use a regular email address, not a temporary one.',
   },
 };
 
@@ -49,12 +54,15 @@ const ES: SignupContent = {
   passwordHint: 'Mínimo 8 caracteres.',
   creatingAccount: 'Creando cuenta...',
   createAccount: 'Crear cuenta',
+  remindersLabel: 'Recuérdame cada 2 semanas revisar quién me dejó de seguir',
+  remindersHint: 'Un email corto cuando valga la pena una nueva exportación. Un clic para dejarlo.',
   errors: {
     missing_fields: 'El correo electrónico y la contraseña son obligatorios.',
     password_too_short: 'La contraseña debe tener al menos 8 caracteres.',
     rate_limited: 'Demasiados intentos. Vuelve a intentarlo en 15 minutos.',
     email_taken: 'Ya existe una cuenta con este correo electrónico.',
     create_failed: 'No se pudo crear la cuenta. Inténtalo de nuevo.',
+    disposable_email: 'Usa un correo normal, no uno temporal.',
   },
 };
 
@@ -69,12 +77,15 @@ const PT: SignupContent = {
   passwordHint: 'Mínimo de 8 caracteres.',
   creatingAccount: 'Criando conta...',
   createAccount: 'Criar conta',
+  remindersLabel: 'Me lembre a cada 2 semanas de ver quem deixou de me seguir',
+  remindersHint: 'Um email curto quando valer a pena uma nova exportação. Um clique para parar.',
   errors: {
     missing_fields: 'E-mail e senha são obrigatórios.',
     password_too_short: 'A senha deve ter pelo menos 8 caracteres.',
     rate_limited: 'Muitas tentativas. Tente novamente em 15 minutos.',
     email_taken: 'Já existe uma conta com este e-mail.',
     create_failed: 'Falha ao criar a conta. Tente novamente.',
+    disposable_email: 'Use um e-mail normal, não um temporário.',
   },
 };
 

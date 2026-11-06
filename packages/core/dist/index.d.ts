@@ -91,6 +91,25 @@ declare const contactMessageSchema: z.ZodObject<{
 }, z.core.$strip>;
 type ContactSource = (typeof contactSources)[number];
 type ContactMessageInput = z.infer<typeof contactMessageSchema>;
+declare const emailOptInSources: readonly ["results", "snapshot-limit", "reveal", "welcome", "creator-ai-waitlist"];
+declare const emailOptInSchema: z.ZodObject<{
+    email: z.ZodString;
+    source: z.ZodEnum<{
+        results: "results";
+        "snapshot-limit": "snapshot-limit";
+        reveal: "reveal";
+        welcome: "welcome";
+        "creator-ai-waitlist": "creator-ai-waitlist";
+    }>;
+    locale: z.ZodOptional<z.ZodEnum<{
+        en: "en";
+        es: "es";
+        pt: "pt";
+    }>>;
+    consent: z.ZodLiteral<true>;
+}, z.core.$strip>;
+type EmailOptInSource = (typeof emailOptInSources)[number];
+type EmailOptInInput = z.infer<typeof emailOptInSchema>;
 type FollowersFile = z.infer<typeof followersFileSchema>;
 type FollowingFile = z.infer<typeof followingFileSchema>;
 type Account = z.infer<typeof accountSchema>;
@@ -163,4 +182,4 @@ declare class SchemaValidationError extends Error {
     constructor(filename: string, detail: string);
 }
 
-export { type Account, type ContactMessageInput, type ContactSource, type DeltaDetectionResult, type DeltaReason, type FeedbackInput, type FeedbackSentiment, FileReadError, type FollowersFile, type FollowingFile, InvalidZipError, MissingFilesError, MixedFormatError, type ParseExportResult, type ParsedSnapshot, type Platform, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, type ZipShape, analyzeSnapshot, compareSnapshots, contactMessageSchema, contactSources, detectDeltaExport, feedbackSchema, feedbackSentiments, findGhostFollowers, parseExportZip, parseInstagramZip, platforms, snapshotPlatform };
+export { type Account, type ContactMessageInput, type ContactSource, type DeltaDetectionResult, type DeltaReason, type EmailOptInInput, type EmailOptInSource, type FeedbackInput, type FeedbackSentiment, FileReadError, type FollowersFile, type FollowingFile, InvalidZipError, MissingFilesError, MixedFormatError, type ParseExportResult, type ParsedSnapshot, type Platform, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, type ZipShape, analyzeSnapshot, compareSnapshots, contactMessageSchema, contactSources, detectDeltaExport, emailOptInSchema, emailOptInSources, feedbackSchema, feedbackSentiments, findGhostFollowers, parseExportZip, parseInstagramZip, platforms, snapshotPlatform };

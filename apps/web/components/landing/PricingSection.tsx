@@ -6,6 +6,9 @@ import { T } from './tokens';
 import { Icon } from './atoms';
 import { trackUpgradeClick } from '@/lib/analytics';
 import { UNLOCK_PRICE_USD } from '@/lib/pricing';
+import { useLocale } from 'next-intl';
+import { CreatorAiTeaser } from '@/components/CreatorAiTeaser';
+import type { AppLocale } from '@/i18n/routing';
 
 // The yearly unlock's savings vs. buying the 30-day one repeatedly for a
 // year, computed from the same prices instead of a separately hardcoded
@@ -161,7 +164,7 @@ function PricingMobileTabs({ content, billing, mobileEmail, setMobileEmail, mobi
 }
 
 function PricingBig({ content, lifetimeAvailable }: { content: PricingTeaserContent; lifetimeAvailable: boolean }) {
-  const [billing, setBilling] = React.useState<Billing>('monthly');
+  const [billing, setBilling] = React.useState<Billing>('annual');
   const [mobileEmail, setMobileEmail] = React.useState('');
   const [mobileStatus, setMobileStatus] = React.useState<'idle' | 'sent' | 'error'>('idle');
 
@@ -368,6 +371,7 @@ function PricingBig({ content, lifetimeAvailable }: { content: PricingTeaserCont
 }
 
 export function PricingSection({ content, lifetimeAvailable = false }: { content: PricingTeaserContent; lifetimeAvailable?: boolean }) {
+  const locale = useLocale() as AppLocale;
   return (
     <section id="pricing" className="px-4 sm:px-12 pb-24 sm:pb-32 relative">
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
@@ -380,6 +384,9 @@ export function PricingSection({ content, lifetimeAvailable = false }: { content
           <span style={{ fontStyle: 'italic', color: T.tealLight }}>{content.headlineLine2}</span>
         </h2>
         <PricingBig content={content} lifetimeAvailable={lifetimeAvailable} />
+        <div style={{ maxWidth: 880, margin: '28px auto 0' }}>
+          <CreatorAiTeaser locale={locale} placement="home" />
+        </div>
       </div>
     </section>
   );
