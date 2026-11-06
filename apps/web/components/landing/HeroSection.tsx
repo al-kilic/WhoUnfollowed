@@ -16,7 +16,7 @@ import { detectDeltaExport, type DeltaReason } from '@ig-tracker/core';
 import { useSnapshotStore } from '@/lib/store';
 import { useSnapshotList, saveSnapshot, deleteSnapshot, FREE_SNAPSHOT_LIMIT } from '@/hooks/useSnapshots';
 import { useAuth } from '@/components/AuthProvider';
-import { track, trackFunnel } from '@/lib/analytics';
+import { Events, track, trackFunnel } from '@/lib/analytics';
 import { recordParse as recordParseAction } from '@/app/actions/stats';
 import { DeltaWarning } from '@/components/DeltaWarning';
 import type { DeltaWarningContent } from '@/components/deltaWarning.content';
@@ -105,7 +105,7 @@ function classifyError(err: unknown, content: HeroContent): { message: string; k
       message: err.platform === 'threads' ? content.errors.missingThreadsData : err.platform === 'tiktok' ? content.errors.missingTikTokData : content.errors.missingData,
       kind: 'missing_data',
       showGuideCta: true,
-      ...(err.shape ? { props: shapeProps(err.shape) } : {}),
+      props: { platform: err.platform, ...(err.shape ? shapeProps(err.shape) : {}) },
     };
   }
   if (err instanceof MixedFormatError) {
@@ -201,8 +201,8 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
   const commit = useCallback(async (snap: ParsedSnapshot) => {
     // Navigate immediately — results page reads from Zustand, not IndexedDB
     setSnapshot(snap);
-    track('zip-upload');
-    trackFunnel('Analysis Completed', { analysis_type: 'non_followers' });
+    track(Events.zipUpload, { platform: snapshotPlatform(snap) });
+    trackFunnel('Analysis Completed', { analysis_type: 'non_followers', platform: snapshotPlatform(snap) });
     router.push('/results');
     // Save to IndexedDB in background (non-blocking). Track only on actual
     // success — a rejected save should never report a false "Snapshot Saved".
@@ -278,7 +278,7 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
       const info = classifyError(err, content);
       setErrInfo(info);
       setPhase('error');
-      trackFunnel('Analysis Failed', { error_type: info.kind, size, ...info.props });
+      trackFunnel('Analysis Failed', { error_type: info.kind, size, platform: isTikTokJson ? 'tiktok' : 'unknown', ...info.props });
     }
   };
 
@@ -316,7 +316,7 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
       const newId = await saveSnapshot(snap, userId);
       const sinceLabel = new Date(previous.exportedAt * 1000).toLocaleDateString(locale, { day: 'numeric', month: 'short' });
       setReveal({ snap, comparison: compareSnapshots(previous.data, snap), oldId: previous.id, newId, sinceLabel });
-      trackFunnel('Analysis Completed', { analysis_type: 'comparison' });
+      trackFunnel('Analysis Completed', { analysis_type: 'comparison', platform });
       return true;
     } catch {
       return false;

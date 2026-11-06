@@ -28,14 +28,11 @@ export function track(eventName: string, eventData?: Record<string, unknown>): v
 // is easy to read. Conversion funnel: upload -> results -> locked-view -> upgrade
 // -> checkout -> subscribe.
 export const Events = {
-  zipUpload: 'zip-upload',
-  resultsView: 'results-view',
-  radarView: 'radar-view',
-  historyView: 'history-view',
+  zipUpload: 'zip-upload',          // { platform }
+  radarView: 'radar-view',           // { platform, pro, has_previous }
   lockedView: 'locked-view',          // { feature }
   upgradeClick: 'upgrade-click',      // { source }
   checkoutStart: 'checkout-start',    // { billing: 'unlock-monthly' | 'unlock-yearly' | 'lifetime' }
-  manageBilling: 'manage-billing',
   subscribeComplete: 'subscribe-complete',
   csvExport: 'csv-export',            // { mode: pro | free | capture | limit }
   emailCaptured: 'email-captured',    // { context }
@@ -46,6 +43,7 @@ export const Events = {
   reminderOptin: 'reminder-optin',    // { source }
   revealView: 'reveal-view',          // { count_bucket }
   creatorWaitlist: 'creator-waitlist', // { placement }
+  keepExportClick: 'keep-export-click', // { placement } signed-out "keep this export" card -> signup
   // Tools. Props are fixed literals or counts only, never usernames.
   verdictShare: 'verdict-share',      // { action: share | save | another, archetype, placement }
   planStarted: 'plan-started',        // { pace, size_bucket }
@@ -83,13 +81,17 @@ export function trackLockedView(feature: string): void {
 // call trackFunnel, so an arbitrary string can never reach Umami here. Never
 // pass anything user-provided (usernames, filenames, raw error messages) as a
 // prop value — only these fixed literals.
+type PlatformTag = 'instagram' | 'threads' | 'tiktok';
+
 type FunnelEventMap = {
   'Hero CTA Clicked': { path: 'have_zip' | 'get_export' };
   'Export Guide Opened': { entry: 'hero' | 'upload_error' };
   'Upload Started': { size: SizeBucket };
-  'Analysis Completed': { analysis_type: 'non_followers' | 'comparison' };
+  'Analysis Completed': { analysis_type: 'non_followers' | 'comparison'; platform: PlatformTag };
   'Analysis Failed': {
     error_type: 'html_export' | 'missing_data' | 'invalid_zip' | 'unsupported_format' | 'unzipped_file' | 'file_read' | 'schema_changed' | 'unknown';
+    // Which app the file was for, when the error tells us; otherwise 'unknown'.
+    platform?: PlatformTag | 'unknown';
     // Diagnostics, all closed sets (see lib/uploadDiagnostics.ts).
     size?: SizeBucket;
     file_ext?: FileExt;

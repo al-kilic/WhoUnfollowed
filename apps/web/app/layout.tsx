@@ -13,6 +13,8 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 const UMAMI_SRC =
   process.env.NEXT_PUBLIC_UMAMI_SRC ?? 'https://analytics.whounfollowed.co/script.js';
 const UMAMI_WEBSITE_ID = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID ?? '380314e5-fc79-480f-9483-d5ddded7ad59';
+// Only this host is counted (see the data-domains note on the script tag).
+const UMAMI_DOMAINS = process.env.NEXT_PUBLIC_UMAMI_DOMAINS ?? 'whounfollowed.co';
 // Session recorder (heatmaps + replays), also self-hosted on our VPS.
 const UMAMI_RECORDER_SRC =
   process.env.NEXT_PUBLIC_UMAMI_RECORDER_SRC ?? 'https://analytics.whounfollowed.co/recorder.js';
@@ -173,15 +175,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: `(function(){try{var K='wu:acq_source';if(!sessionStorage.getItem(K)){var src='direct';var p=new URLSearchParams(location.search);var u=p.get('utm_source');if(u){src=u;}else if(document.referrer){try{var h=new URL(document.referrer).hostname;if(h&&h.indexOf('whounfollowed.co')===-1){src=h;}}catch(e){}}sessionStorage.setItem(K,src);}}catch(e){}})();`,
           }}
         />
+        {/* data-domains: the tracker ignores any other host, so local and LAN
+            dev servers never write test traffic into the live stats. */}
         {UMAMI_WEBSITE_ID ? (
           <Script
             defer
             src={UMAMI_SRC}
             data-website-id={UMAMI_WEBSITE_ID}
+            data-domains={UMAMI_DOMAINS}
             strategy="afterInteractive"
           />
         ) : null}
-        {UMAMI_WEBSITE_ID ? (
+        {/* The recorder has no domain filter, so it only loads in production builds. */}
+        {UMAMI_WEBSITE_ID && process.env.NODE_ENV === 'production' ? (
           <Script
             defer
             src={UMAMI_RECORDER_SRC}
