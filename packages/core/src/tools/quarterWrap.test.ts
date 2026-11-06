@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Account, ParsedSnapshot } from '../schemas.js';
-import { monthsBefore, quarterWrap, shouldAutoPlayWrap, WRAP_REPLAY_DAYS } from './quarterWrap.js';
+import { monthsBefore, quarterWrap, shouldAutoPlayWrap, WRAP_MIN_ACTIVITY, WRAP_REPLAY_DAYS } from './quarterWrap.js';
 
 const NOW = Date.UTC(2026, 10, 1, 12) / 1000; // 2026-11-01 12:00 UTC
 const DAY = 86400;
@@ -54,10 +54,16 @@ describe('quarterWrap', () => {
 });
 
 describe('shouldAutoPlayWrap', () => {
-  it('plays with no record, or once the export is far enough newer', () => {
-    expect(shouldAutoPlayWrap(null, NOW)).toBe(true);
-    expect(shouldAutoPlayWrap(NOW, NOW)).toBe(false);
-    expect(shouldAutoPlayWrap(NOW - (WRAP_REPLAY_DAYS - 1) * DAY, NOW)).toBe(false);
-    expect(shouldAutoPlayWrap(NOW - WRAP_REPLAY_DAYS * DAY, NOW)).toBe(true);
+  const seen = { shownAt: NOW, exportedAt: NOW };
+  it('plays the first time when the wrap has enough in it', () => {
+    expect(shouldAutoPlayWrap(null, NOW, NOW, WRAP_MIN_ACTIVITY)).toBe(true);
+    expect(shouldAutoPlayWrap(null, NOW, NOW, WRAP_MIN_ACTIVITY - 1)).toBe(false);
+  });
+  it('waits a quarter and needs a newer export', () => {
+    const later = NOW + WRAP_REPLAY_DAYS * DAY;
+    expect(shouldAutoPlayWrap(seen, NOW + DAY, NOW + DAY, 50)).toBe(false); // too soon
+    expect(shouldAutoPlayWrap(seen, NOW, later, 50)).toBe(false); // same export, months later
+    expect(shouldAutoPlayWrap(seen, later - DAY, later - DAY, 50)).toBe(false); // newer export, too soon
+    expect(shouldAutoPlayWrap(seen, later, later, 50)).toBe(true);
   });
 });

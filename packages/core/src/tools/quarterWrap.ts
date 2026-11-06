@@ -46,8 +46,20 @@ export function monthsBefore(ts: number, months: number): number {
   return Date.UTC(y, m, Math.min(d.getUTCDate(), last), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds()) / 1000;
 }
 
-export function shouldAutoPlayWrap(seenExportedAt: number | null, exportedAt: number): boolean {
-  return seenExportedAt === null || exportedAt >= seenExportedAt + WRAP_REPLAY_DAYS * DAY;
+// Below this many new followers plus follows made in the window, the wrap is
+// too thin to open by itself (it can still be played from the button).
+export const WRAP_MIN_ACTIVITY = 5;
+
+// The last wrap that opened by itself in this browser (epoch seconds).
+export interface WrapSeen { shownAt: number; exportedAt: number }
+
+// Opens by itself about once a quarter: never seen, or at least WRAP_REPLAY_DAYS
+// since the last auto-play AND for a newer export than that one. One record per
+// browser, across apps and sign-in, so nobody gets a wrap per app or per login.
+export function shouldAutoPlayWrap(seen: WrapSeen | null, exportedAt: number, now: number, activity: number): boolean {
+  if (activity < WRAP_MIN_ACTIVITY) return false;
+  if (!seen) return true;
+  return now - seen.shownAt >= WRAP_REPLAY_DAYS * DAY && exportedAt > seen.exportedAt;
 }
 
 const inWindow = (a: Account, start: number, end: number): a is Account & { followedAt: number } =>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useEffect, useState } from 'react';
+import { useMemo, useEffect, useRef, useState } from 'react';
 import { Link } from '@/i18n/navigation';
 import { format, differenceInDays } from 'date-fns';
 import { es, pt } from 'date-fns/locale';
@@ -38,6 +38,7 @@ import { getWrapContent } from '@/components/wrap/wrap.content';
 import { useWrapAutoplay } from '@/hooks/useWrapAutoplay';
 import { quarterWrap } from '@ig-tracker/core';
 import { useStars } from '@/hooks/useStars';
+import { Events, track } from '@/lib/analytics';
 
 const DATE_FNS_LOCALES: Partial<Record<AppLocale, DateFnsLocale>> = { es, pt };
 
@@ -114,6 +115,12 @@ function makeCustomTooltip(labelMap: Record<string, string>) {
       </div>
     );
   };
+}
+
+// The locked (free) preview keeps counts and dates but never puts real
+// usernames in the page: blur is only CSS, and these lists are Pro.
+function maskAccounts<A extends { username: string; href: string }>(accounts: A[]): A[] {
+  return accounts.map((a, i) => ({ ...a, username: `${'•'.repeat(4 + (i % 6))}`, href: '#' }));
 }
 
 function AudienceBreakdown({ followers, mutuals, fans, nonFollowers, c, locked = false }: {
@@ -434,7 +441,7 @@ function FollowAgeCard({ nonFollowers, c, locked = false }: { nonFollowers: { us
                 const days = differenceInDays(Date.now(), (a.followedAt ?? 0) * 1000);
                 const intensity = Math.max(0.15, 1 - i * 0.08);
                 return (
-                  <a key={a.username} href={a.href} target="_blank" rel="noopener noreferrer" style={{
+                  <a key={`${i}:${a.username}`} href={a.href} target="_blank" rel="noopener noreferrer" style={{
                     display: 'inline-flex', alignItems: 'center', gap: 5,
                     fontSize: 11, fontFamily: T.mono, padding: '4px 11px', borderRadius: 20,
                     background: `rgba(168,75,47,${intensity * 0.08})`,
@@ -514,7 +521,7 @@ function FollowAgeCard({ nonFollowers, c, locked = false }: { nonFollowers: { us
             {activeBucket.accounts.map((a, i) => {
               const days = differenceInDays(now * 1000, (a.followedAt ?? 0) * 1000);
               return (
-                <div key={a.username} style={{
+                <div key={`${i}:${a.username}`} style={{
                   display: 'flex', alignItems: 'center', gap: 10, padding: '9px 14px',
                   borderBottom: i < activeBucket.accounts.length - 1 ? '1px solid var(--t-surface2)' : 'none',
                 }}>
@@ -610,7 +617,7 @@ function PendingRequestsCard({ accounts, c, locked = false }: { accounts: { user
               const days = a.followedAt ? differenceInDays(now * 1000, a.followedAt * 1000) : null;
               const flag = pendingLabel(c, days, a.username);
               return (
-                <div key={a.username} style={{
+                <div key={`${i}:${a.username}`} style={{
                   display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px',
                   borderBottom: i < displayAccounts.length - 1 ? '1px solid var(--t-surface2)' : 'none',
                 }}>
@@ -645,7 +652,7 @@ function RecentlyUnfollowedCard({ accounts, c, dateLocale, locked = false }: { a
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', borderRadius: 10, border: '1px solid var(--t-border1)', overflow: 'hidden', marginTop: 16, maxHeight: 300, overflowY: 'auto' }}>
           {accounts.map((a, i) => (
-            <div key={a.username} style={{
+            <div key={`${i}:${a.username}`} style={{
               display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px',
               borderBottom: i < accounts.length - 1 ? '1px solid var(--t-surface2)' : 'none',
             }}>
@@ -957,7 +964,24 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
     [snapshot, previousSnapshot],
   );
   const onPlatformWithData = !!snapshot && !emptyPlatforms.includes(platform);
-  const wrapState = useWrapAutoplay(account.userId, platform, onPlatformWithData ? snapshot.exportedAt : null, wrap !== null);
+  const wrapState = useWrapAutoplay(onPlatformWithData ? snapshot.exportedAt : null, wrap !== null, wrap ? wrap.arrived + wrap.followsMade : 0);
+
+  // One radar-view per export shown, so "saw the Radar -> upgrade" is countable.
+  const viewedExport = onPlatformWithData ? snapshot.exportedAt : null;
+  const hasPrevious = previousSnapshot !== undefined;
+  // Opened from the wrap email with nothing saved on this device: say why.
+  const [fromWrapEmail, setFromWrapEmail] = useState(false);
+  useEffect(() => { setFromWrapEmail(new URLSearchParams(window.location.search).get('wrap') === '1'); }, []);
+
+  const lastViewed = useRef<string | null>(null);
+  useEffect(() => {
+    // Wait for saved history, or has_previous would read false on a fresh load.
+    if (viewedExport === null || !snapshotsLoaded) return;
+    const key = `${platform}:${viewedExport}`;
+    if (lastViewed.current === key) return; // history loading late must not count twice
+    lastViewed.current = key;
+    track(Events.radarView, { platform, pro: account.isPro, has_previous: hasPrevious });
+  }, [viewedExport, snapshotsLoaded, platform, account.isPro, hasPrevious]);
 
   if (loading) return (
     <div style={{ minHeight: '100vh', background: T.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -984,6 +1008,11 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
         <p style={{ fontSize: 14.5, color: T.inkDim, lineHeight: 1.6, marginBottom: 28 }}>
           {c.emptyState.body}
         </p>
+        {fromWrapEmail && (
+          <p style={{ fontSize: 14, color: T.ink, lineHeight: 1.6, margin: '-12px 0 28px', padding: '12px 16px', borderRadius: 10, background: T.surface2, border: `1px solid ${T.border2}` }}>
+            {c.emptyState.wrapNote}
+          </p>
+        )}
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
           <Link
             href="/"
@@ -1101,7 +1130,7 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
 
         {/* Follow age full width */}
         <div id="tutorial-follow-age" style={{ marginBottom: 16 }}>
-          <FollowAgeCard nonFollowers={nonFollowers} c={c} locked={locked} />
+          <FollowAgeCard nonFollowers={locked ? maskAccounts(nonFollowers) : nonFollowers} c={c} locked={locked} />
         </div>
 
         {/* Stars and the unfollow planner list real usernames, so they only
@@ -1117,8 +1146,8 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
         {/* Threads exports have no "requests you sent" list, so the pending
             card is Instagram-only. */}
         <div id="tutorial-pending" className={hasPendingRequests(platform) ? 'grid grid-cols-1 md:grid-cols-2' : 'grid grid-cols-1'} style={{ gap: 16 }}>
-          {hasPendingRequests(platform) && <PendingRequestsCard accounts={snapshot.pendingRequests ?? []} c={c} locked={locked} />}
-          <RecentlyUnfollowedCard accounts={snapshot.recentlyUnfollowed ?? []} c={c} dateLocale={dateLocale} locked={locked} />
+          {hasPendingRequests(platform) && <PendingRequestsCard accounts={locked ? maskAccounts(snapshot.pendingRequests ?? []) : snapshot.pendingRequests ?? []} c={c} locked={locked} />}
+          <RecentlyUnfollowedCard accounts={locked ? maskAccounts(snapshot.recentlyUnfollowed ?? []) : snapshot.recentlyUnfollowed ?? []} c={c} dateLocale={dateLocale} locked={locked} />
         </div>
         </RadarSection>
       </main>

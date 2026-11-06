@@ -6,6 +6,8 @@ export interface DashboardContent {
     body: string;
     uploadExport: string;
     howToExport: string;
+    // Shown when the page was opened from the 3-month wrap email.
+    wrapNote: string;
   };
   header: {
     radar: string;
@@ -83,9 +85,10 @@ const EN: DashboardContent = {
   loadingRadar: 'Loading Radar…',
   emptyState: {
     title: 'No data to scan yet',
-    body: 'Radar needs an Instagram or Threads export to analyze. Upload your data once and your follower radar, non-followers, and growth show up here. Nothing leaves your browser.',
+    body: 'Radar needs an Instagram, Threads or TikTok export to analyze. Upload your data once and your follower radar, non-followers, and growth show up here. Nothing leaves your browser.',
     uploadExport: 'Upload your export',
     howToExport: 'How to export',
+    wrapNote: 'Your wrap is made from your own export, right here in your browser, so this device needs one first. Download a fresh export, upload it, then open your Radar to play your 3-month wrap.',
   },
   header: {
     radar: 'RADAR',
@@ -201,9 +204,10 @@ const ES: DashboardContent = {
   loadingRadar: 'Cargando Radar…',
   emptyState: {
     title: 'Aún no hay datos para analizar',
-    body: 'Radar necesita una exportación de Instagram o Threads para analizar. Sube tus datos una vez y tu radar de seguidores, no seguidores y crecimiento aparecerán aquí. Nada sale de tu navegador.',
+    body: 'Radar necesita una exportación de Instagram, Threads o TikTok para analizar. Sube tus datos una vez y tu radar de seguidores, no seguidores y crecimiento aparecerán aquí. Nada sale de tu navegador.',
     uploadExport: 'Sube tu exportación',
     howToExport: 'Cómo exportar',
+    wrapNote: 'Tu resumen se hace con tu propia exportación, aquí mismo en tu navegador, así que este dispositivo necesita una primero. Descarga una exportación nueva, súbela y abre tu Radar para ver tu resumen de 3 meses.',
   },
   header: {
     radar: 'RADAR',
@@ -319,9 +323,10 @@ const PT: DashboardContent = {
   loadingRadar: 'Carregando Radar…',
   emptyState: {
     title: 'Ainda não há dados para analisar',
-    body: 'O Radar precisa de uma exportação do Instagram ou do Threads para analisar. Envie seus dados uma vez e seu radar de seguidores, não seguidores e crescimento aparecem aqui. Nada sai do seu navegador.',
+    body: 'O Radar precisa de uma exportação do Instagram, do Threads ou do TikTok para analisar. Envie seus dados uma vez e seu radar de seguidores, não seguidores e crescimento aparecem aqui. Nada sai do seu navegador.',
     uploadExport: 'Envie sua exportação',
     howToExport: 'Como exportar',
+    wrapNote: 'Sua retrospectiva é feita com a sua própria exportação, aqui mesmo no seu navegador, então este dispositivo precisa de uma primeiro. Baixe uma exportação nova, envie e abra seu Radar para ver sua retrospectiva de 3 meses.',
   },
   header: {
     radar: 'RADAR',

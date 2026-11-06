@@ -9,7 +9,7 @@ export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
     items: [
       'TikTok support: upload the data file from TikTok\'s own Download your data page and see who doesn\'t follow you back, alongside Instagram and Threads.',
       'A new Radar. It opens with a one-line summary of your account, then things you didn\'t know from your own export (your best month, the day most followers arrive, your longest unanswered follow), your verdict, and a radar of what to fix, biggest impact first.',
-      'Your 3-month wrap: a short full-screen story of the last three months, made from the follow dates in your export. Share it as a story image. It plays once each time you bring a new export.',
+      'Your 3-month wrap: a short full-screen story of the last three months, made from the follow dates in your export. Share it as a story image. It opens by itself about once every 3 months, when you bring a newer export, and the button on your Radar replays it any time.',
       'Verdict card: a shareable account type picked from your real numbers, on your results and your Radar. Only counts go on it, never a username.',
       'Pro tools: stars for the mutuals you would miss, and an unfollow planner that splits a cleanup into small daily batches, with optional weekly or daily nudge emails.',
       'Reminder emails tell you when a fresh export is worth comparing. They are on by default for new accounts and every email has a one-click way to stop them.',
