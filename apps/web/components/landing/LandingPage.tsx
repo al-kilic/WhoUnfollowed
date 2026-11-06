@@ -10,6 +10,8 @@ import { ValueSection }  from './ValueSection';
 import { FlowSection }   from './FlowSection';
 import type { FlowVideoProps } from './FlowVideoCard';
 import { CompareSection } from './CompareSection';
+import { GuidesSection } from './GuidesSection';
+import { getGuidesSectionContent } from './guidesSection.content';
 import { PricingSection } from './PricingSection';
 import { FAQSection }    from './FAQSection';
 import { FinalCTA, LandingFooter } from './FinalCTA';
@@ -41,6 +43,7 @@ export function LandingPage({ userEmail, isPro = false, lifetimeAvailable = fals
         <ValueSection content={content.value} />
         <FlowSection content={content.flow} video={exportVideo} />
         <CompareSection content={content.compare} />
+        <GuidesSection content={getGuidesSectionContent(locale)} />
         <FAQSection content={content.faq} />
         <PricingSection content={content.pricingTeaser} lifetimeAvailable={lifetimeAvailable} />
         <FinalCTA />

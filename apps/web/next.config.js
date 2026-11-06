@@ -35,6 +35,20 @@ const nextConfig = {
         destination: '/blog/how-to-see-who-unfollowed-you-on-instagram',
         permanent: true,
       },
+      // Merged 2026-11-06: overlapping posts chasing the same search intent were
+      // folded into one stronger page each (Google indexed none of them while
+      // they competed). 301 so old links and any indexed copies carry over.
+      { source: '/blog/can-you-see-who-unfollowed-you-on-instagram', destination: '/blog/how-to-see-who-unfollowed-you-on-instagram', permanent: true },
+      { source: '/blog/instagram-unfollow-checker', destination: '/blog/how-to-see-who-unfollowed-you-on-instagram', permanent: true },
+      { source: '/blog/how-to-see-who-unfollowed-you-without-them-knowing', destination: '/blog/how-to-see-who-unfollowed-you-on-instagram', permanent: true },
+      { source: '/blog/how-to-see-who-unfollowed-you-on-instagram-from-your-phone', destination: '/blog/how-to-see-who-unfollowed-you-on-instagram', permanent: true },
+      { source: '/blog/how-to-see-who-unfollowed-you-on-instagram-on-a-computer', destination: '/blog/how-to-see-who-unfollowed-you-on-instagram', permanent: true },
+      { source: '/blog/who-unfollowed-me-on-instagram-or-threads-quick-answers', destination: '/blog/how-to-see-who-unfollowed-you-on-instagram', permanent: true },
+      { source: '/blog/is-there-a-free-app-to-see-who-unfollowed-you-on-instagram', destination: '/blog/best-app-to-see-who-unfollowed-me-on-instagram-without-password', permanent: true },
+      { source: '/blog/do-instagram-unfollow-apps-actually-work', destination: '/blog/best-app-to-see-who-unfollowed-me-on-instagram-without-password', permanent: true },
+      { source: '/blog/instagram-follower-tracker-without-login', destination: '/blog/best-app-to-see-who-unfollowed-me-on-instagram-without-password', permanent: true },
+      { source: '/blog/can-you-see-who-unfollowed-you-on-threads-for-free', destination: '/blog/how-to-see-who-unfollowed-you-on-threads', permanent: true },
+      { source: '/blog/what-is-a-good-follower-to-following-ratio-on-instagram', destination: '/blog/instagram-follow-ratio-what-it-means-how-to-improve-it', permanent: true },
     ];
   },
 };
