@@ -1,17 +1,16 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { runHealthChecks, type HealthFinding, type ParsedSnapshot } from '@ig-tracker/core';
+import { useState } from 'react';
+import type { HealthFinding } from '@ig-tracker/core';
 import { T } from '@/components/landing/tokens';
-import { lockedContentStyle } from '@/components/ProLockOverlay';
 import type { AppLocale } from '@/i18n/routing';
-import { PLATFORM_NAME, snapshotPlatform } from '@/lib/platform';
 import { Events, track } from '@/lib/analytics';
-import { getHealthCheckContent, type HealthCheckContent } from './healthCheck.content';
-import { ToolCard, ToolLabel, ToolSub, ToolTitle, fill, fmt, toolButton } from './ToolCard';
+import type { HealthCheckContent } from './healthCheck.content';
+import { fill, fmt, toolButton } from './ToolCard';
 
 const SHOW_MAX = 30;
 
+// One health-check finding: headline, action, and (Pro) the accounts behind it.
 export function FindingRow({ f, c, locale, app, locked, index, active = false, onHover, badge }: {
   f: HealthFinding; c: HealthCheckContent; locale: AppLocale; app: string; locked: boolean;
   // Numbered variant used by the radar: a numbered dot instead of the side bar.
@@ -72,28 +71,5 @@ export function FindingRow({ f, c, locale, app, locked, index, active = false, o
         )}
       </div>
     </li>
-  );
-}
-
-// Ranked, specific findings for the export on screen. `previous` is the
-// prior export of the same platform, when there is one.
-// `locked` (free preview): headlines only, never the usernames behind them.
-export function HealthCheckCard({ current, previous, locale, pro, locked = false }: {
-  current: ParsedSnapshot; previous?: ParsedSnapshot | undefined; locale: AppLocale; pro?: string | undefined; locked?: boolean;
-}) {
-  const c = getHealthCheckContent(locale);
-  const findings = useMemo(() => runHealthChecks({ current, previous }), [current, previous]);
-  const app = PLATFORM_NAME[snapshotPlatform(current)];
-  const real = findings.filter(f => f.id !== 'second_export').length;
-
-  return (
-    <ToolCard id="tutorial-health">
-      <ToolLabel pro={pro}>{c.label}</ToolLabel>
-      <ToolTitle>{c.title}</ToolTitle>
-      <ToolSub>{real > 0 ? `${c.summary(real)}. ${c.sub}` : c.allClear}</ToolSub>
-      <ol style={{ listStyle: 'none', padding: 0, margin: 0, ...(locked ? lockedContentStyle : {}) }}>
-        {findings.map(f => <FindingRow key={f.id} f={f} c={c} locale={locale} app={app} locked={locked} />)}
-      </ol>
-    </ToolCard>
   );
 }

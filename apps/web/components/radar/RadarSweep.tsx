@@ -6,7 +6,7 @@ import { T } from '@/components/landing/tokens';
 import { lockedContentStyle } from '@/components/ProLockOverlay';
 import type { AppLocale } from '@/i18n/routing';
 import { PLATFORM_NAME, snapshotPlatform } from '@/lib/platform';
-import { FindingRow } from '@/components/tools/HealthCheckCard';
+import { FindingRow } from '@/components/tools/FindingRow';
 import { getHealthCheckContent } from '@/components/tools/healthCheck.content';
 import { fill } from '@/components/tools/ToolCard';
 import type { RadarPageContent } from './radar.content';

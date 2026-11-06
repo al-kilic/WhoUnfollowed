@@ -174,7 +174,7 @@ const EN: DashboardContent = {
     tip: 'Upload a new export every few weeks. Each upload adds a data point to your timeline, sharpens your growth trend, and unlocks the health checks that compare two exports.',
   },
   tutorial: [
-    { title: 'Health check', body: 'Specific things to fix, with your real numbers, biggest impact first. Open any one to see the accounts behind it.' },
+    { title: 'The radar', body: 'Every fixable pattern as a blip. The closer to the center, the bigger the impact. Open any one to see the accounts behind it.' },
     { title: 'Growth chart', body: 'Upload a second export later and this fills in - followers gained, lost, and net change over time.' },
     { title: 'Audience breakdown', body: 'Your followers split into mutuals, fans, and non-followers - with a donut chart and follow ratio.' },
     { title: 'Follow age bars', body: "How long you've been following each non-follower. Tap a bar to expand it and see the accounts in that range." },
@@ -292,7 +292,7 @@ const ES: DashboardContent = {
     tip: 'Sube una nueva exportación cada pocas semanas. Cada subida añade un punto de datos a tu línea de tiempo, afina tu tendencia de crecimiento y activa los chequeos que comparan dos exportaciones.',
   },
   tutorial: [
-    { title: 'Chequeo de salud', body: 'Cosas concretas que arreglar, con tus números reales, primero lo que más impacta. Abre cualquiera para ver las cuentas detrás.' },
+    { title: 'El radar', body: 'Cada patrón que se puede arreglar es un punto. Cuanto más al centro, más impacto. Abre cualquiera para ver las cuentas detrás.' },
     { title: 'Gráfico de crecimiento', body: 'Sube una segunda exportación más adelante y esto se completa: seguidores ganados, perdidos y cambio neto en el tiempo.' },
     { title: 'Desglose de audiencia', body: 'Tus seguidores se dividen en mutuos, fans y no seguidores, con un gráfico de dona y ratio de seguimiento.' },
     { title: 'Barras de antigüedad de seguimiento', body: 'Cuánto tiempo llevas siguiendo a cada no seguidor. Toca una barra para expandirla y ver las cuentas en ese rango.' },
@@ -410,7 +410,7 @@ const PT: DashboardContent = {
     tip: 'Envie uma nova exportação a cada poucas semanas. Cada envio adiciona um ponto de dados à sua linha do tempo, refina sua tendência de crescimento e libera as verificações que comparam duas exportações.',
   },
   tutorial: [
-    { title: 'Check-up da conta', body: 'Coisas concretas para arrumar, com seus números reais, o que mais pesa primeiro. Abra qualquer uma para ver as contas por trás.' },
+    { title: 'O radar', body: 'Cada padrão que dá para arrumar vira um ponto. Quanto mais perto do centro, maior o impacto. Abra qualquer um para ver as contas por trás.' },
     { title: 'Gráfico de crescimento', body: 'Envie uma segunda exportação depois e isso se preenche: seguidores ganhos, perdidos e variação líquida ao longo do tempo.' },
     { title: 'Detalhamento de audiência', body: 'Seus seguidores divididos em mútuos, fãs e não seguidores, com um gráfico de rosca e proporção de seguimento.' },
     { title: 'Barras de tempo de seguimento', body: 'Há quanto tempo você segue cada não seguidor. Toque em uma barra para expandi-la e ver as contas nessa faixa.' },

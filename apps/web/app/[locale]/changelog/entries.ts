@@ -1,7 +1,23 @@
 // Changelog entries, kept English-only on purpose (see content.ts).
 export interface ChangelogEntry { version: string; date: string; tag: 'launch' | 'fix' | 'improvement' | 'feature'; items: string[] }
 
-export const CHANGELOG_ENTRIES: ChangelogEntry[] = [  {
+export const CHANGELOG_ENTRIES: ChangelogEntry[] = [
+  {
+    version: '3.0',
+    date: 'November 6, 2026',
+    tag: 'launch',
+    items: [
+      'TikTok support: upload the data file from TikTok\'s own Download your data page and see who doesn\'t follow you back, alongside Instagram and Threads.',
+      'A new Radar. It opens with a one-line summary of your account, then things you didn\'t know from your own export (your best month, the day most followers arrive, your longest unanswered follow), your verdict, and a radar of what to fix, biggest impact first.',
+      'Your 3-month wrap: a short full-screen story of the last three months, made from the follow dates in your export. Share it as a story image. It plays once each time you bring a new export.',
+      'Verdict card: a shareable account type picked from your real numbers, on your results and your Radar. Only counts go on it, never a username.',
+      'Pro tools: stars for the mutuals you would miss, and an unfollow planner that splits a cleanup into small daily batches, with optional weekly or daily nudge emails.',
+      'Reminder emails tell you when a fresh export is worth comparing. They are on by default for new accounts and every email has a one-click way to stop them.',
+      'New pricing: a Yearly Pass, launch prices until December 31, and a limited number of Insider seats.',
+      'Privacy policy updated for reminder, planner and wrap emails.',
+    ],
+  },
+  {
     version: '2.4',
     date: 'October 22, 2026',
     tag: 'improvement',
