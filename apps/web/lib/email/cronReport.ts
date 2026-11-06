@@ -25,6 +25,7 @@ export interface CronEmailReport {
 const LABEL = { reminders: 'Check-again reminders', planner: 'Planner nudges', wraps: '3-month wraps' } as const;
 
 const sentOf = (r: PassResult) => ('sent' in r ? r.sent : 0);
+const emails = (n: number) => `${n} ${n === 1 ? 'email' : 'emails'}`;
 
 export function buildCronEmailReport(r: CronEmailReport): { text: string; alert: boolean } {
   const lines: string[] = [];
@@ -59,10 +60,10 @@ export function buildCronEmailReport(r: CronEmailReport): { text: string; alert:
 
   const sinceH = Math.max(1, Math.round((r.date.getTime() - r.other.since.getTime()) / 3_600_000));
   lines.push(`Other emails (signup codes, receipts, contact) in the last ${sinceH}h: ${r.other.sent} sent${r.other.failed ? `, ${r.other.failed} failed` : ''}`);
-  if (r.other.failed > 0) problems.push(`${r.other.failed} signup/receipt/contact emails failed since the last report`);
+  if (r.other.failed > 0) problems.push(`${r.other.failed} signup, receipt or contact ${r.other.failed === 1 ? 'email' : 'emails'} failed since the last report`);
 
   const limited = r.limitedInRun + r.other.limited;
-  if (limited > 0) problems.unshift(`Resend refused ${limited} emails for hitting its limit`);
+  if (limited > 0) problems.unshift(`Resend refused ${emails(limited)} for hitting its limit`);
   if (cronSent >= r.budget) problems.push(`The daily budget of ${r.budget} is fully used`);
 
   const alert = problems.length > 0;

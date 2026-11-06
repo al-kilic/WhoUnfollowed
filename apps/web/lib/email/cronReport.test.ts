@@ -48,7 +48,7 @@ describe('buildCronEmailReport', () => {
     expect(r.alert).toBe(true);
     expect(r.text).toContain('Planner nudges crashed');
     expect(r.text).toContain('Resend refused 3 emails for hitting its limit');
-    expect(r.text).toContain('2 signup/receipt/contact emails failed');
+    expect(r.text).toContain('2 signup, receipt or contact emails failed');
   });
 
   it('flags a used-up daily budget', () => {
