@@ -34,12 +34,12 @@ const PRICING_FAQ_EN: PricingFaqItem[] = [
     a: `Yes. Launch prices ($${L.monthly} for 30 days, $${L.yearly} for a year) last until December 31. From January 1 they are $${S.monthly} and $${S.yearly}. Anything you buy before then keeps its full time.`,
   },
   {
-    q: 'Do I need to give you my Instagram or Threads password?',
-    a: 'Never. You download your own data from Instagram or Threads and upload the ZIP here. We have no connection to either app whatsoever.',
+    q: 'Do I need to give you my Instagram, Threads or TikTok password?',
+    a: 'Never. You download your own data from Instagram, Threads or TikTok and upload the file here. We have no connection to any of these apps whatsoever.',
   },
   {
-    q: 'Is my Instagram or Threads data safe?',
-    a: 'Yes. ZIP parsing happens entirely in your browser, so nothing is sent to us. Cloud-synced snapshots are encrypted in your browser before leaving your device. We store only blobs we cannot read.',
+    q: 'Is my Instagram, Threads or TikTok data safe?',
+    a: 'Yes. File parsing happens entirely in your browser, so nothing is sent to us. Cloud-synced snapshots are encrypted in your browser before leaving your device. We store only blobs we cannot read.',
   },
 ];
 
@@ -61,12 +61,12 @@ const PRICING_FAQ_ES: PricingFaqItem[] = [
     a: `Sí. Los precios de lanzamiento ($${L.monthly} por 30 días, $${L.yearly} por un año) duran hasta el 31 de diciembre. Desde el 1 de enero son $${S.monthly} y $${S.yearly}. Lo que compres antes conserva todo su tiempo.`,
   },
   {
-    q: '¿Tengo que darles mi contraseña de Instagram o Threads?',
-    a: 'Nunca. Descargas tus propios datos desde Instagram o Threads y subes el ZIP aquí. No tenemos ninguna conexión con ninguna de las dos apps.',
+    q: '¿Tengo que darles mi contraseña de Instagram, Threads o TikTok?',
+    a: 'Nunca. Descargas tus propios datos desde Instagram, Threads o TikTok y subes el archivo aquí. No tenemos ninguna conexión con ninguna de estas apps.',
   },
   {
-    q: '¿Mis datos de Instagram o Threads están seguros?',
-    a: 'Sí. El ZIP se procesa por completo en tu navegador, así que nada se nos envía. Las copias sincronizadas en la nube se cifran en tu navegador antes de salir de tu dispositivo. Solo guardamos datos que no podemos leer.',
+    q: '¿Mis datos de Instagram, Threads o TikTok están seguros?',
+    a: 'Sí. El archivo se procesa por completo en tu navegador, así que nada se nos envía. Las copias sincronizadas en la nube se cifran en tu navegador antes de salir de tu dispositivo. Solo guardamos datos que no podemos leer.',
   },
 ];
 
@@ -88,12 +88,12 @@ const PRICING_FAQ_PT: PricingFaqItem[] = [
     a: `Sim. Os preços de lançamento ($${L.monthly} por 30 dias, $${L.yearly} por um ano) valem até 31 de dezembro. A partir de 1º de janeiro são $${S.monthly} e $${S.yearly}. O que você comprar antes mantém todo o tempo.`,
   },
   {
-    q: 'Preciso dar minha senha do Instagram ou do Threads?',
-    a: 'Nunca. Você baixa os próprios dados do Instagram ou do Threads e envia o ZIP aqui. Não temos nenhuma conexão com nenhum dos dois apps.',
+    q: 'Preciso dar minha senha do Instagram, do Threads ou do TikTok?',
+    a: 'Nunca. Você baixa os próprios dados do Instagram, do Threads ou do TikTok e envia o arquivo aqui. Não temos nenhuma conexão com nenhum desses apps.',
   },
   {
-    q: 'Meus dados do Instagram ou do Threads estão seguros?',
-    a: 'Sim. O ZIP é processado inteiramente no seu navegador, então nada é enviado para nós. Os snapshots sincronizados na nuvem são criptografados no seu navegador antes de sair do dispositivo. Guardamos apenas dados que não conseguimos ler.',
+    q: 'Meus dados do Instagram, do Threads ou do TikTok estão seguros?',
+    a: 'Sim. O arquivo é processado inteiramente no seu navegador, então nada é enviado para nós. Os snapshots sincronizados na nuvem são criptografados no seu navegador antes de sair do dispositivo. Guardamos apenas dados que não conseguimos ler.',
   },
 ];
 
