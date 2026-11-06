@@ -1048,7 +1048,7 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
       {/* Verdict card is free, so it sits above the Pro-locked Radar. */}
       {!emptyPlatforms.includes(platform) && (
         <div className="px-4 sm:px-8" style={{ maxWidth: 1100, margin: '0 auto', paddingTop: 24 }}>
-          <VerdictCard current={snapshot} previous={previousSnapshot} locale={locale} />
+          <VerdictCard current={snapshot} previous={previousSnapshot} locale={locale} placement="radar" />
         </div>
       )}
       {emptyPlatforms.includes(platform) ? <PlatformEmptyPanel platform={platform} c={c} /> : (

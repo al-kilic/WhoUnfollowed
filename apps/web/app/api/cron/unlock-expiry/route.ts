@@ -8,6 +8,7 @@ import { sendEmail, isEmailConfigured } from '@/lib/email/send';
 import { unlockExpiringSoonEmail, unlockExpiredEmail } from '@/lib/email/templates';
 import { isAuthorizedBySecretHeader } from '@/lib/auth/secretHeader';
 import { sendDueReminders } from '@/lib/reminders/send';
+import { sendDuePlannerEmails, plannerDailyCap } from '@/lib/planner/send';
 
 // Called daily by a server cron (e.g. `curl -X POST -H "x-cron-secret: $CRON_SECRET"
 // https://yourdomain.com/api/cron/unlock-expiry`). POST-only, unlike a plain
@@ -19,6 +20,8 @@ import { sendDueReminders } from '@/lib/reminders/send';
 //   2. The day subscriptionExpiresAt passes: send an "access ended" email once
 //      (expiredEmailSentAt marks it sent).
 //   3. "Time to check again" reminder emails that are due (lib/reminders).
+//   4. Unfollow planner nudges (lib/planner), with whatever is left of the
+//      day's email budget after the passes above.
 //      They ride on this existing daily cron so no new crontab line is needed.
 //
 // subscriptionStatus itself is never flipped here — getSubscriptionStatus()
@@ -26,6 +29,9 @@ import { sendDueReminders } from '@/lib/reminders/send';
 // real recurring Stripe subscription (subscriptionExpiresAt null) is entirely
 // out of scope for this cron.
 const REMINDER_WINDOW_DAYS = 3;
+
+// Emails this cron may send in one run across all passes (Resend free: 100/day).
+const DAILY_EMAIL_BUDGET = 90;
 
 export async function POST(request: NextRequest) {
   if (!isAuthorizedBySecretHeader(request, 'x-cron-secret', process.env.CRON_SECRET)) {
@@ -117,5 +123,18 @@ export async function POST(request: NextRequest) {
     reminders = { error: 'reminders_failed' };
   }
 
-  return NextResponse.json({ expiredSent, reminderSent, reminders });
+  // Pass 4: planner nudges. Resend's free plan is 100 a day for everything,
+  // so this only uses what the passes above left (keeping a small margin for
+  // signup and purchase emails later in the day).
+  const usedToday = expiredSent + reminderSent + ('sent' in reminders ? reminders.sent : 0);
+  const plannerBudget = Math.max(0, Math.min(plannerDailyCap(), DAILY_EMAIL_BUDGET - usedToday));
+  let planner: { sent: number; failed: number; stopped: number } | { error: string };
+  try {
+    planner = await sendDuePlannerEmails(now, plannerBudget);
+  } catch (err) {
+    console.error('[cron/unlock-expiry] planner failed:', err);
+    planner = { error: 'planner_failed' };
+  }
+
+  return NextResponse.json({ expiredSent, reminderSent, reminders, planner });
 }

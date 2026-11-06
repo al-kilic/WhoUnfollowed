@@ -5,8 +5,10 @@ import { PACE_PER_DAY, SUB_BATCH, buildPlan, daysAtEachPace, planProgress, type 
 import { T } from '@/components/landing/tokens';
 import type { AppLocale } from '@/i18n/routing';
 import { usePlan } from '@/hooks/usePlan';
+import { usePlannerSync } from '@/hooks/usePlannerSync';
 import { PLATFORM_NAME, profileHref, type Platform } from '@/lib/platform';
 import { getPlannerContent } from './planner.content';
+import { Events, sizeBucketOf, track } from '@/lib/analytics';
 import { ToolCard, ToolLabel, ToolSub, ToolTitle, fill, fmt, toolButton, toolButtonPrimary } from './ToolCard';
 
 const PACES: Pace[] = ['gentle', 'steady', 'quick'];
@@ -16,7 +18,8 @@ export function UnfollowPlannerCard({ owner, platform, oneWay, starred, locale, 
 }) {
   const c = getPlannerContent(locale);
   const app = PLATFORM_NAME[platform];
-  const { plan, savePlan, toggleDone, markBatchDone, deletePlan } = usePlan(owner, platform);
+  const { plan, savePlan, toggleDone, markBatchDone, setCadence, deletePlan } = usePlan(owner, platform);
+  usePlannerSync(plan, platform, locale, owner !== null);
   const [pace, setPace] = useState<Pace>('gentle');
   const candidates = useMemo(() => oneWay.filter(a => !starred.has(a.username)), [oneWay, starred]);
   const days = daysAtEachPace(candidates.length);
@@ -55,7 +58,8 @@ export function UnfollowPlannerCard({ owner, platform, oneWay, starred, locale, 
         </fieldset>
         {oneWay.length > candidates.length && <p style={{ fontSize: 12.5, color: T.inkMute, marginTop: 10 }}>{fill(c.starredSkipped, { count: oneWay.length - candidates.length })}</p>}
         <p style={{ fontSize: 12.5, color: T.inkDim, lineHeight: 1.55, margin: '12px 0 14px' }}>{fill(c.safety, { app, sub: SUB_BATCH })}</p>
-        <button type="button" style={toolButtonPrimary} onClick={() => savePlan(buildPlan({ accounts: candidates, pace, starred }))}>{c.start}</button>
+        <p style={{ fontSize: 12, color: T.inkMute, lineHeight: 1.5, margin: '-6px 0 14px' }}>{c.startEmailNote}</p>
+        <button type="button" style={toolButtonPrimary} onClick={() => { track(Events.planStarted, { pace, size_bucket: sizeBucketOf(candidates.length) }); void savePlan(buildPlan({ accounts: candidates, pace, starred })); }}>{c.start}</button>
       </ToolCard>
     );
   }
@@ -89,8 +93,25 @@ export function UnfollowPlannerCard({ owner, platform, oneWay, starred, locale, 
               </li>
             ))}
           </ul>
-          <button type="button" style={{ ...toolButton, marginTop: 12 }} onClick={() => markBatchDone(batch)}>{c.markAll}</button>
+          <button type="button" style={{ ...toolButton, marginTop: 12 }} onClick={() => { track(Events.planBatchDone, { day: prog.currentBatch + 1 }); void markBatchDone(batch); }}>{c.markAll}</button>
         </>
+      )}
+      {prog.currentBatch >= 0 && (
+        <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 12.5, color: T.inkDim }}>{c.emailLabel}</span>
+          <div role="radiogroup" aria-label={c.emailLabel} style={{ display: 'inline-flex', gap: 4 }}>
+            {(['weekly', 'daily', 'off'] as const).map(k => {
+              const on = (plan.cadence ?? 'weekly') === k;
+              return (
+                <button key={k} type="button" role="radio" aria-checked={on} onClick={() => void setCadence(k)}
+                  style={{ ...toolButton, padding: '4px 10px', fontSize: 12, borderColor: on ? 'var(--t-tealMid)' : 'var(--t-border2)', color: on ? T.ink : T.inkDim }}>
+                  {c.emailOptions[k]}
+                </button>
+              );
+            })}
+          </div>
+          <span style={{ fontSize: 11.5, color: T.inkMute }}>{c.emailHint}</span>
+        </div>
       )}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginTop: 14, flexWrap: 'wrap' }}>
         <span style={{ fontSize: 12, color: T.inkMute }}>{c.privacy}</span>

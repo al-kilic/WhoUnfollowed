@@ -6,6 +6,7 @@ import { T } from '@/components/landing/tokens';
 import { lockedContentStyle } from '@/components/ProLockOverlay';
 import type { AppLocale } from '@/i18n/routing';
 import { PLATFORM_NAME, snapshotPlatform } from '@/lib/platform';
+import { Events, track } from '@/lib/analytics';
 import { getHealthCheckContent, type HealthCheckContent } from './healthCheck.content';
 import { ToolCard, ToolLabel, ToolSub, ToolTitle, fill, fmt, toolButton } from './ToolCard';
 
@@ -38,7 +39,7 @@ function FindingRow({ f, c, locale, app, locked }: { f: HealthFinding; c: Health
         <div style={{ fontSize: 13.5, color: T.inkDim, lineHeight: 1.55, marginTop: 4 }}>{fill(copy.action, params)}</div>
         {f.accounts.length > 0 && !locked && (
           <div style={{ display: 'flex', gap: 8, marginTop: 10, flexWrap: 'wrap' }}>
-            <button type="button" style={{ ...toolButton, padding: '5px 11px', fontSize: 12 }} aria-expanded={open} onClick={() => setOpen(o => !o)}>
+            <button type="button" style={{ ...toolButton, padding: '5px 11px', fontSize: 12 }} aria-expanded={open} onClick={() => { if (!open) track(Events.healthOpened, { check: f.id }); setOpen(o => !o); }}>
               {open ? c.hideAccounts : c.showAccounts(f.accounts.length)}
             </button>
             <button type="button" style={{ ...toolButton, padding: '5px 11px', fontSize: 12 }} onClick={copyList}>

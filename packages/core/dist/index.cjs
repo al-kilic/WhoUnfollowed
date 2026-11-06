@@ -58,6 +58,9 @@ __export(index_exports, {
   parseInstagramZip: () => parseInstagramZip,
   pickVerdict: () => pickVerdict,
   planProgress: () => planProgress,
+  plannerCadences: () => plannerCadences,
+  plannerSyncSchema: () => plannerSyncSchema,
+  platformSchema: () => platformSchema,
   platforms: () => platforms,
   runHealthChecks: () => runHealthChecks,
   snapshotPlatform: () => snapshotPlatform,
@@ -234,6 +237,15 @@ var emailOptInSchema = import_zod.z.object({
   // Must be an explicit true from the form, never inferred.
   consent: import_zod.z.literal(true)
 });
+var plannerCadences = ["weekly", "daily", "off"];
+var plannerSyncSchema = import_zod.z.object({
+  platform: platformSchema,
+  total: import_zod.z.number().int().min(0).max(1e5),
+  done: import_zod.z.number().int().min(0).max(1e5),
+  perDay: import_zod.z.number().int().min(1).max(500),
+  cadence: import_zod.z.enum(plannerCadences),
+  locale: import_zod.z.enum(["en", "es", "pt"]).optional()
+}).refine((v) => v.done <= v.total, { message: "done exceeds total" });
 
 // src/tiktok.ts
 var FOLLOWER_LIST_KEYS = ["fanslist", "followerlist", "followers", "follower"];
@@ -1180,6 +1192,9 @@ function daysAtEachPace(total) {
   parseInstagramZip,
   pickVerdict,
   planProgress,
+  plannerCadences,
+  plannerSyncSchema,
+  platformSchema,
   platforms,
   runHealthChecks,
   snapshotPlatform,

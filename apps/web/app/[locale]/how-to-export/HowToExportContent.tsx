@@ -49,6 +49,16 @@ export function HowToExportContent({ content }: { content: HowToExportContentDat
                 <LocaleLink href="/threads" style={{ color: T.tealLight, textDecoration: 'none', fontWeight: 600 }}>{content.threadsCallout.link}</LocaleLink>
               </div>
             </div>
+            <div style={{ marginTop: 10, display: 'flex', gap: 12, alignItems: 'flex-start', padding: '14px 16px', borderRadius: 12, border: '1px solid var(--t-border2)', background: 'var(--t-surface1)', maxWidth: 560 }}>
+              <span style={{ flexShrink: 0, width: 30, height: 30, borderRadius: 9, background: T.ink, color: T.bg, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', boxShadow: '-2px -2px 0 #02888f, 2px 2px 0 #a84b2f' }}>
+                <PlatformIcon platform="tiktok" size={16} />
+              </span>
+              <div style={{ fontSize: 13.5, color: T.inkDim, lineHeight: 1.55 }}>
+                <strong style={{ color: T.ink, fontWeight: 600 }}>{content.tiktokCallout.title}</strong>{' '}
+                {content.tiktokCallout.body}{' '}
+                <LocaleLink href="/tiktok" style={{ color: T.tealLight, textDecoration: 'none', fontWeight: 600 }}>{content.tiktokCallout.link}</LocaleLink>
+              </div>
+            </div>
           </div>
 
           {/* Tab switcher */}

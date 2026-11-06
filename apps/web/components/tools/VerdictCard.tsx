@@ -6,13 +6,15 @@ import { T } from '@/components/landing/tokens';
 import type { AppLocale } from '@/i18n/routing';
 import { getVerdictContent } from './verdict.content';
 import { drawVerdictImage } from './verdictImage';
+import { Events, track } from '@/lib/analytics';
 import { ToolCard, ToolLabel, ToolSub, ToolTitle, fill, fmt, toolButton, toolButtonPrimary } from './ToolCard';
 
 // Free and shareable. Only aggregate numbers go on the card, never usernames.
-export function VerdictCard({ current, previous, locale }: {
+export function VerdictCard({ current, previous, locale, placement = 'results' }: {
   current: ParsedSnapshot;
   previous?: ParsedSnapshot | undefined;
   locale: AppLocale;
+  placement?: 'results' | 'radar';
 }) {
   const c = getVerdictContent(locale);
   const statLabels = c.stats;
@@ -42,7 +44,10 @@ export function VerdictCard({ current, previous, locale }: {
 
   const render = () => drawVerdictImage({ typeLabel: c.typeLabel, name: a.name, line, stats: statRow, footer: c.footer });
 
-  const save = async () => {
+  const log = (action: 'share' | 'save' | 'another') => track(Events.verdictShare, { action, archetype: verdict.archetype, placement });
+
+  const save = async (fromShare = false) => {
+    if (!fromShare) log('save');
     setBusy(true);
     try {
       const blob = await render();
@@ -57,11 +62,12 @@ export function VerdictCard({ current, previous, locale }: {
   };
 
   const share = async () => {
+    log('share');
     setBusy(true);
     try {
       const file = new File([await render()], 'my-account-verdict.png', { type: 'image/png' });
       if (navigator.canShare?.({ files: [file] })) await navigator.share({ files: [file] });
-      else await save();
+      else await save(true);
     } catch { /* user cancelled the share sheet */ } finally { setBusy(false); }
   };
 
@@ -90,8 +96,8 @@ export function VerdictCard({ current, previous, locale }: {
       </div>
       <div style={{ display: 'flex', gap: 8, marginTop: 14, flexWrap: 'wrap' }}>
         {canShare && <button type="button" style={toolButtonPrimary} disabled={busy} onClick={share}>{c.share}</button>}
-        <button type="button" style={canShare ? toolButton : toolButtonPrimary} disabled={busy} onClick={save}>{saved ? c.saved : c.save}</button>
-        <button type="button" style={toolButton} onClick={() => { setSpin(s => s + 1); setSaved(false); }}>{c.another}</button>
+        <button type="button" style={canShare ? toolButton : toolButtonPrimary} disabled={busy} onClick={() => save()}>{saved ? c.saved : c.save}</button>
+        <button type="button" style={toolButton} onClick={() => { log('another'); setSpin(s => s + 1); setSaved(false); }}>{c.another}</button>
       </div>
     </ToolCard>
   );

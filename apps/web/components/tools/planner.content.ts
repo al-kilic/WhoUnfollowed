@@ -21,6 +21,10 @@ export interface PlannerContent {
   finished: string;
   reset: string;
   privacy: string;
+  emailLabel: string;
+  emailOptions: Record<'weekly' | 'daily' | 'off', string>;
+  emailHint: string;
+  startEmailNote: string;
 }
 
 const en: PlannerContent = {
@@ -47,6 +51,10 @@ const en: PlannerContent = {
   finished: 'Plan finished. Upload a new export in a couple of weeks to see what changed.',
   reset: 'Start over',
   privacy: 'The list and your progress stay in this browser.',
+  emailLabel: 'Email me a nudge',
+  emailOptions: { weekly: 'Weekly', daily: 'Daily', off: 'Off' },
+  emailHint: 'The email only says how many are left, never who.',
+  startEmailNote: 'You\'ll get a weekly email with how many are left. Switch it to daily or off any time.',
 };
 
 const es: PlannerContent = {
@@ -73,6 +81,10 @@ const es: PlannerContent = {
   finished: 'Plan terminado. Sube una nueva exportación en un par de semanas para ver qué cambió.',
   reset: 'Empezar de nuevo',
   privacy: 'La lista y tu avance se quedan en este navegador.',
+  emailLabel: 'Envíame un recordatorio',
+  emailOptions: { weekly: 'Semanal', daily: 'Diario', off: 'No' },
+  emailHint: 'El email solo dice cuántas quedan, nunca quiénes.',
+  startEmailNote: 'Recibirás un email semanal con cuántas quedan. Cámbialo a diario o apágalo cuando quieras.',
 };
 
 const pt: PlannerContent = {
@@ -99,6 +111,10 @@ const pt: PlannerContent = {
   finished: 'Plano concluído. Envie uma nova exportação em umas duas semanas para ver o que mudou.',
   reset: 'Recomeçar',
   privacy: 'A lista e seu progresso ficam neste navegador.',
+  emailLabel: 'Me mande um lembrete',
+  emailOptions: { weekly: 'Semanal', daily: 'Diário', off: 'Não' },
+  emailHint: 'O email só diz quantas faltam, nunca quem.',
+  startEmailNote: 'Você vai receber um email semanal com quantas faltam. Mude para diário ou desligue quando quiser.',
 };
 
 const all: Record<AppLocale, PlannerContent> = { en, es, pt };

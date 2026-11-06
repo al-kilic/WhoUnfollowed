@@ -8,6 +8,7 @@ import {
   integer,
   customType,
   index,
+  primaryKey,
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
@@ -209,3 +210,27 @@ export const contactMessages = pgTable('contact_messages', {
   page: text('page'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
+
+// Unfollow planner progress for the weekly/daily nudge email. Counts only:
+// the list of accounts never leaves the browser. One row per account and
+// platform. Deleting the account deletes the rows.
+export const unfollowPlans = pgTable('unfollow_plans', {
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  // 'instagram' | 'threads' | 'tiktok'
+  platform: text('platform').notNull(),
+  total: integer('total').notNull(),
+  done: integer('done').notNull().default(0),
+  perDay: integer('per_day').notNull(),
+  // 'weekly' | 'daily' | 'off'
+  cadence: text('cadence').notNull().default('weekly'),
+  locale: text('locale'),
+  nextAt: timestamp('next_at'),
+  lastSentAt: timestamp('last_sent_at'),
+  // Random token for the email's unsubscribe link (no login needed).
+  token: text('token').notNull().unique(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+}, (t) => [
+  primaryKey({ columns: [t.userId, t.platform] }),
+  index('unfollow_plans_next_at_idx').on(t.nextAt).where(sql`${t.nextAt} IS NOT NULL`),
+]);

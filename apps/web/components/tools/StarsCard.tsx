@@ -6,6 +6,7 @@ import type { Account, ParsedSnapshot } from '@ig-tracker/core';
 import { T } from '@/components/landing/tokens';
 import type { AppLocale } from '@/i18n/routing';
 import { getStarsContent } from './stars.content';
+import { Events, track } from '@/lib/analytics';
 import { ToolCard, ToolLabel, ToolSub, ToolTitle, fill, fmt } from './ToolCard';
 
 const SHOW = 60;
@@ -63,7 +64,7 @@ export function StarsCard({ mutuals, current, previous, stars, onToggle, locale,
                 return (
                   <li key={a.username}>
                     <button
-                      type="button" aria-pressed={on} aria-label={fill(on ? c.unstar : c.star, { name: `@${a.username}` })} onClick={() => onToggle(a.username)}
+                      type="button" aria-pressed={on} aria-label={fill(on ? c.unstar : c.star, { name: `@${a.username}` })} onClick={() => { track(Events.starToggled, { on: !on }); onToggle(a.username); }}
                       style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '7px 10px', borderRadius: 9, cursor: 'pointer', fontFamily: T.mono, fontSize: 12.5, textAlign: 'left', color: T.ink, background: on ? 'rgba(var(--t-accent-rgb),0.08)' : 'transparent', border: `1px solid ${on ? 'var(--t-tealMid)' : 'var(--t-border1)'}` }}
                     >
                       <Star size={14} strokeWidth={1.8} aria-hidden="true" fill={on ? 'currentColor' : 'none'} style={{ color: on ? 'var(--t-tealLight)' : 'var(--t-inkMute)', flexShrink: 0 }} />

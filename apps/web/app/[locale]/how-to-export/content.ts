@@ -6,6 +6,7 @@ export interface HowToExportContent {
   intro: string;
   newHereLink: string;
   threadsCallout: { title: string; body: string; link: string };
+  tiktokCallout: { title: string; body: string; link: string };
   deviceTab: string;
   driveTab: string;
   zipCtaTitle: string;
@@ -102,6 +103,11 @@ const EN: HowToExportContent = {
     title: 'Exporting Threads?',
     body: 'Same steps, same screens. When asked to choose an account, pick your Threads profile. One profile per export, JSON format, All time.',
     link: 'Threads guide →',
+  },
+  tiktokCallout: {
+    title: 'Exporting TikTok?',
+    body: 'TikTok has its own download: Settings and privacy, Account, Download your data, JSON. It can take a few days to be ready.',
+    link: 'TikTok guide →',
   },
   deviceTab: 'Download to device',
   driveTab: 'Export to Google Drive',
@@ -263,6 +269,11 @@ const ES: HowToExportContent = {
     body: 'Los mismos pasos y las mismas pantallas. Cuando te pida elegir una cuenta, elige tu perfil de Threads. Un perfil por export, formato JSON, Todo el tiempo.',
     link: 'Guía de Threads →',
   },
+  tiktokCallout: {
+    title: '¿Exportas TikTok?',
+    body: 'TikTok tiene su propia descarga: Ajustes y privacidad, Cuenta, Descargar tus datos, JSON. Puede tardar unos días en estar lista.',
+    link: 'Guía de TikTok →',
+  },
   deviceTab: 'Descargar al dispositivo',
   driveTab: 'Exportar a Google Drive',
   zipCtaTitle: '¿Ya tienes el ZIP?',
@@ -422,6 +433,11 @@ const PT: HowToExportContent = {
     title: 'Exportando o Threads?',
     body: 'Os mesmos passos e as mesmas telas. Quando pedir para escolher uma conta, escolha seu perfil do Threads. Um perfil por export, formato JSON, Todo o período.',
     link: 'Guia do Threads →',
+  },
+  tiktokCallout: {
+    title: 'Exportando o TikTok?',
+    body: 'O TikTok tem seu próprio download: Configurações e privacidade, Conta, Baixar seus dados, JSON. Pode levar alguns dias para ficar pronto.',
+    link: 'Guia do TikTok →',
   },
   deviceTab: 'Baixar para o dispositivo',
   driveTab: 'Exportar para o Google Drive',

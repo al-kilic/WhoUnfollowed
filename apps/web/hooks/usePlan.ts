@@ -18,7 +18,7 @@ export function usePlan(owner: string | null, platform: Platform) {
   const savePlan = useCallback(async (p: UnfollowPlan) => {
     if (!owner) return;
     const now = Date.now();
-    await db.plans.put({ owner, platform, pace: p.pace, batches: p.batches, done: [], createdAt: now, updatedAt: now });
+    await db.plans.put({ owner, platform, pace: p.pace, cadence: 'weekly', batches: p.batches, done: [], createdAt: now, updatedAt: now });
   }, [owner, platform]);
 
   const toggleDone = useCallback(async (username: string) => {
@@ -40,9 +40,13 @@ export function usePlan(owner: string | null, platform: Platform) {
     });
   }, [owner, platform]);
 
+  const setCadence = useCallback(async (cadence: 'weekly' | 'daily' | 'off') => {
+    if (owner) await db.plans.update([owner, platform], { cadence, updatedAt: Date.now() });
+  }, [owner, platform]);
+
   const deletePlan = useCallback(async () => {
     if (owner) await db.plans.delete([owner, platform]);
   }, [owner, platform]);
 
-  return { plan, savePlan, toggleDone, markBatchDone, deletePlan };
+  return { plan, savePlan, toggleDone, markBatchDone, setCadence, deletePlan };
 }

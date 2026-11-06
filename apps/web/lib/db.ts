@@ -44,6 +44,8 @@ export interface PlanRecord {
   owner: string;
   platform: Platform;
   pace: Pace;
+  // Nudge email setting; undefined on plans saved before emails existed (= weekly).
+  cadence?: 'weekly' | 'daily' | 'off';
   batches: string[][];
   done: string[];
   createdAt: number;

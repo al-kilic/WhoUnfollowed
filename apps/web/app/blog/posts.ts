@@ -1,7 +1,7 @@
 import type { ArtVariant } from './BlogArt';
 
 /** Topic clusters for the pillar-and-cluster internal-linking structure. */
-export type ClusterId = 'unfollowers' | 'data-export' | 'privacy-safety' | 'account-health' | 'threads';
+export type ClusterId = 'unfollowers' | 'data-export' | 'privacy-safety' | 'account-health' | 'threads' | 'tiktok';
 
 export interface BlogPost {
   slug: string;
@@ -4777,6 +4777,195 @@ It can feel like a list with a few dead accounts is less trustworthy. It is the 
 
 Ready to check your own list? [Download your Instagram data](/blog/how-to-download-your-instagram-data) and [upload it here](/). It runs in your browser and your file never leaves your device.`,
   },
+  {
+    slug: 'how-to-see-who-unfollowed-you-on-tiktok',
+    cluster: 'tiktok',
+    title: 'Who Unfollowed You on TikTok? How to See (Without Your Password)',
+    metaTitle: 'Who Unfollowed You on TikTok? How to Check for Free',
+    metaDescription: 'TikTok won\'t tell you who unfollowed you, but two of your own data downloads will. The exact steps, no password or login required.',
+    excerpt: 'TikTok has no "who unfollowed me" list. Your own data download does have your full follower list, though, and two of them taken a few weeks apart show exactly who left.',
+    date: 'November 6, 2026',
+    readTime: '5 min',
+    tag: 'Guide',
+    primaryKeyword: 'who unfollowed me on TikTok',
+    art: 'search',
+    imageAlt: 'Abstract geometric illustration of a search lens over a follower list, representing checking who unfollowed you on TikTok',
+    cta: {
+      heading: 'See exactly who unfollowed you on TikTok.',
+      body: 'No login, no password. Upload the file TikTok already gives you and WhoUnfollowed shows the names in your browser. The parser is open source, so you can check what it reads.',
+      buttonLabel: 'Check your TikTok followers',
+      proNudge: 'Checking every few weeks? Pro keeps every TikTok snapshot, so each new upload shows exactly who left since the last one.',
+    },
+    faq: [
+      { q: 'Does TikTok show you who unfollowed you?', a: 'No, TikTok has no unfollowers list and sends no notification when someone stops following you; comparing two of your own data downloads is the reliable way to see it.' },
+      { q: 'How do you download your TikTok data?', a: 'In the TikTok app go to Profile, the menu, Settings and privacy, Account, then Download your data, choose the JSON format and request it.' },
+      { q: 'How long does a TikTok data download take?', a: 'TikTok prepares the file in the background; it is often ready within a day but can take a few days, and it appears under the Download data tab when it is.' },
+      { q: 'Can you see who unfollowed you on TikTok for free?', a: 'Yes, one download shows who does not follow you back at no cost; seeing who left between two downloads needs saved snapshot history, which is a Pro feature.' },
+      { q: 'Do you need your TikTok password to check unfollowers?', a: 'No, WhoUnfollowed only reads the data file TikTok gives you and never asks for your TikTok login.' },
+    ],
+    body: `The short answer: TikTok won't tell you who unfollowed you, but your own data download contains your full follower list. Take one now, take another in a few weeks, and anyone missing from the second one unfollowed you in between. WhoUnfollowed does that comparison in your browser, with no password and nothing sent to a server.
+
+If you searched "who unfollowed me on TikTok" hoping there was a hidden screen for it, there isn't. TikTok shows your follower count dropping and nothing else. Here's the method that actually gives you names.
+
+## Step 1: Request Your TikTok Data
+
+Open TikTok, go to your Profile, tap the menu (three lines), then **Settings and privacy**, then **Account**, then **Download your data**. You can do the same on tiktok.com under Settings.
+
+Pick **JSON** as the file format. TikTok defaults to TXT, which WhoUnfollowed can also read, but JSON is the cleaner choice. Requesting all data is fine, or a custom selection that includes your activity, which is where the follower and following lists live. Tap **Request data**.
+
+## Step 2: Wait, Then Download
+
+TikTok prepares the file in the background. It's often ready within a day, sometimes a few days. When it's done it shows up under the **Download data** tab. Download it and leave it as it is, ZIP or JSON. There's no need to unzip anything.
+
+## Step 3: Upload It to WhoUnfollowed
+
+Go to [WhoUnfollowed's TikTok page](/tiktok) or drop the file onto the homepage. It's read entirely inside your browser by the same open-source parser (MPL-2.0) that handles Instagram and Threads exports. Only your follower and following lists are read. Your videos, messages and watch history in the same file are never touched.
+
+## What You'll See
+
+- Every TikTok account you follow that doesn't follow you back, with the date you followed them
+- Fans: people who follow you that you don't follow back
+- Mutuals
+- Who unfollowed you, once you have two downloads to compare
+
+## One Thing to Know: The 10,000 Cap
+
+TikTok's download lists up to about 10,000 followers. If you're above that, the oldest followers can be missing from the file, which means some of them could show up as "doesn't follow back" when they actually do. WhoUnfollowed warns you when your list is at that limit, so check before you unfollow anyone you know.
+
+## Why No Password Is Needed
+
+Plenty of "TikTok unfollower" apps ask you to log in first. That means handing a third party your account so it can pull data through channels TikTok doesn't offer to outside apps, and that's exactly the kind of activity that gets accounts flagged. You don't need any of that. The data download is TikTok's own feature, the file is already yours, and reading it on your own device is all it takes.
+
+## In Short
+
+- TikTok has no list of who unfollowed you and sends no alert when it happens.
+- Your data download (Settings and privacy, Account, Download your data) includes your full follower list.
+- One download shows who doesn't follow you back for free; two downloads a few weeks apart show exactly who left.
+- The download covers up to about 10,000 followers, so very large accounts should treat the oldest part of the list with care.
+- WhoUnfollowed reads the file in your browser and never asks for your TikTok password.
+
+On Instagram too? The [same method works there](/blog/how-to-see-who-unfollowed-you-on-instagram), just with Meta's export screen instead.`,
+  },
+  {
+    slug: 'does-tiktok-notify-when-someone-unfollows-you',
+    cluster: 'tiktok',
+    title: 'Does TikTok Notify You When Someone Unfollows You?',
+    metaTitle: 'Does TikTok Notify You When Someone Unfollows You?',
+    metaDescription: 'No, TikTok sends no alert in either direction when a follow ends. Here is what it does tell you, and how to find out who left anyway.',
+    excerpt: 'No. TikTok tells you about new followers, not lost ones, and it never tells someone you unfollowed them. Here is what you can and can\'t see, and how to get the names anyway.',
+    date: 'November 6, 2026',
+    readTime: '4 min',
+    tag: 'Guide',
+    primaryKeyword: 'does TikTok notify when someone unfollows you',
+    art: 'bell',
+    imageAlt: 'Abstract geometric illustration of a notification bell with no alert, representing the unfollow TikTok never tells you about',
+    cta: {
+      heading: 'Stop waiting for a notification that never comes.',
+      body: 'TikTok keeps unfollows silent. Upload your TikTok data download and WhoUnfollowed shows you exactly who left, in your browser. No password, nothing uploaded.',
+      buttonLabel: 'See who unfollowed you on TikTok',
+      proNudge: 'Pro keeps a running history of your TikTok snapshots, so each new download shows who left since the last one.',
+    },
+    faq: [
+      { q: 'Does TikTok notify you when someone unfollows you?', a: 'No, TikTok sends no notification, badge or alert when a follower leaves; your follower count just drops.' },
+      { q: 'Does TikTok tell someone when you unfollow them?', a: 'No, unfollowing on TikTok is silent in both directions, so the other person is not notified.' },
+      { q: 'Can you see who unfollowed you in TikTok\'s follower list?', a: 'No, the follower list only shows who follows you now, so someone who left simply disappears from it without a trace.' },
+      { q: 'How can you find out who unfollowed you on TikTok?', a: 'Compare two of your own TikTok data downloads taken at different times; anyone in the older one but missing from the newer one unfollowed you in between.' },
+    ],
+    body: `No. TikTok does not send a notification, alert or any other signal when someone unfollows you. It works the same in reverse: if you unfollow someone, they aren't told either. The only trace is a follower count that's one lower than it was.
+
+## What TikTok Does Tell You
+
+TikTok notifies you about new followers, likes, comments, mentions and messages. Gains get announced. Losses don't. Most social apps work the same way.
+
+## Why You Can't Spot It in Your Follower List
+
+Your follower list only shows who follows you right now. Someone who left isn't greyed out or marked, they're just gone. Unless you remember every name on the list, there's no way to notice from inside the app, especially once you have more than a few hundred followers.
+
+## How to Find Out Anyway
+
+The data TikTok holds about you includes your full follower list, and TikTok lets you download it. Take one download now and another in a few weeks. Anyone in the first file who isn't in the second unfollowed you in between.
+
+1. In TikTok go to Profile, the menu, **Settings and privacy**, **Account**, **Download your data**.
+2. Choose JSON and request it. It can take up to a few days to be ready.
+3. Upload the file to [WhoUnfollowed](/tiktok). It's read in your browser and compared with your previous one.
+
+The first upload already shows who doesn't follow you back. The second one shows who left. Our [step-by-step guide](/blog/how-to-see-who-unfollowed-you-on-tiktok) walks through it in more detail.
+
+## What About Apps That Promise Unfollow Alerts?
+
+Apps that claim to alert you the moment someone unfollows you on TikTok need to watch your account constantly, and that means logging in as you. Handing your password to a third party is the riskiest way to answer a simple question. Your own data download answers it without any of that.
+
+## In Short
+
+- TikTok never notifies you when someone unfollows you, and never tells anyone you unfollowed them.
+- Your follower list only shows current followers, so people who left vanish without a trace.
+- Two TikTok data downloads taken a few weeks apart show exactly who left.
+- No password or login is needed to compare them.`,
+  },
+  {
+    slug: 'why-am-i-losing-followers-on-tiktok',
+    cluster: 'tiktok',
+    title: 'Why Am I Losing Followers on TikTok? (And How to See Who Left)',
+    metaTitle: 'Why Am I Losing Followers on TikTok? How to See Who Left',
+    metaDescription: 'Losing TikTok followers usually has a reason you can spot once you know who left. Here are the common causes and how to see the actual names.',
+    excerpt: 'A falling follower count on TikTok is frustrating mostly because it is anonymous. Here are the usual reasons people leave, and how to find out exactly who did.',
+    date: 'November 6, 2026',
+    readTime: '6 min',
+    tag: 'Guide',
+    primaryKeyword: 'losing followers on TikTok',
+    art: 'ratio',
+    imageAlt: 'Abstract geometric illustration of a follower ratio tipping downward, representing losing followers on TikTok',
+    cta: {
+      heading: 'Put names to the drop.',
+      body: 'A lower number tells you nothing. Upload your TikTok data download and WhoUnfollowed shows exactly who left, in your browser, with no password and nothing uploaded.',
+      buttonLabel: 'See who left on TikTok',
+      proNudge: 'Pro compares every new download with the last one and keeps the history, so you can see whether a drop was one post or a trend.',
+    },
+    faq: [
+      { q: 'Why am I losing followers on TikTok?', a: 'The usual reasons are a change in what you post, a long gap between posts, follow-for-follow accounts leaving after you stopped following back, and TikTok removing inactive or fake accounts.' },
+      { q: 'Does TikTok remove fake followers?', a: 'TikTok removes accounts that break its rules, including spam and fake accounts, so a sudden small drop can come from accounts that no longer exist rather than people choosing to leave.' },
+      { q: 'How can I see who unfollowed me on TikTok?', a: 'Download your TikTok data now and again in a few weeks, then compare the two follower lists; WhoUnfollowed does the comparison in your browser.' },
+      { q: 'Is losing a few followers a day normal on TikTok?', a: 'Yes, almost every account loses some followers every day; what matters is whether new followers outpace them over a few weeks.' },
+    ],
+    body: `Almost every TikTok account loses followers every day. What makes it frustrating is that the drop is anonymous: the number goes down and TikTok won't say who left or why. Once you can see the actual names, the reason is usually obvious.
+
+## The Common Reasons
+
+**You changed what you post.** People follow an account for a specific kind of video. Switch from cooking to vlogs and some of the cooking crowd leaves. That's not a failure, it's your audience re-sorting itself.
+
+**You went quiet.** A long gap between posts means you drop out of people's feeds. Some notice they've forgotten why they followed you and tidy their list.
+
+**Follow-for-follow is unwinding.** If you grew partly by following people back, some of them leave once you stop engaging or unfollow them first. These drops tend to come in waves.
+
+**Accounts got removed.** TikTok takes down spam and fake accounts. When that happens, they disappear from your follower count even though nobody chose to leave. A sudden drop of a handful of accounts with odd usernames is usually this.
+
+**One video rubbed people the wrong way.** A post that went wide outside your usual audience can bring followers in and, a few days later, push some of them back out.
+
+## Why the Names Matter
+
+The reasons above look completely different once you can see who left. Ten accounts with random letters and no videos: removed spam, nothing to fix. Ten real people you'd been chatting with in comments: worth paying attention to. A batch of accounts that followed you on the same day last year: follow-for-follow unwinding. The count alone can't tell these apart.
+
+## How to See Exactly Who Left
+
+TikTok doesn't show it, but your own data download includes your full follower list.
+
+1. In TikTok go to Profile, the menu, **Settings and privacy**, **Account**, **Download your data**, choose JSON and request it.
+2. Upload the file to [WhoUnfollowed](/tiktok). It's read in your browser; nothing is sent to a server.
+3. Do it again in a few weeks. The comparison shows exactly who unfollowed you in between.
+
+Our [full guide](/blog/how-to-see-who-unfollowed-you-on-tiktok) covers each step, including the roughly 10,000-follower limit on TikTok's download.
+
+## What Not to Do
+
+Don't hand your password to an "unfollower tracker" app to find out faster. Logging a third party into your account is exactly the kind of activity that gets accounts restricted, and it's not needed: the data download is TikTok's own feature.
+
+## In Short
+
+- Losing a few followers a day is normal on TikTok; the trend over weeks matters more than any single day.
+- Common causes are a content change, a posting gap, follow-for-follow unwinding, removed spam accounts, and the odd video that reaches the wrong crowd.
+- Seeing who left tells you which of these it is.
+- Two TikTok data downloads compared in WhoUnfollowed show the exact names, with no password.`,
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
@@ -4797,5 +4986,6 @@ export const CLUSTERS: Record<ClusterId, Cluster> = {
   'privacy-safety': { id: 'privacy-safety', label: 'Tracker privacy and safety',      pillarSlug: 'why-instagram-follower-trackers-ask-for-your-password' },
   'account-health': { id: 'account-health', label: 'Account health and follow ratio', pillarSlug: 'instagram-follow-ratio-what-it-means-how-to-improve-it' },
   'threads':        { id: 'threads',        label: 'Seeing who unfollowed you on Threads', pillarSlug: 'how-to-see-who-unfollowed-you-on-threads' },
+  'tiktok':         { id: 'tiktok',         label: 'Seeing who unfollowed you on TikTok', pillarSlug: 'how-to-see-who-unfollowed-you-on-tiktok' },
 };
 

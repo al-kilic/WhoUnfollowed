@@ -12,7 +12,7 @@ import { LOCALIZED_PATHS } from '@/i18n/localizedPaths';
 // pricing changes.
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
-const CLUSTER_ORDER: ClusterId[] = ['unfollowers', 'data-export', 'privacy-safety', 'account-health', 'threads'];
+const CLUSTER_ORDER: ClusterId[] = ['unfollowers', 'data-export', 'privacy-safety', 'account-health', 'threads', 'tiktok'];
 
 function guidesSection(clusterId: ClusterId): string {
   const cluster = CLUSTERS[clusterId];

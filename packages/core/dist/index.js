@@ -165,6 +165,15 @@ var emailOptInSchema = z.object({
   // Must be an explicit true from the form, never inferred.
   consent: z.literal(true)
 });
+var plannerCadences = ["weekly", "daily", "off"];
+var plannerSyncSchema = z.object({
+  platform: platformSchema,
+  total: z.number().int().min(0).max(1e5),
+  done: z.number().int().min(0).max(1e5),
+  perDay: z.number().int().min(1).max(500),
+  cadence: z.enum(plannerCadences),
+  locale: z.enum(["en", "es", "pt"]).optional()
+}).refine((v) => v.done <= v.total, { message: "done exceeds total" });
 
 // src/tiktok.ts
 var FOLLOWER_LIST_KEYS = ["fanslist", "followerlist", "followers", "follower"];
@@ -1110,6 +1119,9 @@ export {
   parseInstagramZip,
   pickVerdict,
   planProgress,
+  plannerCadences,
+  plannerSyncSchema,
+  platformSchema,
   platforms,
   runHealthChecks,
   snapshotPlatform,

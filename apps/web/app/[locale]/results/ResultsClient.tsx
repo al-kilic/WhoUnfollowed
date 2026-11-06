@@ -23,6 +23,7 @@ import { Tutorial } from '@/components/Tutorial';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { UpgradeLink } from '@/app/account/UpgradeLink';
 import { NextCheckSection } from './NextCheckSection';
+import { VerdictCard } from '@/components/tools/VerdictCard';
 import { trackLockedView } from '@/lib/analytics';
 import type { AppLocale } from '@/i18n/routing';
 import { getResultsContent, type ResultsContent } from './content';
@@ -523,6 +524,11 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
               content={toolbar}
             />
           )}
+        </div>
+
+        {/* Free, shareable: only aggregate numbers, never usernames. */}
+        <div style={{ marginTop: 32 }}>
+          <VerdictCard current={snapshot} locale={locale} />
         </div>
 
         <NextCheckSection

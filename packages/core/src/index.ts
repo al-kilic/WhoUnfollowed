@@ -22,9 +22,10 @@ export type {
   EmailOptInInput,
   EmailOptInSource,
 } from './schemas.js';
-export { feedbackSchema, feedbackSentiments, platforms, snapshotPlatform } from './schemas.js';
+export { feedbackSchema, feedbackSentiments, platformSchema, platforms, snapshotPlatform } from './schemas.js';
 export { contactMessageSchema, contactSources } from './schemas.js';
-export { emailOptInSchema, emailOptInSources } from './schemas.js';
+export { emailOptInSchema, emailOptInSources, plannerCadences, plannerSyncSchema } from './schemas.js';
+export type { PlannerSyncInput } from './schemas.js';
 export type { SingleSnapshotAnalysis, SnapshotComparison } from './diff.js';
 // TikTok export helpers.
 export { TIKTOK_LIST_CAP, tiktokHref, tiktokListNearCap } from './tiktok.js';

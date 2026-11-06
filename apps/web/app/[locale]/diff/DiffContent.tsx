@@ -12,6 +12,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { T } from '@/components/landing/tokens';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { AccountList } from '@/components/AccountList';
+import { StarredLeftNotice } from '@/components/tools/StarredLeftNotice';
 import { LandingFooter } from '@/components/landing/FinalCTA';
 import { getDiffContent } from './content';
 import { UnfollowerReveal } from '@/components/UnfollowerReveal';
@@ -217,6 +218,8 @@ function DiffPageInner({ locale }: { locale: AppLocale }) {
           <StatChip label={c.statYouUnfollowed}  value={-diff.unfollowed.length}    positive={false} />
           <StatChip label={c.statNetChange}      value={netFollowers}               positive={netFollowers >= 0} />
         </div>
+
+        <StarredLeftNotice owner={userId} platform={snapshotPlatform(currentRecord.data)} lost={diff.lostFollowers} locale={locale} />
 
         {/* Sections */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>

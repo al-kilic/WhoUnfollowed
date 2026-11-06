@@ -152,6 +152,21 @@ export const emailOptInSchema = z.object({
 export type EmailOptInSource = (typeof emailOptInSources)[number];
 export type EmailOptInInput = z.infer<typeof emailOptInSchema>;
 
+// Unfollow planner progress sent to the server for the nudge email. Counts
+// and settings only; the accounts in the plan never leave the browser.
+export const plannerCadences = ['weekly', 'daily', 'off'] as const;
+
+export const plannerSyncSchema = z.object({
+  platform: platformSchema,
+  total: z.number().int().min(0).max(100_000),
+  done: z.number().int().min(0).max(100_000),
+  perDay: z.number().int().min(1).max(500),
+  cadence: z.enum(plannerCadences),
+  locale: z.enum(['en', 'es', 'pt']).optional(),
+}).refine(v => v.done <= v.total, { message: 'done exceeds total' });
+
+export type PlannerSyncInput = z.infer<typeof plannerSyncSchema>;
+
 export type StringListItem = z.infer<typeof stringListItemSchema>;
 export type RelationshipEntry = z.infer<typeof relationshipEntrySchema>;
 export type FollowersFile = z.infer<typeof followersFileSchema>;

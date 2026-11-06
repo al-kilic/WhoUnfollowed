@@ -112,6 +112,28 @@ declare const emailOptInSchema: z.ZodObject<{
 }, z.core.$strip>;
 type EmailOptInSource = (typeof emailOptInSources)[number];
 type EmailOptInInput = z.infer<typeof emailOptInSchema>;
+declare const plannerCadences: readonly ["weekly", "daily", "off"];
+declare const plannerSyncSchema: z.ZodObject<{
+    platform: z.ZodEnum<{
+        instagram: "instagram";
+        threads: "threads";
+        tiktok: "tiktok";
+    }>;
+    total: z.ZodNumber;
+    done: z.ZodNumber;
+    perDay: z.ZodNumber;
+    cadence: z.ZodEnum<{
+        weekly: "weekly";
+        daily: "daily";
+        off: "off";
+    }>;
+    locale: z.ZodOptional<z.ZodEnum<{
+        en: "en";
+        es: "es";
+        pt: "pt";
+    }>>;
+}, z.core.$strip>;
+type PlannerSyncInput = z.infer<typeof plannerSyncSchema>;
 type FollowersFile = z.infer<typeof followersFileSchema>;
 type FollowingFile = z.infer<typeof followingFileSchema>;
 type Account = z.infer<typeof accountSchema>;
@@ -270,4 +292,4 @@ interface PlanProgress {
 declare function planProgress(plan: Pick<UnfollowPlan, 'batches' | 'perDay' | 'total'>, done: ReadonlySet<string>): PlanProgress;
 declare function daysAtEachPace(total: number): Record<Pace, number>;
 
-export { ARCHETYPE_IDS, type Account, type ArchetypeId, type ContactMessageInput, type ContactSource, type DeltaDetectionResult, type DeltaReason, type EmailOptInInput, type EmailOptInSource, type ExportPlatform, type FeedbackInput, type FeedbackSentiment, FileReadError, type FollowersFile, type FollowingFile, type GrowthTimeline, type HealthCheckId, type HealthFinding, type HealthInput, InvalidZipError, MissingFilesError, MixedFormatError, PACE_PER_DAY, type Pace, type ParseExportResult, type ParsedSnapshot, type PlanOptions, type PlanProgress, type Platform, SUB_BATCH, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, TIKTOK_LIST_CAP, type TimelineMonth, type UnfollowPlan, type Verdict, type VerdictStats, type ZipShape, analyzeSnapshot, buildPlan, compareSnapshots, contactMessageSchema, contactSources, daysAtEachPace, detectDeltaExport, eligibleArchetypes, emailOptInSchema, emailOptInSources, feedbackSchema, feedbackSentiments, findGhostFollowers, growthTimeline, hashSeed, parseExportZip, parseInstagramZip, pickVerdict, planProgress, platforms, runHealthChecks, snapshotPlatform, tiktokHref, tiktokListNearCap, verdictStats };
+export { ARCHETYPE_IDS, type Account, type ArchetypeId, type ContactMessageInput, type ContactSource, type DeltaDetectionResult, type DeltaReason, type EmailOptInInput, type EmailOptInSource, type ExportPlatform, type FeedbackInput, type FeedbackSentiment, FileReadError, type FollowersFile, type FollowingFile, type GrowthTimeline, type HealthCheckId, type HealthFinding, type HealthInput, InvalidZipError, MissingFilesError, MixedFormatError, PACE_PER_DAY, type Pace, type ParseExportResult, type ParsedSnapshot, type PlanOptions, type PlanProgress, type PlannerSyncInput, type Platform, SUB_BATCH, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, TIKTOK_LIST_CAP, type TimelineMonth, type UnfollowPlan, type Verdict, type VerdictStats, type ZipShape, analyzeSnapshot, buildPlan, compareSnapshots, contactMessageSchema, contactSources, daysAtEachPace, detectDeltaExport, eligibleArchetypes, emailOptInSchema, emailOptInSources, feedbackSchema, feedbackSentiments, findGhostFollowers, growthTimeline, hashSeed, parseExportZip, parseInstagramZip, pickVerdict, planProgress, plannerCadences, plannerSyncSchema, platformSchema, platforms, runHealthChecks, snapshotPlatform, tiktokHref, tiktokListNearCap, verdictStats };

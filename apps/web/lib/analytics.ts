@@ -46,7 +46,22 @@ export const Events = {
   reminderOptin: 'reminder-optin',    // { source }
   revealView: 'reveal-view',          // { count_bucket }
   creatorWaitlist: 'creator-waitlist', // { placement }
+  // Tools. Props are fixed literals or counts only, never usernames.
+  verdictShare: 'verdict-share',      // { action: share | save | another, archetype, placement }
+  planStarted: 'plan-started',        // { pace, size_bucket }
+  planBatchDone: 'plan-batch-done',   // { day }
+  healthOpened: 'health-opened',      // { check }
+  starToggled: 'star-toggled',        // { on }
 } as const;
+
+// Coarse size for list lengths, so counts never identify anyone.
+export function sizeBucketOf(n: number): string {
+  if (n === 0) return '0';
+  if (n <= 50) return '1-50';
+  if (n <= 200) return '51-200';
+  if (n <= 1000) return '201-1000';
+  return 'gt1000';
+}
 
 // The most important conversion signal: which surface drove an upgrade intent.
 export function trackUpgradeClick(source: string): void {
