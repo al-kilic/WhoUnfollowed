@@ -12,7 +12,11 @@ import { ToolCard, ToolLabel, ToolSub, ToolTitle, fill, fmt, toolButton } from '
 
 const SHOW_MAX = 30;
 
-function FindingRow({ f, c, locale, app, locked }: { f: HealthFinding; c: HealthCheckContent; locale: AppLocale; app: string; locked: boolean }) {
+export function FindingRow({ f, c, locale, app, locked, index, active = false, onHover, badge }: {
+  f: HealthFinding; c: HealthCheckContent; locale: AppLocale; app: string; locked: boolean;
+  // Numbered variant used by the radar: a numbered dot instead of the side bar.
+  index?: number | undefined; active?: boolean; onHover?: ((on: boolean) => void) | undefined; badge?: string | undefined;
+}) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const params: Record<string, string | number> = { app };
@@ -32,9 +36,16 @@ function FindingRow({ f, c, locale, app, locked }: { f: HealthFinding; c: Health
   };
 
   return (
-    <li style={{ display: 'flex', gap: 14, padding: '14px 0', borderTop: '1px solid var(--t-border1)' }}>
-      <span aria-hidden="true" style={{ width: 3, borderRadius: 2, background: bar, flexShrink: 0 }} />
+    <li
+      onMouseEnter={onHover && (() => onHover(true))}
+      onMouseLeave={onHover && (() => onHover(false))}
+      style={{ display: 'flex', gap: 14, padding: '14px 10px', margin: '0 -10px', borderTop: '1px solid var(--t-border1)', borderRadius: 10, background: active ? 'var(--t-surface2)' : 'transparent', transition: 'background 0.2s' }}
+    >
+      {index === undefined
+        ? <span aria-hidden="true" style={{ width: 3, borderRadius: 2, background: bar, flexShrink: 0 }} />
+        : <span aria-hidden="true" style={{ width: 24, height: 24, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontFamily: T.mono, fontWeight: 600, color: '#F4F0E8', background: bar === 'var(--t-border3)' ? 'var(--t-inkMute)' : bar }}>{index}</span>}
       <div style={{ minWidth: 0, flex: 1 }}>
+        {badge && <span style={{ display: 'inline-block', marginBottom: 6, fontSize: 10, fontFamily: T.mono, letterSpacing: '0.1em', textTransform: 'uppercase', color: T.terraText, border: '1px solid var(--t-terra)', borderRadius: 999, padding: '2px 8px' }}>{badge}</span>}
         <div style={{ fontSize: 14.5, fontWeight: 600, color: T.ink, lineHeight: 1.4 }}>{fill(copy.title, params)}</div>
         <div style={{ fontSize: 13.5, color: T.inkDim, lineHeight: 1.55, marginTop: 4 }}>{fill(copy.action, params)}</div>
         {f.accounts.length > 0 && !locked && (

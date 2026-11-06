@@ -17,6 +17,8 @@ export async function GET(req: Request) {
   if (token) {
     try { await markEngaged(token); } catch (err) { console.error('[reminders/open] failed:', err); }
   }
-  const target = `${APP_URL}${localizedPathname('/how-to-export', locale)}?utm_source=reminder&utm_medium=email`;
+  // Wrap emails share this endpoint (k=wrap) so their clicks count as engagement too.
+  const source = url.searchParams.get('k') === 'wrap' ? 'wrap' : 'reminder';
+  const target = `${APP_URL}${localizedPathname('/how-to-export', locale)}?utm_source=${source}&utm_medium=email`;
   return NextResponse.redirect(target, 302);
 }

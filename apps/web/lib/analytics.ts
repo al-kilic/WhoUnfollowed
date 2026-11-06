@@ -52,6 +52,10 @@ export const Events = {
   planBatchDone: 'plan-batch-done',   // { day }
   healthOpened: 'health-opened',      // { check }
   starToggled: 'star-toggled',        // { on }
+  wrapShown: 'wrap-shown',            // { trigger: auto | chip | email }
+  wrapCompleted: 'wrap-completed',    // { screens }
+  wrapShare: 'wrap-share',            // { action: share | save }
+  wrapProTap: 'wrap-pro-tap',         // { what: follows | left, pro }
 } as const;
 
 // Coarse size for list lengths, so counts never identify anyone.

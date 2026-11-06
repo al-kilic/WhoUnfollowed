@@ -9,6 +9,7 @@ import { unlockExpiringSoonEmail, unlockExpiredEmail } from '@/lib/email/templat
 import { isAuthorizedBySecretHeader } from '@/lib/auth/secretHeader';
 import { sendDueReminders } from '@/lib/reminders/send';
 import { sendDuePlannerEmails, plannerDailyCap } from '@/lib/planner/send';
+import { sendDueWraps } from '@/lib/wrap/send';
 
 // Called daily by a server cron (e.g. `curl -X POST -H "x-cron-secret: $CRON_SECRET"
 // https://yourdomain.com/api/cron/unlock-expiry`). POST-only, unlike a plain
@@ -136,5 +137,17 @@ export async function POST(request: NextRequest) {
     planner = { error: 'planner_failed' };
   }
 
-  return NextResponse.json({ expiredSent, reminderSent, reminders, planner });
+  // Pass 5: "your 3-month wrap is ready" emails, per address. Only whatever
+  // budget is still left today; the rest stay due and go out tomorrow.
+  const usedAfterPlanner = usedToday + ('sent' in planner ? planner.sent : 0);
+  const wrapBudget = Math.max(0, DAILY_EMAIL_BUDGET - usedAfterPlanner);
+  let wraps: { sent: number; failed: number } | { error: string };
+  try {
+    wraps = await sendDueWraps(now, wrapBudget);
+  } catch (err) {
+    console.error('[cron/unlock-expiry] wraps failed:', err);
+    wraps = { error: 'wraps_failed' };
+  }
+
+  return NextResponse.json({ expiredSent, reminderSent, reminders, planner, wraps });
 }

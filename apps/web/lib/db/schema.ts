@@ -174,12 +174,18 @@ export const emailSubscribers = pgTable('email_subscribers', {
   // Random token in every reminder's unsubscribe and open links, so those
   // links work without logging in and without exposing the email address.
   token: text('token').unique(),
+  // "Your 3-month wrap is ready" emails (see lib/wrap). Quarters count from
+  // consentedAt, per address. Same consent, token and opt-out as reminders.
+  wrapNextAt: timestamp('wrap_next_at'),
+  wrapSentCount: integer('wrap_sent_count').notNull().default(0),
+  wrapLastSentAt: timestamp('wrap_last_sent_at'),
   // Joined the Creator AI waitlist from a teaser.
   creatorWaitlistAt: timestamp('creator_waitlist_at'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 }, (t) => [
   // The daily cron only looks at rows with a reminder scheduled.
   index('email_subscribers_reminder_next_at_idx').on(t.reminderNextAt).where(sql`${t.reminderNextAt} IS NOT NULL`),
+  index('email_subscribers_wrap_next_at_idx').on(t.wrapNextAt).where(sql`${t.wrapNextAt} IS NOT NULL`),
 ]);
 
 export const feedback = pgTable('feedback', {

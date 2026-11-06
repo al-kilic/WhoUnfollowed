@@ -951,10 +951,10 @@ function countByMonth(accounts) {
 function growthTimeline(snapshot) {
   const f = countByMonth(snapshot.followers);
   const g = countByMonth(snapshot.following);
-  const dated = snapshot.followers.filter((a) => a.followedAt !== null).length;
-  const undated = snapshot.followers.length - dated;
+  const dated2 = snapshot.followers.filter((a) => a.followedAt !== null).length;
+  const undated = snapshot.followers.length - dated2;
   const keys = [...f.keys(), ...g.keys()].sort();
-  if (keys.length === 0) return { months: [], best: null, dated, undated, lastYearShare: 0 };
+  if (keys.length === 0) return { months: [], best: null, dated: dated2, undated, lastYearShare: 0 };
   const end = monthKey(snapshot.exportedAt);
   const last = keys[keys.length - 1] > end ? keys[keys.length - 1] : end;
   const months = [];
@@ -965,7 +965,164 @@ function growthTimeline(snapshot) {
   for (const m of months) if (m.followers > 0 && (!best || m.followers > best.followers)) best = m;
   const yearAgo = snapshot.exportedAt - 365 * 86400;
   const recent = snapshot.followers.filter((a) => a.followedAt !== null && a.followedAt >= yearAgo).length;
-  return { months, best, dated, undated, lastYearShare: dated === 0 ? 0 : recent / dated };
+  return { months, best, dated: dated2, undated, lastYearShare: dated2 === 0 ? 0 : recent / dated2 };
+}
+
+// src/tools/curiosities.ts
+var DAY2 = 86400;
+var SPARK_MONTHS = 36;
+var WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+function dayFormatter(timeZone) {
+  return new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" });
+}
+function weekdayIndex(ts, fmt) {
+  return WEEKDAYS.indexOf(fmt.format(new Date(ts * 1e3)));
+}
+var dated = (list) => list.filter((a) => a.followedAt !== null);
+function curiosities({ current, previous, timeZone = "UTC" }) {
+  const out = [];
+  const followerSet = new Set(current.followers.map((a) => a.username));
+  const followingSet = new Set(current.following.map((a) => a.username));
+  const datedFollowers = dated(current.followers);
+  let tz = timeZone;
+  try {
+    dayFormatter(tz);
+  } catch {
+    tz = "UTC";
+  }
+  const toDay = dayFormatter(tz);
+  if (previous) {
+    const prev = new Set(previous.followers.map((a) => a.username));
+    const lost = [...prev].filter((u) => !followerSet.has(u)).length;
+    const gained = [...followerSet].filter((u) => !prev.has(u)).length;
+    out.push({ id: "since_last", params: { gained, lost, net: gained - lost } });
+  }
+  const timeline = growthTimeline(current);
+  if (timeline.best && timeline.best.followers >= 2 && timeline.months.length >= 3) {
+    const window = timeline.months.slice(-SPARK_MONTHS);
+    const idx = window.findIndex((m) => m.month === timeline.best.month);
+    out.push({
+      id: "best_month",
+      params: { month: timeline.best.month, count: timeline.best.followers },
+      series: window.map((m) => m.followers),
+      ...idx >= 0 ? { highlight: idx } : {}
+    });
+  }
+  if (datedFollowers.length >= 20) {
+    const fmt = new Intl.DateTimeFormat("en-US", { timeZone: tz, weekday: "short" });
+    const counts = [0, 0, 0, 0, 0, 0, 0];
+    for (const a of datedFollowers) {
+      const i = weekdayIndex(a.followedAt, fmt);
+      if (i >= 0) counts[i]++;
+    }
+    const top = counts.indexOf(Math.max(...counts));
+    out.push({
+      id: "arrival_weekday",
+      params: { weekday: top, pct: Math.round(counts[top] / datedFollowers.length * 100) },
+      series: counts,
+      highlight: top
+    });
+  }
+  if (datedFollowers.length > 0) {
+    const first = datedFollowers.reduce((a, b) => a.followedAt <= b.followedAt ? a : b);
+    out.push({
+      id: "first_follower",
+      params: { date: toDay.format(new Date(first.followedAt * 1e3)), years: Math.floor((current.exportedAt - first.followedAt) / (365 * DAY2)) }
+    });
+  }
+  const waiting = dated(current.following.filter((a) => !followerSet.has(a.username)));
+  if (waiting.length > 0) {
+    const oldest = Math.min(...waiting.map((a) => a.followedAt));
+    const days = Math.floor((current.exportedAt - oldest) / DAY2);
+    if (days >= 1) out.push({ id: "longest_wait", params: { days, count: waiting.length } });
+  }
+  if (datedFollowers.length >= 10) {
+    const yearAgo = current.exportedAt - 365 * DAY2;
+    const recent = datedFollowers.filter((a) => a.followedAt >= yearAgo).length;
+    out.push({ id: "recent_share", params: { pct: Math.round(recent / datedFollowers.length * 100), count: recent } });
+  }
+  const byDay = /* @__PURE__ */ new Map();
+  for (const a of dated(current.following)) {
+    const d = toDay.format(new Date(a.followedAt * 1e3));
+    byDay.set(d, (byDay.get(d) ?? 0) + 1);
+  }
+  let spree = null;
+  for (const entry of byDay) if (!spree || entry[1] > spree[1] || entry[1] === spree[1] && entry[0] < spree[0]) spree = entry;
+  if (spree && spree[1] >= 10) out.push({ id: "follow_spree", params: { date: spree[0], count: spree[1] } });
+  const fans = current.followers.filter((a) => !followingSet.has(a.username)).length;
+  if (fans > 0 && current.followers.length > 0) {
+    out.push({ id: "fans", params: { count: fans, pct: Math.round(fans / current.followers.length * 100) } });
+  }
+  return out;
+}
+
+// src/tools/quarterWrap.ts
+var WRAP_MONTHS = 3;
+var WRAP_REPLAY_DAYS = 80;
+var DAY3 = 86400;
+function monthsBefore(ts, months) {
+  const d = new Date(ts * 1e3);
+  const y = d.getUTCFullYear();
+  const m = d.getUTCMonth() - months;
+  const last = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+  return Date.UTC(y, m, Math.min(d.getUTCDate(), last), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds()) / 1e3;
+}
+function shouldAutoPlayWrap(seenExportedAt, exportedAt) {
+  return seenExportedAt === null || exportedAt >= seenExportedAt + WRAP_REPLAY_DAYS * DAY3;
+}
+var inWindow = (a, start, end) => a.followedAt !== null && a.followedAt >= start && a.followedAt < end;
+function quarterWrap({ current, previous, timeZone = "UTC" }) {
+  let tz = timeZone;
+  try {
+    new Intl.DateTimeFormat("en-CA", { timeZone: tz });
+  } catch {
+    tz = "UTC";
+  }
+  const toDay = new Intl.DateTimeFormat("en-CA", { timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit" });
+  const day = (ts) => toDay.format(new Date(ts * 1e3));
+  const end = current.exportedAt;
+  const start = monthsBefore(end, WRAP_MONTHS);
+  const before = monthsBefore(start, WRAP_MONTHS);
+  const followerSet = new Set(current.followers.map((a) => a.username));
+  const followingSet = new Set(current.following.map((a) => a.username));
+  const arrivedList = current.followers.filter((a) => inWindow(a, start, end));
+  const arrivedBefore = current.followers.filter((a) => inWindow(a, before, start)).length;
+  const madeList = current.following.filter((a) => inWindow(a, start, end));
+  let sincePrevious;
+  if (previous && previous.exportedAt < current.exportedAt) {
+    const prev = new Set(previous.followers.map((a) => a.username));
+    sincePrevious = {
+      date: day(previous.exportedAt),
+      gained: [...followerSet].filter((u) => !prev.has(u)).length,
+      lost: [...prev].filter((u) => !followerSet.has(u)).length
+    };
+  }
+  if (arrivedList.length === 0 && madeList.length === 0 && !sincePrevious) return null;
+  const nWeeks = Math.ceil((end - start) / (7 * DAY3));
+  const weeks = new Array(nWeeks).fill(0);
+  for (const a of arrivedList) weeks[Math.min(nWeeks - 1, Math.floor((a.followedAt - start) / (7 * DAY3)))]++;
+  const top = Math.max(...weeks);
+  const bestWeek = top > 0 ? { start: day(start + weeks.indexOf(top) * 7 * DAY3), count: top } : null;
+  const byDay = /* @__PURE__ */ new Map();
+  for (const a of madeList) {
+    const d = day(a.followedAt);
+    byDay.set(d, (byDay.get(d) ?? 0) + 1);
+  }
+  let spree = null;
+  for (const [date, count] of byDay) if (count >= 5 && (!spree || count > spree.count || count === spree.count && date < spree.date)) spree = { date, count };
+  return {
+    start,
+    end,
+    arrived: arrivedList.length,
+    arrivedBefore,
+    arrivedMutual: arrivedList.filter((a) => followingSet.has(a.username)).length,
+    weeks,
+    bestWeek,
+    followsMade: madeList.length,
+    followsBack: madeList.filter((a) => followerSet.has(a.username)).length,
+    spree,
+    sincePrevious
+  };
 }
 
 // src/tools/verdict.ts
@@ -999,8 +1156,8 @@ function verdictStats(current, previous) {
   const followers = current.followers.length;
   const following = current.following.length;
   const yearAgo = current.exportedAt - 365 * 86400;
-  const dated = current.followers.filter((a) => a.followedAt !== null);
-  const recent = dated.filter((a) => a.followedAt >= yearAgo).length;
+  const dated2 = current.followers.filter((a) => a.followedAt !== null);
+  const recent = dated2.filter((a) => a.followedAt >= yearAgo).length;
   let lost;
   let gained;
   if (previous) {
@@ -1016,7 +1173,7 @@ function verdictStats(current, previous) {
     fans: current.followers.filter((a) => !followingSet.has(a.username)).length,
     followBackPct: following === 0 ? 0 : Math.round(mutuals / following * 100),
     ratio: following === 0 ? followers : followers / following,
-    lastYearShare: dated.length === 0 ? 0 : recent / dated.length,
+    lastYearShare: dated2.length === 0 ? 0 : recent / dated2.length,
     lost,
     gained
   };
@@ -1100,11 +1257,14 @@ export {
   SUB_BATCH,
   SchemaValidationError,
   TIKTOK_LIST_CAP,
+  WRAP_MONTHS,
+  WRAP_REPLAY_DAYS,
   analyzeSnapshot,
   buildPlan,
   compareSnapshots,
   contactMessageSchema,
   contactSources,
+  curiosities,
   daysAtEachPace,
   detectDeltaExport,
   eligibleArchetypes,
@@ -1115,6 +1275,7 @@ export {
   findGhostFollowers,
   growthTimeline,
   hashSeed,
+  monthsBefore,
   parseExportZip,
   parseInstagramZip,
   pickVerdict,
@@ -1123,7 +1284,9 @@ export {
   plannerSyncSchema,
   platformSchema,
   platforms,
+  quarterWrap,
   runHealthChecks,
+  shouldAutoPlayWrap,
   snapshotPlatform,
   tiktokHref,
   tiktokListNearCap,

@@ -6,6 +6,7 @@ import { emailSubscribers } from '@/lib/db/schema';
 import { SUBSCRIBER_CONSENT_VERSION } from '@/lib/marketingConsent';
 import type { AppLocale } from '@/i18n/routing';
 import { firstReminderAt } from './schedule';
+import { nextWrapAt } from '@/lib/wrap/schedule';
 
 export function newToken(): string {
   return randomBytes(24).toString('base64url');
@@ -41,6 +42,8 @@ export async function enableReminders(opts: {
     reminderNextAt: nextAt,
     reminderSentCount: 0,
     reminderOptedOutAt: null,
+    // Same consent covers the 3-month wrap email, counted from opt-in.
+    wrapNextAt: nextWrapAt(existing?.consentedAt ?? now, now),
     token,
     ...(opts.userId ? { userId: opts.userId } : {}),
   };
@@ -89,7 +92,7 @@ export async function disableRemindersByToken(token: string, now: Date = new Dat
   if (!row.reminderOptedOutAt) {
     await db
       .update(emailSubscribers)
-      .set({ reminderNextAt: null, reminderOptedOutAt: now })
+      .set({ reminderNextAt: null, wrapNextAt: null, reminderOptedOutAt: now })
       .where(eq(emailSubscribers.id, row.id));
   }
   return true;
@@ -119,7 +122,7 @@ export async function getReminderStateForUser(userId: string, email: string) {
 export async function disableRemindersForUser(userId: string, email: string, now: Date = new Date()): Promise<void> {
   await db
     .update(emailSubscribers)
-    .set({ reminderNextAt: null, reminderOptedOutAt: now })
+    .set({ reminderNextAt: null, wrapNextAt: null, reminderOptedOutAt: now })
     .where(accountRow(userId, email));
 }
 
@@ -132,6 +135,19 @@ export async function dueReminders(now: Date, limit: number) {
       isNull(emailSubscribers.optedOutAt),
     ),
     orderBy: [asc(emailSubscribers.reminderNextAt)],
+    limit,
+  });
+}
+
+export async function dueWraps(now: Date, limit: number) {
+  return db.query.emailSubscribers.findMany({
+    where: and(
+      isNotNull(emailSubscribers.wrapNextAt),
+      lte(emailSubscribers.wrapNextAt, now),
+      isNull(emailSubscribers.reminderOptedOutAt),
+      isNull(emailSubscribers.optedOutAt),
+    ),
+    orderBy: [asc(emailSubscribers.wrapNextAt)],
     limit,
   });
 }

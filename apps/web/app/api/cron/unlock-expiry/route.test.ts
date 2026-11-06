@@ -26,6 +26,8 @@ const { sendDueReminders } = vi.hoisted(() => ({ sendDueReminders: vi.fn() }));
 vi.mock('@/lib/reminders/send', () => ({ sendDueReminders }));
 const { sendDuePlannerEmails } = vi.hoisted(() => ({ sendDuePlannerEmails: vi.fn() }));
 vi.mock('@/lib/planner/send', () => ({ sendDuePlannerEmails, plannerDailyCap: () => 15 }));
+const { sendDueWraps } = vi.hoisted(() => ({ sendDueWraps: vi.fn().mockResolvedValue({ sent: 0, failed: 0 }) }));
+vi.mock('@/lib/wrap/send', () => ({ sendDueWraps }));
 
 import { POST } from './route';
 
@@ -63,7 +65,7 @@ describe('POST /api/cron/unlock-expiry', () => {
     const res = await POST(makeRequest());
 
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ expiredSent: 1, reminderSent: 0, reminders: { sent: 0, failed: 0 }, planner: { sent: 0, failed: 0, stopped: 0 } });
+    expect(await res.json()).toEqual({ expiredSent: 1, reminderSent: 0, reminders: { sent: 0, failed: 0 }, planner: { sent: 0, failed: 0, stopped: 0 }, wraps: { sent: 0, failed: 0 } });
     expect(sendEmail).toHaveBeenCalledWith(expect.objectContaining({ to: 'lapsed@example.com' }));
     expect(updateSet).toHaveBeenCalledWith(expect.objectContaining({ expiredEmailSentAt: expect.any(Date) }));
     expect(updateSet.mock.calls[0]![0]).not.toHaveProperty('subscriptionStatus');
@@ -79,7 +81,7 @@ describe('POST /api/cron/unlock-expiry', () => {
     const res = await POST(makeRequest());
 
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 1, reminders: { sent: 0, failed: 0 }, planner: { sent: 0, failed: 0, stopped: 0 } });
+    expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 1, reminders: { sent: 0, failed: 0 }, planner: { sent: 0, failed: 0, stopped: 0 }, wraps: { sent: 0, failed: 0 } });
     expect(sendEmail).toHaveBeenCalledWith(expect.objectContaining({ to: 'soon@example.com' }));
     expect(updateSet).toHaveBeenCalledWith(expect.objectContaining({ expiryReminderSentAt: expect.any(Date) }));
   });
@@ -88,7 +90,7 @@ describe('POST /api/cron/unlock-expiry', () => {
     profilesFindMany.mockResolvedValue([]);
     const res = await POST(makeRequest());
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 0, reminders: { sent: 0, failed: 0 }, planner: { sent: 0, failed: 0, stopped: 0 } });
+    expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 0, reminders: { sent: 0, failed: 0 }, planner: { sent: 0, failed: 0, stopped: 0 }, wraps: { sent: 0, failed: 0 } });
     expect(sendEmail).not.toHaveBeenCalled();
     expect(update).not.toHaveBeenCalled();
   });
@@ -127,14 +129,14 @@ describe('POST /api/cron/unlock-expiry reminder pass', () => {
   it('reports reminder results alongside the unlock emails', async () => {
     sendDueReminders.mockResolvedValue({ sent: 3, failed: 1 });
     const res = await POST(makeRequest());
-    expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 0, reminders: { sent: 3, failed: 1 }, planner: { sent: 0, failed: 0, stopped: 0 } });
+    expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 0, reminders: { sent: 3, failed: 1 }, planner: { sent: 0, failed: 0, stopped: 0 }, wraps: { sent: 0, failed: 0 } });
   });
 
   it('still answers when the reminder pass throws', async () => {
     sendDueReminders.mockRejectedValue(new Error('db down'));
     const res = await POST(makeRequest());
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 0, reminders: { error: 'reminders_failed' }, planner: { sent: 0, failed: 0, stopped: 0 } });
+    expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 0, reminders: { error: 'reminders_failed' }, planner: { sent: 0, failed: 0, stopped: 0 }, wraps: { sent: 0, failed: 0 } });
   });
 });
 
@@ -152,5 +154,21 @@ describe('POST /api/cron/unlock-expiry planner pass', () => {
     const res = await POST(makeRequest());
     expect(sendDuePlannerEmails.mock.calls[0]![1]).toBe(10); // 90 budget - 80 reminders
     expect((await res.json()).planner).toEqual({ sent: 2, failed: 0, stopped: 0 });
+  });
+
+  it('gives wrap emails whatever is left after the planner', async () => {
+    sendDueReminders.mockResolvedValue({ sent: 70, failed: 0 });
+    sendDuePlannerEmails.mockResolvedValue({ sent: 5, failed: 0, stopped: 0 });
+    sendDueWraps.mockResolvedValue({ sent: 15, failed: 0 });
+    const res = await POST(makeRequest());
+    expect(sendDueWraps.mock.calls.at(-1)![1]).toBe(15); // 90 - 70 - 5
+    expect((await res.json()).wraps).toEqual({ sent: 15, failed: 0 });
+  });
+
+  it('sends no wraps when the budget is used up', async () => {
+    sendDueReminders.mockResolvedValue({ sent: 80, failed: 0 });
+    sendDuePlannerEmails.mockResolvedValue({ sent: 10, failed: 0, stopped: 0 });
+    await POST(makeRequest());
+    expect(sendDueWraps.mock.calls.at(-1)![1]).toBe(0);
   });
 });

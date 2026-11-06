@@ -26,11 +26,17 @@ import { FeedbackWidget } from '@/components/FeedbackWidget';
 import type { AppLocale } from '@/i18n/routing';
 import { getDashboardContent, type DashboardContent } from './content';
 import { getFeedbackWidgetContent } from '@/components/feedbackWidget.content';
-import { HealthCheckCard } from '@/components/tools/HealthCheckCard';
 import { GrowthTimelineCard } from '@/components/tools/GrowthTimelineCard';
 import { StarsCard } from '@/components/tools/StarsCard';
 import { UnfollowPlannerCard } from '@/components/tools/UnfollowPlannerCard';
-import { VerdictCard } from '@/components/tools/VerdictCard';
+import { RadarFreeZone } from '@/components/radar/RadarFreeZone';
+import { RadarSweep } from '@/components/radar/RadarSweep';
+import { RadarSection, SectionHead, SectionNav } from '@/components/radar/RadarSection';
+import { getRadarPageContent } from '@/components/radar/radar.content';
+import { QuarterWrap } from '@/components/wrap/QuarterWrap';
+import { getWrapContent } from '@/components/wrap/wrap.content';
+import { useWrapAutoplay } from '@/hooks/useWrapAutoplay';
+import { quarterWrap } from '@ig-tracker/core';
 import { useStars } from '@/hooks/useStars';
 
 const DATE_FNS_LOCALES: Partial<Record<AppLocale, DateFnsLocale>> = { es, pt };
@@ -88,35 +94,6 @@ function EmptyState({ text }: { text: string }) {
   return (
     <div style={{ padding: '32px 16px', textAlign: 'center', fontSize: 13, color: T.inkMute, fontStyle: 'italic' }}>
       {text}
-    </div>
-  );
-}
-
-// ─── 1. Hero stats row ────────────────────────────────────────────────────────
-
-function HeroStats({ followers, following, mutuals, nonFollowers, c, locked = false }: {
-  followers: number; following: number; mutuals: number; nonFollowers: number; c: DashboardContent; locked?: boolean;
-}) {
-  const ratio = following === 0 ? 0 : followers / following;
-  const nonFollowerPct = following === 0 ? 0 : Math.round((nonFollowers / following) * 100);
-
-  const stats = [
-    { value: followers.toLocaleString(),    label: c.heroStats.followers,        color: T.ink },
-    { value: following.toLocaleString(),    label: c.heroStats.following,        color: T.ink },
-    { value: mutuals.toLocaleString(),      label: c.heroStats.mutuals,          color: T.tealLight },
-    { value: nonFollowers.toLocaleString(), label: c.heroStats.nonFollowers,     color: T.terra },
-    { value: `${nonFollowerPct}%`,          label: c.heroStats.noFollowBackPct,  color: nonFollowerPct > 30 ? T.terra : '#a0956b' },
-    { value: ratio.toFixed(2),              label: c.heroStats.followRatio,      color: ratio >= 1 ? T.tealLight : '#a0956b' },
-  ];
-
-  return (
-    <div className="grid grid-cols-3 sm:grid-cols-6" style={{ gap: 10 }}>
-      {stats.map(s => (
-        <Card key={s.label} style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-          <div style={{ fontSize: 10, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.06em', textTransform: 'uppercase', height: 24, display: 'flex', alignItems: 'center', marginBottom: 10 }}>{s.label}</div>
-          <div style={{ fontFamily: T.serif, fontSize: 26, lineHeight: 1, letterSpacing: '-0.02em', color: s.color, ...(locked ? lockedContentStyle : {}) }}>{s.value}</div>
-        </Card>
-      ))}
     </div>
   );
 }
@@ -909,6 +886,7 @@ interface DashboardClientProps {
 
 export function DashboardClient({ locale, account }: DashboardClientProps) {
   const c = getDashboardContent(locale);
+  const rc = getRadarPageContent(locale);
   const feedbackC = getFeedbackWidgetContent(locale);
   const dateLocale = DATE_FNS_LOCALES[locale];
   const storeSnapshot = useSnapshotStore(s => s.currentSnapshot);
@@ -973,6 +951,14 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
     };
   }, [snapshot]);
 
+  // The 3-month wrap that plays before the Radar (free, counts only).
+  const wrap = useMemo(
+    () => (snapshot ? quarterWrap({ current: snapshot, previous: previousSnapshot, timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone }) : null),
+    [snapshot, previousSnapshot],
+  );
+  const onPlatformWithData = !!snapshot && !emptyPlatforms.includes(platform);
+  const wrapState = useWrapAutoplay(account.userId, platform, onPlatformWithData ? snapshot.exportedAt : null, wrap !== null);
+
   if (loading) return (
     <div style={{ minHeight: '100vh', background: T.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ fontSize: 13, color: T.inkMute, fontFamily: T.mono }}>{c.loadingRadar}</div>
@@ -1021,7 +1007,10 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
       <SiteNav userEmail={account.userEmail} isPro={account.isPro} />
 
       {radarModalOpen && <RadarModal c={c} onClose={() => setRadarModalOpen(false)} />}
-      {!locked && <Tutorial
+      {wrapState.open && wrap && onPlatformWithData && (
+        <QuarterWrap w={wrap} current={snapshot} previous={previousSnapshot} locale={locale} isPro={account.isPro} onClose={wrapState.close} />
+      )}
+      {!locked && !wrapState.open && <Tutorial
         storageKey="ig-tracker:tutorial-radar"
         labels={c.tutorialLabels}
         steps={c.tutorial
@@ -1045,66 +1034,44 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
         />
       </div>
 
-      {/* Verdict card is free, so it sits above the Pro-locked Radar. */}
       {!emptyPlatforms.includes(platform) && (
-        <div className="px-4 sm:px-8" style={{ maxWidth: 1100, margin: '0 auto', paddingTop: 24 }}>
-          <VerdictCard current={snapshot} previous={previousSnapshot} locale={locale} placement="radar" />
-        </div>
+        <SectionNav
+          label={rc.nav.label}
+          items={[
+            { id: 'overview', label: rc.nav.overview },
+            { id: 'curiosities', label: rc.nav.curiosities },
+            { id: 'verdict', label: rc.nav.verdict },
+            { id: 'radar', label: rc.nav.radar },
+            { id: 'data', label: rc.nav.data },
+          ]}
+        />
       )}
-      {emptyPlatforms.includes(platform) ? <PlatformEmptyPanel platform={platform} c={c} /> : (
+
+      {emptyPlatforms.includes(platform) ? <PlatformEmptyPanel platform={platform} c={c} /> : (<>
+      {/* Free zone: overview, curiosities and the verdict are aggregates
+          only, so they sit above the Pro-locked radar and data. */}
+      <div className="px-4 sm:px-8" style={{ maxWidth: 1100, margin: '0 auto', paddingTop: 24 }}>
+        <RadarFreeZone
+          current={snapshot} previous={previousSnapshot} locale={locale} c={rc}
+          dateLabel={format(new Date(snapshot.exportedAt * 1000), 'MMM d, yyyy', dateLocale && { locale: dateLocale })}
+          aboutLabel={c.header.whatIsRadar}
+          onAbout={() => setRadarModalOpen(true)}
+          {...(wrap ? { wrapLabel: getWrapContent(locale).chip, onWrap: wrapState.openManually } : {})}
+        />
+      </div>
       <div style={{ position: 'relative' }}>
-      <main className="px-4 sm:px-8 py-8 sm:py-12 pb-20" style={{ maxWidth: 1100, margin: '0 auto' }}>
-        {/* Header */}
-        <div style={{ marginBottom: 40 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ fontSize: 10, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em' }}>{c.header.radar}</span>
-              <span style={{ fontSize: 10, color: T.inkMute, fontFamily: T.mono }}>{c.header.exportDate(format(new Date(snapshot.exportedAt * 1000), 'MMM d, yyyy', dateLocale && { locale: dateLocale }))}</span>
-            </div>
-            <button
-              onClick={() => setRadarModalOpen(true)}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                padding: '6px 14px', borderRadius: 20, cursor: 'pointer',
-                fontSize: 12, fontFamily: T.mono, fontWeight: 500,
-                background: 'transparent',
-                border: '1px solid rgba(2,136,143,0.3)',
-                color: T.tealLight, transition: 'all 0.2s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(2,136,143,0.08)'; }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
-            >
-              <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.3"/>
-                <path d="M7 6.5V10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-                <circle cx="7" cy="4.5" r="0.7" fill="currentColor"/>
-              </svg>
-              {c.header.whatIsRadar}
-            </button>
-          </div>
-          <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', color: T.ink }}>
-            {c.header.headline}
-          </h1>
-          <p style={{ fontSize: 14, color: T.inkDim, marginTop: 8 }}>
-            {c.header.summary(snapshot.followers.length.toLocaleString(), snapshot.following.length.toLocaleString(), nonFollowers.length.toLocaleString())}
-          </p>
-        </div>
+      <main className="px-4 sm:px-8 pb-20" style={{ maxWidth: 1100, margin: '0 auto' }}>
+        <RadarSection id="radar">
+          <SectionHead {...rc.sections.radar} />
+          <RadarSweep current={snapshot} previous={previousSnapshot} locale={locale} c={rc} locked={locked} />
+        </RadarSection>
 
-        {/* Health check: ranked, specific findings (replaces the old grade). */}
-        <div style={{ marginBottom: 16 }}>
-          <HealthCheckCard current={snapshot} previous={previousSnapshot} locale={locale} locked={locked} />
-        </div>
+        <RadarSection id="data" style={{ marginBottom: 0 }}>
+        <SectionHead {...rc.sections.data} />
 
-        {/* Hero stats */}
+        {/* Growth timeline from follow dates: works with one export, so it leads */}
         <div style={{ marginBottom: 16 }}>
-          <HeroStats
-            followers={snapshot.followers.length}
-            following={snapshot.following.length}
-            mutuals={mutuals.length}
-            nonFollowers={nonFollowers.length}
-            c={c}
-            locked={locked}
-          />
+          <GrowthTimelineCard snapshot={snapshot} locale={locale} />
         </div>
 
         {/* Growth chart */}
@@ -1113,7 +1080,7 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
         </div>
 
         {/* Row 1: Audience donut + Follow ratio */}
-        <div id="tutorial-audience" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+        <div id="tutorial-audience" className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 16, marginBottom: 16 }}>
           <AudienceBreakdown
             followers={snapshot.followers.length}
             mutuals={mutuals.length}
@@ -1137,11 +1104,6 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
           <FollowAgeCard nonFollowers={nonFollowers} c={c} locked={locked} />
         </div>
 
-        {/* Growth timeline from follow dates */}
-        <div style={{ marginBottom: 16 }}>
-          <GrowthTimelineCard snapshot={snapshot} locale={locale} />
-        </div>
-
         {/* Stars and the unfollow planner list real usernames, so they only
             render for Pro (the locked preview never puts names in the page). */}
         {!locked && (
@@ -1154,10 +1116,11 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
         {/* Pending + Recently unfollowed */}
         {/* Threads exports have no "requests you sent" list, so the pending
             card is Instagram-only. */}
-        <div id="tutorial-pending" style={{ display: 'grid', gridTemplateColumns: hasPendingRequests(platform) ? '1fr 1fr' : '1fr', gap: 16 }}>
+        <div id="tutorial-pending" className={hasPendingRequests(platform) ? 'grid grid-cols-1 md:grid-cols-2' : 'grid grid-cols-1'} style={{ gap: 16 }}>
           {hasPendingRequests(platform) && <PendingRequestsCard accounts={snapshot.pendingRequests ?? []} c={c} locked={locked} />}
           <RecentlyUnfollowedCard accounts={snapshot.recentlyUnfollowed ?? []} c={c} dateLocale={dateLocale} locked={locked} />
         </div>
+        </RadarSection>
       </main>
       {locked && (
         <ProLockOverlay
@@ -1169,7 +1132,7 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
         />
       )}
       </div>
-      )}
+      </>)}
 
       <LandingFooter />
       <FeedbackWidget content={feedbackC} />

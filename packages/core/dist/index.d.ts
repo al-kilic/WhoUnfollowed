@@ -240,6 +240,54 @@ interface GrowthTimeline {
 }
 declare function growthTimeline(snapshot: Pick<ParsedSnapshot, 'followers' | 'following' | 'exportedAt'>): GrowthTimeline;
 
+type CuriosityId = 'since_last' | 'best_month' | 'arrival_weekday' | 'first_follower' | 'longest_wait' | 'recent_share' | 'follow_spree' | 'fans';
+interface Curiosity {
+    id: CuriosityId;
+    params: Record<string, number | string>;
+    series?: number[];
+    highlight?: number;
+}
+interface CuriosityInput {
+    current: Pick<ParsedSnapshot, 'followers' | 'following' | 'exportedAt'>;
+    previous?: Pick<ParsedSnapshot, 'followers'> | undefined;
+    timeZone?: string;
+}
+declare function curiosities({ current, previous, timeZone }: CuriosityInput): Curiosity[];
+
+declare const WRAP_MONTHS = 3;
+declare const WRAP_REPLAY_DAYS = 80;
+interface QuarterWrap {
+    start: number;
+    end: number;
+    arrived: number;
+    arrivedBefore: number;
+    arrivedMutual: number;
+    weeks: number[];
+    bestWeek: {
+        start: string;
+        count: number;
+    } | null;
+    followsMade: number;
+    followsBack: number;
+    spree: {
+        date: string;
+        count: number;
+    } | null;
+    sincePrevious?: {
+        date: string;
+        gained: number;
+        lost: number;
+    } | undefined;
+}
+interface QuarterWrapInput {
+    current: Pick<ParsedSnapshot, 'followers' | 'following' | 'exportedAt'>;
+    previous?: Pick<ParsedSnapshot, 'followers' | 'exportedAt'> | undefined;
+    timeZone?: string;
+}
+declare function monthsBefore(ts: number, months: number): number;
+declare function shouldAutoPlayWrap(seenExportedAt: number | null, exportedAt: number): boolean;
+declare function quarterWrap({ current, previous, timeZone }: QuarterWrapInput): QuarterWrap | null;
+
 type ArchetypeId = 'loyal_magnet' | 'main_character' | 'quiet_icon' | 'fair_trader' | 'generous_giver' | 'hopeful_romantic' | 'ghost_collector' | 'tiny_circle' | 'open_house' | 'selective' | 'rising' | 'og' | 'mutual_maximalist' | 'fan_club' | 'collector' | 'drama_magnet' | 'untouchable' | 'comeback' | 'balanced' | 'steady';
 interface VerdictStats {
     followers: number;
@@ -292,4 +340,4 @@ interface PlanProgress {
 declare function planProgress(plan: Pick<UnfollowPlan, 'batches' | 'perDay' | 'total'>, done: ReadonlySet<string>): PlanProgress;
 declare function daysAtEachPace(total: number): Record<Pace, number>;
 
-export { ARCHETYPE_IDS, type Account, type ArchetypeId, type ContactMessageInput, type ContactSource, type DeltaDetectionResult, type DeltaReason, type EmailOptInInput, type EmailOptInSource, type ExportPlatform, type FeedbackInput, type FeedbackSentiment, FileReadError, type FollowersFile, type FollowingFile, type GrowthTimeline, type HealthCheckId, type HealthFinding, type HealthInput, InvalidZipError, MissingFilesError, MixedFormatError, PACE_PER_DAY, type Pace, type ParseExportResult, type ParsedSnapshot, type PlanOptions, type PlanProgress, type PlannerSyncInput, type Platform, SUB_BATCH, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, TIKTOK_LIST_CAP, type TimelineMonth, type UnfollowPlan, type Verdict, type VerdictStats, type ZipShape, analyzeSnapshot, buildPlan, compareSnapshots, contactMessageSchema, contactSources, daysAtEachPace, detectDeltaExport, eligibleArchetypes, emailOptInSchema, emailOptInSources, feedbackSchema, feedbackSentiments, findGhostFollowers, growthTimeline, hashSeed, parseExportZip, parseInstagramZip, pickVerdict, planProgress, plannerCadences, plannerSyncSchema, platformSchema, platforms, runHealthChecks, snapshotPlatform, tiktokHref, tiktokListNearCap, verdictStats };
+export { ARCHETYPE_IDS, type Account, type ArchetypeId, type ContactMessageInput, type ContactSource, type Curiosity, type CuriosityId, type CuriosityInput, type DeltaDetectionResult, type DeltaReason, type EmailOptInInput, type EmailOptInSource, type ExportPlatform, type FeedbackInput, type FeedbackSentiment, FileReadError, type FollowersFile, type FollowingFile, type GrowthTimeline, type HealthCheckId, type HealthFinding, type HealthInput, InvalidZipError, MissingFilesError, MixedFormatError, PACE_PER_DAY, type Pace, type ParseExportResult, type ParsedSnapshot, type PlanOptions, type PlanProgress, type PlannerSyncInput, type Platform, type QuarterWrap, type QuarterWrapInput, SUB_BATCH, SchemaValidationError, type SingleSnapshotAnalysis, type SnapshotComparison, TIKTOK_LIST_CAP, type TimelineMonth, type UnfollowPlan, type Verdict, type VerdictStats, WRAP_MONTHS, WRAP_REPLAY_DAYS, type ZipShape, analyzeSnapshot, buildPlan, compareSnapshots, contactMessageSchema, contactSources, curiosities, daysAtEachPace, detectDeltaExport, eligibleArchetypes, emailOptInSchema, emailOptInSources, feedbackSchema, feedbackSentiments, findGhostFollowers, growthTimeline, hashSeed, monthsBefore, parseExportZip, parseInstagramZip, pickVerdict, planProgress, plannerCadences, plannerSyncSchema, platformSchema, platforms, quarterWrap, runHealthChecks, shouldAutoPlayWrap, snapshotPlatform, tiktokHref, tiktokListNearCap, verdictStats };
