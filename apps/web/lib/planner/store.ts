@@ -1,6 +1,6 @@
 import 'server-only';
 import { randomBytes } from 'crypto';
-import { and, asc, eq, isNotNull, lte } from 'drizzle-orm';
+import { and, asc, count, eq, isNotNull, lte } from 'drizzle-orm';
 import { db } from '@/lib/db/index';
 import { unfollowPlans, users } from '@/lib/db/schema';
 import type { Platform } from '@ig-tracker/core';
@@ -69,3 +69,10 @@ export async function duePlans(now: Date, limit: number) {
 }
 
 export type DuePlan = Awaited<ReturnType<typeof duePlans>>[number];
+
+// Plans still due after a run (held back by the cap, or a failed send).
+export async function countDuePlans(now: Date): Promise<number> {
+  const [row] = await db.select({ n: count() }).from(unfollowPlans)
+    .where(and(isNotNull(unfollowPlans.nextAt), lte(unfollowPlans.nextAt, now)));
+  return row?.n ?? 0;
+}

@@ -21,9 +21,18 @@ vi.mock('@/lib/db/index', () => ({
     update,
   },
 }));
-vi.mock('@/lib/email/send', () => ({ sendEmail, isEmailConfigured }));
+vi.mock('@/lib/email/send', () => ({ sendEmail, isEmailConfigured, takeEmailTally: () => ({ sent: 0, failed: 0, limited: 0, since: Date.now() }) }));
+const { sendTelegramMessage, countDueReminders, countDueWraps, countDuePlans } = vi.hoisted(() => ({
+  sendTelegramMessage: vi.fn().mockResolvedValue({ ok: true }),
+  countDueReminders: vi.fn().mockResolvedValue(0),
+  countDueWraps: vi.fn().mockResolvedValue(0),
+  countDuePlans: vi.fn().mockResolvedValue(0),
+}));
+vi.mock('@/lib/telegram', () => ({ sendTelegramMessage, escapeTelegramHtml: (s: string) => s }));
+vi.mock('@/lib/reminders/store', () => ({ countDueReminders, countDueWraps }));
+vi.mock('@/lib/planner/store', () => ({ countDuePlans }));
 const { sendDueReminders } = vi.hoisted(() => ({ sendDueReminders: vi.fn() }));
-vi.mock('@/lib/reminders/send', () => ({ sendDueReminders }));
+vi.mock('@/lib/reminders/send', () => ({ sendDueReminders, reminderDailyCap: () => 80 }));
 const { sendDuePlannerEmails } = vi.hoisted(() => ({ sendDuePlannerEmails: vi.fn() }));
 vi.mock('@/lib/planner/send', () => ({ sendDuePlannerEmails, plannerDailyCap: () => 15 }));
 const { sendDueWraps } = vi.hoisted(() => ({ sendDueWraps: vi.fn().mockResolvedValue({ sent: 0, failed: 0 }) }));
@@ -65,7 +74,7 @@ describe('POST /api/cron/unlock-expiry', () => {
     const res = await POST(makeRequest());
 
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ expiredSent: 1, reminderSent: 0, reminders: { sent: 0, failed: 0 }, planner: { sent: 0, failed: 0, stopped: 0 }, wraps: { sent: 0, failed: 0 } });
+    expect(await res.json()).toMatchObject({ expiredSent: 1, reminderSent: 0, reminders: { sent: 0, failed: 0 }, planner: { sent: 0, failed: 0, stopped: 0 }, wraps: { sent: 0, failed: 0 } });
     expect(sendEmail).toHaveBeenCalledWith(expect.objectContaining({ to: 'lapsed@example.com' }));
     expect(updateSet).toHaveBeenCalledWith(expect.objectContaining({ expiredEmailSentAt: expect.any(Date) }));
     expect(updateSet.mock.calls[0]![0]).not.toHaveProperty('subscriptionStatus');
@@ -81,7 +90,7 @@ describe('POST /api/cron/unlock-expiry', () => {
     const res = await POST(makeRequest());
 
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 1, reminders: { sent: 0, failed: 0 }, planner: { sent: 0, failed: 0, stopped: 0 }, wraps: { sent: 0, failed: 0 } });
+    expect(await res.json()).toMatchObject({ expiredSent: 0, reminderSent: 1, reminders: { sent: 0, failed: 0 }, planner: { sent: 0, failed: 0, stopped: 0 }, wraps: { sent: 0, failed: 0 } });
     expect(sendEmail).toHaveBeenCalledWith(expect.objectContaining({ to: 'soon@example.com' }));
     expect(updateSet).toHaveBeenCalledWith(expect.objectContaining({ expiryReminderSentAt: expect.any(Date) }));
   });
@@ -90,7 +99,7 @@ describe('POST /api/cron/unlock-expiry', () => {
     profilesFindMany.mockResolvedValue([]);
     const res = await POST(makeRequest());
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 0, reminders: { sent: 0, failed: 0 }, planner: { sent: 0, failed: 0, stopped: 0 }, wraps: { sent: 0, failed: 0 } });
+    expect(await res.json()).toMatchObject({ expiredSent: 0, reminderSent: 0, reminders: { sent: 0, failed: 0 }, planner: { sent: 0, failed: 0, stopped: 0 }, wraps: { sent: 0, failed: 0 } });
     expect(sendEmail).not.toHaveBeenCalled();
     expect(update).not.toHaveBeenCalled();
   });
@@ -111,7 +120,7 @@ describe('POST /api/cron/unlock-expiry when email is not configured', () => {
     const res = await POST(makeRequest());
 
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 0, skipped: 'email_not_configured' });
+    expect(await res.json()).toMatchObject({ expiredSent: 0, reminderSent: 0, skipped: 'email_not_configured' });
     expect(profilesFindMany).not.toHaveBeenCalled();
     expect(update).not.toHaveBeenCalled();
   });
@@ -129,14 +138,14 @@ describe('POST /api/cron/unlock-expiry reminder pass', () => {
   it('reports reminder results alongside the unlock emails', async () => {
     sendDueReminders.mockResolvedValue({ sent: 3, failed: 1 });
     const res = await POST(makeRequest());
-    expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 0, reminders: { sent: 3, failed: 1 }, planner: { sent: 0, failed: 0, stopped: 0 }, wraps: { sent: 0, failed: 0 } });
+    expect(await res.json()).toMatchObject({ expiredSent: 0, reminderSent: 0, reminders: { sent: 3, failed: 1 }, planner: { sent: 0, failed: 0, stopped: 0 }, wraps: { sent: 0, failed: 0 } });
   });
 
   it('still answers when the reminder pass throws', async () => {
     sendDueReminders.mockRejectedValue(new Error('db down'));
     const res = await POST(makeRequest());
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ expiredSent: 0, reminderSent: 0, reminders: { error: 'reminders_failed' }, planner: { sent: 0, failed: 0, stopped: 0 }, wraps: { sent: 0, failed: 0 } });
+    expect(await res.json()).toMatchObject({ expiredSent: 0, reminderSent: 0, reminders: { error: 'reminders_failed' }, planner: { sent: 0, failed: 0, stopped: 0 }, wraps: { sent: 0, failed: 0 } });
   });
 });
 
@@ -179,5 +188,32 @@ describe('POST /api/cron/unlock-expiry planner pass', () => {
     sendDuePlannerEmails.mockResolvedValue({ sent: 10, failed: 0, stopped: 0 });
     await POST(makeRequest());
     expect(sendDueWraps.mock.calls.at(-1)![1]).toBe(0);
+  });
+
+  it('posts an email report to Telegram and flags what the caps held back', async () => {
+    sendDueReminders.mockResolvedValue({ sent: 80, failed: 0 });
+    sendDuePlannerEmails.mockResolvedValue({ sent: 10, failed: 0, stopped: 0 });
+    sendDueWraps.mockResolvedValue({ sent: 0, failed: 0 });
+    countDueWraps.mockResolvedValueOnce(4);
+    const res = await POST(makeRequest());
+    expect((await res.json()).alert).toBe(true);
+    const text = sendTelegramMessage.mock.calls.at(-1)![0] as string;
+    expect(text).toContain('some emails did not go out');
+    expect(text).toContain('4 3-month wraps held back by the daily limit');
+  });
+
+  it('sends a calm report when everything went out', async () => {
+    sendDueReminders.mockResolvedValue({ sent: 2, failed: 0 });
+    sendDuePlannerEmails.mockResolvedValue({ sent: 0, failed: 0, stopped: 0 });
+    sendDueWraps.mockResolvedValue({ sent: 0, failed: 0 });
+    const res = await POST(makeRequest());
+    expect((await res.json()).alert).toBe(false);
+    expect(sendTelegramMessage.mock.calls.at(-1)![0]).toContain('📧 <b>Email report</b>');
+  });
+
+  it('alerts on Telegram when email is not configured', async () => {
+    isEmailConfigured.mockReturnValue(false);
+    await POST(makeRequest());
+    expect(sendTelegramMessage.mock.calls.at(-1)![0]).toContain('nothing sent today');
   });
 });

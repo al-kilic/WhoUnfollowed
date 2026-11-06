@@ -1,5 +1,6 @@
 import 'server-only';
 import { Resend } from 'resend';
+import { sendTelegramMessage, escapeTelegramHtml } from '@/lib/telegram';
 
 // Email is sent via Resend. Configuration is optional: when RESEND_API_KEY is
 // absent (local dev, or before the domain is verified) email features degrade
@@ -42,9 +43,56 @@ export async function sendEmail(opts: {
       ...(opts.replyTo ? { replyTo: opts.replyTo } : {}),
       ...(opts.headers ? { headers: opts.headers } : {}),
     });
-    if (error) return { ok: false, error: error.message };
+    if (error) {
+      noteFailure(error.message, error.name);
+      return { ok: false, error: error.message };
+    }
+    tally().sent++;
     return { ok: true };
   } catch (e) {
-    return { ok: false, error: e instanceof Error ? e.message : 'Failed to send email.' };
+    const message = e instanceof Error ? e.message : 'Failed to send email.';
+    noteFailure(message);
+    return { ok: false, error: message };
   }
+}
+
+// Per-process counters for every email sent through here (signup codes,
+// receipts, reminders...), read and reset by the daily cron's report. Kept on
+// globalThis so every route bundle shares one copy. They reset on a redeploy,
+// so the report labels them "since the last report or restart".
+interface EmailTally { sent: number; failed: number; limited: number; since: number }
+const g = globalThis as typeof globalThis & { __wuEmailTally?: EmailTally; __wuQuotaAlertAt?: number };
+function tally(): EmailTally {
+  g.__wuEmailTally ??= { sent: 0, failed: 0, limited: 0, since: Date.now() };
+  return g.__wuEmailTally;
+}
+
+export function takeEmailTally(): EmailTally {
+  const t = { ...tally() };
+  g.__wuEmailTally = { sent: 0, failed: 0, limited: 0, since: Date.now() };
+  return t;
+}
+
+// Resend answers 429 with names like daily_quota_exceeded, monthly_quota_exceeded
+// or rate_limit_exceeded when the plan's limit is hit.
+export function isLimitError(message: string, name?: string): boolean {
+  return /quota|rate[_ ]limit|too many requests/i.test(`${name ?? ''} ${message}`);
+}
+
+const QUOTA_ALERT_EVERY_MS = 60 * 60 * 1000;
+
+function noteFailure(message: string, name?: string) {
+  const t = tally();
+  t.failed++;
+  if (!isLimitError(message, name)) return;
+  t.limited++;
+  // Alert right away, at most once an hour, so a day of refusals doesn't spam.
+  const now = Date.now();
+  if (g.__wuQuotaAlertAt && now - g.__wuQuotaAlertAt < QUOTA_ALERT_EVERY_MS) return;
+  g.__wuQuotaAlertAt = now;
+  void sendTelegramMessage([
+    '🚨 Email limit hit: Resend refused a send',
+    `Reason: ${escapeTelegramHtml(`${name ?? 'error'}: ${message}`.slice(0, 200))}`,
+    'Emails are not going out until the limit resets. Signup codes and receipts are affected too.',
+  ].join('\n')).catch(() => { /* never block a send on the alert */ });
 }

@@ -4,12 +4,16 @@ import { profiles, users } from '@/lib/db/schema';
 import { and, eq, isNotNull, isNull, lte } from 'drizzle-orm';
 import { hasLocale } from 'next-intl';
 import { routing, type AppLocale } from '@/i18n/routing';
-import { sendEmail, isEmailConfigured } from '@/lib/email/send';
+import { sendEmail, isEmailConfigured, takeEmailTally } from '@/lib/email/send';
 import { unlockExpiringSoonEmail, unlockExpiredEmail } from '@/lib/email/templates';
 import { isAuthorizedBySecretHeader } from '@/lib/auth/secretHeader';
-import { sendDueReminders } from '@/lib/reminders/send';
+import { sendDueReminders, reminderDailyCap } from '@/lib/reminders/send';
 import { sendDuePlannerEmails, plannerDailyCap } from '@/lib/planner/send';
 import { sendDueWraps, wrapDailyCap } from '@/lib/wrap/send';
+import { countDueReminders, countDueWraps } from '@/lib/reminders/store';
+import { countDuePlans } from '@/lib/planner/store';
+import { buildCronEmailReport } from '@/lib/email/cronReport';
+import { sendTelegramMessage } from '@/lib/telegram';
 
 // Called daily by a server cron (e.g. `curl -X POST -H "x-cron-secret: $CRON_SECRET"
 // https://yourdomain.com/api/cron/unlock-expiry`). POST-only, unlike a plain
@@ -24,6 +28,8 @@ import { sendDueWraps, wrapDailyCap } from '@/lib/wrap/send';
 //   4. Unfollow planner nudges (lib/planner), with whatever is left of the
 //      day's email budget after the passes above.
 //      They ride on this existing daily cron so no new crontab line is needed.
+//   5. 3-month wrap emails (lib/wrap), same budget rule.
+//   6. A Telegram email report: sent, failed, and what the caps held back.
 //
 // subscriptionStatus itself is never flipped here — getSubscriptionStatus()
 // already treats a past subscriptionExpiresAt as expired at read time, and a
@@ -44,10 +50,14 @@ export async function POST(request: NextRequest) {
   // down), silently burning the one-shot idempotency markers with nothing
   // actually sent.
   if (!isEmailConfigured()) {
+    await sendTelegramMessage('🚨 <b>Email report: nothing sent today</b>\nRESEND_API_KEY is not set on the server, so the daily emails were skipped.')
+      .catch(() => undefined);
     return NextResponse.json({ expiredSent: 0, reminderSent: 0, skipped: 'email_not_configured' });
   }
 
   const now = new Date();
+  // Emails sent outside this cron since the last run (signup codes, receipts).
+  const other = takeEmailTally();
   const reminderCutoff = new Date(now.getTime() + REMINDER_WINDOW_DAYS * 24 * 60 * 60 * 1000);
 
   let expiredSent = 0;
@@ -149,5 +159,26 @@ export async function POST(request: NextRequest) {
     wraps = { error: 'wraps_failed' };
   }
 
-  return NextResponse.json({ expiredSent, reminderSent, reminders, planner, wraps });
+  // Pass 6: the Telegram email report. Never fails the run.
+  const ownTally = takeEmailTally();
+  const stillDue = async (fn: (d: Date) => Promise<number>) => { try { return await fn(now); } catch { return null; } };
+  const [remindersDue, plannerDue, wrapsDue] = await Promise.all([
+    stillDue(countDueReminders), stillDue(countDuePlans), stillDue(countDueWraps),
+  ]);
+  const report = buildCronEmailReport({
+    date: now,
+    budget: DAILY_EMAIL_BUDGET,
+    expiry: { expired: expiredSent, expiringSoon: reminderSent },
+    passes: {
+      reminders: { result: reminders, cap: reminderDailyCap(), stillDue: remindersDue },
+      planner: { result: planner, cap: plannerBudget, stillDue: plannerDue },
+      wraps: { result: wraps, cap: wrapBudget, stillDue: wrapsDue },
+    },
+    other: { sent: other.sent, failed: other.failed, limited: other.limited, since: new Date(other.since) },
+    limitedInRun: ownTally.limited,
+  });
+  const notify = await sendTelegramMessage(report.text).catch(() => ({ ok: false as const, error: 'threw' }));
+  if (!notify.ok) console.error('[cron/unlock-expiry] email report not delivered:', notify.error);
+
+  return NextResponse.json({ expiredSent, reminderSent, reminders, planner, wraps, alert: report.alert });
 }

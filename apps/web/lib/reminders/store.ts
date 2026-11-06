@@ -1,6 +1,6 @@
 import 'server-only';
 import { randomBytes } from 'crypto';
-import { and, asc, eq, isNotNull, isNull, lte, or } from 'drizzle-orm';
+import { and, asc, count, eq, isNotNull, isNull, lte, or } from 'drizzle-orm';
 import { db } from '@/lib/db/index';
 import { emailSubscribers } from '@/lib/db/schema';
 import { SUBSCRIBER_CONSENT_VERSION } from '@/lib/marketingConsent';
@@ -126,28 +126,36 @@ export async function disableRemindersForUser(userId: string, email: string, now
     .where(accountRow(userId, email));
 }
 
+const reminderDue = (now: Date) => and(
+  isNotNull(emailSubscribers.reminderNextAt),
+  lte(emailSubscribers.reminderNextAt, now),
+  isNull(emailSubscribers.reminderOptedOutAt),
+  isNull(emailSubscribers.optedOutAt),
+);
+
+const wrapDue = (now: Date) => and(
+  isNotNull(emailSubscribers.wrapNextAt),
+  lte(emailSubscribers.wrapNextAt, now),
+  isNull(emailSubscribers.reminderOptedOutAt),
+  isNull(emailSubscribers.optedOutAt),
+);
+
 export async function dueReminders(now: Date, limit: number) {
-  return db.query.emailSubscribers.findMany({
-    where: and(
-      isNotNull(emailSubscribers.reminderNextAt),
-      lte(emailSubscribers.reminderNextAt, now),
-      isNull(emailSubscribers.reminderOptedOutAt),
-      isNull(emailSubscribers.optedOutAt),
-    ),
-    orderBy: [asc(emailSubscribers.reminderNextAt)],
-    limit,
-  });
+  return db.query.emailSubscribers.findMany({ where: reminderDue(now), orderBy: [asc(emailSubscribers.reminderNextAt)], limit });
 }
 
 export async function dueWraps(now: Date, limit: number) {
-  return db.query.emailSubscribers.findMany({
-    where: and(
-      isNotNull(emailSubscribers.wrapNextAt),
-      lte(emailSubscribers.wrapNextAt, now),
-      isNull(emailSubscribers.reminderOptedOutAt),
-      isNull(emailSubscribers.optedOutAt),
-    ),
-    orderBy: [asc(emailSubscribers.wrapNextAt)],
-    limit,
-  });
+  return db.query.emailSubscribers.findMany({ where: wrapDue(now), orderBy: [asc(emailSubscribers.wrapNextAt)], limit });
+}
+
+// How many are still due after a run: the ones the daily caps held back
+// (plus any failed sends, which stay due). Used by the cron's email report.
+export async function countDueReminders(now: Date): Promise<number> {
+  const [row] = await db.select({ n: count() }).from(emailSubscribers).where(reminderDue(now));
+  return row?.n ?? 0;
+}
+
+export async function countDueWraps(now: Date): Promise<number> {
+  const [row] = await db.select({ n: count() }).from(emailSubscribers).where(wrapDue(now));
+  return row?.n ?? 0;
 }
