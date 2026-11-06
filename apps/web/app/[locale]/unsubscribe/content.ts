@@ -18,7 +18,7 @@ export interface UnsubscribeContent {
 const EN: UnsubscribeContent = {
   metaTitle: 'Stop reminder emails',
   title: 'Stop reminder emails?',
-  body: 'You will no longer get the "time to check again" emails. You can turn them back on any time from the results page or your account.',
+  body: 'You will no longer get the "time to check again" emails or the 3-month wrap emails. You can turn them back on any time from the results page or your account.',
   button: 'Stop reminders',
   working: 'Stopping...',
   doneTitle: 'Done. No more reminders.',
@@ -38,7 +38,7 @@ const EN: UnsubscribeContent = {
 const ES: UnsubscribeContent = {
   metaTitle: 'Dejar los recordatorios',
   title: '¿Dejar de recibir recordatorios?',
-  body: 'Ya no recibirás los emails de "hora de revisar de nuevo". Puedes volver a activarlos cuando quieras desde la página de resultados o tu cuenta.',
+  body: 'Ya no recibirás los emails de "hora de revisar de nuevo" ni los del resumen de 3 meses. Puedes volver a activarlos cuando quieras desde la página de resultados o tu cuenta.',
   button: 'Dejar los recordatorios',
   working: 'Desactivando...',
   doneTitle: 'Listo. No más recordatorios.',
@@ -58,7 +58,7 @@ const ES: UnsubscribeContent = {
 const PT: UnsubscribeContent = {
   metaTitle: 'Parar os lembretes',
   title: 'Parar os emails de lembrete?',
-  body: 'Você não vai mais receber os emails de "hora de conferir de novo". Pode reativar quando quiser na página de resultados ou na sua conta.',
+  body: 'Você não vai mais receber os emails de "hora de conferir de novo" nem os da retrospectiva de 3 meses. Pode reativar quando quiser na página de resultados ou na sua conta.',
   button: 'Parar lembretes',
   working: 'Parando...',
   doneTitle: 'Pronto. Sem mais lembretes.',

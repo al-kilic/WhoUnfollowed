@@ -27,7 +27,7 @@ vi.mock('@/lib/reminders/send', () => ({ sendDueReminders }));
 const { sendDuePlannerEmails } = vi.hoisted(() => ({ sendDuePlannerEmails: vi.fn() }));
 vi.mock('@/lib/planner/send', () => ({ sendDuePlannerEmails, plannerDailyCap: () => 15 }));
 const { sendDueWraps } = vi.hoisted(() => ({ sendDueWraps: vi.fn().mockResolvedValue({ sent: 0, failed: 0 }) }));
-vi.mock('@/lib/wrap/send', () => ({ sendDueWraps }));
+vi.mock('@/lib/wrap/send', () => ({ sendDueWraps, wrapDailyCap: () => 15 }));
 
 import { POST } from './route';
 
@@ -158,10 +158,19 @@ describe('POST /api/cron/unlock-expiry planner pass', () => {
 
   it('gives wrap emails whatever is left after the planner', async () => {
     sendDueReminders.mockResolvedValue({ sent: 70, failed: 0 });
-    sendDuePlannerEmails.mockResolvedValue({ sent: 5, failed: 0, stopped: 0 });
+    sendDuePlannerEmails.mockResolvedValue({ sent: 10, failed: 0, stopped: 0 });
+    sendDueWraps.mockResolvedValue({ sent: 10, failed: 0 });
+    const res = await POST(makeRequest());
+    expect(sendDueWraps.mock.calls.at(-1)![1]).toBe(10); // 90 - 70 - 10
+    expect((await res.json()).wraps).toEqual({ sent: 10, failed: 0 });
+  });
+
+  it('caps wraps even on a quiet day', async () => {
+    sendDueReminders.mockResolvedValue({ sent: 0, failed: 0 });
+    sendDuePlannerEmails.mockResolvedValue({ sent: 0, failed: 0, stopped: 0 });
     sendDueWraps.mockResolvedValue({ sent: 15, failed: 0 });
     const res = await POST(makeRequest());
-    expect(sendDueWraps.mock.calls.at(-1)![1]).toBe(15); // 90 - 70 - 5
+    expect(sendDueWraps.mock.calls.at(-1)![1]).toBe(15);
     expect((await res.json()).wraps).toEqual({ sent: 15, failed: 0 });
   });
 

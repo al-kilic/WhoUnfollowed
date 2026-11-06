@@ -10,6 +10,16 @@ import { wrapEmail } from '@/lib/email/wrapTemplates';
 import { dueWraps, newToken } from '@/lib/reminders/store';
 import { nextWrapAfterSend, reminderAfterWrap } from './schedule';
 
+// Like the planner, wraps take at most this many a day, so the 10-email margin
+// for signup codes, password resets and receipts later in the day stays intact
+// and one busy anniversary day can't crowd out the rest. Overflow waits a day.
+const DEFAULT_DAILY_CAP = 15;
+
+export function wrapDailyCap(): number {
+  const n = Number(process.env.WRAP_DAILY_CAP);
+  return Number.isFinite(n) && n > 0 ? Math.floor(n) : DEFAULT_DAILY_CAP;
+}
+
 // Sends the "3-month wrap is ready" emails that are due, oldest first, using
 // only what is left of the day's email budget. Anything over the cap stays
 // due and goes out on the next run with room.
