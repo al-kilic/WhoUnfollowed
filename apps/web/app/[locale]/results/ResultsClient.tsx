@@ -23,6 +23,7 @@ import { Tutorial } from '@/components/Tutorial';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
 import { UpgradeLink } from '@/app/account/UpgradeLink';
 import { NextCheckSection } from './NextCheckSection';
+import { KeepExportCard } from './KeepExportCard';
 import { VerdictCard } from '@/components/tools/VerdictCard';
 import { trackLockedView } from '@/lib/analytics';
 import type { AppLocale } from '@/i18n/routing';
@@ -530,6 +531,9 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
         <div style={{ marginTop: 32 }}>
           <VerdictCard current={snapshot} locale={locale} />
         </div>
+
+        {/* Signed out: this export only lives in this tab session. */}
+        {!userEmail && <KeepExportCard locale={locale} />}
 
         <NextCheckSection
           locale={locale}

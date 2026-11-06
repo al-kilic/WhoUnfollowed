@@ -53,6 +53,23 @@ export async function claimAnonymousSnapshots(userId: string): Promise<number> {
   return unclaimed.length;
 }
 
+// Signed-out exports belong to one tab session (lib/localOwnership.ts). Once
+// that session is over nobody can ever see or claim them again, so after a day
+// they are removed from this browser instead of piling up. Exports from the
+// current session, and any export owned by an account, are never touched.
+export const ORPHAN_TTL_SECONDS = 24 * 60 * 60;
+let pruned = false;
+export async function pruneOrphanedAnonymousSnapshots(now: number = Date.now() / 1000): Promise<number> {
+  if (pruned) return 0;
+  pruned = true;
+  const current = getOrCreateAnonSessionId();
+  const stale = await db.snapshots
+    .filter(r => r.ownerUserId == null && r.anonSessionId != null && r.anonSessionId !== current && r.savedAt < now - ORPHAN_TTL_SECONDS)
+    .primaryKeys();
+  if (stale.length) await db.snapshots.bulkDelete(stale);
+  return stale.length;
+}
+
 export function useSnapshotList(currentUserId: string | null): SnapshotRecord[] {
   // The one-time legacy backfill MUST run outside the liveQuery querier below.
   // Dexie 4 throws ReadOnlyError ("Readwrite transaction in liveQuery context")
@@ -62,6 +79,7 @@ export function useSnapshotList(currentUserId: string | null): SnapshotRecord[] 
   // the now-tagged records.
   useEffect(() => {
     void migrateLegacyOwnership(currentUserId).catch(() => {});
+    void pruneOrphanedAnonymousSnapshots().catch(() => {});
   }, [currentUserId]);
 
   return useLiveQuery(
