@@ -1,17 +1,31 @@
 import type { SnapshotRecord } from '@/lib/db';
 
 const ANON_SESSION_KEY = 'wu.anonSessionId';
+// Set when a signed-out visitor asks for reminder emails: they plan to come
+// back, so their exports stay visible in this browser across sessions instead
+// of ending with the tab. Their choice, on their device.
+const KEPT_ID_KEY = 'wu.anonKeptId';
 
 // A per-tab-session id for anonymous (logged-out) use, so snapshots created
 // before signing up are scoped to "whoever is using this browser right now",
 // not visible to a different anonymous person or account later. Lives in
 // sessionStorage on purpose: it disappears when the tab/browser closes, same
 // lifecycle as the cloud-sync key in lib/syncKey.ts.
+function readKeptId(): string | null {
+  try { return localStorage.getItem(KEPT_ID_KEY); } catch { return null; }
+}
+
+// Keeps this browser's signed-out exports past the end of the tab session, so
+// the next upload can be compared with them (the reminder email's promise).
+export function keepAnonymousExportsOnThisDevice(): void {
+  try { localStorage.setItem(KEPT_ID_KEY, getOrCreateAnonSessionId()); } catch { /* storage blocked */ }
+}
+
 export function getOrCreateAnonSessionId(): string {
   try {
     let id = sessionStorage.getItem(ANON_SESSION_KEY);
     if (!id) {
-      id = crypto.randomUUID();
+      id = readKeptId() ?? crypto.randomUUID();
       sessionStorage.setItem(ANON_SESSION_KEY, id);
     }
     return id;

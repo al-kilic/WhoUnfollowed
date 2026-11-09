@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { T } from '@/components/landing/tokens';
 import { track, Events } from '@/lib/analytics';
 import { EmailOptInForm } from '@/components/EmailOptInForm';
+import { keepAnonymousExportsOnThisDevice } from '@/lib/localOwnership';
 import { startCheckout, type CheckoutPlan } from '@/lib/checkoutClient';
 import { unlockPricesAt, isLaunchPricing, STANDARD_UNLOCK_PRICE_USD } from '@/lib/pricing';
 import type { AppLocale } from '@/i18n/routing';
@@ -71,6 +72,8 @@ export function NextCheckSection({ locale, isPro, userEmail, nonFollowersCount }
             defaultEmail={userEmail ?? undefined}
             onDone={({ nextAt, alreadyOn }) => {
               track(Events.reminderOptin, { source: 'results' });
+              // They'll come back from the email: keep this export so it can be compared.
+              keepAnonymousExportsOnThisDevice();
               if (alreadyOn) setAlready(true);
               if (nextAt) {
                 setReminderUntil(nextAt);
