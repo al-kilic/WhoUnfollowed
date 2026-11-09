@@ -1053,7 +1053,15 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
 
       {/* Platform switcher sits outside the Pro-lock area so free users can
           switch the preview too. */}
-      <div className="px-4 sm:px-8" style={{ maxWidth: 1100, margin: '0 auto', paddingTop: 28, display: 'flex', justifyContent: 'center' }}>
+      <div className="px-4 sm:px-8 flex flex-col items-start gap-3 sm:grid sm:grid-cols-[1fr_auto_1fr] sm:items-center" style={{ maxWidth: 1100, margin: '0 auto', paddingTop: 28 }}>
+        <div>
+          {!emptyPlatforms.includes(platform) && (
+            <Link href="/results" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 500, color: T.inkDim, textDecoration: 'none', padding: '8px 14px', borderRadius: 999, border: `1px solid ${T.border2}`, background: 'var(--t-surface1)' }}>
+              <span aria-hidden="true">←</span>{c.backToResults}
+            </Link>
+          )}
+        </div>
+        <div className="self-center">
         <PlatformSwitcher
           options={allPlatforms}
           active={platform}
@@ -1061,6 +1069,7 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
           ariaLabel={c.header.platformSwitcherLabel}
           empty={emptyPlatforms}
         />
+        </div>
       </div>
 
       {!emptyPlatforms.includes(platform) && (

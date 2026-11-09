@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState, type MouseEvent, type ReactNode } from 'react';
 import { T } from '@/components/landing/tokens';
 
 // Numbered editorial section head: a big outlined numeral, title and one line.
@@ -50,7 +50,7 @@ export function SectionNav({ items, label }: { items: { id: string; label: strin
         {items.map(i => {
           const on = active === i.id;
           return (
-            <a key={i.id} href={`#${i.id}`} aria-current={on ? 'true' : undefined} style={{
+            <a key={i.id} href={`#${i.id}`} onClick={e => jumpToSection(e, i.id)} aria-current={on ? 'true' : undefined} style={{
               fontSize: 12, fontFamily: T.mono, letterSpacing: '0.04em', whiteSpace: 'nowrap', textDecoration: 'none',
               padding: '6px 12px', borderRadius: 999, transition: 'background 0.2s, color 0.2s',
               background: on ? 'var(--t-teal)' : 'transparent', color: on ? '#F4F0E8' : T.inkDim,
@@ -60,4 +60,17 @@ export function SectionNav({ items, label }: { items: { id: string; label: strin
       </div>
     </nav>
   );
+}
+
+// In-page jumps on the Radar (section menu, overview chips). Plain #links add a
+// browser history entry per click, so Back stepped through sections instead of
+// leaving the page. This scrolls and replaces the address instead. Modified
+// clicks (new tab, etc.) keep the browser's default.
+export function jumpToSection(e: MouseEvent<HTMLAnchorElement>, id: string) {
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+  const el = document.getElementById(id);
+  if (!el) return;
+  e.preventDefault();
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  window.history.replaceState(window.history.state, '', `#${id}`);
 }

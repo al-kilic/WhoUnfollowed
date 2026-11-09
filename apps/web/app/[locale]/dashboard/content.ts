@@ -1,6 +1,7 @@
 export interface DashboardContent {
   metaTitle: string;
   loadingRadar: string;
+  backToResults: string;
   emptyState: {
     title: string;
     body: string;
@@ -83,6 +84,7 @@ export interface DashboardContent {
 const EN: DashboardContent = {
   metaTitle: 'Radar',
   loadingRadar: 'Loading Radar…',
+  backToResults: 'Back to results',
   emptyState: {
     title: 'No data to scan yet',
     body: 'Radar needs an Instagram, Threads or TikTok export to analyze. Upload your data once and your follower radar, non-followers, and growth show up here. Nothing leaves your browser.',
@@ -202,6 +204,7 @@ const EN: DashboardContent = {
 const ES: DashboardContent = {
   metaTitle: 'Radar',
   loadingRadar: 'Cargando Radar…',
+  backToResults: 'Volver a los resultados',
   emptyState: {
     title: 'Aún no hay datos para analizar',
     body: 'Radar necesita una exportación de Instagram, Threads o TikTok para analizar. Sube tus datos una vez y tu radar de seguidores, no seguidores y crecimiento aparecerán aquí. Nada sale de tu navegador.',
@@ -321,6 +324,7 @@ const ES: DashboardContent = {
 const PT: DashboardContent = {
   metaTitle: 'Radar',
   loadingRadar: 'Carregando Radar…',
+  backToResults: 'Voltar aos resultados',
   emptyState: {
     title: 'Ainda não há dados para analisar',
     body: 'O Radar precisa de uma exportação do Instagram, do Threads ou do TikTok para analisar. Envie seus dados uma vez e seu radar de seguidores, não seguidores e crescimento aparecem aqui. Nada sai do seu navegador.',

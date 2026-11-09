@@ -5,12 +5,13 @@ import { T } from '@/components/landing/tokens';
 import type { AppLocale } from '@/i18n/routing';
 import { fmt } from '@/components/tools/ToolCard';
 import type { RadarPageContent } from './radar.content';
+import { jumpToSection } from './RadarSection';
 
 const SAND = '#a0956b';
 
 function Chip({ href, kicker, value, tone }: { href: string; kicker: string; value: string; tone: string }) {
   return (
-    <a href={href} style={{
+    <a href={href} onClick={e => jumpToSection(e, href.slice(1))} style={{
       display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0, textDecoration: 'none', padding: '14px 16px', borderRadius: 14,
       background: 'var(--t-surface1)', border: '1px solid var(--t-border1)', borderTop: `2px solid ${tone}`, transition: 'transform 0.2s',
     }}
