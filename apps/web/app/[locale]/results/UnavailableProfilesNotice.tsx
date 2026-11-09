@@ -6,8 +6,10 @@ import { T } from '@/components/landing/tokens';
 import { withApp, type Platform } from '@/lib/platform';
 import type { TriageListContent } from './triageList.content';
 
-// Set when the user taps the main button. Closing with X, Escape or the
-// backdrop only hides it for now, so it shows again on the next profile open.
+// Set the first time the notice closes, however it closes (main button, X,
+// Escape or backdrop). It used to reopen on every profile click until the main
+// button was tapped, which read as being bombarded with pop-ups. Now it pops up
+// once; the inline link reopens it any time.
 const ACK_KEY = 'wu_unavailable_profiles_ack';
 
 export function hasAckedUnavailableNotice(): boolean {
@@ -35,7 +37,7 @@ interface Props {
 // reads like a parser bug. The list opens this when a profile link is
 // clicked; the inline link reopens it any time.
 export function UnavailableProfilesNotice({ platform, c, deactivatedLabel, open, onOpenChange }: Props) {
-  const dismiss = useCallback(() => onOpenChange(false), [onOpenChange]);
+  const dismiss = useCallback(() => { markAcked(); onOpenChange(false); }, [onOpenChange]);
   const ack = useCallback(() => { markAcked(); onOpenChange(false); }, [onOpenChange]);
 
   useEffect(() => {

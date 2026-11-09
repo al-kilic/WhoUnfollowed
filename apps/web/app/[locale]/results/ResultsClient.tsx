@@ -320,7 +320,8 @@ function RadarPulse({ trigger, c }: { trigger: boolean; c: ResultsContent }) {
 
   useEffect(() => {
     if (!trigger) return;
-    try { if (sessionStorage.getItem('ig-tracker:radar-pulse')) return; } catch {}
+    // Once per browser, not per visit: one hint is plenty.
+    try { if (localStorage.getItem('ig-tracker:radar-pulse')) return; } catch {}
 
     // Measure Radar button position. Keyed off a data attribute rather than
     // the href, since that's locale-prefixed for es/pt.
@@ -341,7 +342,7 @@ function RadarPulse({ trigger, c }: { trigger: boolean; c: ResultsContent }) {
   }, [trigger]);
 
   function dismiss() {
-    try { sessionStorage.setItem('ig-tracker:radar-pulse', '1'); } catch {}
+    try { localStorage.setItem('ig-tracker:radar-pulse', '1'); } catch {}
     setPhase('out');
     setTimeout(() => setPhase('hidden'), 500);
   }
@@ -554,7 +555,7 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
       </main>
 
       <LandingFooter />
-      <FeedbackWidget content={feedbackC} autoOpenAfterMs={60_000} />
+      <FeedbackWidget content={feedbackC} autoOpenAfterMs={150_000} />
     </div>
   );
 }

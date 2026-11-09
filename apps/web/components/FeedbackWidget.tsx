@@ -50,9 +50,11 @@ export function FeedbackWidget({ content: c = EN_FEEDBACK_WIDGET, autoOpenAfterM
       if (sessionStorage.getItem(AUTO_OPENED_KEY) || sessionStorage.getItem(STORAGE_KEY)) return;
     } catch { return; }
     let timer: ReturnType<typeof setTimeout>;
+    // Never over the tour or another dialog; check again shortly instead.
     const tryOpen = () => {
-      // Don't cover the results feature tour; check again shortly.
-      if (document.body.classList.contains('tutorial-active')) {
+      const busy = document.body.classList.contains('tutorial-active')
+        || document.querySelector('[role="dialog"], [aria-modal="true"]') !== null;
+      if (busy) {
         timer = setTimeout(tryOpen, 2000);
         return;
       }
