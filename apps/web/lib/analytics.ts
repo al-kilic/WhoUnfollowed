@@ -102,6 +102,10 @@ type FunnelEventMap = {
     has_media?: YesNo;
     has_threads?: YesNo;
     has_html?: YesNo;
+    has_tiktok?: YesNo;
+    missing_list?: 'followers' | 'following' | 'both';
+    odd_follower_file?: YesNo;
+    odd_following_file?: YesNo;
   };
   'Large File Warning': { size: SizeBucket; device: 'mobile' | 'desktop' };
   'Large File Choice': { choice: 'continue' | 'smaller_export' | 'cancel' };

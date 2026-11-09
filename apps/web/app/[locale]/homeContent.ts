@@ -19,6 +19,7 @@ export interface HomeContent {
     dropIdleTitle: string;
     dropDraggingTitle: string;
     dropIdleBody: string;
+    dropDateRange: string;
     chooseFile: string;
     orDropAnywhere: string;
     noExportYetLink: string;
@@ -193,6 +194,7 @@ const EN: HomeContent = {
     dropIdleTitle: 'Have your Instagram, Threads or TikTok export? Upload it here.',
     dropDraggingTitle: 'Drop it here.',
     dropIdleBody: 'The file Instagram, Threads or TikTok gives you, as it is. Do not unzip it.',
+    dropDateRange: 'Instagram and Threads: the export needs the date range set to All time, or your lists come out incomplete.',
     chooseFile: 'Choose file',
     orDropAnywhere: 'or drop it anywhere on this page',
     noExportYetLink: "Don't have it yet? See how to request your export →",
@@ -269,9 +271,9 @@ const EN: HomeContent = {
     eyebrow: 'RESULTS',
     headlineLine1: '2 seconds to parse.',
     headlineLine2: 'A full picture to act on.',
-    body: 'Drop the ZIP. Your browser reads it locally and gives you the exact list of who does not follow you back, a Radar health score, and a growth timeline. Nothing leaves your device.',
+    body: 'Drop the ZIP. Your browser reads it locally and gives you the exact list of who does not follow you back, a Radar with what to fix first, and a growth timeline. Nothing leaves your device.',
     panelAccountHealth: 'Radar · Account Health',
-    panelAccountHealthDesc: "Radar is your account health score: how many followers are sticking around, how long they've followed you, and how your growth is trending.",
+    panelAccountHealthDesc: "Radar is your account at a glance: a one-line summary, things you didn't know from your own export, your verdict, and what to fix first.",
     panelResults: 'Results · Non-followers',
     panelCompare: 'Radar · Compare',
     panelCompareDesc: "Compare shows the difference between two snapshots: exactly who unfollowed you and who's new, between the export you uploaded before and this one.",
@@ -350,7 +352,7 @@ const EN: HomeContent = {
     proBullets: [
       'Everything in Free',
       'Unlimited snapshot history',
-      'Radar: an account health score plus how long each follower has stuck around',
+      'Radar: a summary of your account, what to fix first, and how long each follower has stuck around',
       'Compare any two snapshots to see exactly who unfollowed',
       'Follower growth charts',
       'Triage: mark non-followers to drop, whitelist, or skip for now',
@@ -433,6 +435,7 @@ const ES: HomeContent = {
     dropIdleTitle: '¿Tienes tu export de Instagram, Threads o TikTok? Súbelo aquí.',
     dropDraggingTitle: 'Suéltalo aquí.',
     dropIdleBody: 'El archivo que te da Instagram, Threads o TikTok, tal cual. No lo descomprimas.',
+    dropDateRange: 'Instagram y Threads: la exportación necesita el rango de fechas en Todo el tiempo, o tus listas salen incompletas.',
     chooseFile: 'Elegir archivo',
     orDropAnywhere: 'o suéltalo en cualquier parte',
     noExportYetLink: '¿Aún no lo tienes? Mira cómo solicitar tu export →',
@@ -509,9 +512,9 @@ const ES: HomeContent = {
     eyebrow: 'RESULTADOS',
     headlineLine1: '2 segundos para procesar.',
     headlineLine2: 'Una imagen completa para actuar.',
-    body: 'Suelta el ZIP. Tu navegador lo lee localmente y te da la lista exacta de quién no te sigue de vuelta, un puntaje de salud Radar y una línea de tiempo de crecimiento. Nada sale de tu dispositivo.',
+    body: 'Suelta el ZIP. Tu navegador lo lee localmente y te da la lista exacta de quién no te sigue de vuelta, un Radar con lo que conviene arreglar primero y una línea de tiempo de crecimiento. Nada sale de tu dispositivo.',
     panelAccountHealth: 'Radar · Salud de la Cuenta',
-    panelAccountHealthDesc: 'Radar es tu puntaje de salud de cuenta: cuántos seguidores se quedan, hace cuánto te siguen y cómo va tu crecimiento.',
+    panelAccountHealthDesc: 'Radar es tu cuenta de un vistazo: un resumen en una línea, cosas que no sabías de tu propia exportación, tu veredicto y qué arreglar primero.',
     panelResults: 'Resultados · No te siguen',
     panelCompare: 'Radar · Comparar',
     panelCompareDesc: 'Comparar muestra la diferencia entre dos snapshots: exactamente quién te dejó de seguir y quién es nuevo, entre el export que subiste antes y este.',
@@ -590,7 +593,7 @@ const ES: HomeContent = {
     proBullets: [
       'Todo lo del plan Gratis',
       'Historial ilimitado de snapshots',
-      'Radar: un puntaje de salud de cuenta más cuánto tiempo lleva cada seguidor',
+      'Radar: un resumen de tu cuenta, qué arreglar primero y cuánto tiempo lleva cada seguidor',
       'Compara dos snapshots cualquiera para ver exactamente quién te dejó de seguir',
       'Gráficos de crecimiento de seguidores',
       'Triaje: marca no-seguidores para eliminar, poner en lista blanca o dejar para después',
@@ -673,6 +676,7 @@ const PT: HomeContent = {
     dropIdleTitle: 'Tem seu export do Instagram, Threads ou TikTok? Envie aqui.',
     dropDraggingTitle: 'Solte aqui.',
     dropIdleBody: 'O arquivo que o Instagram, o Threads ou o TikTok te entrega, do jeito que veio. Não descompacte.',
+    dropDateRange: 'Instagram e Threads: a exportação precisa do período em Todo o período, senão suas listas saem incompletas.',
     chooseFile: 'Escolher arquivo',
     orDropAnywhere: 'ou solte em qualquer lugar',
     noExportYetLink: 'Ainda não tem? Veja como solicitar seu export →',
@@ -749,9 +753,9 @@ const PT: HomeContent = {
     eyebrow: 'RESULTADOS',
     headlineLine1: '2 segundos para processar.',
     headlineLine2: 'Uma visão completa para agir.',
-    body: 'Solte o ZIP. Seu navegador o lê localmente e te dá a lista exata de quem não te segue de volta, uma pontuação de saúde Radar e uma linha do tempo de crescimento. Nada sai do seu dispositivo.',
+    body: 'Solte o ZIP. Seu navegador o lê localmente e te dá a lista exata de quem não te segue de volta, um Radar com o que arrumar primeiro e uma linha do tempo de crescimento. Nada sai do seu dispositivo.',
     panelAccountHealth: 'Radar · Saúde da Conta',
-    panelAccountHealthDesc: 'O Radar é sua pontuação de saúde de conta: quantos seguidores continuam, há quanto tempo te seguem e como está sua tendência de crescimento.',
+    panelAccountHealthDesc: 'O Radar é sua conta num relance: um resumo em uma linha, coisas que você não sabia da sua própria exportação, seu veredito e o que arrumar primeiro.',
     panelResults: 'Resultados · Não-seguidores',
     panelCompare: 'Radar · Comparar',
     panelCompareDesc: 'Comparar mostra a diferença entre dois snapshots: exatamente quem deixou de te seguir e quem é novo, entre o export que você enviou antes e este.',
@@ -830,7 +834,7 @@ const PT: HomeContent = {
     proBullets: [
       'Tudo do plano Grátis',
       'Histórico ilimitado de snapshots',
-      'Radar: uma pontuação de saúde de conta mais há quanto tempo cada seguidor permanece',
+      'Radar: um resumo da sua conta, o que arrumar primeiro e há quanto tempo cada seguidor permanece',
       'Compare dois snapshots quaisquer para ver exatamente quem deixou de te seguir',
       'Gráficos de crescimento de seguidores',
       'Triagem: marque não-seguidores para remover, colocar na lista branca ou deixar para depois',

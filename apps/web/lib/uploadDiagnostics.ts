@@ -58,6 +58,9 @@ export function shapeProps(shape: ZipShape) {
     has_threads: yn(shape.hasThreadsFolder),
     has_html: yn(shape.hasHtmlFiles),
     has_tiktok: yn(shape.hasTikTokFiles ?? false),
+    ...(shape.missingList ? { missing_list: shape.missingList } : {}),
+    odd_follower_file: yn(shape.oddFollowerFile ?? false),
+    odd_following_file: yn(shape.oddFollowingFile ?? false),
   };
 }
 

@@ -377,6 +377,21 @@ function zipShape(allFileNames: string[]): ZipShape {
     hasThreadsFolder: allFileNames.some(isThreadsPath),
     hasHtmlFiles: files.some(n => /\.html?$/i.test(n)),
     hasTikTokFiles: hasTikTokFiles(files),
+    ...instagramListShape(files.filter(n => !isThreadsPath(n))),
+  };
+}
+
+const baseName = (n: string) => n.slice(n.lastIndexOf('/') + 1);
+
+function instagramListShape(files: string[]): Pick<ZipShape, 'missingList' | 'oddFollowerFile' | 'oddFollowingFile'> {
+  const names = files.map(baseName);
+  const followers = names.some(n => /^followers_\d+\.(?:json|html?)$/i.test(n));
+  const following = names.some(n => /^following\.(?:json|html?)$/i.test(n));
+  const missingList = !followers && !following ? 'both' : !followers ? 'followers' : !following ? 'following' : null;
+  return {
+    ...(missingList ? { missingList } : {}),
+    oddFollowerFile: names.some(n => /follower/i.test(n) && /\.(?:json|html?)$/i.test(n) && !/^followers_\d+\./i.test(n)),
+    oddFollowingFile: names.some(n => /following/i.test(n) && /\.(?:json|html?)$/i.test(n) && !/^following\./i.test(n) && !/hashtag/i.test(n)),
   };
 }
 

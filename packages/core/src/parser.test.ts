@@ -336,3 +336,17 @@ describe('parseInstagramZip — HTML format', () => {
     });
   });
 });
+
+describe('missing-file diagnostics', () => {
+  it('says which list is missing and flags a follower file it did not recognise', async () => {
+    const z = new JSZip();
+    // A renamed followers file (not followers_N.json) next to a normal following.json.
+    z.file('connections/followers_and_following/followers.json', JSON.stringify([]));
+    z.file('connections/followers_and_following/following.json', JSON.stringify({ relationships_following: [] }));
+    z.file('connections/followers_and_following/following_hashtags.json', JSON.stringify({}));
+    const buf = await z.generateAsync({ type: 'arraybuffer' });
+    const err = await parseInstagramZip(buf).catch(e => e);
+    expect(err).toBeInstanceOf(MissingFilesError);
+    expect(err.shape).toMatchObject({ missingList: 'followers', oddFollowerFile: true, oddFollowingFile: false });
+  });
+});

@@ -33,6 +33,12 @@ export interface ZipShape {
   hasHtmlFiles: boolean;
   // Optional so diagnostics recorded before TikTok support still type-check.
   hasTikTokFiles?: boolean;
+  // Instagram only: which list was missing, and whether a file with
+  // follower/following in its name exists that the parser did not recognise
+  // (the sign Meta renamed a file). Closed sets, never file names.
+  missingList?: 'followers' | 'following' | 'both';
+  oddFollowerFile?: boolean;
+  oddFollowingFile?: boolean;
 }
 
 // Kept local (not imported from schemas) so errors.ts has no dependencies.

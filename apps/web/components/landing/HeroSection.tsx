@@ -58,6 +58,8 @@ interface HeroContent {
   dropIdleTitle: string;
   dropDraggingTitle: string;
   dropIdleBody: string;
+  // One line, shown under the body: the date range is the most common reason an export is incomplete.
+  dropDateRange: string;
   chooseFile: string;
   orDropAnywhere: string;
   noExportYetLink: string;
@@ -639,6 +641,11 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
                   <div style={{ fontSize: 13, color: T.inkDim, fontFamily: T.sans, maxWidth: 360, lineHeight: 1.5, margin: '0 auto' }}>
                     {content.dropIdleBody}
                   </div>
+                  {phase !== 'dragging' && (
+                    <div style={{ fontSize: 12, color: T.inkMute, fontFamily: T.sans, maxWidth: 360, lineHeight: 1.5, margin: '6px auto 0' }}>
+                      {content.dropDateRange}
+                    </div>
+                  )}
                 </div>
                 {phase !== 'dragging' && (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
