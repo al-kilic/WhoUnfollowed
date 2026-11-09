@@ -98,7 +98,7 @@ export function RadarSweep({ current, previous, locale, c, locked }: {
           <span style={{ fontSize: 15, color: T.inkDim }}>{findings.length > 0 ? hc.summary(findings.length) : hc.allClear}</span>
         </div>
         {findings.length > 0 && (
-          <ol style={{ listStyle: 'none', padding: 0, margin: '12px 0 0', ...(locked ? lockedContentStyle : {}) }}>
+          <ol style={{ listStyle: 'none', padding: 0, margin: '12px 0 0', ...(locked ? lockedContentStyle : {}) }} inert={locked}>
             {findings.map((f, i) => (
               <FindingRow key={f.id} f={f} c={hc} locale={locale} app={app} locked={locked} index={i + 1} active={active === i} onHover={on => setActive(on ? i : null)} badge={i === 0 ? c.sweep.top : undefined} />
             ))}

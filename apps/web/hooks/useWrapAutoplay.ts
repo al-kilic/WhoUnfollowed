@@ -4,16 +4,16 @@ import { useEffect, useState } from 'react';
 import { shouldAutoPlayWrap, type WrapSeen } from '@ig-tracker/core';
 import { Events, track } from '@/lib/analytics';
 
-// The last wrap that opened by itself in this browser. One record for every
-// app and identity, so a person gets about one wrap a quarter, not one per app
-// or per sign-in. A convenience only: if storage is blocked the wrap may play
-// again, which is harmless.
-const KEY = 'wu:wrap-last';
+// The last wrap that opened by itself for this account in this browser, one
+// record across all apps, so a person gets about one wrap a quarter, not one
+// per app. A convenience only: if storage is blocked the wrap may play again.
+const keyFor = (userId: string) => `wu:wrap-last:${userId}`;
+const SHARED_KEY = 'wu:wrap-last'; // 2026-11-07 build: one record per browser
 const LEGACY_PREFIX = 'wu:wrap-seen:'; // v2.0 kept one exportedAt per owner and app
 
-function readSeen(nowSec: number): WrapSeen | null {
+function readSeen(userId: string, nowSec: number): WrapSeen | null {
   try {
-    const raw = window.localStorage.getItem(KEY);
+    const raw = window.localStorage.getItem(keyFor(userId)) ?? window.localStorage.getItem(SHARED_KEY);
     if (raw) {
       const v = JSON.parse(raw) as Partial<WrapSeen>;
       if (typeof v.shownAt === 'number' && typeof v.exportedAt === 'number') return { shownAt: v.shownAt, exportedAt: v.exportedAt };
@@ -28,16 +28,16 @@ function readSeen(nowSec: number): WrapSeen | null {
   } catch { return null; }
 }
 
-function writeSeen(seen: WrapSeen) {
-  try { window.localStorage.setItem(KEY, JSON.stringify(seen)); } catch { /* storage blocked */ }
+function writeSeen(userId: string, seen: WrapSeen) {
+  try { window.localStorage.setItem(keyFor(userId), JSON.stringify(seen)); } catch { /* storage blocked */ }
 }
 
-// Opens the wrap by itself about once a quarter (see shouldAutoPlayWrap), or
-// once when the page was opened from the wrap email (?wrap=1, removed from the
-// address bar right after so a refresh doesn't replay it). `activity` is new
-// followers plus follows made in the window. Returns the open state and a
-// manual opener for the button, which always works.
-export function useWrapAutoplay(exportedAt: number | null, available: boolean, activity: number) {
+// Opens the wrap by itself only for signed-in accounts, about once a quarter
+// and once per export (see shouldAutoPlayWrap). Signed-out visitors never get
+// it by itself. Anyone opening the wrap email (?wrap=1) gets it once, and the
+// parameter is removed right after so a refresh doesn't replay it. `activity`
+// is new followers plus follows made in the window. The button always works.
+export function useWrapAutoplay(userId: string | null, exportedAt: number | null, available: boolean, activity: number) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -49,12 +49,13 @@ export function useWrapAutoplay(exportedAt: number | null, available: boolean, a
       window.history.replaceState(window.history.state, '', url.pathname + url.search + url.hash);
     }
     const now = Math.floor(Date.now() / 1000);
-    if (fromEmail || shouldAutoPlayWrap(readSeen(now), exportedAt, now, activity)) {
-      writeSeen({ shownAt: now, exportedAt });
+    const auto = userId !== null && shouldAutoPlayWrap(readSeen(userId, now), exportedAt, now, activity);
+    if (fromEmail || auto) {
+      if (userId) writeSeen(userId, { shownAt: now, exportedAt });
       setOpen(true);
       track(Events.wrapShown, { trigger: fromEmail ? 'email' : 'auto' });
     }
-  }, [exportedAt, available, activity]);
+  }, [userId, exportedAt, available, activity]);
 
   const openManually = () => { setOpen(true); track(Events.wrapShown, { trigger: 'chip' }); };
   return { open, close: () => setOpen(false), openManually };

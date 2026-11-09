@@ -137,7 +137,7 @@ function AudienceBreakdown({ followers, mutuals, fans, nonFollowers, c, locked =
     <Card style={{ display: 'flex', flexDirection: 'column' }}>
       <SectionLabel>{c.audience.sectionLabel}</SectionLabel>
       <CardTitle>{c.audience.title}</CardTitle>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginTop: 16, ...(locked ? lockedContentStyle : {}) }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginTop: 16, ...(locked ? lockedContentStyle : {}) }} inert={locked}>
         {/* The list to the right already states these same numbers and
             percentages as real text, so the donut is purely decorative here
             and hidden from assistive tech rather than announced twice. */}
@@ -252,7 +252,7 @@ function FollowRatioCard({ followers, following, snapshots, c, dateLocale, locke
         <CardTitle>{c.ratio.title}</CardTitle>
         <RatioInfoTooltip c={c} />
       </div>
-      <div style={locked ? lockedContentStyle : undefined}>
+      <div style={locked ? lockedContentStyle : undefined} inert={locked}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginTop: 16 }}>
           <div style={{ position: 'relative', width: 120, height: 120, flexShrink: 0 }}>
             {/* The ratio value is repeated as real text in the overlay below and
@@ -350,7 +350,7 @@ function FollowAgeCard({ nonFollowers, c, locked = false }: { nonFollowers: { us
     <Card>
       <SectionLabel>{c.followAge.sectionLabel}</SectionLabel>
       <CardTitle>{c.followAge.title}</CardTitle>
-      <div style={locked ? lockedContentStyle : undefined}>
+      <div style={locked ? lockedContentStyle : undefined} inert={locked}>
       {/* Two stat boxes - distinct visual treatment */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 12, marginTop: 16, marginBottom: 20 }}>
         {/* Left: count box */}
@@ -584,7 +584,7 @@ function PendingRequestsCard({ accounts, c, locked = false }: { accounts: { user
       <SectionLabel>{c.pending.sectionLabel}</SectionLabel>
       <CardTitle>{c.pending.title}</CardTitle>
 
-      <div style={locked ? lockedContentStyle : undefined}>
+      <div style={locked ? lockedContentStyle : undefined} inert={locked}>
       {!accounts.length ? (
         <EmptyState text={c.pending.emptyMessage} />
       ) : (
@@ -646,7 +646,7 @@ function RecentlyUnfollowedCard({ accounts, c, dateLocale, locked = false }: { a
     <Card>
       <SectionLabel>{c.recentlyUnfollowed.sectionLabel}</SectionLabel>
       <CardTitle>{c.recentlyUnfollowed.title}</CardTitle>
-      <div style={locked ? lockedContentStyle : undefined}>
+      <div style={locked ? lockedContentStyle : undefined} inert={locked}>
       {!accounts.length ? (
         <EmptyState text={c.recentlyUnfollowed.emptyMessage} />
       ) : (
@@ -734,7 +734,7 @@ function GrowthChart({ snapshots, c, dateLocale, locked = false }: { snapshots: 
       <SectionLabel>{c.growth.sectionLabel}</SectionLabel>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 4 }}>
         <CardTitle>{c.growth.title}</CardTitle>
-        <div style={{ textAlign: 'right', ...(locked ? lockedContentStyle : {}) }}>
+        <div style={{ textAlign: 'right', ...(locked ? lockedContentStyle : {}) }} inert={locked}>
           <div style={{ fontFamily: T.serif, fontSize: 28, letterSpacing: '-0.02em', color: netColor, lineHeight: 1 }}>
             {netPrefix}{netChange.toLocaleString()}
           </div>
@@ -742,7 +742,7 @@ function GrowthChart({ snapshots, c, dateLocale, locked = false }: { snapshots: 
         </div>
       </div>
 
-      <div style={locked ? lockedContentStyle : undefined}>
+      <div style={locked ? lockedContentStyle : undefined} inert={locked}>
       {showDropAlert && (
         <div style={{
           display: 'flex', alignItems: 'center', gap: 10,
@@ -964,7 +964,7 @@ export function DashboardClient({ locale, account }: DashboardClientProps) {
     [snapshot, previousSnapshot],
   );
   const onPlatformWithData = !!snapshot && !emptyPlatforms.includes(platform);
-  const wrapState = useWrapAutoplay(onPlatformWithData ? snapshot.exportedAt : null, wrap !== null, wrap ? wrap.arrived + wrap.followsMade : 0);
+  const wrapState = useWrapAutoplay(account.userId, onPlatformWithData ? snapshot.exportedAt : null, wrap !== null, wrap ? wrap.arrived + wrap.followsMade : 0);
 
   // One radar-view per export shown, so "saw the Radar -> upgrade" is countable.
   const viewedExport = onPlatformWithData ? snapshot.exportedAt : null;
