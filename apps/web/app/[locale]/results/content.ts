@@ -89,7 +89,7 @@ const EN: ResultsContent = {
     eyebrow: 'Beyond this snapshot',
     headline: (n) =>
       `Right now, you won't know if any of your ${n.toLocaleString()} ${n === 1 ? 'mutual quietly unfollows' : 'mutuals quietly unfollow'} you.`,
-    body: "This is a one-time check, it can't catch that. Radar keeps every export you make, compares them automatically, and turns your numbers into a running health score and growth chart.",
+    body: "This is a one-time check, it can't catch that. Radar keeps every export you make, compares them automatically, and turns your numbers into a summary, a list of what to fix first, and a growth chart.",
     checks: [
       'Compare any two snapshots',
       'Follower growth chart',
@@ -163,7 +163,7 @@ const ES: ResultsContent = {
     eyebrow: 'Más allá de este snapshot',
     headline: (n) =>
       `Ahora mismo, no sabrás si alguno de tus ${n.toLocaleString()} ${n === 1 ? 'mutuo te deja de seguir' : 'mutuos te dejan de seguir'} en silencio.`,
-    body: 'Esto es una comprobación puntual, no puede detectar eso. Radar guarda cada exportación que haces, las compara automáticamente y convierte tus números en una puntuación de salud y un gráfico de crecimiento continuos.',
+    body: 'Esto es una comprobación puntual, no puede detectar eso. Radar guarda cada exportación que haces, las compara automáticamente y convierte tus números en un resumen, una lista de qué arreglar primero y un gráfico de crecimiento.',
     checks: [
       'Compara dos snapshots cualesquiera',
       'Gráfico de crecimiento de seguidores',
@@ -237,7 +237,7 @@ const PT: ResultsContent = {
     eyebrow: 'Além deste snapshot',
     headline: (n) =>
       `Agora, você não vai saber se algum dos seus ${n.toLocaleString()} ${n === 1 ? 'mútuo deixa de te seguir' : 'mútuos deixam de te seguir'} silenciosamente.`,
-    body: 'Esta é uma checagem pontual, ela não detecta isso. O Radar guarda cada exportação que você faz, compara automaticamente e transforma seus números em uma pontuação de saúde e um gráfico de crescimento contínuos.',
+    body: 'Esta é uma checagem pontual, ela não detecta isso. O Radar guarda cada exportação que você faz, compara automaticamente e transforma seus números em um resumo, uma lista do que arrumar primeiro e um gráfico de crescimento.',
     checks: [
       'Compare dois snapshots quaisquer',
       'Gráfico de crescimento de seguidores',

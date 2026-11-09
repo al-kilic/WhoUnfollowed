@@ -188,7 +188,7 @@ const EN: DashboardContent = {
   proLock: {
     eyebrow: 'Pro feature',
     title: 'Radar is a Pro feature',
-    description: 'Your account health check, growth over time, audience breakdown, and follow-age analysis. Unlock the full picture of your account.',
+    description: 'What to fix first, growth over time, audience breakdown, and follow-age analysis. Unlock the full picture of your account.',
     cta: 'Upgrade to Pro',
   },
   openOn: (u, app) => `Open @${u} on ${app}`,
@@ -307,7 +307,7 @@ const ES: DashboardContent = {
   proLock: {
     eyebrow: 'Función Pro',
     title: 'Radar es una función Pro',
-    description: 'Tu chequeo de salud de cuenta, crecimiento en el tiempo, desglose de audiencia y análisis de antigüedad de seguimiento. Desbloquea el panorama completo de tu cuenta.',
+    description: 'Qué arreglar primero, crecimiento en el tiempo, desglose de audiencia y análisis de antigüedad de seguimiento. Desbloquea el panorama completo de tu cuenta.',
     cta: 'Mejorar a Pro',
   },
   openOn: (u, app) => `Abrir @${u} en ${app}`,
@@ -426,7 +426,7 @@ const PT: DashboardContent = {
   proLock: {
     eyebrow: 'Recurso Pro',
     title: 'O Radar é um recurso Pro',
-    description: 'Seu check-up da conta, crescimento ao longo do tempo, detalhamento de audiência e análise de tempo de seguimento. Desbloqueie o panorama completo da sua conta.',
+    description: 'O que arrumar primeiro, crescimento ao longo do tempo, detalhamento de audiência e análise de tempo de seguimento. Desbloqueie o panorama completo da sua conta.',
     cta: 'Assinar Pro',
   },
   openOn: (u, app) => `Abrir @${u} no ${app}`,
