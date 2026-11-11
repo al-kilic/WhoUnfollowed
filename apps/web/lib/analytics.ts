@@ -31,6 +31,7 @@ export const Events = {
   zipUpload: 'zip-upload',          // { platform }
   radarView: 'radar-view',           // { platform, pro, has_previous }
   lockedView: 'locked-view',          // { feature }
+  teaserSeen: 'teaser-seen',          // { placement } fired once when an upgrade teaser is actually on screen (locked-view fires on render)
   upgradeClick: 'upgrade-click',      // { source }
   checkoutStart: 'checkout-start',    // { billing: 'unlock-monthly' | 'unlock-yearly' | 'lifetime' }
   subscribeComplete: 'subscribe-complete',

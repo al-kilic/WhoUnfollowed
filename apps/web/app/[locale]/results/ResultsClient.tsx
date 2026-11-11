@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import { Link, useRouter as useLocaleRouter } from '@/i18n/navigation';
 import { PLATFORM_NAME, snapshotPlatform, triageKeyOf, withApp, type Platform } from '@/lib/platform';
 import { PlatformHero } from './PlatformHero';
@@ -25,7 +25,8 @@ import { UpgradeLink } from '@/app/account/UpgradeLink';
 import { NextCheckSection } from './NextCheckSection';
 import { KeepExportCard } from './KeepExportCard';
 import { VerdictCard } from '@/components/tools/VerdictCard';
-import { trackLockedView } from '@/lib/analytics';
+import { jumpToSection } from '@/components/radar/RadarSection';
+import { Events, track, trackLockedView } from '@/lib/analytics';
 import type { AppLocale } from '@/i18n/routing';
 import { getResultsContent, type ResultsContent } from './content';
 import { getListToolbarContent } from '@/components/listToolbar.content';
@@ -250,12 +251,30 @@ function RadarTeaser({ isPro, mutualsCount, nonFollowersCount, totalFollowing, s
   c: ResultsContent;
 }) {
   useEffect(() => { if (!isPro) trackLockedView('results-radar-teaser'); }, [isPro]);
+  // locked-view counts renders; the teaser sits below the list, so this one
+  // counts people who actually scrolled to it.
+  const ref = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (isPro || !el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some(e => e.isIntersecting)) {
+        track(Events.teaserSeen, { placement: 'results-radar-teaser' });
+        io.disconnect();
+      }
+    }, { threshold: 0.5 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [isPro]);
   if (isPro) return null;
 
   return (
     <section
+      ref={ref}
+      id="radar-teaser"
       className="grid grid-cols-1 sm:grid-cols-[1fr_300px]"
       style={{
+        scrollMarginTop: 80,
         marginTop: 48,
         gap: 28,
         alignItems: 'center',
@@ -270,7 +289,7 @@ function RadarTeaser({ isPro, mutualsCount, nonFollowersCount, totalFollowing, s
           {c.radarTeaser.eyebrow}
         </div>
         <h2 style={{ fontFamily: T.serif, fontSize: 24, fontWeight: 400, color: T.ink, letterSpacing: '-0.01em', marginBottom: 10, maxWidth: 460 }}>
-          {c.radarTeaser.headline(mutualsCount)}
+          {c.radarTeaser.headline()}
         </h2>
         <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.6, marginBottom: 20, maxWidth: 480 }}>
           {c.radarTeaser.body}
@@ -475,6 +494,12 @@ export function ResultsClient({ locale }: { locale: AppLocale }) {
             <span style={{ color: T.tealLight }}>{analysis.nonFollowers.length.toLocaleString()}</span>{' '}
             {c.headlineSuffix(analysis.nonFollowers.length, PLATFORM_NAME[platform])}
           </h1>
+          {!isPro && (
+            <p style={{ marginTop: 12, fontSize: 14, lineHeight: 1.55, color: T.inkDim, maxWidth: 620 }}>
+              {c.todayHint.text}{' '}
+              <a href="#radar-teaser" onClick={(e) => jumpToSection(e, 'radar-teaser')} style={{ color: T.tealLight, fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap' }}>{c.todayHint.link} ↓</a>
+            </p>
+          )}
           <TikTokCapNotice snapshot={snapshot} locale={locale} />
           {snapshot.format === 'html' && !snapshot.followers.some(a => a.followedAt !== null) && (
             <div style={{ marginTop: 16, padding: '12px 16px', borderRadius: 12, background: 'rgba(var(--t-accent-rgb),0.06)', border: '1px solid rgba(var(--t-accent-rgb),0.2)', display: 'flex', alignItems: 'flex-start', gap: 10, maxWidth: 560 }}>

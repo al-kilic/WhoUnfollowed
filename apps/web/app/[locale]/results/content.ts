@@ -18,9 +18,11 @@ export interface ResultsContent {
   };
   tutorial: { title: string; body: string }[];
   tutorialLabels: { featureTour: string; skipTour: string; next: string; gotIt: string };
+  // One line under the headline for free users: this page is today, the next export shows who left.
+  todayHint: { text: string; link: string };
   radarTeaser: {
     eyebrow: string;
-    headline: (mutualsCount: number) => string;
+    headline: () => string;
     body: string;
     checks: string[];
     // Entries of `checks` that only apply to Instagram (hidden for Threads).
@@ -85,11 +87,14 @@ const EN: ResultsContent = {
     { title: 'Whitelist section', body: 'Whitelisted accounts collapse here. Expand anytime to review or undo.' },
   ],
   tutorialLabels: { featureTour: 'Feature tour', skipTour: 'Skip tour', next: 'Next', gotIt: 'Got it' },
+  todayHint: {
+    text: "This is today's snapshot, so it shows who doesn't follow you back, not who unfollowed you. Upload your next export in a few weeks to see who left.",
+    link: 'How that works',
+  },
   radarTeaser: {
-    eyebrow: 'Beyond this snapshot',
-    headline: (n) =>
-      `Right now, you won't know if any of your ${n.toLocaleString()} ${n === 1 ? 'mutual quietly unfollows' : 'mutuals quietly unfollow'} you.`,
-    body: "This is a one-time check, it can't catch that. Radar keeps every export you make, compares them automatically, and turns your numbers into a summary, a list of what to fix first, and a growth chart.",
+    eyebrow: 'Who unfollowed you',
+    headline: () => "Today's list can't show who unfollowed you. Your next export can.",
+    body: 'Upload a new export in a few weeks and we compare it with this one. Free shows how many people left. Pro shows every name and date, keeps every export, and adds Radar: ghost followers, old requests and your follower trend.',
     checks: [
       'Compare any two snapshots',
       'Follower growth chart',
@@ -99,7 +104,7 @@ const EN: ResultsContent = {
       'How long a non-follower has kept you waiting',
     ],
     instagramOnlyChecks: ['Pending requests, sorted by wait time'],
-    ctaPrimary: "See what's in Radar",
+    ctaPrimary: 'See who unfollows you next',
     ctaSecondary: 'Preview Radar, no account needed →',
     previewLabel: 'your Radar preview · today',
     followBackRate: 'of who you follow, follows back',
@@ -159,11 +164,14 @@ const ES: ResultsContent = {
     { title: 'Sección de lista blanca', body: 'Las cuentas en lista blanca se colapsan aquí. Despliega en cualquier momento para revisar o deshacer.' },
   ],
   tutorialLabels: { featureTour: 'Recorrido guiado', skipTour: 'Saltar recorrido', next: 'Siguiente', gotIt: 'Entendido' },
+  todayHint: {
+    text: 'Esto es un snapshot de hoy: muestra quién no te sigue de vuelta, no quién te dejó de seguir. Sube tu próxima exportación en unas semanas para ver quién se fue.',
+    link: 'Cómo funciona',
+  },
   radarTeaser: {
-    eyebrow: 'Más allá de este snapshot',
-    headline: (n) =>
-      `Ahora mismo, no sabrás si alguno de tus ${n.toLocaleString()} ${n === 1 ? 'mutuo te deja de seguir' : 'mutuos te dejan de seguir'} en silencio.`,
-    body: 'Esto es una comprobación puntual, no puede detectar eso. Radar guarda cada exportación que haces, las compara automáticamente y convierte tus números en un resumen, una lista de qué arreglar primero y un gráfico de crecimiento.',
+    eyebrow: 'Quién te dejó de seguir',
+    headline: () => 'La lista de hoy no puede mostrar quién te dejó de seguir. Tu próxima exportación sí.',
+    body: 'Sube una nueva exportación en unas semanas y la comparamos con esta. Gratis ves cuántas personas se fueron. Pro muestra cada nombre y fecha, guarda cada exportación y suma Radar: seguidores fantasma, solicitudes viejas y la tendencia de tus seguidores.',
     checks: [
       'Compara dos snapshots cualesquiera',
       'Gráfico de crecimiento de seguidores',
@@ -173,7 +181,7 @@ const ES: ResultsContent = {
       'Cuánto tiempo te ha hecho esperar un no seguidor',
     ],
     instagramOnlyChecks: ['Solicitudes pendientes, ordenadas por tiempo de espera'],
-    ctaPrimary: 'Ver qué incluye Radar',
+    ctaPrimary: 'Ver quién te deja de seguir',
     ctaSecondary: 'Prueba Radar, sin necesidad de cuenta →',
     previewLabel: 'tu vista previa de Radar · hoy',
     followBackRate: 'de a quienes sigues, te siguen de vuelta',
@@ -233,11 +241,14 @@ const PT: ResultsContent = {
     { title: 'Seção de lista branca', body: 'Contas na lista branca ficam recolhidas aqui. Expanda a qualquer momento para revisar ou desfazer.' },
   ],
   tutorialLabels: { featureTour: 'Tour de recursos', skipTour: 'Pular tour', next: 'Próximo', gotIt: 'Entendi' },
+  todayHint: {
+    text: 'Isto é um snapshot de hoje: mostra quem não te segue de volta, não quem deixou de te seguir. Envie sua próxima exportação daqui a algumas semanas para ver quem saiu.',
+    link: 'Como funciona',
+  },
   radarTeaser: {
-    eyebrow: 'Além deste snapshot',
-    headline: (n) =>
-      `Agora, você não vai saber se algum dos seus ${n.toLocaleString()} ${n === 1 ? 'mútuo deixa de te seguir' : 'mútuos deixam de te seguir'} silenciosamente.`,
-    body: 'Esta é uma checagem pontual, ela não detecta isso. O Radar guarda cada exportação que você faz, compara automaticamente e transforma seus números em um resumo, uma lista do que arrumar primeiro e um gráfico de crescimento.',
+    eyebrow: 'Quem deixou de te seguir',
+    headline: () => 'A lista de hoje não mostra quem deixou de te seguir. Sua próxima exportação mostra.',
+    body: 'Envie uma nova exportação daqui a algumas semanas e a gente compara com esta. No grátis você vê quantas pessoas saíram. O Pro mostra cada nome e data, guarda cada exportação e inclui o Radar: seguidores fantasmas, pedidos antigos e a tendência dos seus seguidores.',
     checks: [
       'Compare dois snapshots quaisquer',
       'Gráfico de crescimento de seguidores',
@@ -247,7 +258,7 @@ const PT: ResultsContent = {
       'Há quanto tempo um não seguidor te faz esperar',
     ],
     instagramOnlyChecks: ['Solicitações pendentes, ordenadas por tempo de espera'],
-    ctaPrimary: 'Veja o que tem no Radar',
+    ctaPrimary: 'Ver quem deixa de te seguir',
     ctaSecondary: 'Experimente o Radar, sem precisar de conta →',
     previewLabel: 'sua prévia do Radar · hoje',
     followBackRate: 'de quem você segue, te segue de volta',
