@@ -15,12 +15,6 @@ export interface DashboardContent {
     exportDate: (date: string) => string;
     whatIsRadar: string;
     platformSwitcherLabel: string;
-    headline: string;
-    summary: (followers: string, following: string, nonFollowers: string) => string;
-  };
-  heroStats: {
-    followers: string; following: string; mutuals: string; nonFollowers: string;
-    noFollowBackPct: string; followRatio: string;
   };
   audience: {
     sectionLabel: string; title: string;
@@ -97,12 +91,6 @@ const EN: DashboardContent = {
     exportDate: (date) => `· ${date}`,
     whatIsRadar: 'What is Radar?',
     platformSwitcherLabel: 'Choose platform',
-    headline: 'The full picture.',
-    summary: (followers, following, nonFollowers) => `${followers} followers · ${following} following · ${nonFollowers} don't follow back`,
-  },
-  heroStats: {
-    followers: 'Followers', following: 'Following', mutuals: 'Mutuals', nonFollowers: 'Non-followers',
-    noFollowBackPct: 'No follow-back %', followRatio: 'Follow ratio',
   },
   audience: {
     sectionLabel: 'Audience', title: 'Who follows you',
@@ -168,7 +156,7 @@ const EN: DashboardContent = {
     eyebrow: 'RADAR', title: 'What is Radar?',
     intro: "Radar is the intelligence layer on top of your Instagram or Threads export. While the results page tells you who doesn't follow you back right now, Radar tells you the full story - trends, health, history, and context. It turns a static snapshot into an ongoing picture of your account.",
     sections: [
-      { icon: '⬡', title: 'Account Health Check', body: 'Radar runs a set of specific checks on your export: old pending requests, the follow year that never followed back, follow bursts, sudden drops, lost mutuals and more. Each one comes with your real numbers and one thing to do about it, ranked by impact.' },
+      { icon: '⬡', title: 'Fixes, ranked by impact', body: 'Radar runs a set of specific checks on your export: old pending requests, the follow year that never followed back, follow bursts, sudden drops, lost mutuals and more. Each one comes with your real numbers and one thing to do about it, ranked by impact.' },
       { icon: '↑', title: 'Follower Growth Over Time', body: 'Every time you upload a new export, Radar plots your follower count on a timeline. You can see exactly when you gained or lost followers, and which period had the biggest drop. It turns a static number into a story.' },
       { icon: '⧗', title: 'Follow Age Analysis', body: "Radar reads the timestamps in your export to tell you how long you've been following people who never followed back. Broken into buckets: under a month, 1–6 months, 6–12, 1–2 years, and 2+ years. The longer the wait, the colder the lead." },
       { icon: '◎', title: 'Audience Breakdown', body: "Not all followers are equal. Radar splits your audience into Mutuals (both follow each other), Non-followers (you follow them, they don't follow back), and Fans (they follow you, you don't follow back). A donut chart makes it instant." },
@@ -176,7 +164,7 @@ const EN: DashboardContent = {
       { icon: '✓', title: 'Recently Unfollowed', body: "Instagram and Threads log every account you've recently unfollowed. Radar shows it back to you - useful for confirming you already handled someone, or for seeing patterns in who you're cutting." },
     ],
     tipLabel: 'How to get more from Radar:',
-    tip: 'Upload a new export every few weeks. Each upload adds a data point to your timeline, sharpens your growth trend, and unlocks the health checks that compare two exports.',
+    tip: 'Upload a new export every few weeks. Each upload adds a data point to your timeline, sharpens your growth trend, and unlocks the checks that compare two exports.',
   },
   tutorial: [
     { title: 'The radar', body: 'Every fixable pattern as a blip. The closer to the center, the bigger the impact. Open any one to see the accounts behind it.' },
@@ -217,12 +205,6 @@ const ES: DashboardContent = {
     exportDate: (date) => `· ${date}`,
     whatIsRadar: '¿Qué es Radar?',
     platformSwitcherLabel: 'Elige la plataforma',
-    headline: 'El panorama completo.',
-    summary: (followers, following, nonFollowers) => `${followers} seguidores · ${following} seguidos · ${nonFollowers} no te siguen de vuelta`,
-  },
-  heroStats: {
-    followers: 'Seguidores', following: 'Seguidos', mutuals: 'Mutuos', nonFollowers: 'No te siguen',
-    noFollowBackPct: '% sin seguimiento mutuo', followRatio: 'Ratio de seguimiento',
   },
   audience: {
     sectionLabel: 'Audiencia', title: 'Quién te sigue',
@@ -288,7 +270,7 @@ const ES: DashboardContent = {
     eyebrow: 'RADAR', title: '¿Qué es Radar?',
     intro: 'Radar es la capa de inteligencia sobre tu exportación de Instagram o Threads. Mientras la página de resultados te dice quién no te sigue de vuelta ahora mismo, Radar te cuenta la historia completa: tendencias, salud, historial y contexto. Convierte un snapshot estático en una imagen continua de tu cuenta.',
     sections: [
-      { icon: '⬡', title: 'Chequeo de salud de la cuenta', body: 'Radar hace una serie de chequeos concretos sobre tu exportación: solicitudes pendientes viejas, el año de follows que nunca te siguió, ráfagas de follows, caídas repentinas, mutuos perdidos y más. Cada uno trae tus números reales y una acción, ordenados por impacto.' },
+      { icon: '⬡', title: 'Arreglos, ordenados por impacto', body: 'Radar hace una serie de chequeos concretos sobre tu exportación: solicitudes pendientes viejas, el año de follows que nunca te siguió, ráfagas de follows, caídas repentinas, mutuos perdidos y más. Cada uno trae tus números reales y una acción, ordenados por impacto.' },
       { icon: '↑', title: 'Crecimiento de seguidores en el tiempo', body: 'Cada vez que subes una nueva exportación, Radar traza tu número de seguidores en una línea de tiempo. Puedes ver exactamente cuándo ganaste o perdiste seguidores, y qué período tuvo la mayor caída. Convierte un número estático en una historia.' },
       { icon: '⧗', title: 'Análisis de antigüedad de seguimiento', body: 'Radar lee las marcas de tiempo en tu exportación para decirte cuánto tiempo llevas siguiendo a personas que nunca te siguieron de vuelta. Dividido en rangos: menos de un mes, 1–6 meses, 6–12, 1–2 años y 2+ años. Cuanto más larga la espera, más frío el interés.' },
       { icon: '◎', title: 'Desglose de audiencia', body: 'No todos los seguidores son iguales. Radar divide tu audiencia en Mutuos (se siguen entre sí), No seguidores (los sigues, no te siguen de vuelta) y Fans (te siguen, no los sigues). Un gráfico de dona lo hace instantáneo.' },
@@ -337,12 +319,6 @@ const PT: DashboardContent = {
     exportDate: (date) => `· ${date}`,
     whatIsRadar: 'O que é o Radar?',
     platformSwitcherLabel: 'Escolha a plataforma',
-    headline: 'O panorama completo.',
-    summary: (followers, following, nonFollowers) => `${followers} seguidores · ${following} seguindo · ${nonFollowers} não te seguem de volta`,
-  },
-  heroStats: {
-    followers: 'Seguidores', following: 'Seguindo', mutuals: 'Mútuos', nonFollowers: 'Não te seguem',
-    noFollowBackPct: '% sem seguir de volta', followRatio: 'Proporção de seguimento',
   },
   audience: {
     sectionLabel: 'Audiência', title: 'Quem te segue',
@@ -408,7 +384,7 @@ const PT: DashboardContent = {
     eyebrow: 'RADAR', title: 'O que é o Radar?',
     intro: 'O Radar é a camada de inteligência sobre sua exportação do Instagram ou do Threads. Enquanto a página de resultados diz quem não te segue de volta agora, o Radar conta a história completa: tendências, saúde, histórico e contexto. Ele transforma um snapshot estático em uma visão contínua da sua conta.',
     sections: [
-      { icon: '⬡', title: 'Check-up da conta', body: 'O Radar faz uma série de verificações concretas na sua exportação: pedidos pendentes antigos, o ano de follows que nunca seguiu de volta, rajadas de follows, quedas repentinas, mútuos perdidos e mais. Cada uma vem com seus números reais e uma ação, em ordem de impacto.' },
+      { icon: '⬡', title: 'Ajustes, em ordem de impacto', body: 'O Radar faz uma série de verificações concretas na sua exportação: pedidos pendentes antigos, o ano de follows que nunca seguiu de volta, rajadas de follows, quedas repentinas, mútuos perdidos e mais. Cada uma vem com seus números reais e uma ação, em ordem de impacto.' },
       { icon: '↑', title: 'Crescimento de seguidores ao longo do tempo', body: 'Toda vez que você envia uma nova exportação, o Radar plota seu número de seguidores em uma linha do tempo. Você pode ver exatamente quando ganhou ou perdeu seguidores, e qual período teve a maior queda. Transforma um número estático em uma história.' },
       { icon: '⧗', title: 'Análise de tempo de seguimento', body: 'O Radar lê os registros de data e hora da sua exportação para dizer há quanto tempo você segue pessoas que nunca te seguiram de volta. Dividido em faixas: menos de um mês, 1–6 meses, 6–12, 1–2 anos e 2+ anos. Quanto mais longa a espera, mais frio o interesse.' },
       { icon: '◎', title: 'Detalhamento de audiência', body: 'Nem todos os seguidores são iguais. O Radar divide sua audiência em Mútuos (se seguem mutuamente), Não seguidores (você os segue, eles não seguem de volta) e Fãs (te seguem, você não os segue). Um gráfico de rosca torna isso instantâneo.' },
