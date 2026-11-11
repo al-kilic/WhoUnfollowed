@@ -38,6 +38,7 @@ export const Events = {
   csvExport: 'csv-export',            // { mode: pro | free | capture | limit }
   emailCaptured: 'email-captured',    // { context }
   snapshotLimitHit: 'snapshot-limit-hit',
+  sameExportReopened: 'same-export-reopened', // { platform, pro } re-upload of an already saved export: results reopen, no limit dialog
   blogCtaClick: 'blog-cta-click',     // { slug } — the post's main "upload your export" CTA, not an upgrade click
   // V2 return loop and offers.
   offerView: 'offer-view',            // { placement }

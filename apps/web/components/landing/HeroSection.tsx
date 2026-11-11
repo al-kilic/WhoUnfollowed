@@ -15,6 +15,7 @@ import {
 import { detectDeltaExport, type DeltaReason } from '@ig-tracker/core';
 import { useSnapshotStore } from '@/lib/store';
 import { useSnapshotList, saveSnapshot, deleteSnapshot, FREE_SNAPSHOT_LIMIT } from '@/hooks/useSnapshots';
+import { isSameExport } from '@/lib/sameExport';
 import { useAuth } from '@/components/AuthProvider';
 import { Events, track, trackFunnel } from '@/lib/analytics';
 import { recordParse as recordParseAction } from '@/app/actions/stats';
@@ -286,6 +287,15 @@ export function HeroSection({ isPro = false, initialStats, content }: { isPro?: 
 
   // ── Post-parse checks: delta warning, then free snapshot limit ───────────
   const continueAfterParse = async (snap: ParsedSnapshot) => {
+    // The same export uploaded again: reopen its results. No delta warning,
+    // no snapshot-limit dialog, no duplicate copy in history.
+    if (snapshots.some(s => isSameExport(s.data, snap))) {
+      setPhase('idle');
+      track(Events.sameExportReopened, { platform: snapshotPlatform(snap), pro: isPro });
+      setSnapshot(snap);
+      router.push('/results');
+      return;
+    }
     // Delta detection against the current viewer's own most recent snapshot
     // of the same platform (snapshots is already scoped to this
     // account/anonymous session; comparing Threads to Instagram is meaningless).
