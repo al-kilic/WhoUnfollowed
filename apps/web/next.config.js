@@ -1,6 +1,7 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import createNextIntlPlugin from 'next-intl/plugin';
+import { buildCsp } from './lib/security/csp-policy.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
@@ -11,6 +12,8 @@ process.env.NEXT_TELEMETRY_DISABLED = '1';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
+  // Don't advertise the framework in every response.
+  poweredByHeader: false,
   transpilePackages: ['@ig-tracker/core'],
   turbopack: {
     root: path.resolve(__dirname, '../..'),
@@ -18,7 +21,14 @@ const nextConfig = {
   // Self-hosted guide videos are versioned by filename (export-guide-v1.mp4),
   // so they can be cached for a year. Next serves public/ uncached by default.
   async headers() {
+    // Report-only CSP (see lib/security/csp-policy.mjs). Production only: the dev
+    // server needs eval for hot reload. The other security headers come from
+    // Caddy (ops/Caddyfile).
+    const csp = process.env.NODE_ENV === 'production'
+      ? [{ source: '/:path*', headers: [{ key: 'Content-Security-Policy-Report-Only', value: buildCsp() }] }]
+      : [];
     return [
+      ...csp,
       {
         source: '/video/:path*',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
