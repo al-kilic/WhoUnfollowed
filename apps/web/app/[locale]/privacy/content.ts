@@ -30,7 +30,7 @@ export interface PrivacyContent {
 const EN: PrivacyContent = {
   eyebrow: 'LEGAL',
   headline: 'Privacy Policy',
-  dates: 'Effective date: April 28, 2026 · Last updated: November 6, 2026',
+  dates: 'Effective date: April 28, 2026 · Last updated: November 11, 2026',
   disclaimerBold: 'WhoUnfollowed is an independent service.',
   disclaimerRest: 'It is not affiliated with, endorsed by, sponsored by, or in any way officially connected with Instagram, Threads, Meta Platforms, Inc., TikTok, ByteDance Ltd., or any of their subsidiaries or affiliates. "Instagram" and "Threads" are trademarks of Meta Platforms, Inc., and "TikTok" is a trademark of ByteDance Ltd. All references to Instagram, Threads and TikTok are for descriptive purposes only.',
   tldrLabel: 'THE SHORT VERSION',
@@ -70,7 +70,7 @@ const EN: PrivacyContent = {
   s8FreeLabel: 'Free tier:',
   s8FreeBody: 'All data is stored exclusively in your browser\'s local storage (IndexedDB). We hold no copy of this data. Clearing your browser\'s site data permanently removes all locally stored snapshots.',
   s8ProLabel: 'Pro tier:',
-  s8ProBody: 'Encrypted account data is retained for the duration of the account. You may request complete account deletion at any time via your account settings. Deletion is processed immediately and is irreversible.',
+  s8ProBody: 'Encrypted account data is retained for the duration of the account. You may request complete account deletion at any time via your account settings. Deletion is processed immediately and is irreversible. It removes your account, any encrypted cloud copies of your snapshots, and your reminder and wrap email settings. Our nightly database backups are kept for up to 8 days, so a copy of deleted account data can remain in a backup for that long before it is overwritten. Stripe keeps its own payment records for as long as tax law requires.',
   s9Title: '9. Your rights (GDPR)',
   s9Intro: 'If you are located in the European Economic Area, you have the following rights regarding any personal data we process:',
   gdprRights: [
@@ -94,7 +94,7 @@ const EN: PrivacyContent = {
 const ES: PrivacyContent = {
   eyebrow: 'LEGAL',
   headline: 'Política de Privacidad',
-  dates: 'Fecha de vigencia: 28 de abril de 2026 · Última actualización: 6 de noviembre de 2026',
+  dates: 'Fecha de vigencia: 28 de abril de 2026 · Última actualización: 11 de noviembre de 2026',
   disclaimerBold: 'WhoUnfollowed es un servicio independiente.',
   disclaimerRest: 'No está afiliado, respaldado, patrocinado ni conectado oficialmente de ninguna manera con Instagram, Threads, Meta Platforms, Inc., TikTok, ByteDance Ltd., ni con ninguna de sus subsidiarias o afiliadas. "Instagram" y "Threads" son marcas de Meta Platforms, Inc., y "TikTok" es una marca de ByteDance Ltd. Todas las referencias a Instagram, Threads y TikTok son únicamente con fines descriptivos.',
   tldrLabel: 'LA VERSIÓN CORTA',
@@ -134,7 +134,7 @@ const ES: PrivacyContent = {
   s8FreeLabel: 'Nivel Gratuito:',
   s8FreeBody: 'Todos los datos se almacenan exclusivamente en el almacenamiento local de tu navegador (IndexedDB). No conservamos ninguna copia de estos datos. Borrar los datos del sitio en tu navegador elimina permanentemente todos los snapshots almacenados localmente.',
   s8ProLabel: 'Nivel Pro:',
-  s8ProBody: 'Los datos cifrados de la cuenta se conservan mientras dure la cuenta. Puedes solicitar la eliminación completa de tu cuenta en cualquier momento desde la configuración de tu cuenta. La eliminación se procesa de inmediato y es irreversible.',
+  s8ProBody: 'Los datos cifrados de la cuenta se conservan mientras dure la cuenta. Puedes solicitar la eliminación completa de tu cuenta en cualquier momento desde la configuración de tu cuenta. La eliminación se procesa de inmediato y es irreversible. Borra tu cuenta, las copias cifradas de tus snapshots en la nube y tus ajustes de emails de recordatorio y de resumen. Nuestras copias de seguridad nocturnas de la base de datos se guardan hasta 8 días, así que una copia de los datos de una cuenta eliminada puede seguir en una copia de seguridad durante ese tiempo antes de sobrescribirse. Stripe conserva sus propios registros de pago el tiempo que exige la ley fiscal.',
   s9Title: '9. Tus derechos (RGPD)',
   s9Intro: 'Si te encuentras en el Espacio Económico Europeo, tienes los siguientes derechos respecto a cualquier dato personal que procesemos:',
   gdprRights: [
@@ -158,7 +158,7 @@ const ES: PrivacyContent = {
 const PT: PrivacyContent = {
   eyebrow: 'LEGAL',
   headline: 'Política de Privacidade',
-  dates: 'Data de vigência: 28 de abril de 2026 · Última atualização: 6 de novembro de 2026',
+  dates: 'Data de vigência: 28 de abril de 2026 · Última atualização: 11 de novembro de 2026',
   disclaimerBold: 'O WhoUnfollowed é um serviço independente.',
   disclaimerRest: 'Não é afiliado, endossado, patrocinado nem conectado oficialmente de forma alguma ao Instagram, ao Threads, à Meta Platforms, Inc., ao TikTok, à ByteDance Ltd., ou a qualquer uma de suas subsidiárias ou afiliadas. "Instagram" e "Threads" são marcas da Meta Platforms, Inc., e "TikTok" é uma marca da ByteDance Ltd. Todas as referências ao Instagram, ao Threads e ao TikTok têm fins meramente descritivos.',
   tldrLabel: 'A VERSÃO RESUMIDA',
@@ -198,7 +198,7 @@ const PT: PrivacyContent = {
   s8FreeLabel: 'Nível Gratuito:',
   s8FreeBody: 'Todos os dados são armazenados exclusivamente no armazenamento local do seu navegador (IndexedDB). Não mantemos nenhuma cópia desses dados. Limpar os dados do site no seu navegador remove permanentemente todos os snapshots armazenados localmente.',
   s8ProLabel: 'Nível Pro:',
-  s8ProBody: 'Os dados criptografados da conta são retidos durante a existência da conta. Você pode solicitar a exclusão completa da conta a qualquer momento através das configurações da sua conta. A exclusão é processada imediatamente e é irreversível.',
+  s8ProBody: 'Os dados criptografados da conta são retidos durante a existência da conta. Você pode solicitar a exclusão completa da conta a qualquer momento através das configurações da sua conta. A exclusão é processada imediatamente e é irreversível. Ela apaga sua conta, as cópias criptografadas dos seus snapshots na nuvem e suas configurações de e-mails de lembrete e de retrospectiva. Nossos backups noturnos do banco de dados ficam guardados por até 8 dias, então uma cópia dos dados de uma conta excluída pode continuar em um backup por esse tempo antes de ser sobrescrita. A Stripe mantém seus próprios registros de pagamento pelo tempo que a lei fiscal exige.',
   s9Title: '9. Seus direitos (RGPD)',
   s9Intro: 'Se você estiver localizado no Espaço Econômico Europeu, você tem os seguintes direitos em relação a quaisquer dados pessoais que processamos:',
   gdprRights: [

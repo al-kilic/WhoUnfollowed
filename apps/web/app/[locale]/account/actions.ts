@@ -104,7 +104,13 @@ export async function deleteAccountAction() {
   }
 
   await invalidateSession(session.id);
-  // Cascade deletes handle profiles, sessions, snapshots, sync_settings
+  // Email-list rows not linked by user_id (created before signup) would
+  // survive the cascade and keep sending reminder and wrap emails.
+  const { deleteSubscriberRowsForUser } = await import('@/lib/reminders/store');
+  await deleteSubscriberRowsForUser(user.id, user.email);
+  // Cascade deletes handle profiles, sessions, cloud snapshots (encrypted blobs
+  // live in Postgres, not on disk), sync_settings, email verifications,
+  // password resets, feedback and unfollow plans.
   await db.delete(users).where(eq(users.id, user.id));
 
   redirect('/');

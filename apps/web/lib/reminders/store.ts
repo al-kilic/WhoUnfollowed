@@ -126,6 +126,13 @@ export async function disableRemindersForUser(userId: string, email: string, now
     .where(accountRow(userId, email));
 }
 
+// Account deletion: remove every email-list row for this account, including one
+// created before the account existed (buy-first purchase or a signed-out
+// opt-in with the same address). The user_id cascade alone misses those.
+export async function deleteSubscriberRowsForUser(userId: string, email: string): Promise<void> {
+  await db.delete(emailSubscribers).where(accountRow(userId, email));
+}
+
 const reminderDue = (now: Date) => and(
   isNotNull(emailSubscribers.reminderNextAt),
   lte(emailSubscribers.reminderNextAt, now),
