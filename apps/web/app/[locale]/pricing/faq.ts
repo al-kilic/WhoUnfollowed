@@ -27,7 +27,7 @@ const PRICING_FAQ_EN: PricingFaqItem[] = [
   },
   {
     q: 'What is the Lifetime Insider option?',
-    a: `Pay once, keep Pro forever. Lifetime sells in a fixed number of seats: the first ones cost $${T1}, the next $${T2}, the last $${T3}. When all ${LIFETIME_TOTAL_SEATS} are gone, Lifetime closes for good. Insiders also get a private community, Pro benefits on future tools, and hear first about new launches.`,
+    a: `Pay once, keep Pro forever. Lifetime sells in a fixed number of seats: the first ones cost $${T1}, the next $${T2}, the last $${T3}. When all ${LIFETIME_TOTAL_SEATS} are gone, Lifetime closes for good. Insiders also get a private community, Pro features on future tools (AI features that run on credits are not included), and hear first about new launches.`,
   },
   {
     q: 'Will the price go up?',
@@ -54,7 +54,7 @@ const PRICING_FAQ_ES: PricingFaqItem[] = [
   },
   {
     q: '¿Qué es la opción Lifetime de Insider?',
-    a: `Paga una vez y conserva Pro para siempre. Lifetime se vende en un número fijo de plazas: las primeras cuestan $${T1}, las siguientes $${T2} y las últimas $${T3}. Cuando se acaben las ${LIFETIME_TOTAL_SEATS}, Lifetime cierra para siempre. Los Insiders también tienen una comunidad privada, beneficios Pro en futuras herramientas y se enteran primero de cada lanzamiento.`,
+    a: `Paga una vez y conserva Pro para siempre. Lifetime se vende en un número fijo de plazas: las primeras cuestan $${T1}, las siguientes $${T2} y las últimas $${T3}. Cuando se acaben las ${LIFETIME_TOTAL_SEATS}, Lifetime cierra para siempre. Los Insiders también tienen una comunidad privada, funciones Pro en futuras herramientas (sin incluir las funciones de IA que funcionan con créditos) y se enteran primero de cada lanzamiento.`,
   },
   {
     q: '¿Va a subir el precio?',
@@ -81,7 +81,7 @@ const PRICING_FAQ_PT: PricingFaqItem[] = [
   },
   {
     q: 'O que é a opção Lifetime de Insider?',
-    a: `Pague uma vez e fique com o Pro para sempre. O Lifetime é vendido em um número fixo de vagas: as primeiras custam $${T1}, as seguintes $${T2} e as últimas $${T3}. Quando as ${LIFETIME_TOTAL_SEATS} acabarem, o Lifetime fecha de vez. Insiders também têm uma comunidade privada, benefícios Pro em ferramentas futuras e ficam sabendo primeiro de cada lançamento.`,
+    a: `Pague uma vez e fique com o Pro para sempre. O Lifetime é vendido em um número fixo de vagas: as primeiras custam $${T1}, as seguintes $${T2} e as últimas $${T3}. Quando as ${LIFETIME_TOTAL_SEATS} acabarem, o Lifetime fecha de vez. Insiders também têm uma comunidade privada, recursos Pro em ferramentas futuras (sem incluir os recursos de IA que funcionam com créditos) e ficam sabendo primeiro de cada lançamento.`,
   },
   {
     q: 'O preço vai subir?',
