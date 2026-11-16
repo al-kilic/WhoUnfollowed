@@ -6,7 +6,8 @@ services:
     environment:
       - NODE_ENV=production
       - HOSTNAME=0.0.0.0
-    # No published port: only Caddy reaches the app, over the compose network.
+    # No published port: the server's shared Caddy (/srv/proxy) reaches it over 'edge'.
+    networks: [default, edge]
     depends_on:
       postgres:
         condition: service_healthy
@@ -27,19 +28,6 @@ services:
       timeout: 5s
       retries: 5
 
-  caddy:
-    image: caddy:2-alpine
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - /srv/ig-tracker/data/caddy:/data
-    depends_on:
-      - web
-
   # plausible:
   #   image: ghcr.io/plausible/community-edition:v2
   #   restart: unless-stopped
@@ -56,3 +44,11 @@ services:
   #     - "3001:3001"
   #   volumes:
   #     - /srv/ig-tracker/data/uptime-kuma:/app/data
+
+# Caddy (ports 80/443, https certificates) moved out of this project on 2026-11-14.
+# It now lives in /srv/proxy on the server and serves every site there; its Caddyfile
+# is /srv/proxy/Caddyfile (./Caddyfile here is a reference copy). On the server, umami
+# and nocodb also join 'edge'. Create the network once with: docker network create edge
+networks:
+  edge:
+    external: true

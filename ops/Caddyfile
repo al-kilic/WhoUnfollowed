@@ -50,3 +50,15 @@ admin.whounfollowed.co {
 www.whounfollowed.co {
     redir https://whounfollowed.co{uri} permanent
 }
+
+# Added to /srv/ig-tracker/Caddyfile once photo.alankilic.com points at the server.
+photo.alankilic.com {
+    reverse_proxy alankilic-photo:3000
+    encode gzip
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        -Server
+    }
+}
