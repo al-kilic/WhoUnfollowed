@@ -99,6 +99,7 @@ export const config = {
     '/welcome/:path*',
     '/diff/:path*',
     '/unsubscribe/:path*',
+    '/waitlist/:path*',
     '/(es|pt)/:path*',
   ],
 };

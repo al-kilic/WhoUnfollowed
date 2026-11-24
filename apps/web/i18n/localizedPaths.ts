@@ -37,4 +37,5 @@ export const LOCALIZED_PATHS: string[] = [
   '/welcome',
   '/diff',
   '/unsubscribe',
+  '/waitlist',
 ];

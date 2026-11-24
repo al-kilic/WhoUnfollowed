@@ -45,6 +45,8 @@ export const Events = {
   reminderOptin: 'reminder-optin',    // { source }
   revealView: 'reveal-view',          // { count_bucket }
   creatorWaitlist: 'creator-waitlist', // { placement }
+  announceClick: 'announce-click',     // { locale } sitewide "something big is coming" strip -> /waitlist
+  waitlistJoin: 'waitlist-join',       // { mode: signup | account } joined from /waitlist
   keepExportClick: 'keep-export-click', // { placement } signed-out "keep this export" card -> signup
   // Tools. Props are fixed literals or counts only, never usernames.
   verdictShare: 'verdict-share',      // { action: share | save | another, archetype, placement }

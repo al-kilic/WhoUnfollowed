@@ -76,7 +76,22 @@ export async function joinCreatorWaitlist(opts: { email: string; locale: AppLoca
       token: newToken(),
       ...(opts.userId ? { userId: opts.userId } : {}),
     })
-    .onConflictDoUpdate({ target: emailSubscribers.email, set: { creatorWaitlistAt: now } });
+    // Links the account when we have one. An earlier opt-out (optedOutAt) is
+    // left alone: it also gates reminder emails, so the launch send must skip
+    // opted-out rows rather than this join silently clearing it.
+    .onConflictDoUpdate({
+      target: emailSubscribers.email,
+      set: { creatorWaitlistAt: now, ...(opts.userId ? { userId: opts.userId } : {}) },
+    });
+}
+
+// True when the address already joined the launch waitlist.
+export async function isOnCreatorWaitlist(email: string): Promise<boolean> {
+  const row = await db.query.emailSubscribers.findFirst({
+    where: and(eq(emailSubscribers.email, email.trim().toLowerCase()), isNotNull(emailSubscribers.creatorWaitlistAt)),
+    columns: { email: true },
+  });
+  return Boolean(row);
 }
 
 export async function findByToken(token: string) {

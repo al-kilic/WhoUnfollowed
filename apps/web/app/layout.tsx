@@ -5,6 +5,8 @@ import { NextIntlClientProvider } from 'next-intl';
 import { chromeMessagesFor, STATIC_INTL_CONFIG } from '@/lib/i18n/chromeMessages';
 import { FontLoader } from '@/components/FontLoader';
 import { AuthProvider } from '@/components/AuthProvider';
+import { AnnouncementBar } from '@/components/AnnouncementBar';
+import { ANNOUNCE_STORAGE_KEY } from '@/components/announcementBar.content';
 import './globals.css';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
@@ -175,6 +177,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: `(function(){try{var K='wu:acq_source';if(!sessionStorage.getItem(K)){var src='direct';var p=new URLSearchParams(location.search);var u=p.get('utm_source');if(u){src=u;}else if(document.referrer){try{var h=new URL(document.referrer).hostname;if(h&&h.indexOf('whounfollowed.co')===-1){src=h;}}catch(e){}}sessionStorage.setItem(K,src);}}catch(e){}})();`,
           }}
         />
+        {/* Hides the closed announcement strip before first paint, so it
+            never flashes back in (see components/AnnouncementBar.tsx). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if(localStorage.getItem(${JSON.stringify(ANNOUNCE_STORAGE_KEY)})==='off')document.documentElement.setAttribute('data-announce','off');}catch(e){}})();`,
+          }}
+        />
         {/* data-domains: the tracker ignores any other host, so local and LAN
             dev servers never write test traffic into the live stats. */}
         {UMAMI_WEBSITE_ID ? (
@@ -201,6 +210,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <NextIntlClientProvider locale="en" messages={chromeMessagesFor('en')} {...STATIC_INTL_CONFIG}>
             <AuthProvider>
               <FontLoader />
+              <AnnouncementBar />
               {children}
             </AuthProvider>
           </NextIntlClientProvider>
