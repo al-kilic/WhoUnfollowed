@@ -1,172 +1,83 @@
 'use client';
 
+import type { ReactNode } from 'react';
+import { useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import type { ReactNode, InputHTMLAttributes } from 'react';
-import { T } from '@/components/landing/tokens';
+import type { AppLocale } from '@/i18n/routing';
+import { getAuthShellContent } from './authShell.content';
 
+// Re-exported so every account page keeps importing from one place.
+export { AuthField, AuthError, AuthButton } from './AuthControls';
+
+// Layout for every account page (login, signup, password reset, verify email,
+// welcome, unsubscribe). Wide screens get a side panel with the privacy
+// promise and the launch waitlist; phones get the form alone. `compact`
+// drops the panel for pages where a pitch would be out of place.
 export function AuthShell({
   title,
   subtitle,
   children,
   footer,
+  compact = false,
 }: {
   title: string;
   subtitle?: string;
   children: ReactNode;
   footer?: ReactNode;
+  compact?: boolean;
 }) {
+  const locale = useLocale() as AppLocale;
+  const c = getAuthShellContent(locale);
+
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        background: T.bg,
-        color: T.ink,
-        fontFamily: T.sans,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '40px 20px',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
-      {/* subtle teal radial glow */}
-      <div
-        aria-hidden
-        style={{
-          position: 'absolute',
-          top: '-25%',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: 640,
-          height: 640,
-          background: `radial-gradient(circle, ${T.tealGlow} 0%, transparent 70%)`,
-          pointerEvents: 'none',
-        }}
-      />
+    <div className={`wu-auth${compact ? ' wu-auth--compact' : ''}`}>
+      {!compact && (
+        <aside className="wu-auth-aside" aria-label={c.eyebrow}>
+          <div aria-hidden className="wu-auth-orbit">
+            <span /><span /><span />
+          </div>
+          <Brand label={c.home} />
+          <div className="wu-auth-aside-body">
+            <p className="wu-auth-eyebrow"><span aria-hidden className="wu-auth-dot" />{c.eyebrow}</p>
+            <p className="wu-auth-headline">{c.headline}</p>
+            <ul className="wu-auth-points">
+              {c.points.map((p) => (
+                <li key={p}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden><polyline points="20 6 9 17 4 12" /></svg>
+                  {p}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <Link href="/waitlist" className="wu-auth-teaser">
+            <span className="wu-auth-teaser-badge">{c.teaserBadge}</span>
+            <span className="wu-auth-teaser-text">{c.teaserText}</span>
+            <span className="wu-auth-teaser-cta">{c.teaserCta} <span aria-hidden>→</span></span>
+          </Link>
+        </aside>
+      )}
 
-      <div style={{ position: 'relative', width: '100%', maxWidth: 400 }}>
-        <Link
-          href="/"
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 10, textDecoration: 'none', marginBottom: 26 }}
-        >
-          <img
-            src="/logo.png"
-            alt="WhoUnfollowed"
-            width={30}
-            height={30}
-            style={{ borderRadius: 8, boxShadow: `0 4px 14px ${T.tealGlow}`, objectFit: 'contain' }}
-          />
-          <span style={{ fontFamily: T.serif, fontSize: 19, letterSpacing: '-0.01em', color: T.ink }}>
-            WhoUnfollowed
-          </span>
-        </Link>
-
-        <div
-          style={{
-            background: T.overlay,
-            border: `1px solid ${T.border2}`,
-            borderRadius: 18,
-            padding: '32px 28px',
-            boxShadow: '0 20px 60px rgba(0,0,0,0.10)',
-          }}
-        >
-          <h1
-            style={{
-              fontFamily: T.serif,
-              fontSize: 28,
-              fontWeight: 400,
-              letterSpacing: '-0.02em',
-              color: T.ink,
-              marginBottom: subtitle ? 8 : 22,
-              lineHeight: 1.12,
-            }}
-          >
-            {title}
-          </h1>
-          {subtitle && (
-            <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.55, marginBottom: 24 }}>{subtitle}</p>
-          )}
-          {children}
+      <main className="wu-auth-main">
+        <div className="wu-auth-column">
+          <div className="wu-auth-mobile-brand"><Brand label={c.home} /></div>
+          <div className="wu-auth-card">
+            <h1 className="wu-auth-title">{title}</h1>
+            {subtitle && <p className="wu-auth-subtitle">{subtitle}</p>}
+            {children}
+          </div>
+          {footer && <div className="wu-auth-footer">{footer}</div>}
         </div>
-
-        {footer && (
-          <div style={{ textAlign: 'center', marginTop: 20, fontSize: 13, color: T.inkDim }}>{footer}</div>
-        )}
-      </div>
+      </main>
     </div>
   );
 }
 
-interface AuthFieldProps extends InputHTMLAttributes<HTMLInputElement> {
-  label: string;
-  id: string;
-  hint?: string;
-}
-
-export function AuthField({ label, id, hint, ...props }: AuthFieldProps) {
+function Brand({ label }: { label: string }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-      <label htmlFor={id} style={{ fontSize: 13, fontWeight: 500, color: T.ink }}>
-        {label}
-      </label>
-      <input
-        id={id}
-        {...props}
-        style={{
-          width: '100%',
-          padding: '10px 12px',
-          borderRadius: 10,
-          fontSize: 14,
-          fontFamily: T.sans,
-          color: T.ink,
-          background: T.surface1,
-          border: `1px solid ${T.border2}`,
-          outline: 'none',
-          transition: 'border-color 0.15s, box-shadow 0.15s',
-        }}
-        onFocus={(e) => {
-          e.currentTarget.style.borderColor = T.tealMid;
-          e.currentTarget.style.boxShadow = `0 0 0 3px ${T.tealGlow}`;
-        }}
-        onBlur={(e) => {
-          e.currentTarget.style.borderColor = T.border2;
-          e.currentTarget.style.boxShadow = 'none';
-        }}
-      />
-      {hint && <p style={{ fontSize: 12, color: T.inkMute }}>{hint}</p>}
-    </div>
-  );
-}
-
-export function AuthError({ children }: { children: ReactNode }) {
-  return (
-    <p style={{ fontSize: 13, color: T.terra, lineHeight: 1.4 }}>{children}</p>
-  );
-}
-
-export function AuthButton({ pending, children }: { pending?: boolean; children: ReactNode }) {
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      style={{
-        width: '100%',
-        padding: '11px 16px',
-        borderRadius: 10,
-        fontSize: 14,
-        fontWeight: 600,
-        fontFamily: T.sans,
-        color: T.cream,
-        background: T.teal,
-        border: `1px solid rgba(2,136,143,0.5)`,
-        cursor: pending ? 'default' : 'pointer',
-        opacity: pending ? 0.6 : 1,
-        transition: 'opacity 0.15s',
-      }}
-    >
-      {children}
-    </button>
+    <Link href="/" aria-label={label} className="wu-auth-brand">
+      {/* eslint-disable-next-line @next/next/no-img-element -- tiny static logo, same as the old shell */}
+      <img src="/logo.png" alt="" width={30} height={30} />
+      <span>WhoUnfollowed</span>
+    </Link>
   );
 }

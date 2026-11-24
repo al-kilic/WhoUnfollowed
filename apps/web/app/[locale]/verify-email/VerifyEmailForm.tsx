@@ -81,7 +81,7 @@ export function VerifyEmailForm({ email, locale }: { email: string; locale: AppL
         >
           {resending ? c.resending : c.resendCode}
         </button>
-        {resendMsg && <div style={{ marginTop: 8, color: T.inkMute }}>{resendMsg}</div>}
+        {resendMsg && <div style={{ marginTop: 8, color: T.inkDim }}>{resendMsg}</div>}
       </div>
     </AuthShell>
   );
