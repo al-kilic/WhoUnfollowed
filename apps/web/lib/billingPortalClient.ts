@@ -2,8 +2,8 @@
 
 // Sends the browser to Stripe's billing portal (cancel, change card). Returns
 // false if it could not open, so the caller can show its own error.
-export async function openBillingPortal(locale: string, from: 'you' | 'account' = 'you'): Promise<boolean> {
-  const r = await fetch('/api/stripe/portal', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ locale, from }) }).catch(() => null);
+export async function openBillingPortal(locale: string): Promise<boolean> {
+  const r = await fetch('/api/stripe/portal', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ locale }) }).catch(() => null);
   const j = r?.ok ? ((await r.json()) as { url?: string }) : null;
   if (!j?.url) return false;
   window.location.href = j.url;

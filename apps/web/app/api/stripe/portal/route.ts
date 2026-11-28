@@ -19,7 +19,7 @@ export async function POST(req: Request) {
   if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   const profile = await db.query.profiles.findFirst({ where: eq(profiles.userId, user.id), columns: { stripeCustomerId: true } });
   if (!profile?.stripeCustomerId) return NextResponse.json({ error: 'no_customer' }, { status: 404 });
-  const body = (await req.json().catch(() => ({}))) as { locale?: unknown; from?: unknown };
+  const body = (await req.json().catch(() => ({}))) as { locale?: unknown };
   const locale = hasLocale(routing.locales, body.locale) ? body.locale : routing.defaultLocale;
   // Live uses its own portal configuration (cancel at period end, card and
   // invoices, NO plan switching: a switch would start a new billing month and
@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     ...(configuration ? { configuration } : {}),
     // Back where the member came from, flagged so the page re-reads the
     // subscription at once (see /api/stripe/sync).
-    return_url: `${APP_URL}${localizedPathname(body.from === 'account' ? '/account' : '/app/you', locale)}?billing=returned`,
+    return_url: `${APP_URL}${localizedPathname('/app/you', locale)}?billing=returned#billing`,
   });
   return NextResponse.json({ url: session.url });
 }

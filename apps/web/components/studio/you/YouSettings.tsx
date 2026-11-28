@@ -14,6 +14,7 @@ import { PageHead } from '../PageHead';
 import { getYouContent } from './you.content';
 import { SetRow, YouAccounts, YouLanguage } from './YouParts';
 import { YouBilling } from './YouBilling';
+import { YouHashScroll } from './YouHashScroll';
 import { proAiPricesAt, TOPUP_PRICE_USD } from '@/lib/pricing';
 import { BriefToggle, CoachPrefs, SaveNote } from './YouPrefs';
 import { PlanReminders } from '../coach/PlanReminders';
@@ -50,12 +51,13 @@ export function YouSettings({ locale, a }: { locale: AppLocale; a: AccountSummar
   return (
     <>
       <PageHead title={sc.nav.you} />
+      <YouHashScroll />
       <div className="s-ylay">
         <nav className="s-ynav" aria-label={sc.nav.settings}>
-          {SECTIONS.map(([id, Ic]) => <a key={id} href={`#y-${id}`}><Ic size={15} />{t.sections[id]}</a>)}
+          {SECTIONS.map(([id, Ic]) => <a key={id} href={`#${id}`}><Ic size={15} />{t.sections[id]}</a>)}
         </nav>
         <div className="s-col" style={{ gap: 16, minWidth: 0 }}>
-          <section className="s-card" id="y-profile">
+          <section className="s-card" id="profile">
             <div className="s-hd"><h3 className="s-h3">{t.sections.profile}</h3></div>
             <div className="s-pad s-row" style={{ gap: 18, flexWrap: 'wrap' }}>
               <AvatarPicker />
@@ -69,7 +71,7 @@ export function YouSettings({ locale, a }: { locale: AppLocale; a: AccountSummar
             <SetRow title={t.language} body={t.languageBody}><YouLanguage /></SetRow>
           </section>
 
-          <section className="s-card" id="y-coach">
+          <section className="s-card" id="coach">
             <div className="s-hd"><h3 className="s-h3">{t.sections.coach}</h3>{a.hasProAi ? <SaveNote /> : <span className="s-sub-t">{t.coachSub}</span>}</div>
             {a.hasProAi ? (
               <>
@@ -83,17 +85,17 @@ export function YouSettings({ locale, a }: { locale: AppLocale; a: AccountSummar
             ) : <p className="s-pad s-sub-t" style={{ margin: 0 }}><Lock size={13} style={{ verticalAlign: -2 }} /> {k.memoryBody}</p>}
           </section>
 
-          <section className="s-card" id="y-memory">
+          <section className="s-card" id="memory">
             <div className="s-hd"><h3 className="s-h3">{t.sections.memory}</h3><span className="s-sub-t">{k.memoryBody}</span></div>
             {a.hasProAi ? <MemorySummary /> : <p className="s-pad s-sub-t" style={{ margin: 0 }}><Lock size={13} style={{ verticalAlign: -2 }} /> {sc.plan.proAi}</p>}
           </section>
 
-          <section className="s-card" id="y-billing">
+          <section className="s-card" id="billing">
             <div className="s-hd"><h3 className="s-h3">{t.sections.billing}</h3>{a.status === 'grace' && a.graceEndsAt && <span className="s-pace warn">{ac.graceWarning(date(a.graceEndsAt))}</span>}</div>
             <YouBilling b={{ plan: a.plan, isSubscriber: a.isSubscriber, periodEnd: a.periodEnd, cancelAt: a.cancelAt, proUntil: a.proUntil, isInsider: a.isInsider, prices: proAiPricesAt(), refillPrice: TOPUP_PRICE_USD }} />
           </section>
 
-          <section className="s-card" id="y-notifications">
+          <section className="s-card" id="notifications">
             <div className="s-hd"><h3 className="s-h3">{t.sections.notifications}</h3><span className="s-sub-t">{t.notifSub}</span></div>
             <SetRow title={ac.reminders.title}><ReminderToggle nextAt={a.reminderNextAt} locale={locale} c={ac.reminders} /></SetRow>
             {a.hasProAi && <BriefToggle />}
@@ -102,13 +104,13 @@ export function YouSettings({ locale, a }: { locale: AppLocale; a: AccountSummar
           </section>
 
           {a.hasProAi && (
-            <section className="s-card" id="y-calendar">
+            <section className="s-card" id="calendar">
               <div className="s-hd"><h3 className="s-h3">{t.sections.calendar}</h3></div>
               <div className="s-pad"><PlanReminders manage /></div>
             </section>
           )}
 
-          <section className="s-card" id="y-privacy">
+          <section className="s-card" id="privacy">
             <div className="s-hd"><h3 className="s-h3">{t.sections.privacy}</h3></div>
             <div className="s-pad s-priv">
               <div className="s-col" style={{ gap: 9 }}><span className="s-lab s-row" style={{ gap: 6 }}><Database size={13} />{t.saved}</span>{t.savedList.map((x) => <span key={x} className="s-row s-pli"><Check size={14} />{x}</span>)}</div>

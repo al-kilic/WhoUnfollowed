@@ -62,7 +62,7 @@ export function AddPostToCalendar({ planId, start, item }: { planId: string; sta
         <a className="s-btn sec xs" href={googleCalendarLink(e)} target="_blank" rel="noopener noreferrer"><CalendarPlus size={13} />{p.calGoogle}</a>
         <button type="button" className="s-btn sec xs" onClick={() => download([e], `post-${item.day + 1}.ics`)}><Download size={13} />{p.calIcs}</button>
       </div>
-      {emailOff && <Link href="/app/you#y-calendar" className="s-lnk" style={{ fontSize: 13 }}><BellRing size={12} />{p.remindEmail}</Link>}
+      {emailOff && <Link href="/app/you#calendar" className="s-lnk" style={{ fontSize: 13 }}><BellRing size={12} />{p.remindEmail}</Link>}
     </div>
   );
 }

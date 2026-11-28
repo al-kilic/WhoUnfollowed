@@ -31,7 +31,7 @@ export default async function ForgotPasswordPage({ params }: PageProps) {
   setRequestLocale(locale);
 
   const { user } = await validateRequest();
-  if (user) redirect({ href: '/account', locale: locale as AppLocale });
+  if (user) redirect({ href: '/app/you', locale: locale as AppLocale });
 
   return <ForgotPasswordForm locale={locale as AppLocale} />;
 }

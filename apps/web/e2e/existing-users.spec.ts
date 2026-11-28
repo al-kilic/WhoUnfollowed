@@ -21,12 +21,9 @@ for (const c of cases) {
     await signIn(context, user);
     expect((await request.get('/api/ai/state', { headers: auth(user.sessionId) })).status()).toBe(403);
 
+    // The old account page now sends everyone to Studio > You, plan section.
     await page.goto('/account');
-    await expect(page.getByText(c.badge).first()).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Get Pro AI' }).first()).toBeVisible();
-    if (SHOTS) await page.screenshot({ path: `${SHOTS}/${c.plan}-account.png`, fullPage: false });
-
-    await page.goto('/app/you#y-billing');
+    await expect(page).toHaveURL(/\/app\/you#billing$/);
     await expect(page.getByText(c.card).first()).toBeVisible();
     if (SHOTS) await page.locator('.s-bill').first().screenshot({ path: `${SHOTS}/${c.plan}-studio-billing.png` });
 
@@ -41,10 +38,10 @@ test('an old Pro member who upgrades gets Pro AI and keeps the old end date', as
   expect(await sendEvent(request, 'customer.subscription.created', subscription(user))).toBe(200);
   expect((await request.get('/api/ai/state', { headers: auth(user.sessionId) })).status()).toBe(200);
   expect(String((await profileOf(user.id)).subscription_expires_at)).toBe(String(before));
-  await page.goto('/account');
-  await expect(page.getByText('Pro AI, billed monthly')).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Get Pro AI' })).toHaveCount(0);
-  if (SHOTS) await page.screenshot({ path: `${SHOTS}/legacy-after-upgrade-account.png` });
+  await page.goto('/app/you#billing');
+  await expect(page.getByRole('button', { name: 'Manage billing' })).toBeVisible();
+  await expect(page.locator('.s-bill').getByRole('link', { name: 'Get Pro AI' })).toHaveCount(0);
+  if (SHOTS) await page.locator('.s-bill').first().screenshot({ path: `${SHOTS}/legacy-after-upgrade-billing.png` });
 });
 
 test('pricing tells an old Pro member what changes when they upgrade', async ({ page, context }) => {

@@ -11,7 +11,9 @@ import { BETA_COOKIE, ROBOTS_DISALLOW_ALL, STAGING_MARK_COOKIE, betaCode, isBeta
 const SESSION_COOKIE = 'auth_session';
 
 // Routes that require a valid session (any subscription status)
-const AUTH_REQUIRED = ['/account', '/settings', '/coach'];
+// /account and /settings only redirect to Studio > You, which handles signed-out
+// visitors itself, so they need no session here.
+const AUTH_REQUIRED = ['/coach'];
 
 // Routes that require an account (subscription status checked server-side).
 // /dashboard is deliberately not here: it's the free/no-account entry point

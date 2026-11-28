@@ -72,7 +72,7 @@ export function CalendarLinks({ manage = false }: { manage?: boolean }) {
               <button type="button" className="s-btn sec xs" disabled={busy} onClick={() => void act('rotate')} title={k.rotateNote}><RefreshCw size={13} />{k.rotate}</button>
               <button type="button" className="s-btn sec xs" disabled={busy} onClick={() => void act('revoke')}><X size={13} />{k.revoke}</button>
             </div>
-          ) : <Link href="/app/you#y-calendar" className="s-lnk" style={{ fontSize: 13 }}>{k.manage}</Link>}
+          ) : <Link href="/app/you#calendar" className="s-lnk" style={{ fontSize: 13 }}>{k.manage}</Link>}
         </>
       )}
       {err && <p role="alert" style={{ margin: 0, color: 'var(--bad)', fontSize: 13 }}>{k.error}</p>}

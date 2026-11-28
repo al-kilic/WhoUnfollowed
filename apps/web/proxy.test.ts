@@ -49,8 +49,8 @@ describe('middleware with the staging gate off (production)', () => {
     }
   });
 
-  it('keeps the existing auth gate (no session on /account goes to login)', async () => {
-    const res = await middleware(req('/es/account'));
+  it('keeps the existing auth gate (no session on /coach goes to login)', async () => {
+    const res = await middleware(req('/es/coach'));
     expect(res.headers.get('location')).toBe('https://staging.example.test/es/login');
   });
 });

@@ -18,7 +18,7 @@ test('subscribe, cancel at period end, then the plan ends', async ({ page, conte
   // Cancelled in the billing portal: active until the period end.
   expect(await sendEvent(request, 'customer.subscription.updated', subscription(user, { cancelAtPeriodEnd: true }))).toBe(200);
   expect((await profileOf(user.id)).cancel_at).toBeTruthy();
-  await page.goto('/app/you#y-billing');
+  await page.goto('/app/you#billing');
   await expect(page.getByText(/It won.t renew\./).first()).toBeVisible();
   await expect(page.getByRole('button', { name: 'Keep my plan' }).first()).toBeVisible();
 

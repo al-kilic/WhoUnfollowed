@@ -294,7 +294,7 @@ function AccountBadge({ userEmail, isPro, isInsider }: { userEmail: string; isPr
             )}
 
             <Link
-              href="/account"
+              href="/app/you"
               role="menuitem"
               onClick={() => setOpen(false)}
               style={menuItemStyle}
@@ -385,7 +385,7 @@ export function AccountMenu({ userEmail, isPro, isInsider = false, variant = 'ba
             Go Pro
           </Link>
         )}
-        <Link href="/account" style={{ fontSize: 15, color: T.inkDim, textDecoration: 'none' }}>
+        <Link href="/app/you" style={{ fontSize: 15, color: T.inkDim, textDecoration: 'none' }}>
           Account &amp; billing
         </Link>
         <form action="/logout" method="POST" onSubmit={() => clearSyncKey()}>

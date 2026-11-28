@@ -40,7 +40,7 @@ function AccountMenu({ c, email, seed }: { c: Nav; email: string; seed: string }
       <div className="lang-m acc-m" role="menu">
         <span className="acc-mail">{email}</span>
         <Link className="lang-o" role="menuitem" href="/app" onClick={() => setOpen(false)}>{c.studio}</Link>
-        <Link className="lang-o" role="menuitem" href="/account" onClick={() => setOpen(false)}>{c.account}</Link>
+        <Link className="lang-o" role="menuitem" href="/app/you" onClick={() => setOpen(false)}>{c.account}</Link>
         <form action="/logout" method="POST" onSubmit={() => clearSyncKey()}>
           <button className="lang-o" role="menuitem" type="submit">{c.signOut}</button>
         </form>
@@ -56,7 +56,7 @@ export function MobileAccount({ c, close }: { c: Nav; close: () => void }) {
   if (!auth.userEmail) return <Link href="/login" onClick={close}>{c.signIn}</Link>;
   return (
     <>
-      <Link href="/account" onClick={close}>{c.account}</Link>
+      <Link href="/app/you" onClick={close}>{c.account}</Link>
       <form action="/logout" method="POST" onSubmit={() => clearSyncKey()}><button className="m-out" type="submit">{c.signOut}</button></form>
     </>
   );
