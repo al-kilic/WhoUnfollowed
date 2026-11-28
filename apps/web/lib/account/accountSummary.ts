@@ -1,6 +1,7 @@
 import 'server-only';
 import { eq } from 'drizzle-orm';
 import { db } from '@/lib/db/index';
+import { isEarlyLifetime } from '@/lib/ai/allowanceMath';
 import { aiProfiles, profiles, syncSettings } from '@/lib/db/schema';
 import { isProUser } from '@/lib/flags';
 import { isDevProPreview, devPreviewProfile } from '@/lib/auth/devProPreview';
@@ -55,7 +56,11 @@ export async function getAccountSummary(user: { id: string; email: string }): Pr
     // Lifetime purchase is the only Insider signal.
     isInsider: profile?.subscriptionStatus === 'active' && !!profile.lifetimePurchasedAt,
     hasProAi: !!proAi,
-    plan: proAi?.plan ?? null,
+    // Pro AI access decides the plan. Without it, the card still names what
+    // they paid for (old one-time Pro, comped, early Lifetime), never Free.
+    plan: proAi?.plan ?? (profile?.subscriptionStatus === 'active' && profile.lifetimePurchasedAt
+      ? (isEarlyLifetime(profile.lifetimePurchasedAt) ? 'earlyLifetime' : 'legacy')
+      : isPro ? 'legacy' : null),
     isSubscriber,
     periodEnd: isSubscriber ? iso(profile?.currentPeriodEnd) : null,
     cancelAt: isSubscriber ? iso(profile?.cancelAt) : null,

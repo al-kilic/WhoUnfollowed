@@ -39,5 +39,5 @@ export const getAuthState = cache(async (): Promise<AuthState> => {
   // buyer with the never-expiring trial left still has the coach.
   const access = user ? await getProAiAccess(user.id).catch(() => null) : null;
   const named = user ? await getProfileRow(user.id).catch(() => null) : null;
-  return { userId: user?.id ?? null, userEmail: user?.email ?? null, isPro, isInsider, hasProAi: !!access, isLegacyPro: access?.plan === 'legacy', displayName: named?.displayName ?? null };
+  return { userId: user?.id ?? null, userEmail: user?.email ?? null, isPro, isInsider, hasProAi: !!access, isLegacyPro: isPro && !access && !isInsider, displayName: named?.displayName ?? null };
 });

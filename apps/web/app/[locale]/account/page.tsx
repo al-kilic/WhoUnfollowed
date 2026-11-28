@@ -114,7 +114,7 @@ export default async function AccountPage({ params }: PageProps) {
   const card: CSSProperties = { background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12, padding: 20 };
   const sectionLabel: CSSProperties = { fontSize: 15, fontWeight: 600, color: 'var(--ink)', marginBottom: 10, letterSpacing: '-.01em' };
   const proAiPrices = proAiPricesAt();
-  const planName = isInsider ? c.pro : proAi && proAi.plan !== 'legacy' ? 'Pro AI' : isPro ? c.pro : c.free;
+  const planName = proAi ? 'Pro AI' : isPro ? c.pro : c.free;
 
   return (
     <StudioFrame>
@@ -171,7 +171,8 @@ export default async function AccountPage({ params }: PageProps) {
                       : c.onFreePlan}
                 </div>
               </div>
-              {paymentsEnabled && !isInsider && !isSubscriber ? (
+              {/* Everyone without Pro AI (Free, old Pro, comped, early Lifetime) gets the way to it. */}
+              {paymentsEnabled && !proAi ? (
                 <UpgradeLink source="account-plan" href={pricingHref} style={{ fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.onTeal, textDecoration: 'none', padding: '9px 18px', borderRadius: 10, background: T.teal, whiteSpace: 'nowrap' }}>
                   {c.upgradeToPro}
                 </UpgradeLink>

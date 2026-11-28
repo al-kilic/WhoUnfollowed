@@ -7,7 +7,7 @@ import { E2E_DATABASE_URL, E2E_URL } from '../env';
 // a given plan state and checking what the app stored.
 export const sql = postgres(E2E_DATABASE_URL, { max: 4, onnotice: () => {} });
 
-export type Plan = 'none' | 'monthly' | 'yearly' | 'lifetime' | 'earlyLifetime' | 'legacy' | 'lifetimeBeforeLaunch' | 'lifetimeAi';
+export type Plan = 'none' | 'monthly' | 'yearly' | 'lifetime' | 'earlyLifetime' | 'legacy' | 'lifetimeBeforeLaunch' | 'lifetimeAi' | 'comped';
 
 export interface TestUser { id: string; email: string; sessionId: string; customerId: string; subscriptionId: string }
 
@@ -30,12 +30,14 @@ export async function createUser(plan: Plan = 'none', opts: { locale?: string } 
     monthly: { subscription_status: 'active', stripe_customer_id: customerId, stripe_subscription_id: subscriptionId, subscription_interval: 'month', current_period_end: new Date(now + 30 * DAY) },
     yearly: { subscription_status: 'active', stripe_customer_id: customerId, stripe_subscription_id: subscriptionId, subscription_interval: 'year', current_period_end: new Date(now + 365 * DAY) },
     lifetime: { subscription_status: 'none', lifetime_purchased_at: new Date('2026-11-20T10:00:00Z') },
-    earlyLifetime: { subscription_status: 'none', lifetime_purchased_at: new Date('2026-10-01T10:00:00Z') },
+    earlyLifetime: { subscription_status: 'active', lifetime_purchased_at: new Date('2026-10-01T10:00:00Z') },
     legacy: { subscription_status: 'active', subscription_expires_at: new Date(now + 120 * DAY) },
     // As the Lifetime webhook writes it: active, no expiry. Before launch day no
     // AI; from launch day (LIFETIME_AI_FROM, 2026-11-28) the same $2.50 a month.
     lifetimeBeforeLaunch: { subscription_status: 'active', lifetime_purchased_at: new Date('2026-11-27T10:00:00Z') },
     lifetimeAi: { subscription_status: 'active', lifetime_purchased_at: new Date(now - 60_000) },
+    // Given Pro by hand: active, no end date, no purchase.
+    comped: { subscription_status: 'active' },
   };
   const row = { ...base, ...fields[plan] };
   await sql`insert into profiles ${sql(row)}`;
