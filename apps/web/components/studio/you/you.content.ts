@@ -21,7 +21,8 @@ export interface YouContent {
   avatar: { change: string; title: string; body: string; upload: string; remove: string; error: string; privacy: string; link: string };
   notifSub: string; checkins: string; checkinsBody: string; news: string;
   saved: string; savedList: string[]; never: string; neverList: string[]; sync: string; security: string; danger: string;
-  signedOut: string;
+  signedOut: string; signOut: string; signOutBody: string;
+  early: { keepTitle: string; keep: string[]; whyTitle: string; why: string; nextTitle: string; next: string; see: string };
 }
 
 const EN: YouContent = {
@@ -47,6 +48,16 @@ const EN: YouContent = {
   never: 'Never saved, never sent', neverList: ["Your followers' usernames", 'Your export ZIP file', 'Your Instagram password (we never ask)'],
   sync: 'Cloud sync', security: 'Password', danger: 'Delete account',
   signedOut: 'Sign in to see your settings. Results and Radar work without an account.',
+  early: {
+    keepTitle: 'What you keep, for life',
+    keep: ['Every Pro feature: Radar fixes, growth and people', 'Cloud sync across your devices', 'Unlimited exports and history'],
+    whyTitle: 'Why the coach is not part of Lifetime',
+    why: 'Reading your export and every Pro feature run in your browser, so they cost us nothing to keep forever. The coach is different: every answer runs on servers we pay for, every month. A one-time price cannot cover a cost that never stops, so the coach is a monthly plan with a fair limit.',
+    nextTitle: 'What happens now',
+    next: 'Nothing changes for you. You bought Lifetime before the coach existed, and we have not forgotten that. We are working on a thank-you for early Lifetime members and will email you when it is ready.',
+    see: 'See Pro AI',
+  },
+  signOut: 'Sign out', signOutBody: 'Signs you out on this browser.',
 };
 
 const ES: YouContent = {
@@ -72,6 +83,16 @@ const ES: YouContent = {
   never: 'Nunca se guarda ni se envía', neverList: ['Los usuarios de tus seguidores', 'El ZIP de tu exportación', 'Tu contraseña de Instagram (nunca la pedimos)'],
   sync: 'Sincronización en la nube', security: 'Contraseña', danger: 'Eliminar cuenta',
   signedOut: 'Inicia sesión para ver tus ajustes. Resultados y Radar funcionan sin cuenta.',
+  early: {
+    keepTitle: 'Lo que conservas, de por vida',
+    keep: ['Todas las funciones Pro: arreglos, crecimiento y personas en Radar', 'Sincronización en la nube entre tus dispositivos', 'Exportaciones e historial sin límite'],
+    whyTitle: 'Por qué el coach no está incluido en De por vida',
+    why: 'Leer tu exportación y todas las funciones Pro ocurre en tu navegador, así que mantenerlas para siempre no nos cuesta nada. El coach es distinto: cada respuesta corre en servidores que pagamos cada mes. Un pago único no puede cubrir un costo que nunca se detiene, por eso el coach es un plan mensual con un límite justo.',
+    nextTitle: 'Qué pasa ahora',
+    next: 'Para ti no cambia nada. Compraste De por vida antes de que existiera el coach, y no lo olvidamos. Estamos preparando un agradecimiento para los primeros miembros De por vida y te escribiremos cuando esté listo.',
+    see: 'Ver Pro AI',
+  },
+  signOut: 'Cerrar sesión', signOutBody: 'Cierra tu sesión en este navegador.',
 };
 
 const PT: YouContent = {
@@ -97,6 +118,16 @@ const PT: YouContent = {
   never: 'Nunca salvo, nunca enviado', neverList: ['Os usuários dos seus seguidores', 'O ZIP da sua exportação', 'Sua senha do Instagram (nunca pedimos)'],
   sync: 'Sincronização na nuvem', security: 'Senha', danger: 'Excluir conta',
   signedOut: 'Entre para ver suas configurações. Resultados e Radar funcionam sem conta.',
+  early: {
+    keepTitle: 'O que você mantém, para sempre',
+    keep: ['Todos os recursos Pro: correções, crescimento e pessoas no Radar', 'Sincronização na nuvem entre seus dispositivos', 'Exportações e histórico sem limite'],
+    whyTitle: 'Por que o coach não faz parte do Vitalício',
+    why: 'A leitura da sua exportação e todos os recursos Pro rodam no seu navegador, então mantê-los para sempre não nos custa nada. O coach é diferente: cada resposta roda em servidores que pagamos todo mês. Um pagamento único não cobre um custo que nunca para, por isso o coach é um plano mensal com um limite justo.',
+    nextTitle: 'O que acontece agora',
+    next: 'Nada muda para você. Você comprou o Vitalício antes de o coach existir, e não esquecemos disso. Estamos preparando um agradecimento para os primeiros membros Vitalício e vamos te enviar um email quando estiver pronto.',
+    see: 'Ver o Pro AI',
+  },
+  signOut: 'Sair', signOutBody: 'Encerra sua sessão neste navegador.',
 };
 
 export function getYouContent(locale: AppLocale): YouContent {

@@ -13,6 +13,7 @@ import { hasLocale } from 'next-intl';
 import { routing } from '@/i18n/routing';
 import { isDisposableEmail } from '@/lib/disposableEmail';
 import { enableReminders } from '@/lib/reminders/store';
+import { trackServerEvent } from '@/lib/umamiServer';
 
 const ARGON2_OPTIONS = {
   memoryCost: 19456,
@@ -87,6 +88,8 @@ export async function signupAction(formData: FormData) {
   }
 
   await createSession(user.id);
+  // Server-side, so ad blockers never hide a signup from the funnel.
+  void trackServerEvent('account-created', '/signup', { locale });
 
   // Create the sync salt now and return it so the client can derive the
   // cloud-sync encryption key from the password before navigating.

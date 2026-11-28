@@ -11,8 +11,8 @@ import { getStudioCoachContent } from './studioCoach.content';
 // Monthly coach use, the only place it shows: nothing in normal use, a soft
 // note near the end of the month (once per month), a clear line when it is
 // used up (with a refill offer only when one can be bought), a one-time
-// thank-you line for a gift, and the Insider offer for early Lifetime members
-// whose gift is used up. Never numbers or amounts.
+// thank-you line for a gift, and for early Lifetime members (no coach yet) a
+// plain line on what they keep, with a link to the full reason in billing. Never numbers or amounts.
 
 const seenKey = (what: string, id: string) => `wu-usage-${what}-${id}`;
 function wasSeen(key: string): boolean {
@@ -31,13 +31,13 @@ export function UsageNote({ compact = false }: { compact?: boolean }) {
   const [ready, setReady] = useState(false);
   useEffect(() => { setReady(true); }, []);
 
-  // Early Lifetime with the gift used up: no coach access, so no state either.
+  // Early Lifetime: no coach access (lib/ai/access.ts), so no state either.
   if (!hasProAi && auth.isInsider && !auth.hasProAi) {
     return (
       <div className="s-nextci" role="note">
         <Sparkles size={16} />
         <span style={{ flex: '1 1 220px' }}><b>{u.insiderTitle}.</b> {u.insiderBody}</span>
-        <Link href="/pricing" className="s-btn xs acc">{u.insiderCta}</Link>
+        <Link href="/app/you#billing" className="s-btn xs sec">{u.insiderCta}</Link>
       </div>
     );
   }

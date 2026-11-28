@@ -110,9 +110,9 @@ const EN: StudioCoachContent = {
     pace: "You've used a lot today. Your coach is back tomorrow.",
     gift: 'Your thank-you gift of coach use is in your account. It never expires.',
     dismiss: 'Got it',
-    insiderTitle: 'Your Insider price',
-    insiderBody: 'Your thank-you gift is used up. As an early Lifetime member, Pro AI monthly is 60% off, for life.',
-    insiderCta: 'See Pro AI',
+    insiderTitle: 'Your Lifetime plan',
+    insiderBody: 'You keep every Pro feature for life. The coach is a separate monthly plan, and we are working on a thank-you for early Lifetime members.',
+    insiderCta: 'What this means',
   },
 };
 
@@ -188,9 +188,9 @@ const ES: StudioCoachContent = {
     pace: 'Hoy usaste mucho tu coach. Vuelve mañana.',
     gift: 'Tu regalo de agradecimiento con uso del coach ya está en tu cuenta. No vence nunca.',
     dismiss: 'Entendido',
-    insiderTitle: 'Tu precio Insider',
-    insiderBody: 'Ya usaste tu regalo de agradecimiento. Como miembro Lifetime de los primeros, Pro AI mensual tiene un 60% de descuento, de por vida.',
-    insiderCta: 'Ver Pro AI',
+    insiderTitle: 'Tu plan De por vida',
+    insiderBody: 'Conservas todas las funciones Pro de por vida. El coach es un plan mensual aparte, y estamos preparando un agradecimiento para los primeros miembros De por vida.',
+    insiderCta: 'Qué significa',
   },
 };
 
@@ -266,9 +266,9 @@ const PT: StudioCoachContent = {
     pace: 'Você usou bastante o seu coach hoje. Ele volta amanhã.',
     gift: 'Seu presente de agradecimento com uso do coach já está na sua conta. Ele nunca expira.',
     dismiss: 'Entendi',
-    insiderTitle: 'Seu preço Insider',
-    insiderBody: 'Você já usou seu presente de agradecimento. Como membro Lifetime dos primeiros, o Pro AI mensal tem 60% de desconto, para sempre.',
-    insiderCta: 'Ver o Pro AI',
+    insiderTitle: 'Seu plano Vitalício',
+    insiderBody: 'Você mantém todos os recursos Pro para sempre. O coach é um plano mensal à parte, e estamos preparando um agradecimento para os primeiros membros Vitalício.',
+    insiderCta: 'O que isso significa',
   },
 };
 

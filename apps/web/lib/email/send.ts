@@ -61,7 +61,7 @@ export async function sendEmail(opts: {
 // globalThis so every route bundle shares one copy. They reset on a redeploy,
 // so the report labels them "since the last report or restart".
 interface EmailTally { sent: number; failed: number; limited: number; since: number }
-const g = globalThis as typeof globalThis & { __wuEmailTally?: EmailTally; __wuQuotaAlertAt?: number };
+const g = globalThis as typeof globalThis & { __wuEmailTally?: EmailTally; __wuQuotaAlertAt?: number; __wuEmailFailAlertAt?: number };
 function tally(): EmailTally {
   g.__wuEmailTally ??= { sent: 0, failed: 0, limited: 0, since: Date.now() };
   return g.__wuEmailTally;
@@ -84,7 +84,19 @@ const QUOTA_ALERT_EVERY_MS = 60 * 60 * 1000;
 function noteFailure(message: string, name?: string) {
   const t = tally();
   t.failed++;
-  if (!isLimitError(message, name)) return;
+  if (!isLimitError(message, name)) {
+    // Any other refusal (key, domain, bad address format) also stops signup
+    // codes and receipts: alert at most once an hour.
+    const now = Date.now();
+    if (g.__wuEmailFailAlertAt && now - g.__wuEmailFailAlertAt < QUOTA_ALERT_EVERY_MS) return;
+    g.__wuEmailFailAlertAt = now;
+    void sendTelegramMessage([
+      '📧 An email failed to send',
+      `Reason: ${escapeTelegramHtml(`${name ?? 'error'}: ${message}`.slice(0, 200))}`,
+      'Check Resend. More failures in the next hour are counted in the daily email report.',
+    ].join('\n')).catch(() => { /* never block a send on the alert */ });
+    return;
+  }
   t.limited++;
   // Alert right away, at most once an hour, so a day of refusals doesn't spam.
   const now = Date.now();

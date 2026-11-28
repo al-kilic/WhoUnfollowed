@@ -35,7 +35,7 @@ vi.mock('@/lib/telegram', async () => {
 vi.mock('@/lib/umamiServer', () => ({ trackServerEvent: m.trackServerEvent }));
 vi.mock('@/lib/email/send', () => ({ sendEmail: m.sendEmail }));
 
-import { handleProAiCheckout, handleSubscriptionEvent } from './proAi';
+import { handleProAiCheckout, handleSubscriptionEvent, subscriptionChange } from './proAi';
 
 const session = (over: Partial<Stripe.Checkout.Session>): Stripe.Checkout.Session => ({
   id: 'cs_1', subscription: 'sub_1', customer: 'cus_1', customer_email: 'Buyer@Example.com',
@@ -128,5 +128,23 @@ describe('handleSubscriptionEvent', () => {
     expect(m.sendTelegramMessage).not.toHaveBeenCalled();
     expect(err).toHaveBeenCalled();
     err.mockRestore();
+  });
+});
+
+describe('subscriptionChange', () => {
+  const sub = (o: Record<string, unknown>) => ({ status: 'active', cancel_at_period_end: false, cancel_at: null, ...o }) as unknown as Stripe.Subscription;
+  it('spots a scheduled and an undone cancellation', () => {
+    expect(subscriptionChange(sub({ cancel_at_period_end: true }), { cancel_at_period_end: false })).toBe('cancel_scheduled');
+    expect(subscriptionChange(sub({ cancel_at: 1830000000 }), { cancel_at: null })).toBe('cancel_scheduled');
+    expect(subscriptionChange(sub({}), { cancel_at_period_end: true })).toBe('cancel_undone');
+  });
+  it('spots a failed and a recovered payment', () => {
+    expect(subscriptionChange(sub({ status: 'past_due' }), { status: 'active' })).toBe('payment_failed');
+    expect(subscriptionChange(sub({ status: 'active' }), { status: 'past_due' })).toBe('payment_recovered');
+  });
+  it('ignores renewals and changes it does not report', () => {
+    expect(subscriptionChange(sub({}), null)).toBeNull();
+    expect(subscriptionChange(sub({}), { items: {} } as never)).toBeNull();
+    expect(subscriptionChange(sub({ status: 'past_due' }), { status: 'unpaid' })).toBeNull();
   });
 });

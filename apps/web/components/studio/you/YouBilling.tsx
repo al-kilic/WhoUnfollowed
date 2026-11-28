@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { CalendarCheck, Check, ExternalLink, Gift, Sparkles } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 import { openBillingPortal, syncAfterPortal } from '@/lib/billingPortalClient';
-import { startCheckout } from '@/lib/checkoutClient';
 import type { AiPlan } from '@/lib/ai/config';
 import { useStudio } from '../StudioContext';
 import { getYouContent } from './you.content';
@@ -32,23 +31,26 @@ export function YouBilling({ b }: { b: BillingInfo }) {
   useEffect(() => { void syncAfterPortal(() => router.refresh()); }, [router]);
   const fmt = (iso: string | null) => (iso ? new Date(iso).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' }) : null);
   const portal = async () => { setOpening(true); setFailed(false); if (!(await openBillingPortal(locale))) { setOpening(false); setFailed(true); } };
-  const insider = async () => { setOpening(true); setFailed(false); if (!(await startCheckout({ plan: 'pro_ai_monthly', placement: 'studio', locale }))) { setOpening(false); setFailed(true); } };
 
-  // Early Lifetime (bought before the coach existed): every Pro feature, a
-  // thank-you gift of coach use, and Pro AI monthly at the Insider price.
+  // Early Lifetime (bought before the coach existed): every Pro feature for
+  // life, no coach. No gift or Insider price shown yet (founder, 2026-11-29):
+  // the card says plainly what they keep, why the coach is separate and what's next.
   if (b.plan === 'earlyLifetime') {
+    const e = t.early;
     return (
       <div className="s-pad s-bill">
         <div className="s-planc2">
-          <span className="s-badge"><Sparkles size={12} />{k.earlyLifetime}</span>
-          <span className="s-sub-t" style={{ fontSize: 12.5 }}>{k.noRenew}</span>
-          {usage?.gift.left && <span className="s-row" style={{ gap: 8, fontSize: 13 }}><Gift size={14} />{k.giftNote}</span>}
-          {usage && <UsageBar v={usage} />}
+          <div className="s-row" style={{ justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
+            <span className="s-badge"><Sparkles size={12} />{k.earlyLifetime}</span>
+            <span className="s-sub-t" style={{ fontSize: 12.5 }}>{k.noRenew}</span>
+          </div>
+          <span style={{ fontWeight: 600 }}>{e.keepTitle}</span>
+          <div className="s-inc">{e.keep.map((x) => <span key={x}><Check size={14} />{x}</span>)}</div>
         </div>
-        <div className="s-col" style={{ gap: 10 }}>
-          <div className="s-yrup"><CalendarCheck size={18} /><div className="s-grow"><b>{k.insiderTitle}</b><span className="s-sub-t">{k.insiderBody}</span></div>
-            <button type="button" className="s-btn acc xs" disabled={opening} onClick={() => void insider()}>{k.insiderCta}</button></div>
-          {failed && <span role="alert" style={{ color: 'var(--bad)', fontSize: 13 }}>{t.billingError}</span>}
+        <div className="s-col" style={{ gap: 12 }}>
+          <div className="s-col" style={{ gap: 4 }}><b style={{ fontSize: 14 }}>{e.whyTitle}</b><span className="s-sub-t" style={{ fontSize: 13 }}>{e.why}</span></div>
+          <div className="s-col" style={{ gap: 4 }}><b style={{ fontSize: 14 }}>{e.nextTitle}</b><span className="s-sub-t" style={{ fontSize: 13 }}>{e.next}</span></div>
+          <Link href="/pricing" className="s-lnk">{e.see}</Link>
         </div>
       </div>
     );

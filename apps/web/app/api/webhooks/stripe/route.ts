@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
   // Pro AI is a recurring subscription: renewals, failed payments and
   // cancellations arrive as subscription events.
   if (event.type === 'customer.subscription.created' || event.type === 'customer.subscription.updated' || event.type === 'customer.subscription.deleted') {
-    await handleSubscriptionEvent(event.data.object, event.type);
+    await handleSubscriptionEvent(event.data.object, event.type, 'previous_attributes' in event.data ? (event.data.previous_attributes as Partial<typeof event.data.object> | undefined) : null);
     return NextResponse.json({ received: true });
   }
 

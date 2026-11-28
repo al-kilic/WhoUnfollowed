@@ -21,6 +21,7 @@ import { PlanReminders } from '../coach/PlanReminders';
 import { HoldToDelete } from './HoldToDelete';
 import { AvatarPicker } from './YouAvatar';
 import { MemorySummary } from './MemoryViews';
+import { SignOutButton } from './SignOutButton';
 
 // Studio > You > Settings, laid out like the prototype: a section list on the
 // left, one card per section. Everything that was on /account lives here too.
@@ -69,6 +70,7 @@ export function YouSettings({ locale, a }: { locale: AppLocale; a: AccountSummar
             <div className="s-pad" style={{ borderTop: '1px solid var(--line)' }}><YouName initial={a.displayName} locale={locale} /></div>
             <SetRow title={t.accounts} body={t.accountsBody}><YouAccounts /></SetRow>
             <SetRow title={t.language} body={t.languageBody}><YouLanguage /></SetRow>
+            <SetRow title={t.signOut} body={t.signOutBody}><SignOutButton label={t.signOut} /></SetRow>
           </section>
 
           <section className="s-card" id="coach">

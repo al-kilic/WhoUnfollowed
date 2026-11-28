@@ -5,6 +5,7 @@ import { validateRequest } from '@/lib/auth/session';
 import { checkRateLimit, clientIpFromXff } from '@/lib/auth/rate-limit';
 import { verifyEmailCode, generateAndSendVerification } from '@/lib/auth/verification';
 import type { AppLocale } from '@/i18n/routing';
+import { trackServerEvent } from '@/lib/umamiServer';
 
 export async function verifyEmailAction(formData: FormData) {
   const { user } = await validateRequest();
@@ -23,6 +24,7 @@ export async function verifyEmailAction(formData: FormData) {
 
   const res = await verifyEmailCode(user.id, code);
   if (!res.ok) return { error: 'invalid_or_expired_code' as const };
+  void trackServerEvent('email-verified', '/verify-email');
   return { ok: true as const };
 }
 

@@ -12,7 +12,7 @@ const cases: { plan: Plan; badge: RegExp; line: RegExp; card: RegExp }[] = [
   { plan: 'none', badge: /^FREE$/, line: /free plan/i, card: /\$\d+(\.\d+)? a month or/ },
   { plan: 'legacy', badge: /^PRO$/, line: /^Pro until /, card: /Your Pro features stay until/ },
   { plan: 'comped', badge: /^PRO$/, line: /./, card: /Pro AI adds the coach with generous monthly use/ },
-  { plan: 'earlyLifetime', badge: /^INSIDER$/, line: /./, card: /Pro AI monthly at 60% off, for life/ },
+  { plan: 'earlyLifetime', badge: /^INSIDER$/, line: /./, card: /What you keep, for life/ },
 ];
 
 for (const c of cases) {

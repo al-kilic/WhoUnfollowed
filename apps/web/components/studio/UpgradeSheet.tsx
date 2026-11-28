@@ -1,13 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Dialog } from '@base-ui/react/dialog';
 import { Check, Lock, Sparkles, X } from 'lucide-react';
 import { PRO_AI_PRICE_USD, perMonth } from '@/lib/pricing';
 import { startCheckout } from '@/lib/checkoutClient';
 import { useStudio } from './StudioContext';
 import type { SheetFeature } from './studio.content';
-import { getYouContent } from './you/you.content';
 
 type Billing = 'monthly' | 'yearly';
 
@@ -16,12 +15,10 @@ type Billing = 'monthly' | 'yearly';
 export function UpgradeSheet({ feature, onClose, container }: { feature: SheetFeature | null; onClose: () => void; container: HTMLElement | null }) {
   const { c, locale, tier, coach } = useStudio();
   const s = c.sheet;
-  // Early Lifetime members get 60% off monthly for life (applied at checkout
-  // when signed in), so the sheet says so and starts on monthly.
+  // Early Lifetime members see no Insider price here yet: their thank-you is
+  // announced later (founder, 2026-11-29). You > billing explains why.
   const insider = coach.state?.plan === 'earlyLifetime';
-  const ins = getYouContent(locale).bill;
   const [billing, setBilling] = useState<Billing>('yearly');
-  useEffect(() => { if (insider) setBilling('monthly'); }, [insider]);
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
 
@@ -48,7 +45,6 @@ export function UpgradeSheet({ feature, onClose, container }: { feature: SheetFe
                 {feature ? s.titles[feature] : ''}
               </Dialog.Title>
               {tier === 'pro' && !insider && <p className="s-sub-t" style={{ margin: '6px 0 0' }}>{s.legacyNote}</p>}
-              {insider && <p className="s-sub-t" style={{ margin: '6px 0 0' }}><b style={{ color: 'var(--ink)' }}>{ins.insiderTitle}.</b> {ins.insiderBody}</p>}
             </div>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 9 }}>
               {s.bullets.map((b) => (

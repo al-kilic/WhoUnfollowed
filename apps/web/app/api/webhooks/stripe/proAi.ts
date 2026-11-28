@@ -77,12 +77,49 @@ export async function handleProAiCheckout(session: Stripe.Checkout.Session): Pro
 
 // Renewals, plan changes, failed payments and cancellations all arrive as
 // subscription events; each one just re-copies the current state.
-export async function handleSubscriptionEvent(sub: Stripe.Subscription, type: string): Promise<void> {
+export async function handleSubscriptionEvent(sub: Stripe.Subscription, type: string, previous?: Partial<Stripe.Subscription> | null): Promise<void> {
   const found = await applySubscription(sub);
   if (!found) console.error(`[stripe webhook] ${type}: no profile for subscription ${sub.id}`);
-  if (type === 'customer.subscription.deleted' && found) {
-    await sendTelegramMessage(`👋 Pro AI subscription ended (${escapeTelegramHtml(sub.id)})`, 'sales').catch(() => null);
+  if (!found) return;
+  const change = type === 'customer.subscription.deleted' ? 'ended' : type === 'customer.subscription.updated' ? subscriptionChange(sub, previous ?? null) : null;
+  if (!change) return;
+  const email = await memberEmail(sub).catch(() => null);
+  const who = email ? ` ${escapeTelegramHtml(email)}` : '';
+  const end = sub.cancel_at ?? sub.items?.data?.[0]?.current_period_end ?? null;
+  const day = end ? new Date(end * 1000).toISOString().slice(0, 10) : '?';
+  const text = {
+    ended: `👋 Pro AI ended:${who} (${escapeTelegramHtml(sub.id)})`,
+    cancel_scheduled: `🔕 Pro AI cancel scheduled:${who}. Keeps access until ${day}.`,
+    cancel_undone: `↩️ Pro AI cancel undone:${who}. Renews again.`,
+    payment_failed: `💳 Pro AI renewal payment failed:${who}. Stripe retries; AI access pauses until it is paid.`,
+    payment_recovered: `✅ Pro AI payment recovered:${who}.`,
+  }[change];
+  await sendTelegramMessage(text, 'sales').catch(() => null);
+  void trackServerEvent('pro-ai-change', '/app/you', { change });
+}
+
+export type SubscriptionChange = 'cancel_scheduled' | 'cancel_undone' | 'payment_failed' | 'payment_recovered';
+
+// What a customer.subscription.updated event changed that the founder should
+// hear about. previous_attributes holds only the fields that changed.
+export function subscriptionChange(sub: Pick<Stripe.Subscription, 'status' | 'cancel_at_period_end' | 'cancel_at'>, previous: Partial<Pick<Stripe.Subscription, 'status' | 'cancel_at_period_end' | 'cancel_at'>> | null): SubscriptionChange | null {
+  if (!previous) return null;
+  const bad = (s: string | undefined) => s === 'past_due' || s === 'unpaid' || s === 'incomplete';
+  if ('status' in previous && previous.status !== sub.status) {
+    if (bad(sub.status) && !bad(previous.status)) return 'payment_failed';
+    if (sub.status === 'active' && bad(previous.status)) return 'payment_recovered';
   }
+  const wasCancelling = !!previous.cancel_at_period_end || !!previous.cancel_at;
+  const isCancelling = !!sub.cancel_at_period_end || !!sub.cancel_at;
+  if (('cancel_at_period_end' in previous || 'cancel_at' in previous) && wasCancelling !== isCancelling) return isCancelling ? 'cancel_scheduled' : 'cancel_undone';
+  return null;
+}
+
+async function memberEmail(sub: Stripe.Subscription): Promise<string | null> {
+  const row = await db.query.profiles.findFirst({ where: eq(profiles.stripeSubscriptionId, sub.id), columns: { userId: true } });
+  if (!row) return null;
+  const user = await db.query.users.findFirst({ where: eq(users.id, row.userId), columns: { email: true } });
+  return user?.email ?? null;
 }
 
 // What the confirmation email states: what Stripe charged today, what each

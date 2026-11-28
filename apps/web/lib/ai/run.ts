@@ -7,6 +7,8 @@ import { worstCaseUsd } from './costGuard';
 import { capFromEnv, createSpendCap, DEFAULT_DAILY_CAP_USD } from './spendCap';
 import { logUsage, usageSource } from './usageLog';
 import { sendTelegramMessage } from '@/lib/telegram';
+import { trackServerEvent } from '@/lib/umamiServer';
+import { createFailureAlerter } from './failureAlert';
 
 // Any zod schema fits this; the web app reaches zod only through @ig-tracker/core.
 export interface Validator<T> {
@@ -48,7 +50,7 @@ function underRateLimit(userId: string, now: number): boolean {
   return true;
 }
 
-export async function runAiAction<T>(opts: {
+async function runInner<T>(note: { detail: string }, opts: {
   userId: string;
   action: AiAction;
   // The shared rules (baseRules), the same for every action.
@@ -77,11 +79,12 @@ export async function runAiAction<T>(opts: {
   const worst = worstCaseUsd(ratesFor(cfg.model), { texts, images, maxTokens: cfg.maxTokens });
   if (worst === null) {
     console.error(`[ai] ${opts.action}: no price for ${cfg.model}, refusing the call`);
+    note.detail = `no price for ${cfg.model}`;
     return { ok: false, reason: 'failed' };
   }
   const mock = isMockProvider();
   // Production without a provider key: refuse instead of failing after a hold.
-  if (!mock && providerFrom() === 'mock') return { ok: false, reason: 'failed' };
+  if (!mock && providerFrom() === 'mock') { note.detail = 'no provider key on the server'; return { ok: false, reason: 'failed' }; }
   if (!underRateLimit(opts.userId, Date.now())) return { ok: false, reason: 'busy' };
   // 3. The global brake, counting this call's worst case.
   if (!mock && (await spendCap.check(opts.userId, new Date(), worst)) !== 'ok') return { ok: false, reason: 'paused' };
@@ -128,6 +131,7 @@ export async function runAiAction<T>(opts: {
         spendCap.record(hold.usd);
       }
       console.error(`[ai] ${opts.action} failed: ${err instanceof Error ? err.message : 'unknown'}`);
+      note.detail = err instanceof AiProviderError && err.status !== null ? `provider error ${err.status}` : 'no answer (timeout or dropped)';
       return { ok: false, reason: 'failed' };
     }
     // No cost figure: count the whole worst case, never zero.
@@ -145,7 +149,24 @@ export async function runAiAction<T>(opts: {
     if (checked.success) return { ok: true, data: checked.data, balance: 0, mocked: res.mocked };
   }
   console.error(`[ai] ${opts.action} failed: answer did not match the schema twice`);
+  note.detail = 'answer did not match the format twice';
   return { ok: false, reason: 'failed' };
+}
+
+// Every AI request goes through here: the call itself (runInner), then a
+// server-side Umami event per request (action and result, no user data) and
+// the Telegram alert when the coach starts or stops failing.
+const failures = createFailureAlerter({ quietMs: 30 * 60_000, send: (text) => void sendTelegramMessage(text, 'alerts').catch(() => null) });
+
+export async function runAiAction<T>(opts: Parameters<typeof runInner<T>>[1]): Promise<AiRunResult<T>> {
+  const note = { detail: 'unknown' };
+  const res = await runInner(note, opts);
+  const result = res.ok ? 'ok' : res.reason;
+  if (!res.ok && res.reason === 'failed') failures.failed(opts.action, note.detail, Date.now());
+  else if (res.ok && !res.mocked) failures.succeeded(Date.now());
+  // Never from mock mode (local, e2e): those are not real requests.
+  if (!isMockProvider()) void trackServerEvent('ai-request', '/app', { action: opts.action, result });
+  return res;
 }
 
 // A failed settle leaves the whole hold in place: the member keeps less, never

@@ -15,12 +15,21 @@ const UMAMI_HOST = (() => {
 })();
 const UMAMI_WEBSITE_ID = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID ?? '380314e5-fc79-480f-9483-d5ddded7ad59';
 
+// Staging and local runs fall back to the production website id above, so a
+// server event from anywhere but whounfollowed.co would count as a real visit.
+// Production leaves NEXT_PUBLIC_SITE_URL unset (or sets it to the live site).
+export function isProductionSite(env: Record<string, string | undefined> = process.env): boolean {
+  const raw = env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (!raw) return env.NODE_ENV === 'production';
+  try { return new URL(raw).hostname === 'whounfollowed.co'; } catch { return false; }
+}
+
 export async function trackServerEvent(
   name: string,
   url: string,
   data?: Record<string, string>,
 ): Promise<void> {
-  if (!UMAMI_WEBSITE_ID) return;
+  if (!UMAMI_WEBSITE_ID || !isProductionSite()) return;
   try {
     await fetch(`${UMAMI_HOST}/api/send`, {
       method: 'POST',
