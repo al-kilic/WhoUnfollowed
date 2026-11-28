@@ -37,6 +37,27 @@ const { sendDuePlannerEmails } = vi.hoisted(() => ({ sendDuePlannerEmails: vi.fn
 vi.mock('@/lib/planner/send', () => ({ sendDuePlannerEmails, plannerDailyCap: () => 15 }));
 const { sendDueWraps } = vi.hoisted(() => ({ sendDueWraps: vi.fn().mockResolvedValue({ sent: 0, failed: 0 }) }));
 vi.mock('@/lib/wrap/send', () => ({ sendDueWraps, wrapDailyCap: () => 15 }));
+const { sendDueCheckins, countDueCheckins } = vi.hoisted(() => ({
+  sendDueCheckins: vi.fn().mockResolvedValue({ sent: 0, failed: 0 }),
+  countDueCheckins: vi.fn().mockResolvedValue(0),
+}));
+vi.mock('@/lib/ai/checkins', () => ({ sendDueCheckins, countDueCheckins, checkinDailyCap: () => 15 }));
+// Without this the test depends on whether a brief exists in content/briefs.
+vi.mock('@/lib/ai/briefEmail', () => ({
+  sendDueBriefs: vi.fn().mockResolvedValue({ sent: 0, failed: 0 }),
+  countDueBriefs: vi.fn().mockResolvedValue(0),
+  briefDailyCap: () => 30,
+}));
+vi.mock('@/lib/ai/postingReminder', () => ({
+  sendDuePostingReminders: vi.fn().mockResolvedValue({ sent: 0, failed: 0 }),
+  countDuePostingReminders: vi.fn().mockResolvedValue(0),
+  postingReminderDailyCap: () => 50,
+}));
+
+// The AI health pass reads the database; here it stays quiet unless a test says otherwise.
+const { runAiHealthPass } = vi.hoisted(() => ({ runAiHealthPass: vi.fn().mockResolvedValue(null) }));
+vi.mock('@/lib/ai/aiHealthLoad', () => ({ runAiHealthPass }));
+vi.mock('@/lib/email/renewalSend', () => ({ sendDueRenewalReminders: vi.fn().mockResolvedValue({ due: 0, sent: 0, failed: 0, skipped: 0 }) }));
 
 import { POST } from './route';
 
@@ -200,6 +221,17 @@ describe('POST /api/cron/unlock-expiry planner pass', () => {
     const text = sendTelegramMessage.mock.calls.at(-1)![0] as string;
     expect(text).toContain('some emails did not go out');
     expect(text).toContain('4 3-month wraps held back by the daily limit');
+    expect(sendTelegramMessage.mock.calls.at(-1)![1]).toBe('alerts');
+  });
+
+  it('stays silent on a day with nothing sent and nothing wrong', async () => {
+    sendDueReminders.mockResolvedValue({ sent: 0, failed: 0 });
+    sendDuePlannerEmails.mockResolvedValue({ sent: 0, failed: 0, stopped: 0 });
+    sendDueWraps.mockResolvedValue({ sent: 0, failed: 0 });
+    sendTelegramMessage.mockClear();
+    const res = await POST(makeRequest());
+    expect((await res.json()).alert).toBe(false);
+    expect(sendTelegramMessage.mock.calls.filter((c) => String(c[0]).includes('Email report'))).toHaveLength(0);
   });
 
   it('sends a calm report when everything went out', async () => {
@@ -211,9 +243,32 @@ describe('POST /api/cron/unlock-expiry planner pass', () => {
     expect(sendTelegramMessage.mock.calls.at(-1)![0]).toContain('📧 <b>Email report</b>');
   });
 
+  it('sends goal check-ins from what is left of the budget and reports them', async () => {
+    sendDueReminders.mockResolvedValue({ sent: 2, failed: 0 });
+    sendDuePlannerEmails.mockResolvedValue({ sent: 0, failed: 0, stopped: 0 });
+    sendDueWraps.mockResolvedValue({ sent: 0, failed: 0 });
+    sendDueCheckins.mockResolvedValueOnce({ sent: 3, failed: 0 });
+    const res = await POST(makeRequest());
+    expect((await res.json()).checkins).toEqual({ sent: 3, failed: 0 });
+    expect(sendDueCheckins).toHaveBeenCalledWith(expect.any(Date), 15);
+    expect(sendTelegramMessage.mock.calls.at(-1)![0]).toContain('Goal check-ins: 3 sent');
+  });
+
   it('alerts on Telegram when email is not configured', async () => {
     isEmailConfigured.mockReturnValue(false);
     await POST(makeRequest());
     expect(sendTelegramMessage.mock.calls.at(-1)![0]).toContain('nothing sent today');
+  });
+
+  it('adds the AI section to the daily report, and still answers when the AI pass fails', async () => {
+    runAiHealthPass.mockResolvedValueOnce({ lines: ['AI in the last 24h: <b>$0.120</b> over 9 calls, 2 members'], quiet: false, alerts: 0 });
+    sendTelegramMessage.mockClear();
+    const res = await POST(makeRequest());
+    expect(res.status).toBe(200);
+    const text = String(sendTelegramMessage.mock.calls.at(-1)![0]);
+    expect(text).toContain('🤖 <b>AI</b>');
+    expect(text).toContain('over 9 calls');
+    runAiHealthPass.mockResolvedValueOnce(null);
+    expect((await POST(makeRequest())).status).toBe(200);
   });
 });

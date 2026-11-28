@@ -5,7 +5,7 @@ import type { Account } from '@ig-tracker/core';
 import { T } from '@/components/landing/tokens';
 import { track, Events } from '@/lib/analytics';
 import { startCheckout, type CheckoutPlacement } from '@/lib/checkoutClient';
-import { unlockPricesAt, isLaunchPricing, STANDARD_UNLOCK_PRICE_USD } from '@/lib/pricing';
+import { proAiPricesAt, isLaunchPricing, STANDARD_PRO_AI_PRICE_USD } from '@/lib/pricing';
 import type { AppLocale } from '@/i18n/routing';
 import { getUnfollowerRevealContent } from './unfollowerReveal.content';
 
@@ -55,7 +55,7 @@ export function UnfollowerReveal({ lostFollowers, newFollowersCount, sinceLabel,
   children?: React.ReactNode;
 }) {
   const c = getUnfollowerRevealContent(locale);
-  const [loading, setLoading] = useState<'yearly' | 'monthly' | null>(null);
+  const [loading, setLoading] = useState<'pro_ai_yearly' | 'pro_ai_monthly' | null>(null);
   const [error, setError] = useState(false);
   const n = lostFollowers.length;
 
@@ -66,11 +66,11 @@ export function UnfollowerReveal({ lostFollowers, newFollowersCount, sinceLabel,
   }, [lostFollowers, n]);
   const hiddenCount = n - visible.length;
   const [placeholders] = useState(() => placeholderHandles(Math.min(4, hiddenCount)));
-  const prices = unlockPricesAt();
+  const prices = proAiPricesAt();
 
   useEffect(() => { track(Events.revealView, { count_bucket: countBucket(n), placement }); }, [n, placement]);
 
-  async function buy(plan: 'yearly' | 'monthly') {
+  async function buy(plan: 'pro_ai_yearly' | 'pro_ai_monthly') {
     setLoading(plan);
     setError(false);
     onCheckoutStart?.();
@@ -123,26 +123,26 @@ export function UnfollowerReveal({ lostFollowers, newFollowersCount, sinceLabel,
       {n > 0 && (
         <div style={{ display: 'grid', gap: 8 }}>
           <button
-            onClick={() => void buy('yearly')}
+            onClick={() => void buy('pro_ai_yearly')}
             disabled={loading !== null}
             style={{
-              width: '100%', padding: '13px 18px', borderRadius: 12, border: 'none', background: T.teal, color: T.cream,
+              width: '100%', padding: '13px 18px', borderRadius: 12, border: 'none', background: T.teal, color: T.onTeal,
               fontSize: 15, fontWeight: 600, fontFamily: T.sans, cursor: loading ? 'not-allowed' : 'pointer',
               opacity: loading ? 0.7 : 1, boxShadow: '0 8px 24px rgba(var(--t-accent-rgb),0.3)',
             }}
           >
-            {loading === 'yearly' ? c.redirecting : fill(c.cta, { price: `$${prices.yearly}` })}
+            {loading === 'pro_ai_yearly' ? c.redirecting : fill(c.cta, { price: `$${prices.yearly}` })}
           </button>
           <button
-            onClick={() => void buy('monthly')}
+            onClick={() => void buy('pro_ai_monthly')}
             disabled={loading !== null}
             style={{ background: 'none', border: 'none', padding: 0, fontSize: 13, color: T.inkDim, fontFamily: T.sans, textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer', justifySelf: 'center' }}
           >
-            {loading === 'monthly' ? c.redirecting : fill(c.monthly, { price: `$${prices.monthly}` })}
+            {loading === 'pro_ai_monthly' ? c.redirecting : fill(c.monthly, { price: `$${prices.monthly}` })}
           </button>
           {isLaunchPricing() && (
             <span style={{ fontSize: 12, fontWeight: 600, color: T.terraText, textAlign: 'center' }}>
-              {fill(c.launch, { std: `$${STANDARD_UNLOCK_PRICE_USD.yearly}` })}
+              {fill(c.launch, { std: `$${STANDARD_PRO_AI_PRICE_USD.yearly}` })}
             </span>
           )}
           {error && <p role="alert" style={{ margin: 0, fontSize: 12.5, color: T.terraText, textAlign: 'center' }}>{c.error}</p>}

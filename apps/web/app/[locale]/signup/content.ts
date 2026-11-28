@@ -22,7 +22,7 @@ export interface SignupContent {
 
 const EN: SignupContent = {
   title: 'Create your account',
-  subtitle: 'Takes 10 seconds. No credit card, ever, unless you choose Pro.',
+  subtitle: 'Takes 10 seconds. No credit card, ever, unless you choose Pro AI.',
   alreadyHavePre: 'Already have an account?',
   logIn: 'Log in',
   csvBullet: 'Unlimited CSV exports of every list, non-followers, fans, and mutuals',
@@ -45,7 +45,7 @@ const EN: SignupContent = {
 
 const ES: SignupContent = {
   title: 'Crea tu cuenta',
-  subtitle: 'Toma 10 segundos. Sin tarjeta de crédito, nunca, a menos que elijas Pro.',
+  subtitle: 'Toma 10 segundos. Sin tarjeta de crédito, nunca, a menos que elijas Pro AI.',
   alreadyHavePre: '¿Ya tienes una cuenta?',
   logIn: 'Iniciar sesión',
   csvBullet: 'Exportaciones CSV ilimitadas de cada lista: quienes no te siguen, fans y amigos mutuos',
@@ -68,7 +68,7 @@ const ES: SignupContent = {
 
 const PT: SignupContent = {
   title: 'Crie sua conta',
-  subtitle: 'Leva 10 segundos. Sem cartão de crédito, nunca, a menos que escolha o Pro.',
+  subtitle: 'Leva 10 segundos. Sem cartão de crédito, nunca, a menos que escolha o Pro AI.',
   alreadyHavePre: 'Já tem uma conta?',
   logIn: 'Entrar',
   csvBullet: 'Exportações CSV ilimitadas de cada lista: quem não te segue de volta, fãs e seguidos mútuos',

@@ -3,20 +3,22 @@
 import React from 'react';
 import Link from 'next/link';
 import { T } from '@/components/landing/tokens';
-import { SiteNav } from '@/components/landing/SiteNav';
-import { LandingFooter } from '@/components/landing/FinalCTA';
+import { SiteHeader } from '@/components/site/SiteHeader';
+import { SiteFooter } from '@/components/site/SiteFooter';
 import type { ResolvedComparison } from '@/app/compare/comparisons';
 import { Icon } from '@/components/landing/atoms';
 import type { CompareDetailUiContent } from './detailContent';
+import type { CompareFaq } from './faq';
 
-export function CompareDetailContent({ c, others, ui }: {
+export function CompareDetailContent({ c, others, ui, faq }: {
   c: ResolvedComparison;
   others: ResolvedComparison[];
   ui: CompareDetailUiContent;
+  faq: CompareFaq[];
 }) {
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <SiteNav />
+      <SiteHeader />
 
       <main className="px-4 sm:px-8" style={{ maxWidth: 720, margin: '0 auto', paddingTop: 56, paddingBottom: 80 }}>
 
@@ -50,7 +52,7 @@ export function CompareDetailContent({ c, others, ui }: {
           <div className="grid grid-cols-3" style={{ background: T.surface1, borderBottom: `1px solid ${T.border1}` }}>
             <div style={{ padding: '12px 16px', fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.08em' }}>{ui.featureHeader}</div>
             <div style={{ padding: '12px 16px', fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.08em', textAlign: 'center', borderLeft: `1px solid ${T.border1}` }}>WhoUnfollowed</div>
-            <div style={{ padding: '12px 16px', fontSize: 11, color: T.terra, fontFamily: T.mono, letterSpacing: '0.08em', textAlign: 'center', borderLeft: `1px solid ${T.border1}` }}>{c.competitorName}</div>
+            <div style={{ padding: '12px 16px', fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.08em', textAlign: 'center', borderLeft: `1px solid ${T.border1}` }}>{c.competitorName}</div>
           </div>
           {c.rows.map((row, i) => {
             const RowIcon = Icon[row.icon];
@@ -86,6 +88,23 @@ export function CompareDetailContent({ c, others, ui }: {
           <p style={{ fontSize: 15, color: T.ink, lineHeight: 1.65, margin: 0 }}>{c.verdict}</p>
         </div>
 
+        {/* FAQ: the questions people ask about this app, matching the FAQPage markup */}
+        <section style={{ marginBottom: 32 }}>
+          <div style={{ fontSize: 10, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>{ui.faqLabel}</div>
+          {faq.map((f) => (
+            <div key={f.q} style={{ marginBottom: 16 }}>
+              <h2 style={{ fontSize: 16, color: T.ink, margin: '0 0 6px', fontWeight: 600 }}>{f.q}</h2>
+              <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.65, margin: 0 }}>{f.a}</p>
+            </div>
+          ))}
+        </section>
+
+        {/* Mobile app: in development; the web app works on a phone today */}
+        <div style={{ marginBottom: 32, padding: '18px 20px', borderRadius: 14, background: T.surface1, border: `1px solid ${T.border1}` }}>
+          <div style={{ fontSize: 10, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 8 }}>{ui.mobileTitle}</div>
+          <p style={{ fontSize: 14, color: T.inkDim, lineHeight: 1.65, margin: 0 }}>{ui.mobileBody}</p>
+        </div>
+
         {/* Related guide */}
         <div style={{ marginBottom: 40, padding: '18px 20px', borderRadius: 14, background: T.surface1, border: `1px solid ${T.border1}` }}>
           <div style={{ fontSize: 10, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 8 }}>{ui.relatedReadingLabel}</div>
@@ -97,7 +116,7 @@ export function CompareDetailContent({ c, others, ui }: {
         {/* CTA */}
         <div style={{ padding: '24px', borderRadius: 16, background: 'rgba(2,136,143,0.06)', border: '1px solid rgba(2,136,143,0.2)', textAlign: 'center', marginBottom: 48 }}>
           <p style={{ fontSize: 14, color: T.inkDim, marginBottom: 16 }}>{c.cta}</p>
-          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '11px 22px', borderRadius: 11, background: T.teal, color: T.cream, fontSize: 13, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans, boxShadow: `0 6px 20px ${T.tealGlow}` }}>
+          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '11px 22px', borderRadius: 11, background: T.teal, color: T.onTeal, fontSize: 13, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans, boxShadow: `0 6px 20px ${T.tealGlow}` }}>
             {ui.ctaButton}
           </Link>
         </div>
@@ -120,7 +139,7 @@ export function CompareDetailContent({ c, others, ui }: {
         )}
       </main>
 
-      <LandingFooter />
+      <SiteFooter />
     </div>
   );
 }

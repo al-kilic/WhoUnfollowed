@@ -11,7 +11,7 @@ export const routing = defineRouting({
   // the language switcher (components/LanguageSwitcher.tsx) is permanent on
   // every page, including unmigrated ones, so a wrong guess is always one
   // click from being undone. Only fires for requests that actually reach
-  // intlMiddleware — i.e. the paths in middleware.ts's matcher, which is
+  // intlMiddleware — i.e. the paths in proxy.ts's matcher, which is
   // the same set as i18n/localizedPaths.ts. Persisted via next-intl's
   // NEXT_LOCALE cookie after the first detection or an explicit switch, so
   // it doesn't re-negotiate every visit.

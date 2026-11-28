@@ -152,7 +152,7 @@ describe('POST /api/webhooks/stripe', () => {
     const setArg = updateSet.mock.calls[0]![0];
     expect(setArg.subscriptionExpiresAt!.getTime()).toBeGreaterThan(currentExpiry.getTime());
     expect(insert).not.toHaveBeenCalled();
-    expect(sendTelegramMessage).toHaveBeenCalledWith(expect.stringContaining('renewed'));
+    expect(sendTelegramMessage).toHaveBeenCalledWith(expect.stringContaining('renewed'), 'sales');
     expect(trackServerEvent).toHaveBeenCalled();
     // Locale from Stripe metadata flows into the confirmation email's copy.
     expect(sendEmail).toHaveBeenCalledWith(expect.objectContaining({
@@ -183,7 +183,7 @@ describe('POST /api/webhooks/stripe', () => {
     expect(insert).toHaveBeenCalledTimes(2); // users, then profiles
     expect(insertReturning).toHaveBeenCalled();
     expect(update).not.toHaveBeenCalled();
-    expect(sendTelegramMessage).toHaveBeenCalledWith(expect.stringContaining('New Pro customer'));
+    expect(sendTelegramMessage).toHaveBeenCalledWith(expect.stringContaining('New Pro customer'), 'sales');
     expect(sendEmail).toHaveBeenCalledWith(expect.objectContaining({
       to: 'brandnew@example.com',
       subject: expect.stringContaining('Welcome to WhoUnfollowed Pro'),
@@ -214,7 +214,7 @@ describe('POST /api/webhooks/stripe', () => {
     expect(res.status).toBe(200);
     expect(insert).not.toHaveBeenCalled();
     expect(update).toHaveBeenCalledTimes(1);
-    expect(sendTelegramMessage).toHaveBeenCalledWith(expect.stringContaining('renewed'));
+    expect(sendTelegramMessage).toHaveBeenCalledWith(expect.stringContaining('renewed'), 'sales');
     expect(sendEmail).toHaveBeenCalledWith(expect.objectContaining({
       to: 'already-has-account@example.com',
       subject: expect.stringContaining('Welcome to WhoUnfollowed Pro'),
@@ -275,7 +275,7 @@ describe('POST /api/webhooks/stripe', () => {
       expect(setArg.expiryReminderSentAt).toBeNull();
       expect(setArg.marketingOptIn).toBeUndefined();
       expect(profilesFindFirst).not.toHaveBeenCalled();
-      expect(sendTelegramMessage).toHaveBeenCalledWith(expect.stringContaining('Insider'));
+      expect(sendTelegramMessage).toHaveBeenCalledWith(expect.stringContaining('Insider'), 'sales');
       expect(sendEmail).toHaveBeenCalledWith(expect.objectContaining({
         to: 'insider@example.com',
         subject: expect.stringContaining('Bem-vindo'),
@@ -305,7 +305,7 @@ describe('POST /api/webhooks/stripe', () => {
       constructEvent.mockReturnValue(lifetimeEvent());
       await POST(makeRequest('{}'));
       expect(insert).toHaveBeenCalledTimes(2);
-      expect(sendTelegramMessage).toHaveBeenCalledWith(expect.stringContaining('New account: Yes'));
+      expect(sendTelegramMessage).toHaveBeenCalledWith(expect.stringContaining('New account: Yes'), 'sales');
     });
 
     it('does nothing when there is neither a userId nor an email', async () => {

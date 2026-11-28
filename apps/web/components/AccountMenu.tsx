@@ -141,7 +141,7 @@ function GoProButton() {
                 padding: '6px 12px',
                 borderRadius: 7,
                 background: T.teal,
-                color: T.cream,
+                color: T.onTeal,
                 fontSize: 12,
                 fontWeight: 700,
                 fontFamily: T.sans,

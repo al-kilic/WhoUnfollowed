@@ -3,8 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { T } from '@/components/landing/tokens';
-import { SiteNav } from '@/components/landing/SiteNav';
-import { LandingFooter } from '@/components/landing/FinalCTA';
+import { SiteHeader } from '@/components/site/SiteHeader';
+import { SiteFooter } from '@/components/site/SiteFooter';
 import { Icon } from '@/components/landing/atoms';
 import type { AboutContent as AboutContentData } from './content';
 
@@ -18,7 +18,7 @@ export function AboutContent({ content }: { content: AboutContentData }) {
   const appsComing = APPS_META.map((meta, i) => ({ ...meta, desc: content.apps[i]!.desc }));
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <SiteNav />
+      <SiteHeader />
 
       <main className="px-4 sm:px-8" style={{ maxWidth: 760, margin: '0 auto', paddingTop: 64, paddingBottom: 96 }}>
 
@@ -47,10 +47,9 @@ export function AboutContent({ content }: { content: AboutContentData }) {
             {/* Avatar placeholder */}
             <div style={{
               width: 64, height: 64, borderRadius: 16, flexShrink: 0,
-              background: `linear-gradient(135deg, ${T.teal} 0%, #014d52 100%)`,
+              background: T.tealMid,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 24, fontFamily: T.serif, color: T.cream,
-              boxShadow: `0 8px 24px ${T.tealGlow}`,
+              fontSize: 24, fontFamily: T.serif, color: T.onTeal,
             }}>
               A
             </div>
@@ -123,7 +122,7 @@ export function AboutContent({ content }: { content: AboutContentData }) {
                   {/* Blurred layer for soon apps */}
                   {soon && (
                     <div style={{ position: 'absolute', inset: 0, borderRadius: 14, backdropFilter: 'blur(7px)', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <span style={{ fontSize: 10, fontFamily: T.mono, padding: '4px 12px', borderRadius: 20, letterSpacing: '0.14em', fontWeight: 800, textTransform: 'uppercase', background: T.terra, color: T.cream, boxShadow: '0 2px 12px rgba(168,75,47,0.4)' }}>
+                      <span style={{ fontSize: 10, fontFamily: T.mono, padding: '4px 12px', borderRadius: 20, letterSpacing: '0.14em', fontWeight: 800, textTransform: 'uppercase', background: T.terra, color: T.onTeal, boxShadow: '0 2px 12px rgba(168,75,47,0.4)' }}>
                         {content.soonBadge}
                       </span>
                     </div>
@@ -156,7 +155,7 @@ export function AboutContent({ content }: { content: AboutContentData }) {
         <div style={{ padding: '32px', borderRadius: 18, background: T.bgCard, border: `1px solid ${T.border1}`, textAlign: 'center' }}>
           <p style={{ fontFamily: T.serif, fontSize: 18, fontStyle: 'italic', color: T.inkDim, marginBottom: 16 }}>{content.ctaQuote}</p>
           <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '11px 22px', borderRadius: 11, background: T.teal, color: T.cream, fontSize: 13, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans, boxShadow: `0 6px 20px ${T.tealGlow}` }}>
+            <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '11px 22px', borderRadius: 11, background: T.teal, color: T.onTeal, fontSize: 13, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans, boxShadow: `0 6px 20px ${T.tealGlow}` }}>
               {content.ctaTryFree}
             </Link>
             <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '11px 22px', borderRadius: 11, background: T.surface1, color: T.inkDim, fontSize: 13, fontWeight: 500, textDecoration: 'none', fontFamily: T.sans, border: `1px solid ${T.border2}` }}>
@@ -173,7 +172,7 @@ export function AboutContent({ content }: { content: AboutContentData }) {
         </div>
       </main>
 
-      <LandingFooter />
+      <SiteFooter />
     </div>
   );
 }

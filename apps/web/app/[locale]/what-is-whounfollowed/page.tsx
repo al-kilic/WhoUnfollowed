@@ -7,6 +7,7 @@ import { OG_LOCALE, ogAlternateLocales } from '@/i18n/ogLocale';
 import { getPathname } from '@/i18n/navigation';
 import { WhatIsContent } from './WhatIsContent';
 import { getWhatIsContent } from './content';
+import { SitePage } from '@/components/landing/SitePage';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
@@ -85,7 +86,7 @@ export default async function WhatIsWhoUnfollowedPage({ params }: PageProps) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <WhatIsContent content={content} />
+      <SitePage><WhatIsContent content={content} /></SitePage>
     </>
   );
 }

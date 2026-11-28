@@ -101,12 +101,12 @@ describe('priceIdForLifetime', () => {
   afterEach(() => { process.env = ORIGINAL_ENV; });
 
   it('returns the lifetime price id when set', () => {
-    process.env.STRIPE_PRICE_LIFETIME = 'price_lifetime_1';
+    process.env.STRIPE_PRICE_LIFETIME_499 = 'price_lifetime_1';
     expect(priceIdForLifetime()).toBe('price_lifetime_1');
   });
 
   it('returns null when unset (the kill switch that hides the tier)', () => {
-    delete process.env.STRIPE_PRICE_LIFETIME;
+    delete process.env.STRIPE_PRICE_LIFETIME_499;
     expect(priceIdForLifetime()).toBeNull();
   });
 });

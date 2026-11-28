@@ -9,7 +9,7 @@ import { usePlannerSync } from '@/hooks/usePlannerSync';
 import { PLATFORM_NAME, profileHref, type Platform } from '@/lib/platform';
 import { getPlannerContent } from './planner.content';
 import { Events, sizeBucketOf, track } from '@/lib/analytics';
-import { ToolCard, ToolLabel, ToolSub, ToolTitle, fill, fmt, toolButton, toolButtonPrimary } from './ToolCard';
+import { ToolCard, ToolLabel, ToolSub, ToolTitle, fill, fmt, toolButton, toolButtonPrimary, useToolStudio } from './ToolCard';
 
 const PACES: Pace[] = ['gentle', 'steady', 'quick'];
 
@@ -17,6 +17,7 @@ export function UnfollowPlannerCard({ owner, platform, oneWay, starred, locale, 
   owner: string | null; platform: Platform; oneWay: Account[]; starred: ReadonlySet<string>; locale: AppLocale; pro?: string | undefined;
 }) {
   const c = getPlannerContent(locale);
+  const studio = useToolStudio();
   const app = PLATFORM_NAME[platform];
   const { plan, savePlan, toggleDone, markBatchDone, setCadence, deletePlan } = usePlan(owner, platform);
   usePlannerSync(plan, platform, locale, owner !== null);
@@ -59,7 +60,7 @@ export function UnfollowPlannerCard({ owner, platform, oneWay, starred, locale, 
         {oneWay.length > candidates.length && <p style={{ fontSize: 12.5, color: T.inkMute, marginTop: 10 }}>{fill(c.starredSkipped, { count: oneWay.length - candidates.length })}</p>}
         <p style={{ fontSize: 12.5, color: T.inkDim, lineHeight: 1.55, margin: '12px 0 14px' }}>{fill(c.safety, { app, sub: SUB_BATCH })}</p>
         <p style={{ fontSize: 12, color: T.inkMute, lineHeight: 1.5, margin: '-6px 0 14px' }}>{c.startEmailNote}</p>
-        <button type="button" style={toolButtonPrimary} onClick={() => { track(Events.planStarted, { pace, size_bucket: sizeBucketOf(candidates.length) }); void savePlan(buildPlan({ accounts: candidates, pace, starred })); }}>{c.start}</button>
+        <button type="button" className={studio ? 's-btn' : undefined} style={studio ? { alignSelf: 'flex-start' } : toolButtonPrimary} onClick={() => { track(Events.planStarted, { pace, size_bucket: sizeBucketOf(candidates.length) }); void savePlan(buildPlan({ accounts: candidates, pace, starred })); }}>{c.start}</button>
       </ToolCard>
     );
   }
@@ -88,12 +89,12 @@ export function UnfollowPlannerCard({ owner, platform, oneWay, starred, locale, 
             {batch.map((u, i) => (
               <li key={u} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 0', borderTop: i > 0 && i % SUB_BATCH === 0 ? '1px dashed var(--t-border3)' : '1px solid var(--t-border1)' }}>
                 <input type="checkbox" checked={done.has(u)} onChange={() => toggleDone(u)} aria-label={`@${u}`} />
-                <span style={{ flex: 1, fontFamily: T.mono, fontSize: 13, color: done.has(u) ? T.inkMute : T.ink, textDecoration: done.has(u) ? 'line-through' : 'none' }}>@{u}</span>
+                <span style={{ flex: 1, fontFamily: studio ? 'inherit' : T.mono, fontSize: 13, color: done.has(u) ? T.inkMute : T.ink, textDecoration: done.has(u) ? 'line-through' : 'none' }}>@{u}</span>
                 <a href={hrefOf.get(u) ?? profileHref(platform, u)} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: T.tealLight }}>{c.open}</a>
               </li>
             ))}
           </ul>
-          <button type="button" style={{ ...toolButton, marginTop: 12 }} onClick={() => { track(Events.planBatchDone, { day: prog.currentBatch + 1 }); void markBatchDone(batch); }}>{c.markAll}</button>
+          <button type="button" className={studio ? 's-btn sec' : undefined} style={studio ? { marginTop: 12, alignSelf: 'flex-start' } : { ...toolButton, marginTop: 12 }} onClick={() => { track(Events.planBatchDone, { day: prog.currentBatch + 1 }); void markBatchDone(batch); }}>{c.markAll}</button>
         </>
       )}
       {prog.currentBatch >= 0 && (

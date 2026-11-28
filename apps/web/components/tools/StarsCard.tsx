@@ -7,7 +7,7 @@ import { T } from '@/components/landing/tokens';
 import type { AppLocale } from '@/i18n/routing';
 import { getStarsContent } from './stars.content';
 import { Events, track } from '@/lib/analytics';
-import { ToolCard, ToolLabel, ToolSub, ToolTitle, fill, fmt } from './ToolCard';
+import { ToolCard, ToolLabel, ToolSub, ToolTitle, fill, fmt, useToolStudio } from './ToolCard';
 
 const SHOW = 60;
 
@@ -23,6 +23,7 @@ export function StarsCard({ mutuals, current, previous, stars, onToggle, locale,
   pro?: string | undefined;
 }) {
   const c = getStarsContent(locale);
+  const mono = useToolStudio() ? 'inherit' : T.mono;
   const [q, setQ] = useState('');
 
   const leftStarred = useMemo(() => {
@@ -45,7 +46,7 @@ export function StarsCard({ mutuals, current, previous, stars, onToggle, locale,
       {leftStarred && (
         <div role="status" style={{ fontSize: 13.5, padding: '10px 12px', borderRadius: 10, marginBottom: 12, border: `1px solid ${leftStarred.length ? 'var(--t-terra)' : 'var(--t-border2)'}`, color: leftStarred.length ? T.terraText : T.inkDim }}>
           {leftStarred.length ? fill(c.left, { count: leftStarred.length }) : c.leftNone}
-          {leftStarred.length > 0 && <div style={{ fontFamily: T.mono, fontSize: 12.5, marginTop: 6 }}>{leftStarred.map(a => `@${a.username}`).join('  ')}</div>}
+          {leftStarred.length > 0 && <div style={{ fontFamily: mono, fontSize: 12.5, marginTop: 6 }}>{leftStarred.map(a => `@${a.username}`).join('  ')}</div>}
         </div>
       )}
       {mutuals.length === 0 ? <p style={{ fontSize: 13.5, color: T.inkMute }}>{c.empty}</p> : (
@@ -65,7 +66,7 @@ export function StarsCard({ mutuals, current, previous, stars, onToggle, locale,
                   <li key={a.username}>
                     <button
                       type="button" aria-pressed={on} aria-label={fill(on ? c.unstar : c.star, { name: `@${a.username}` })} onClick={() => { track(Events.starToggled, { on: !on }); onToggle(a.username); }}
-                      style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '7px 10px', borderRadius: 9, cursor: 'pointer', fontFamily: T.mono, fontSize: 12.5, textAlign: 'left', color: T.ink, background: on ? 'rgba(var(--t-accent-rgb),0.08)' : 'transparent', border: `1px solid ${on ? 'var(--t-tealMid)' : 'var(--t-border1)'}` }}
+                      style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '7px 10px', borderRadius: 9, cursor: 'pointer', fontFamily: mono, fontSize: 13, textAlign: 'left', color: T.ink, background: on ? 'rgba(var(--t-accent-rgb),0.08)' : 'transparent', border: `1px solid ${on ? 'var(--t-tealMid)' : 'var(--t-border1)'}` }}
                     >
                       <Star size={14} strokeWidth={1.8} aria-hidden="true" fill={on ? 'currentColor' : 'none'} style={{ color: on ? 'var(--t-tealLight)' : 'var(--t-inkMute)', flexShrink: 0 }} />
                       <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>@{a.username}</span>

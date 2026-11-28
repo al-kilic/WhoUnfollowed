@@ -3,6 +3,7 @@ import { BLOG_POSTS } from './blog/posts';
 import { COMPARISONS } from './compare/comparisons';
 import { routing } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
+import { listBriefDates } from '@/lib/briefs';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
@@ -21,6 +22,9 @@ const LOCALIZED_STATIC_PAGES: Array<{
   { path: '/compare', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/what-is-whounfollowed', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/how-to-export', priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/instagram', priority: 0.9, changeFrequency: 'monthly' },
+  { path: '/instagram-coach', priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/instagram-updates', priority: 0.7, changeFrequency: 'weekly' },
   { path: '/threads', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/tiktok', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/about', priority: 0.5, changeFrequency: 'monthly' },
@@ -41,9 +45,10 @@ const STATIC_PAGES: Array<{
 }> = [
   { path: '/blog', priority: 0.6, changeFrequency: 'weekly' },
   { path: '/author/alan-kilic', priority: 0.4, changeFrequency: 'monthly' },
+  { path: '/research/instagram-unfollower-apps', priority: 0.8, changeFrequency: 'monthly' },
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const localizedEntries: MetadataRoute.Sitemap = LOCALIZED_STATIC_PAGES.flatMap((page) => {
     const languages = Object.fromEntries(
       routing.locales.map((l) => [l, `${SITE_URL}${getPathname({ href: page.path, locale: l })}`]),
@@ -84,5 +89,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }));
   });
 
-  return [...localizedEntries, ...staticEntries, ...blogEntries, ...compareEntries];
+  // One dated page per weekly brief, in every language.
+  const briefEntries: MetadataRoute.Sitemap = (await listBriefDates()).flatMap((date) => {
+    const href = `/instagram-updates/${date}`;
+    const languages = Object.fromEntries(routing.locales.map((l) => [l, `${SITE_URL}${getPathname({ href, locale: l })}`]));
+    return routing.locales.map((locale) => ({
+      url: `${SITE_URL}${getPathname({ href, locale })}`,
+      lastModified: new Date(`${date}T12:00:00Z`),
+      changeFrequency: 'yearly' as const,
+      priority: 0.5,
+      alternates: { languages },
+    }));
+  });
+
+  return [...localizedEntries, ...staticEntries, ...blogEntries, ...compareEntries, ...briefEntries];
 }

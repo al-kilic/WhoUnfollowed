@@ -16,6 +16,15 @@ export interface PublicStats {
 const SEED_SNAPSHOTS        = 1047;
 const SEED_NON_FOLLOWER_SUM = 241_081; // produces ~230 avg at seed
 
+// Analyses that happened before or outside this counter, backed by the
+// founder's own records (2026-11-22). Set per environment with
+// STATS_ANALYSES_OFFSET; it only adds to the shown total, never to the
+// running average, which stays computed from counted parses alone.
+export function analysesOffset(): number {
+  const n = Number(process.env.STATS_ANALYSES_OFFSET);
+  return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
+}
+
 // Self-provision the table once per process (the migration pipeline here is
 // partly hand-managed, so we don't rely on it for this counter).
 let tableReady: Promise<void> | null = null;
@@ -49,7 +58,7 @@ function toNum(v: unknown): number {
 
 export function seedStats(): PublicStats {
   return {
-    snapshots: SEED_SNAPSHOTS,
+    snapshots: SEED_SNAPSHOTS + analysesOffset(),
     avgNonFollowers: Math.round(SEED_NON_FOLLOWER_SUM / SEED_SNAPSHOTS),
   };
 }
@@ -63,7 +72,7 @@ export async function getStats(): Promise<PublicStats> {
     const snapshots = toNum(rows[0]?.snapshots);
     const sum       = toNum(rows[0]?.non_follower_sum);
     return {
-      snapshots,
+      snapshots: snapshots + analysesOffset(),
       avgNonFollowers: snapshots > 0 ? Math.round(sum / snapshots) : 0,
     };
   } catch {

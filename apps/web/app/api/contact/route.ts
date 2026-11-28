@@ -78,7 +78,7 @@ export async function POST(req: Request) {
   if (page) lines.push(`Page: ${escapeTelegramHtml(page)}`);
   lines.push(`Message: ${escapeTelegramHtml(message)}`);
 
-  const telegramResult = await sendTelegramMessage(lines.join('\n'));
+  const telegramResult = await sendTelegramMessage(lines.join('\n'), 'inbox');
   if (!telegramResult.ok) {
     // Non-fatal: the message is already saved; just log.
     console.error('[contact] telegram notify failed:', telegramResult.error);

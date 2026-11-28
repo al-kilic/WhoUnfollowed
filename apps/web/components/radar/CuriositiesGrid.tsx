@@ -10,7 +10,7 @@ import type { RadarPageContent } from './radar.content';
 const MAX_SMALL = 4;
 const MONDAY = Date.UTC(2024, 0, 1); // a Monday, for weekday names
 
-function params(cu: Curiosity, locale: AppLocale): Record<string, string | number> {
+export function curiosityParams(cu: Curiosity, locale: AppLocale): Record<string, string | number> {
   const out: Record<string, string | number> = {};
   for (const [k, v] of Object.entries(cu.params)) out[k] = typeof v === 'number' ? fmt(v, locale) : v;
   const p = cu.params;
@@ -45,7 +45,7 @@ function Bars({ series, highlight, labels, height }: { series: number[]; highlig
 
 function Tile({ cu, c, locale, featured }: { cu: Curiosity; c: RadarPageContent; locale: AppLocale; featured: boolean }) {
   const copy = c.curiosities[cu.id];
-  const p = params(cu, locale);
+  const p = curiosityParams(cu, locale);
   const weekdayLabels = cu.id === 'arrival_weekday'
     ? Array.from({ length: 7 }, (_, i) => new Intl.DateTimeFormat(locale, { weekday: 'narrow', timeZone: 'UTC' }).format(new Date(MONDAY + i * 86400000)))
     : undefined;

@@ -13,6 +13,10 @@ export default function robots(): MetadataRoute.Robots {
         '/history',
         '/results',
         '/dashboard',
+        // Not a bare '/app': robots rules match by prefix, so that would also
+        // block /apple-icon.png and any future /app-something page.
+        '/app$',
+        '/app/',
         '/diff',
         '/account',
         '/settings',

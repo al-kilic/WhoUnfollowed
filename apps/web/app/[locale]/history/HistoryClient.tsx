@@ -7,14 +7,16 @@ import type { Locale as DateFnsLocale } from 'date-fns';
 import { Link, useRouter as useLocaleRouter } from '@/i18n/navigation';
 import type { AppLocale } from '@/i18n/routing';
 import { useSnapshotStore } from '@/lib/store';
-import { useSnapshotList, deleteSnapshot, updateSnapshotLabel, redateSnapshot, setSnapshotCloudId, restoreSnapshot, claimAnonymousSnapshots, FREE_SNAPSHOT_LIMIT, type SnapshotRecord } from '@/hooks/useSnapshots';
+import { useSnapshotList, deleteSnapshot, updateSnapshotLabel, redateSnapshot, setSnapshotCloudId, restoreSnapshot, claimAnonymousSnapshots, freeSnapshotLimit, type SnapshotRecord } from '@/hooks/useSnapshots';
 import { useCloudSync } from '@/hooks/useCloudSync';
 import type { CloudSnapshotMeta } from '@/app/api/sync/actions';
 import { UnlockSyncForm } from '@/components/sync/UnlockSyncForm';
-import { SiteNav } from '@/components/landing/SiteNav';
-import { LandingFooter } from '@/components/landing/FinalCTA';
+import { SiteHeader } from '@/components/site/SiteHeader';
+import { SiteFooter } from '@/components/site/SiteFooter';
 import { T } from '@/components/landing/tokens';
-import { snapshotPlatform, type Platform } from '@/lib/platform';
+import { PLATFORM_NAME, snapshotPlatform, type Platform } from '@/lib/platform';
+import { PlatformIcon } from '@/components/PlatformIcon';
+import { exportLabel } from '@/lib/exportLabel';
 import { platforms as allPlatforms } from '@ig-tracker/core';
 import { PlatformSwitcher } from '@/components/PlatformSwitcher';
 import { PlatformBadge } from '@/components/PlatformBadge';
@@ -22,6 +24,11 @@ import { Icon } from '@/components/landing/atoms';
 import { trackUpgradeClick, trackFunnel } from '@/lib/analytics';
 import { getHistoryContent, type HistoryContent } from './content';
 import { PendingRevealBanner } from './PendingRevealBanner';
+
+const UPSELL_CTA = {
+  flexShrink: 0, fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.onTeal, textDecoration: 'none',
+  padding: '11px 20px', borderRadius: 10, background: T.teal, boxShadow: '0 8px 24px rgba(2,136,143,0.3)',
+} as const;
 
 const DATE_FNS_LOCALES: Partial<Record<AppLocale, DateFnsLocale>> = { es, pt };
 
@@ -32,14 +39,20 @@ interface HistoryClientProps {
   isPro: boolean;
   subscriptionStatus: 'active' | 'grace' | 'cancelled' | 'none';
   gracePeriodEndsAt: string | null;
+  // Rendered inside Studio (/app): no site nav, footer or page header, and
+  // comparisons open in Studio.
+  inStudio?: boolean;
+  // Studio passes its upgrade sheet here, used instead of the pricing link.
+  onUpgrade?: (() => void) | undefined;
 }
 
-export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionStatus, gracePeriodEndsAt }: HistoryClientProps) {
+export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionStatus, gracePeriodEndsAt, inStudio = false, onUpgrade }: HistoryClientProps) {
   const c            = getHistoryContent(locale);
   const dateLocale   = DATE_FNS_LOCALES[locale];
   const localeRouter = useLocaleRouter();
   const setSnapshot  = useSnapshotStore(s => s.setSnapshot);
   const snapshots    = useSnapshotList(userId);
+  const freeLimit    = freeSnapshotLimit(!!userId);
   const [deletingId, setDeletingId]     = useState<number | null>(null);
   const [compareBaseId, setCompareBase] = useState<number | null>(null);
   const [platformFilter, setPlatformFilter] = useState<Platform | 'all'>('all');
@@ -77,7 +90,7 @@ export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionSt
 
   function handleView(record: SnapshotRecord) {
     setSnapshot(record.data);
-    localeRouter.push('/results');
+    localeRouter.push(inStudio ? '/app/results' : '/results');
   }
 
   async function handleDelete(id: number) {
@@ -91,7 +104,7 @@ export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionSt
     const target = snapshots.find(s => s.id === targetId);
     if (!base || !target) return;
     const [old, cur] = base.exportedAt <= target.exportedAt ? [base, target] : [target, base];
-    localeRouter.push(`/diff?old=${old.id}&current=${cur.id}`);
+    localeRouter.push(`${inStudio ? '/app/history/compare' : '/diff'}?old=${old.id}&current=${cur.id}`);
   }
 
   async function handleSync(record: SnapshotRecord) {
@@ -134,11 +147,11 @@ export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionSt
   }
 
   const slotsUsed = snapshots.length;
-  const slotsLeft = FREE_SNAPSHOT_LIMIT - slotsUsed;
+  const slotsLeft = freeLimit - slotsUsed;
 
   return (
-    <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <SiteNav userEmail={userEmail} isPro={isPro} />
+    <div style={inStudio ? undefined : { minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
+      {!inStudio && <SiteHeader />}
 
       {subscriptionStatus === 'grace' && gracePeriodEndsAt && (
         <div style={{ background: 'rgba(168,75,47,0.08)', borderBottom: '1px solid rgba(168,75,47,0.2)', padding: '12px 24px', textAlign: 'center' }}>
@@ -149,10 +162,10 @@ export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionSt
         </div>
       )}
 
-      <main className="px-4 sm:px-8 py-10 sm:py-12" style={{ maxWidth: 800, margin: '0 auto' }}>
+      <main className={inStudio ? undefined : 'px-4 sm:px-8 py-10 sm:py-12'} style={inStudio ? undefined : { maxWidth: 800, margin: '0 auto' }}>
         <PendingRevealBanner locale={locale} isPro={isPro} snapshotIds={snapshots.flatMap(s => (s.id != null ? [s.id] : []))} />
-        {/* Header */}
-        <div style={{ marginBottom: 40 }}>
+        {/* Header (Studio has its own) */}
+        {!inStudio && <div style={{ marginBottom: 40 }}>
           <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 12 }}>{c.eyebrow}</div>
           <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(36px, 5vw, 52px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', color: T.ink }}>
             {c.headline}
@@ -160,7 +173,7 @@ export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionSt
           <p style={{ fontSize: 15, color: T.inkDim, marginTop: 10 }}>
             {c.subhead}
           </p>
-        </div>
+        </div>}
 
         {/* Slot indicator */}
         <div style={{
@@ -178,12 +191,12 @@ export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionSt
             ) : (
               <>
                 <div style={{ display: 'flex', gap: 6 }}>
-                  {Array.from({ length: FREE_SNAPSHOT_LIMIT }).map((_, i) => (
+                  {Array.from({ length: freeLimit }).map((_, i) => (
                     <div key={i} style={{ width: 28, height: 8, borderRadius: 4, background: i < slotsUsed ? T.tealMid : 'var(--t-border2)', transition: 'background 0.3s' }} />
                   ))}
                 </div>
                 <span style={{ fontSize: 13, color: T.inkDim, fontFamily: T.mono }}>
-                  {c.slotsUsedOfFree(slotsUsed, FREE_SNAPSHOT_LIMIT)}
+                  {c.slotsUsedOfFree(slotsUsed, freeLimit)}
                 </span>
               </>
             )}
@@ -191,7 +204,7 @@ export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionSt
           {(isPro || slotsLeft > 0) ? (
             <Link href="/" style={{
               fontSize: 13, fontWeight: 600, fontFamily: T.sans,
-              color: T.cream, textDecoration: 'none',
+              color: T.onTeal, textDecoration: 'none',
               display: 'inline-flex', alignItems: 'center', gap: 7,
               padding: '8px 16px', borderRadius: 10,
               background: T.teal, border: `1px solid rgba(2,136,143,0.5)`,
@@ -219,12 +232,13 @@ export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionSt
                 {c.proUpsellBody}
               </p>
             </div>
-            <Link href="/pricing" onClick={() => trackUpgradeClick('history-compare')} style={{
-              flexShrink: 0, fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none',
-              padding: '11px 20px', borderRadius: 10, background: T.teal, boxShadow: '0 8px 24px rgba(2,136,143,0.3)',
-            }}>
+            {onUpgrade ? (
+              <button type="button" onClick={onUpgrade} style={{ ...UPSELL_CTA, border: 0, cursor: 'pointer' }}>{c.unlockCompare}</button>
+            ) : (
+            <Link href="/pricing" onClick={() => trackUpgradeClick('history-compare')} style={UPSELL_CTA}>
               {c.unlockCompare}
             </Link>
+            )}
           </div>
         )}
 
@@ -260,7 +274,7 @@ export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionSt
                 <div key={meta.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '10px 14px', borderRadius: 10, background: 'var(--t-surface1)', border: '1px solid var(--t-border1)' }}>
                   <div style={{ minWidth: 0 }}>
                     <div style={{ fontSize: 14, color: T.ink, marginBottom: 2 }}>{meta.label}</div>
-                    <div style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono }}>{format(new Date(meta.exportedAt), 'MMM d, yyyy', dateLocale && { locale: dateLocale })}</div>
+                    <div style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono }}>{format(new Date(meta.exportedAt), 'PP', dateLocale && { locale: dateLocale })}</div>
                   </div>
                   <button
                     onClick={() => handleRestore(meta)}
@@ -291,7 +305,7 @@ export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionSt
               <div style={{ fontFamily: T.serif, fontSize: 22, color: T.ink, marginBottom: 6 }}>{c.emptyTitle}</div>
               <div style={{ fontSize: 14, color: T.inkDim }}>{c.emptyBody}</div>
             </div>
-            <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 22px', borderRadius: 10, background: T.teal, color: T.cream, fontSize: 13, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans }}>
+            <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 22px', borderRadius: 10, background: T.teal, color: T.onTeal, fontSize: 13, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans }}>
               <Icon.upload size={14} color={T.cream} />{c.uploadZip}
             </Link>
           </div>
@@ -332,7 +346,7 @@ export function HistoryClient({ locale, userId, userEmail, isPro, subscriptionSt
         )}
       </main>
 
-      <LandingFooter />
+      {!inStudio && <SiteFooter />}
     </div>
   );
 }
@@ -357,10 +371,14 @@ interface CardProps {
   onSync: () => void;
 }
 
+// Auto-made labels in the reader's language (see lib/exportLabel.ts).
+const shownLabel = (record: SnapshotRecord, _c: unknown, dateLocale: DateFnsLocale | undefined): string =>
+  exportLabel(record, (dateLocale?.code ?? 'en') as AppLocale);
+
 function SnapshotCard({ record, allSnapshots, compareBaseId, isDeleting, isSyncing, userId: _userId, userEmail, isPro, c, dateLocale, onView, onDelete, onSetCompareBase, onCompareWith, onSync }: CardProps) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [editLabel, setEditLabel] = useState(record.label);
+  const [editLabel, setEditLabel] = useState(() => shownLabel(record, c, dateLocale));
   const [editDate, setEditDate] = useState(() => {
     const d = new Date(record.exportedAt * 1000);
     return d.toISOString().slice(0, 10);
@@ -370,7 +388,7 @@ function SnapshotCard({ record, allSnapshots, compareBaseId, isDeleting, isSynci
   async function saveEdit() {
     if (record.id == null) return;
     const newExportedAt = Math.floor(new Date(editDate + 'T12:00:00').getTime() / 1000);
-    const labelChanged = editLabel.trim() !== record.label;
+    const labelChanged = editLabel.trim() !== shownLabel(record, c, dateLocale);
     const dateChanged = newExportedAt !== record.exportedAt;
     if (labelChanged) await updateSnapshotLabel(record.id, editLabel.trim() || record.label, _userId);
     if (dateChanged) await redateSnapshot(record.id, record.exportedAt, newExportedAt, _userId);
@@ -395,11 +413,9 @@ function SnapshotCard({ record, allSnapshots, compareBaseId, isDeleting, isSynci
     }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
         <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start', flex: 1, minWidth: 0 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(2,136,143,0.1)', border: '1px solid rgba(2,136,143,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <rect x="3" y="4" width="18" height="18" rx="2" stroke={T.tealMid} strokeWidth="1.5"/>
-              <path d="M8 2 V6 M16 2 V6 M3 10 H21" stroke={T.tealMid} strokeWidth="1.5" strokeLinecap="round"/>
-            </svg>
+          {/* The platform's own mark, so Instagram, Threads and TikTok exports are easy to tell apart. */}
+          <div className={`s-pfmark pf-${platform}`} title={PLATFORM_NAME[platform]}>
+            <PlatformIcon platform={platform} size={19} />
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             {editing ? (
@@ -422,26 +438,26 @@ function SnapshotCard({ record, allSnapshots, compareBaseId, isDeleting, isSynci
                   />
                 </div>
                 <div style={{ display: 'flex', gap: 6 }}>
-                  <button onClick={() => void saveEdit()} style={{ padding: '5px 14px', borderRadius: 8, border: 'none', background: T.teal, color: T.cream, fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: T.sans }}>{c.save}</button>
-                  <button onClick={() => { setEditing(false); setEditLabel(record.label); }} style={{ padding: '5px 14px', borderRadius: 8, border: '1px solid var(--t-border3)', background: 'transparent', color: T.inkDim, fontSize: 12, cursor: 'pointer', fontFamily: T.sans }}>{c.editCancel}</button>
+                  <button onClick={() => void saveEdit()} style={{ padding: '5px 14px', borderRadius: 8, border: 'none', background: T.teal, color: T.onTeal, fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: T.sans }}>{c.save}</button>
+                  <button onClick={() => { setEditing(false); setEditLabel(shownLabel(record, c, dateLocale)); }} style={{ padding: '5px 14px', borderRadius: 8, border: '1px solid var(--t-border3)', background: 'transparent', color: T.inkDim, fontSize: 12, cursor: 'pointer', fontFamily: T.sans }}>{c.editCancel}</button>
                 </div>
               </div>
             ) : (
               <>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                  <span style={{ fontFamily: T.serif, fontSize: 19, color: T.ink, letterSpacing: '-0.01em' }}>{record.label}</span>
+                  <span style={{ fontFamily: T.serif, fontSize: 19, color: T.ink, letterSpacing: '-0.01em' }}>{shownLabel(record, c, dateLocale)}</span>
                   <PlatformBadge platform={platform} />
                   {record.cloudId && isPro ? (
-                    <span style={{ fontSize: 10, fontFamily: T.mono, letterSpacing: '0.08em', color: T.tealMid, background: 'rgba(2,136,143,0.1)', border: '1px solid rgba(2,136,143,0.25)', borderRadius: 5, padding: '2px 7px' }}>{c.syncedBadge}</span>
+                    <span style={{ fontSize: 11, fontFamily: T.sans, fontWeight: 500, color: T.tealMid, background: 'rgba(2,136,143,0.1)', border: '1px solid rgba(2,136,143,0.25)', borderRadius: 5, padding: '2px 7px' }}>{c.syncedBadge}</span>
                   ) : (
-                    <span style={{ fontSize: 10, fontFamily: T.mono, letterSpacing: '0.08em', color: T.inkMute, background: 'var(--t-surface2)', border: '1px solid var(--t-border2)', borderRadius: 5, padding: '2px 7px' }}>{c.deviceBadge}</span>
+                    <span style={{ fontSize: 11, fontFamily: T.sans, fontWeight: 500, color: T.inkMute, background: 'var(--t-surface2)', border: '1px solid var(--t-border2)', borderRadius: 5, padding: '2px 7px' }}>{c.deviceBadge}</span>
                   )}
                 </div>
                 <div style={{ fontSize: 12, color: T.inkMute, fontFamily: T.mono }}>
                   {c.followersFollowingExport(
-                    followers.toLocaleString(),
-                    following.toLocaleString(),
-                    format(new Date(record.exportedAt * 1000), 'MMM d, yyyy', dateLocale && { locale: dateLocale }),
+                    followers.toLocaleString(dateLocale?.code ?? 'en'),
+                    following.toLocaleString(dateLocale?.code ?? 'en'),
+                    format(new Date(record.exportedAt * 1000), 'PP', dateLocale && { locale: dateLocale }),
                   )}
                 </div>
               </>
@@ -449,7 +465,7 @@ function SnapshotCard({ record, allSnapshots, compareBaseId, isDeleting, isSynci
           </div>
         </div>
         <div style={{ textAlign: 'right', flexShrink: 0 }}>
-          <div style={{ fontFamily: T.serif, fontSize: 26, color: T.tealLight, letterSpacing: '-0.02em', lineHeight: 1 }}>{nonFollowers.toLocaleString()}</div>
+          <div style={{ fontFamily: T.serif, fontSize: 26, color: T.tealLight, letterSpacing: '-0.02em', lineHeight: 1 }}>{nonFollowers.toLocaleString(dateLocale?.code ?? 'en')}</div>
           <div style={{ fontSize: 10, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.06em', marginTop: 2 }}>{c.nonFollowersLabel}</div>
         </div>
       </div>
@@ -510,7 +526,7 @@ function SnapshotCard({ record, allSnapshots, compareBaseId, isDeleting, isSynci
           ) : (
             <button
               onClick={() => setConfirmDelete(true)}
-              aria-label={c.deleteAriaLabel(record.label)}
+              aria-label={c.deleteAriaLabel(shownLabel(record, c, dateLocale))}
               style={{ padding: '8px', borderRadius: 8, border: 'none', background: 'transparent', color: T.inkMute, cursor: 'pointer', display: 'flex' }}
               onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = T.terra; }}
               onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = T.inkMute; }}

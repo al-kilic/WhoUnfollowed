@@ -88,12 +88,12 @@ export function ResetPasswordForm({ token, locale }: { token: string; locale: Ap
           autoComplete="new-password"
         />
 
-        <div style={{ display: 'flex', gap: 10, padding: '12px 14px', borderRadius: 10, background: 'rgba(168,75,47,0.08)', border: '1px solid rgba(168,75,47,0.3)' }}>
+        <div style={{ display: 'flex', gap: 10, padding: '12px 14px', borderRadius: 10, background: 'color-mix(in srgb, var(--warn) 8%, var(--surface))', border: '1px solid color-mix(in srgb, var(--warn) 35%, var(--line))' }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0, marginTop: 1 }}>
-            <path d="M12 4 L21 20 H3 Z" stroke={T.terra} strokeWidth="1.5" strokeLinejoin="round" />
-            <path d="M12 10 V14 M12 17 V17.5" stroke={T.terra} strokeWidth="1.8" strokeLinecap="round" />
+            <path d="M12 4 L21 20 H3 Z" stroke="var(--warn)" strokeWidth="1.5" strokeLinejoin="round" />
+            <path d="M12 10 V14 M12 17 V17.5" stroke="var(--warn)" strokeWidth="1.8" strokeLinecap="round" />
           </svg>
-          <p style={{ fontSize: 13, color: T.terra, lineHeight: 1.5, margin: 0 }}>
+          <p style={{ fontSize: 13, color: 'var(--warn)', lineHeight: 1.5, margin: 0 }}>
             {c.cloudWarning}
           </p>
         </div>

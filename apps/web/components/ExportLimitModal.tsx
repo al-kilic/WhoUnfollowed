@@ -50,7 +50,7 @@ export function ExportLimitModal({ onClose }: { onClose: () => void }) {
         </p>
         <Link
           href="/signup"
-          style={{ display: 'inline-block', padding: '12px 26px', borderRadius: 11, background: T.teal, color: T.cream, textDecoration: 'none', fontSize: 14, fontWeight: 600, fontFamily: T.sans, boxShadow: '0 8px 24px rgba(2,136,143,0.35)' }}
+          style={{ display: 'inline-block', padding: '12px 26px', borderRadius: 11, background: T.teal, color: T.onTeal, textDecoration: 'none', fontSize: 14, fontWeight: 600, fontFamily: T.sans, boxShadow: '0 8px 24px rgba(2,136,143,0.35)' }}
         >
           Create a free account
         </Link>

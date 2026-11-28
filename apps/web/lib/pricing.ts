@@ -54,16 +54,25 @@ export function perMonth(yearlyPrice: number): string {
 // ladder of seats: once a step's seats are gone the price moves up, and after
 // the last step Lifetime closes for good. Each step has its own Stripe price
 // (see priceIdForLifetimeTier in lib/stripe.ts), kept in sync BY HAND.
+//
+// 2026-11-11: the $19.99 / $39 / $99 ladder was replaced by one $499 step.
+// Seats already sold still count toward the 40, and Lifetime closes on
+// LIFETIME_CLOSES_AT whatever is left.
 export interface LifetimeTier {
   price: number;
   seats: number;
 }
 
 export const LIFETIME_TIERS: readonly LifetimeTier[] = [
-  { price: 19.99, seats: 5 },
-  { price: 39, seats: 10 },
-  { price: 99, seats: 25 },
+  { price: 499, seats: 40 },
 ];
+
+// Lifetime stops selling at this moment (end of Dec 31, 2026, UTC).
+export const LIFETIME_CLOSES_AT = new Date('2027-01-01T00:00:00Z');
+
+export function isLifetimeClosedByDate(now: Date = new Date()): boolean {
+  return now.getTime() >= LIFETIME_CLOSES_AT.getTime();
+}
 
 export const LIFETIME_TOTAL_SEATS = LIFETIME_TIERS.reduce((sum, t) => sum + t.seats, 0);
 
@@ -103,3 +112,30 @@ export function lifetimeOfferForSold(sold: number): LifetimeOffer | null {
 export const LIFETIME_PRICE_USD = LIFETIME_TIERS[0]!.price;
 
 export const LIFETIME_PRICE_SUMMARY = `$${LIFETIME_PRICE_USD} once, for lifetime access`;
+
+// ─── Pro AI (subscription, 2026-11) ─────────────────────────────────────────
+// Display prices. Like the unlock prices above, launch prices hold until
+// PRICE_INCREASE_AT; people who subscribe before then keep their launch price
+// (their Stripe subscription stays on the launch Price). Stripe charges what
+// the STRIPE_PRICE_PRO_AI_* env vars point at; keep these in sync BY HAND.
+export type ProAiInterval = 'monthly' | 'yearly';
+
+export const LAUNCH_PRO_AI_PRICE_USD: Record<ProAiInterval, number> = { monthly: 9.99, yearly: 69 };
+export const STANDARD_PRO_AI_PRICE_USD: Record<ProAiInterval, number> = { monthly: 14.99, yearly: 99 };
+
+export function proAiPricesAt(now: Date = new Date()): Record<ProAiInterval, number> {
+  return isLaunchPricing(now) ? LAUNCH_PRO_AI_PRICE_USD : STANDARD_PRO_AI_PRICE_USD;
+}
+
+// "$9.99 a month or $69 a year": for metadata, structured data and llms.txt.
+export const PRO_AI_PRICE_USD = proAiPricesAt();
+export const PRO_AI_PRICE_SUMMARY = `$${PRO_AI_PRICE_USD.monthly} a month or $${PRO_AI_PRICE_USD.yearly} a year`;
+
+// ─── Pro AI refills (one-time, usage model 2026-11-24) ─────────────────────
+// One more month of coach use for half the monthly price, for members on a
+// paid plan. Used after the monthly allowance, expires TOPUP_VALID_MONTHS after
+// purchase, at most 2 held (lib/ai/allowanceMath.ts). Stripe charges what
+// STRIPE_PRICE_TOPUP_300 points at (the env name is historical); keep the
+// price in sync BY HAND.
+export const TOPUP_PRICE_USD = 4.99;
+export const TOPUP_VALID_MONTHS = 12;

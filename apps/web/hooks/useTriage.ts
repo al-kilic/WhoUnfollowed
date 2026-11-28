@@ -3,8 +3,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, type TriageState, type TriageRecord } from '@/lib/db';
-import { isOwnedByCurrentViewer } from '@/lib/localOwnership';
+import { readOwnedSnapshots } from '@/hooks/useSnapshots';
 import { platformOfTriageKey, snapshotPlatform, triageKeyOf } from '@/lib/platform';
+import { useSampleStore } from '@/lib/sample/sampleMode';
 
 export type { TriageState };
 
@@ -17,10 +18,15 @@ export function useTriage(snapshotKey: number) {
     [] as TriageRecord[],
   );
 
-  const triage: TriageMap = new Map(records.map(r => [r.username, r.state]));
+  // Sample mode: marks live in memory only, never in IndexedDB.
+  const sample = useSampleStore(s => s.on);
+  const sampleMarks = useSampleStore(s => s.marks);
+  const markSample = useSampleStore(s => s.mark);
+  const triage: TriageMap = sample ? sampleMarks : new Map(records.map(r => [r.username, r.state]));
 
   const setTriageState = useCallback(
     async (username: string, state: TriageState | null) => {
+      if (sample) { markSample(username, state); return; }
       if (state === null) {
         await db.triageStates
           .where('[snapshotKey+username]')
@@ -38,11 +44,12 @@ export function useTriage(snapshotKey: number) {
         }
       }
     },
-    [snapshotKey],
+    [snapshotKey, sample, markSample],
   );
 
   const bulkImportTriage = useCallback(
     async (entries: { username: string; state: TriageState }[]) => {
+      if (sample) { for (const e of entries) markSample(e.username, e.state); return; }
       const now = Date.now();
       const toAdd: TriageRecord[] = [];
       const toUpdate: { id: number; state: TriageState }[] = [];
@@ -66,7 +73,7 @@ export function useTriage(snapshotKey: number) {
         }
       });
     },
-    [snapshotKey],
+    [snapshotKey, sample, markSample],
   );
 
   return { triage, setTriageState, bulkImportTriage };
@@ -94,8 +101,7 @@ export function usePreviousTriage(
     if (usernames.size === 0) { setLoading(false); return; }
 
     async function loadOptions() {
-      const allSnapshots = await db.snapshots.orderBy('exportedAt').reverse().toArray();
-      const owned = allSnapshots.filter(s => isOwnedByCurrentViewer(s, currentUserId));
+      const owned = await readOwnedSnapshots(currentUserId);
       // Only offer snapshots from the same platform: Instagram and Threads
       // share usernames, but triage decisions don't carry over between them.
       const platform = platformOfTriageKey(currentSnapshotKey);

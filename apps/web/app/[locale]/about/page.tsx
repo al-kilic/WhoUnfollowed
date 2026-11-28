@@ -7,6 +7,7 @@ import { OG_LOCALE, ogAlternateLocales } from '@/i18n/ogLocale';
 import { getPathname } from '@/i18n/navigation';
 import { AboutContent } from './AboutContent';
 import { getAboutContent } from './content';
+import { SitePage } from '@/components/landing/SitePage';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
@@ -93,7 +94,7 @@ export default async function AboutPage({ params }: PageProps) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <AboutContent content={getAboutContent(locale)} />
+      <SitePage><AboutContent content={getAboutContent(locale)} /></SitePage>
     </>
   );
 }

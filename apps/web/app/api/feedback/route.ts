@@ -65,7 +65,7 @@ export async function POST(req: Request) {
   if (comment) lines.push(`Comment: ${escapeTelegramHtml(comment)}`);
   if (user?.email) lines.push(`From: ${escapeTelegramHtml(user.email)}`);
 
-  const notify = await sendTelegramMessage(lines.join('\n'));
+  const notify = await sendTelegramMessage(lines.join('\n'), 'inbox');
   if (!notify.ok) {
     // Non-fatal: the feedback is already saved; just log.
     console.error('[feedback] telegram notify failed:', notify.error);

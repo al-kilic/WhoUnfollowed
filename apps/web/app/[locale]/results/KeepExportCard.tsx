@@ -43,12 +43,12 @@ export function KeepExportCard({ locale }: { locale: AppLocale }) {
   return (
     <section style={{ marginTop: 32, padding: '22px 24px', borderRadius: 16, background: T.surface1, border: `1px solid ${T.border2}` }}>
       <div style={{ fontFamily: T.mono, fontSize: 11, letterSpacing: '0.12em', color: T.tealMid, marginBottom: 8 }}>{c.eyebrow}</div>
-      <h2 style={{ fontFamily: T.serif, fontSize: 22, fontWeight: 400, lineHeight: 1.25, margin: '0 0 8px', color: T.ink }}>{c.title}</h2>
+      <h2 style={{ fontFamily: T.sans, fontSize: 20, fontWeight: 600, letterSpacing: '-0.02em', lineHeight: 1.25, margin: '0 0 8px', color: T.ink }}>{c.title}</h2>
       <p style={{ fontSize: 14, lineHeight: 1.6, color: T.inkDim, margin: '0 0 16px', maxWidth: 620 }}>{c.body}</p>
       <Link
         href="/signup"
         onClick={() => track(Events.keepExportClick, { placement: 'results' })}
-        style={{ display: 'inline-block', fontSize: 14, fontWeight: 600, color: T.cream, textDecoration: 'none', padding: '11px 20px', borderRadius: 10, background: T.teal }}
+        style={{ display: 'inline-block', fontSize: 14, fontWeight: 600, color: T.onTeal, textDecoration: 'none', padding: '11px 20px', borderRadius: 10, background: T.teal }}
       >
         {c.cta}
       </Link>

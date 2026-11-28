@@ -2,7 +2,7 @@ import 'server-only';
 import { count, isNotNull } from 'drizzle-orm';
 import { db } from '@/lib/db/index';
 import { profiles } from '@/lib/db/schema';
-import { lifetimeOfferForSold, type LifetimeOffer } from '@/lib/pricing';
+import { isLifetimeClosedByDate, lifetimeOfferForSold, type LifetimeOffer } from '@/lib/pricing';
 import { priceIdForLifetimeTier } from '@/lib/stripe';
 
 // Every genuine Lifetime purchase sets profiles.lifetimePurchasedAt (see the
@@ -23,6 +23,8 @@ export type LifetimeAvailability =
 // of a step can both get the lower price; at this scale that's acceptable.
 export async function getLifetimeAvailability(): Promise<LifetimeAvailability> {
   if (!priceIdForLifetimeTier(0)) return { status: 'off' };
+  // Closed for good after Dec 31, 2026, even with seats left.
+  if (isLifetimeClosedByDate()) return { status: 'sold_out' };
   let sold: number;
   try {
     sold = await countLifetimeSeatsSold();

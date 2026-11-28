@@ -73,7 +73,6 @@ export function WelcomeContent({ locale }: { locale: AppLocale }) {
   const c = getWelcomeContent(locale);
   return (
     <AuthShell
-      compact
       title={c.title}
       subtitle={c.subtitle}
       footer={

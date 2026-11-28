@@ -85,6 +85,139 @@
       "when": 1794000000000,
       "tag": "0011_quarter_wrap",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1794400000000,
+      "tag": "0012_pro_ai",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1794800000000,
+      "tag": "0013_ai_goals",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1795200000000,
+      "tag": "0014_goal_options",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1795300000000,
+      "tag": "0015_coach_prefs",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1795400000000,
+      "tag": "0016_ai_usage_log",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1795500000000,
+      "tag": "0017_posting_reminder",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1795600000000,
+      "tag": "0018_usage_tokens",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1795700000000,
+      "tag": "0019_ai_signals",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1795800000000,
+      "tag": "0020_memory_notes",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1795900000000,
+      "tag": "0021_memory_ledger",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1796000000000,
+      "tag": "0022_export_insights",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1796100000000,
+      "tag": "0023_ai_allowance",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1796200000000,
+      "tag": "0024_renewal_reminders",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1796300000000,
+      "tag": "0025_ai_goals",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1796400000000,
+      "tag": "0026_cancel_at",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1796400000001,
+      "tag": "0027_catch_up_hand_made",
+      "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1796500000001,
+      "tag": "0028_plan_calendar_feed",
+      "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1796500000002,
+      "tag": "0029_content_platform",
+      "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1796500000003,
+      "tag": "0030_display_name",
+      "breakpoints": true
     }
   ]
 }

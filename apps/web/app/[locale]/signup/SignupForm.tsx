@@ -1,5 +1,6 @@
 'use client';
 
+import { track } from '@/lib/analytics';
 import { useActionState } from 'react';
 import { Link, useRouter } from '@/i18n/navigation';
 import { signupAction } from './actions';
@@ -27,7 +28,9 @@ export function SignupForm({ locale }: { locale: AppLocale }) {
         if ('needsVerification' in res && res.needsVerification) {
           router.replace('/verify-email');
         } else {
-          router.replace('/history?welcome=1');
+          // Signed up and verified in one go: straight into Studio.
+          track('signup');
+          router.replace('/app');
         }
       }
       return res;
@@ -75,10 +78,10 @@ export function SignupForm({ locale }: { locale: AppLocale }) {
         />
 
         <label htmlFor="reminders" style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer' }}>
-          <input id="reminders" name="reminders" type="checkbox" defaultChecked style={{ marginTop: 3, accentColor: T.teal, width: 16, height: 16, flexShrink: 0 }} />
+          <input id="reminders" name="reminders" type="checkbox" defaultChecked style={{ marginTop: 3, accentColor: T.tealMid, width: 16, height: 16, flexShrink: 0 }} />
           <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <span style={{ fontSize: 13.5, color: T.ink, fontWeight: 500, lineHeight: 1.4 }}>{c.remindersLabel}</span>
-            <span style={{ fontSize: 12, color: T.inkDim, lineHeight: 1.45 }}>{c.remindersHint}</span>
+            <span style={{ fontSize: 12, color: T.inkMute, lineHeight: 1.45 }}>{c.remindersHint}</span>
           </span>
         </label>
 

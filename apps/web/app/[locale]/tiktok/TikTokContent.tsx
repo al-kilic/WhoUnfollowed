@@ -3,8 +3,8 @@
 import React from 'react';
 import { Link } from '@/i18n/navigation';
 import { T } from '@/components/landing/tokens';
-import { SiteNav } from '@/components/landing/SiteNav';
-import { LandingFooter } from '@/components/landing/FinalCTA';
+import { SiteHeader } from '@/components/site/SiteHeader';
+import { SiteFooter } from '@/components/site/SiteFooter';
 import { PlatformIcon } from '@/components/PlatformIcon';
 import type { TikTokPageContent } from './content';
 
@@ -18,7 +18,7 @@ const arrow = <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-h
 export function TikTokContent({ content: c }: { content: TikTokPageContent }) {
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <SiteNav />
+      <SiteHeader />
 
       <main className="px-4 sm:px-8" style={{ maxWidth: 740, margin: '0 auto', paddingTop: 64, paddingBottom: 96 }}>
         {/* Hero */}
@@ -34,7 +34,7 @@ export function TikTokContent({ content: c }: { content: TikTokPageContent }) {
             <span style={{ display: 'block', fontStyle: 'italic', color: T.inkDim }}>{c.headlineItalic}</span>
           </h1>
           <p style={{ fontSize: 16, color: T.inkDim, lineHeight: 1.7, marginBottom: 28, maxWidth: 580 }}>{c.intro}</p>
-          <Link href="/#upload" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 22px', borderRadius: 12, background: T.teal, color: T.cream, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
+          <Link href="/#upload" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 22px', borderRadius: 12, background: T.teal, color: T.onTeal, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
             {c.uploadCta}{arrow}
           </Link>
         </div>
@@ -114,7 +114,7 @@ export function TikTokContent({ content: c }: { content: TikTokPageContent }) {
         <div style={{ padding: 32, borderRadius: 18, background: T.bgCard, border: `1px solid ${T.border1}`, textAlign: 'center' }}>
           <p style={{ fontFamily: T.serif, fontSize: 24, color: T.ink, marginBottom: 6 }}>{c.ctaHeadline}</p>
           <p style={{ fontSize: 14, color: T.inkMute, marginBottom: 22 }}>{c.ctaSubline}</p>
-          <Link href="/#upload" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 12, background: T.teal, color: T.cream, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
+          <Link href="/#upload" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 12, background: T.teal, color: T.onTeal, fontSize: 14, fontWeight: 600, textDecoration: 'none' }}>
             {c.ctaButton}{arrow}
           </Link>
         </div>
@@ -124,7 +124,7 @@ export function TikTokContent({ content: c }: { content: TikTokPageContent }) {
         </div>
       </main>
 
-      <LandingFooter />
+      <SiteFooter />
     </div>
   );
 }

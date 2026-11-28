@@ -1,5 +1,6 @@
 'use client';
 
+import { track } from '@/lib/analytics';
 import { useActionState, useState, useTransition } from 'react';
 import { useRouter } from '@/i18n/navigation';
 import { verifyEmailAction, resendVerificationAction } from './actions';
@@ -18,7 +19,9 @@ export function VerifyEmailForm({ email, locale }: { email: string; locale: AppL
     async (_prev: unknown, formData: FormData) => {
       const res = await verifyEmailAction(formData);
       if (res && 'ok' in res && res.ok) {
-        router.replace('/history?welcome=1');
+        // Signup completes here: count it, then into Studio.
+        track('signup');
+        router.replace('/app');
       }
       return res;
     },
@@ -81,7 +84,7 @@ export function VerifyEmailForm({ email, locale }: { email: string; locale: AppL
         >
           {resending ? c.resending : c.resendCode}
         </button>
-        {resendMsg && <div style={{ marginTop: 8, color: T.inkDim }}>{resendMsg}</div>}
+        {resendMsg && <div style={{ marginTop: 8, color: T.inkMute }}>{resendMsg}</div>}
       </div>
     </AuthShell>
   );

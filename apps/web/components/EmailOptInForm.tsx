@@ -73,7 +73,7 @@ export function EmailOptInForm({
           disabled={state === 'sending'}
           style={{
             flex: '0 0 auto', padding: '10px 16px', borderRadius: 10, border: 'none',
-            background: T.teal, color: T.cream, fontSize: 14, fontWeight: 600, fontFamily: T.sans,
+            background: T.teal, color: T.onTeal, fontSize: 14, fontWeight: 600, fontFamily: T.sans,
             cursor: state === 'sending' ? 'not-allowed' : 'pointer', opacity: state === 'sending' ? 0.7 : 1,
           }}
         >

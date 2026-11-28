@@ -237,7 +237,7 @@ export function MagneticCTA({
       style={{
         position: 'relative',
         background:   primary ? T.teal : 'transparent',
-        color:        primary ? T.cream : T.ink,
+        color:        primary ? T.onTeal : T.ink,
         border:       primary ? 'none' : `1px solid rgba(244,240,232,0.18)`,
         padding:      '14px 24px',
         borderRadius: 12,
@@ -255,7 +255,7 @@ export function MagneticCTA({
     >
       {children}
       <span style={{ display: 'inline-flex', animation: 'magnetic-arrow 1.4s ease-in-out infinite' }}>
-        <Icon.arrow color={primary ? T.cream : T.teal} />
+        <Icon.arrow color={primary ? T.onTeal : T.teal} />
       </span>
     </button>
   );

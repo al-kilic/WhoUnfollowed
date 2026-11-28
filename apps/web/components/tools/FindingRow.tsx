@@ -22,6 +22,7 @@ export function FindingRow({ f, c, locale, app, locked, index, active = false, o
   for (const [k, v] of Object.entries(f.params)) {
     params[k] = k === 'date' ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeZone: 'UTC' }).format(new Date(`${v}T12:00:00Z`)) : k === 'year' || typeof v !== 'number' ? v : fmt(v, locale);
   }
+  if (typeof f.params.months === 'number') params.age = c.age(f.params.months);
   const copy = c.checks[f.id];
   // Stronger accent for the top of the list; everything else neutral.
   const bar = f.impact >= 60 ? T.terra : f.impact >= 35 ? T.tealMid : 'var(--t-border3)';

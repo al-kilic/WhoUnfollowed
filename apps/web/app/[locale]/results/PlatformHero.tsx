@@ -11,13 +11,13 @@ function PlatformMark({ platform }: { platform: Platform }) {
       flexShrink: 0,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       borderRadius: threads ? '50%' : 13,
-      background: threads || tiktok ? T.ink : 'linear-gradient(140deg, #02888f 0%, #01494d 100%)',
-      color: threads || tiktok ? T.bg : '#f4f0e8',
-      // TikTok: two offset brand-palette shadows (teal and terra), a nod to
-      // its split-colour look without using its logo.
+      background: threads || tiktok ? T.ink : 'var(--accent)',
+      color: threads || tiktok ? T.bg : 'var(--on-accent, #fff)',
+      // TikTok: two offset shadows (accent and red), a nod to its split-colour
+      // look without using its logo.
       boxShadow: threads ? '0 0 0 6px var(--t-surface2)'
-        : tiktok ? '-3px -3px 0 #02888f, 3px 3px 0 #a84b2f'
-        : '0 10px 28px rgba(2,136,143,0.28)',
+        : tiktok ? '-3px -3px 0 var(--accent), 3px 3px 0 var(--bad)'
+        : '0 0 0 6px var(--acc-soft)',
     }}>
       <PlatformIcon platform={platform} size={22} />
     </div>
@@ -53,7 +53,7 @@ export function PlatformHero({ platform, eyebrow, exportFrom }: { platform: Plat
       <div className="flex flex-col gap-0.5 xl:items-end">
         <span style={{ fontSize: 10.5, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em' }}>{eyebrow}</span>
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 xl:flex-col xl:items-end">
-          <span style={{ fontFamily: T.serif, fontSize: 20, color: T.ink, letterSpacing: '-0.02em', lineHeight: 1.1 }}>{PLATFORM_NAME[platform]}</span>
+          <span style={{ fontFamily: T.sans, fontSize: 18, fontWeight: 600, color: T.ink, letterSpacing: '-0.02em', lineHeight: 1.1 }}>{PLATFORM_NAME[platform]}</span>
           <span style={{ fontSize: 11, color: T.inkMute, fontFamily: T.mono }}><span className="xl:hidden">· </span>{exportFrom}</span>
         </div>
       </div>

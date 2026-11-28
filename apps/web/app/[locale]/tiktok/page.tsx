@@ -7,6 +7,7 @@ import { OG_LOCALE, ogAlternateLocales } from '@/i18n/ogLocale';
 import { getPathname } from '@/i18n/navigation';
 import { TikTokContent } from './TikTokContent';
 import { getTikTokPageContent } from './content';
+import { SitePage } from '@/components/landing/SitePage';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
@@ -93,7 +94,7 @@ export default async function TikTokPage({ params }: PageProps) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }} />
-      <TikTokContent content={content} />
+      <SitePage><TikTokContent content={content} /></SitePage>
     </>
   );
 }

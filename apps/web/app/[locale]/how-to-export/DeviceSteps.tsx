@@ -88,7 +88,7 @@ export function DeviceSteps({ content, activeStep, onWatchStep }: Props) {
               <div style={{ fontSize: 11, color: T.inkMute, marginTop: 2 }}>From: security-noreply@instagram.com</div>
               <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
                 <div style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--t-border2)', fontSize: 11, color: T.inkDim, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>instagram-username-20260428.zip</div>
-                <div style={{ padding: '8px 14px', borderRadius: 8, background: T.tealMid, fontSize: 11, fontWeight: 600, color: T.cream, whiteSpace: 'nowrap' }}>Download</div>
+                <div style={{ padding: '8px 14px', borderRadius: 8, background: T.tealMid, fontSize: 11, fontWeight: 600, color: T.onTeal, whiteSpace: 'nowrap' }}>Download</div>
               </div>
             </div>
           </div>

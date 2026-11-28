@@ -1,7 +1,5 @@
 import { validateRequest } from '@/lib/auth/session';
-import { db } from '@/lib/db/index';
-import { profiles } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
+import { getProfileRow } from '@/lib/auth/profileRow';
 import { isDevProPreview } from '@/lib/auth/devProPreview';
 
 export function isPaidFeaturesEnabled(): boolean {
@@ -22,9 +20,7 @@ export async function getSubscriptionStatus(): Promise<SubscriptionStatus> {
   const { user } = await validateRequest();
   if (!user) return 'none';
 
-  const profile = await db.query.profiles.findFirst({
-    where: eq(profiles.userId, user.id),
-  });
+  const profile = await getProfileRow(user.id);
   if (!profile) return 'none';
 
   if (
@@ -65,10 +61,7 @@ export async function isPaidSubscriber(): Promise<boolean> {
   const { user } = await validateRequest();
   if (!user) return false;
 
-  const profile = await db.query.profiles.findFirst({
-    where: eq(profiles.userId, user.id),
-    columns: { subscriptionStatus: true, stripeSubscriptionId: true, subscriptionExpiresAt: true, lifetimePurchasedAt: true },
-  });
+  const profile = await getProfileRow(user.id);
   if (!profile || profile.subscriptionStatus !== 'active') return false;
 
   if (profile.lifetimePurchasedAt) return true;
@@ -85,9 +78,6 @@ export async function isLifetimeMember(): Promise<boolean> {
   const { user } = await validateRequest();
   if (!user) return false;
 
-  const profile = await db.query.profiles.findFirst({
-    where: eq(profiles.userId, user.id),
-    columns: { subscriptionStatus: true, lifetimePurchasedAt: true },
-  });
+  const profile = await getProfileRow(user.id);
   return profile?.subscriptionStatus === 'active' && !!profile.lifetimePurchasedAt;
 }

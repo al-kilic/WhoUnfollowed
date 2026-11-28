@@ -7,6 +7,7 @@ import { OG_LOCALE, ogAlternateLocales } from '@/i18n/ogLocale';
 import { getPathname } from '@/i18n/navigation';
 import { ThreadsContent } from './ThreadsContent';
 import { getThreadsPageContent } from './content';
+import { SitePage } from '@/components/landing/SitePage';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
@@ -97,7 +98,7 @@ export default async function ThreadsPage({ params }: PageProps) {
       <script dangerouslySetInnerHTML={{ __html: "document.documentElement.dataset.platform='threads'" }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }} />
-      <ThreadsContent content={content} />
+      <SitePage><ThreadsContent content={content} /></SitePage>
     </>
   );
 }

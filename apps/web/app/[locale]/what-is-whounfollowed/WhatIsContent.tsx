@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { T } from '@/components/landing/tokens';
-import { SiteNav } from '@/components/landing/SiteNav';
-import { LandingFooter } from '@/components/landing/FinalCTA';
+import { SiteHeader } from '@/components/site/SiteHeader';
+import { SiteFooter } from '@/components/site/SiteFooter';
 import { Icon } from '@/components/landing/atoms';
 import type { WhatIsContent as WhatIsContentData, FaqItem } from './content';
 
@@ -18,7 +18,7 @@ function FaqItemRow({ item }: { item: FaqItem }) {
       >
         <span style={{ fontFamily: T.serif, fontSize: 17, lineHeight: 1.3, color: T.ink, letterSpacing: '-0.01em' }}>{item.q}</span>
         <span style={{ flexShrink: 0, width: 26, height: 26, borderRadius: '50%', background: open ? T.tealMid : T.surface2, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s', transform: open ? 'rotate(45deg)' : 'none' }}>
-          <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 2V12M2 7H12" stroke={open ? T.cream : T.inkMute} strokeWidth="1.6" strokeLinecap="round"/></svg>
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 2V12M2 7H12" stroke={open ? T.onTeal : T.inkMute} strokeWidth="1.6" strokeLinecap="round"/></svg>
         </span>
       </button>
       <div style={{ maxHeight: open ? 200 : 0, overflow: 'hidden', transition: 'max-height 0.35s cubic-bezier(0.16,1,0.3,1)' }}>
@@ -31,7 +31,7 @@ function FaqItemRow({ item }: { item: FaqItem }) {
 export function WhatIsContent({ content }: { content: WhatIsContentData }) {
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <SiteNav />
+      <SiteHeader />
 
       <main className="px-4 sm:px-8" style={{ maxWidth: 740, margin: '0 auto', paddingTop: 64, paddingBottom: 96 }}>
 
@@ -65,7 +65,7 @@ export function WhatIsContent({ content }: { content: WhatIsContentData }) {
 
         {/* The problem */}
         <section style={{ paddingBottom: 56, marginBottom: 56, borderBottom: `1px solid ${T.border1}` }}>
-          <div style={{ fontSize: 10, color: T.terra, fontFamily: T.mono, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 14 }}>{content.problemEyebrow}</div>
+          <div style={{ fontSize: 10, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 14 }}>{content.problemEyebrow}</div>
           <h2 style={{ fontFamily: T.serif, fontSize: 'clamp(22px, 4vw, 36px)', fontWeight: 400, lineHeight: 1.1, letterSpacing: '-0.02em', color: T.ink, marginBottom: 20 }}>
             {content.problemHeadline}
           </h2>
@@ -91,7 +91,7 @@ export function WhatIsContent({ content }: { content: WhatIsContentData }) {
               <div key={item.title} style={{ display: 'flex', gap: 20, padding: '20px 22px', borderBottom: i < 2 ? `1px solid ${T.border1}` : 'none', background: i === 2 ? 'rgba(2,136,143,0.04)' : T.surface1 }}>
                 <div style={{ flexShrink: 0, textAlign: 'center', paddingTop: 2 }}>
                   <div style={{ fontFamily: T.mono, fontSize: 10, color: T.tealMid, letterSpacing: '0.1em', marginBottom: 2 }}>{item.time}</div>
-                  <div style={{ width: 28, height: 28, borderRadius: '50%', background: i === 2 ? T.teal : T.surface2, border: `1px solid ${i === 2 ? 'transparent' : T.border2}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontFamily: T.mono, color: i === 2 ? T.cream : T.inkMute, margin: '0 auto' }}>
+                  <div style={{ width: 28, height: 28, borderRadius: '50%', background: i === 2 ? T.teal : T.surface2, border: `1px solid ${i === 2 ? 'transparent' : T.border2}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontFamily: T.mono, color: i === 2 ? T.onTeal : T.inkMute, margin: '0 auto' }}>
                     {String(i + 1).padStart(2, '0')}
                   </div>
                 </div>
@@ -118,7 +118,7 @@ export function WhatIsContent({ content }: { content: WhatIsContentData }) {
             <div className="grid grid-cols-3" style={{ background: T.surface1, borderBottom: `1px solid ${T.border1}` }}>
               <div style={{ padding: '12px 16px', fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.08em' }}>{content.compareFeatureHeader}</div>
               <div style={{ padding: '12px 16px', fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.08em', textAlign: 'center', borderLeft: `1px solid ${T.border1}` }}>{content.compareUsHeader}</div>
-              <div style={{ padding: '12px 16px', fontSize: 11, color: T.terra, fontFamily: T.mono, letterSpacing: '0.08em', textAlign: 'center', borderLeft: `1px solid ${T.border1}` }}>{content.compareThemHeader}</div>
+              <div style={{ padding: '12px 16px', fontSize: 11, color: T.inkMute, fontFamily: T.mono, letterSpacing: '0.08em', textAlign: 'center', borderLeft: `1px solid ${T.border1}` }}>{content.compareThemHeader}</div>
             </div>
             {content.compareRows.map((row, i) => (
               <div key={row.feature} className="grid grid-cols-3" style={{ borderBottom: i < content.compareRows.length - 1 ? `1px solid ${T.border1}` : 'none' }}>
@@ -178,7 +178,7 @@ export function WhatIsContent({ content }: { content: WhatIsContentData }) {
         <div style={{ padding: '32px', borderRadius: 18, background: T.bgCard, border: `1px solid ${T.border1}`, textAlign: 'center' }}>
           <p style={{ fontFamily: T.serif, fontSize: 18, fontStyle: 'italic', color: T.inkDim, marginBottom: 6 }}>{content.ctaQuote}</p>
           <p style={{ fontSize: 14, color: T.inkMute, marginBottom: 24 }}>{content.ctaSubline}</p>
-          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 12, background: T.teal, color: T.cream, fontSize: 14, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans, boxShadow: `0 6px 20px ${T.tealGlow}` }}>
+          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 12, background: T.teal, color: T.onTeal, fontSize: 14, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans, boxShadow: `0 6px 20px ${T.tealGlow}` }}>
             {content.ctaButton}
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7H11M11 7L8 4M11 7L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </Link>
@@ -192,7 +192,7 @@ export function WhatIsContent({ content }: { content: WhatIsContentData }) {
         </div>
       </main>
 
-      <LandingFooter />
+      <SiteFooter />
     </div>
   );
 }

@@ -49,7 +49,7 @@ const EN: ThreadsPageContent = {
   whatItems: [
     { title: "Who doesn't follow you back", body: 'Every Threads account you follow that does not follow you, with the date you followed them.' },
     { title: 'Fans and mutuals', body: "People who follow you that you don't follow back, and everyone you follow each other with." },
-    { title: 'Who unfollowed you', body: 'Upload a newer export later and compare snapshots to see exactly who left. Pro keeps unlimited history.' },
+    { title: 'Who unfollowed you', body: 'Upload a newer export later and compare snapshots to see exactly who left. A free account keeps two exports; Pro AI keeps every one and shows the names.' },
     { title: 'Kept apart from Instagram', body: 'Threads and Instagram snapshots never mix. Radar, history, and comparisons stay per app.' },
   ],
   stepsEyebrow: 'HOW TO EXPORT',
@@ -72,7 +72,7 @@ const EN: ThreadsPageContent = {
   faqHeadline: 'Threads, answered.',
   faq: [
     { q: 'Does Threads tell you when someone unfollows you?', a: "No. Threads doesn't notify you when someone unfollows you, and it doesn't tell anyone when you unfollow them. Comparing two exports is the reliable way to know." },
-    { q: 'Can I see who unfollowed me on Threads for free?', a: 'Yes. The free plan shows who does not follow you back from one export, with no account. Seeing who unfollowed you between two exports needs saved snapshots, which Pro keeps.' },
+    { q: 'Can I see who unfollowed me on Threads for free?', a: 'Yes. The free plan shows who does not follow you back from one export, with no account. Seeing who unfollowed you between two exports needs saved snapshots: a free account shows how many left, Pro AI shows who.' },
     { q: 'Do I need to give my Threads or Instagram password?', a: 'No. You upload the export Meta sends you. There is no login and no connection to your account.' },
     { q: 'Can I use the same export as Instagram?', a: 'Request one export per profile. If a ZIP has both, we show the Instagram part and tell you to export Threads on its own.' },
     { q: 'Will Threads ban me for using this?', a: "No. The data export is Meta's own feature, offered under GDPR. Nothing here touches Threads or its API." },
@@ -100,7 +100,7 @@ const ES: ThreadsPageContent = {
   whatItems: [
     { title: 'Quién no te sigue de vuelta', body: 'Cada cuenta de Threads que sigues y no te sigue, con la fecha en que la empezaste a seguir.' },
     { title: 'Fans y mutuos', body: 'Quienes te siguen y tú no sigues, y todas las cuentas con las que se siguen mutuamente.' },
-    { title: 'Quién te dejó de seguir', body: 'Sube un export más reciente y compara snapshots para ver exactamente quién se fue. Pro guarda historial ilimitado.' },
+    { title: 'Quién te dejó de seguir', body: 'Sube un export más reciente y compara snapshots para ver exactamente quién se fue. Una cuenta gratis guarda dos exports; Pro AI guarda todos y muestra los nombres.' },
     { title: 'Separado de Instagram', body: 'Los snapshots de Threads e Instagram nunca se mezclan. Radar, historial y comparaciones van por app.' },
   ],
   stepsEyebrow: 'CÓMO EXPORTAR',
@@ -123,7 +123,7 @@ const ES: ThreadsPageContent = {
   faqHeadline: 'Threads, respondido.',
   faq: [
     { q: '¿Threads te avisa cuando alguien te deja de seguir?', a: 'No. Threads no te avisa cuando alguien te deja de seguir, ni le dice a nadie cuando tú lo dejas de seguir. Comparar dos exports es la forma fiable de saberlo.' },
-    { q: '¿Puedo ver gratis quién me dejó de seguir en Threads?', a: 'Sí. El plan gratis muestra quién no te sigue de vuelta a partir de un export, sin cuenta. Ver quién te dejó de seguir entre dos exports requiere snapshots guardados, que Pro conserva.' },
+    { q: '¿Puedo ver gratis quién me dejó de seguir en Threads?', a: 'Sí. El plan gratis muestra quién no te sigue de vuelta a partir de un export, sin cuenta. Ver quién te dejó de seguir entre dos exports requiere snapshots guardados: una cuenta gratis muestra cuántos se fueron, Pro AI muestra quiénes.' },
     { q: '¿Tengo que dar mi contraseña de Threads o Instagram?', a: 'No. Subes el export que Meta te envía. No hay inicio de sesión ni conexión con tu cuenta.' },
     { q: '¿Puedo usar el mismo export que en Instagram?', a: 'Solicita un export por perfil. Si un ZIP tiene ambos, mostramos la parte de Instagram y te pedimos exportar Threads por separado.' },
     { q: '¿Threads me bloqueará por usar esto?', a: 'No. El export de datos es una función de Meta, ofrecida bajo el RGPD. Nada de esto toca Threads ni su API.' },
@@ -151,7 +151,7 @@ const PT: ThreadsPageContent = {
   whatItems: [
     { title: 'Quem não te segue de volta', body: 'Cada conta do Threads que você segue e não te segue, com a data em que você começou a seguir.' },
     { title: 'Fãs e mútuos', body: 'Quem te segue e você não segue de volta, e todo mundo com quem vocês se seguem.' },
-    { title: 'Quem deixou de te seguir', body: 'Envie um export mais recente depois e compare snapshots para ver exatamente quem saiu. O Pro guarda histórico ilimitado.' },
+    { title: 'Quem deixou de te seguir', body: 'Envie um export mais recente depois e compare snapshots para ver exatamente quem saiu. Uma conta grátis guarda dois exports; o Pro AI guarda todos e mostra os nomes.' },
     { title: 'Separado do Instagram', body: 'Os snapshots do Threads e do Instagram nunca se misturam. Radar, histórico e comparações ficam por app.' },
   ],
   stepsEyebrow: 'COMO EXPORTAR',
@@ -174,7 +174,7 @@ const PT: ThreadsPageContent = {
   faqHeadline: 'Threads, respondido.',
   faq: [
     { q: 'O Threads avisa quando alguém deixa de te seguir?', a: 'Não. O Threads não avisa quando alguém deixa de te seguir, nem avisa ninguém quando você deixa de seguir. Comparar dois exports é a forma confiável de saber.' },
-    { q: 'Posso ver de graça quem deixou de me seguir no Threads?', a: 'Sim. O plano grátis mostra quem não te segue de volta a partir de um export, sem conta. Ver quem deixou de te seguir entre dois exports exige snapshots salvos, que o Pro guarda.' },
+    { q: 'Posso ver de graça quem deixou de me seguir no Threads?', a: 'Sim. O plano grátis mostra quem não te segue de volta a partir de um export, sem conta. Ver quem deixou de te seguir entre dois exports exige snapshots salvos: uma conta grátis mostra quantos saíram, o Pro AI mostra quem.' },
     { q: 'Preciso dar minha senha do Threads ou do Instagram?', a: 'Não. Você envia o export que a Meta te manda. Não há login nem conexão com sua conta.' },
     { q: 'Posso usar o mesmo export do Instagram?', a: 'Peça um export por perfil. Se um ZIP tiver os dois, mostramos a parte do Instagram e pedimos para exportar o Threads separado.' },
     { q: 'O Threads vai me banir por usar isso?', a: 'Não. O export de dados é um recurso da própria Meta, oferecido sob o RGPD. Nada aqui toca o Threads ou a API dele.' },

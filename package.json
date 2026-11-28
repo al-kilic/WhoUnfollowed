@@ -10,7 +10,8 @@
     "test": "turbo run test",
     "format": "turbo run format",
     "clean": "turbo run clean && rm -rf node_modules",
-    "prepare": "husky"
+    "prepare": "husky",
+    "e2e": "pnpm --filter @ig-tracker/web e2e"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.66.0",

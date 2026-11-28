@@ -1,3 +1,4 @@
+import { IMAGE_SANS, IMAGE_SERIF, loadImageFonts } from '@/components/landing/imageFonts';
 // Draws the verdict card as a 1080x1920 story image, entirely in the browser.
 // Brand colours: deep teal ground, cream ink, terra accent.
 
@@ -11,8 +12,8 @@ export interface VerdictImageInput {
 
 const W = 1080;
 const H = 1920;
-const SERIF = "'Instrument Serif', Georgia, serif";
-const SANS = "'DM Sans', system-ui, sans-serif";
+const SERIF = IMAGE_SERIF;
+const SANS = IMAGE_SANS;
 
 function wrap(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
   const lines: string[] = [];
@@ -26,9 +27,7 @@ function wrap(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): st
 }
 
 export async function drawVerdictImage(input: VerdictImageInput): Promise<Blob> {
-  if (typeof document !== 'undefined' && 'fonts' in document) {
-    try { await document.fonts.ready; } catch { /* fall back to system fonts */ }
-  }
+  await loadImageFonts();
   const canvas = document.createElement('canvas');
   canvas.width = W;
   canvas.height = H;

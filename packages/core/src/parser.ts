@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-import JSZip from 'jszip';
+import { openZipReader, type ZipReader } from './lazyZip.js';
 import {
   FileReadError,
   InvalidZipError,
@@ -77,10 +77,10 @@ function entryToAccount(entry: RelationshipEntry, platform: Platform = 'instagra
   };
 }
 
-async function parseFollowersJson(zip: JSZip, fileNames: string[]): Promise<Account[]> {
+async function parseFollowersJson(zip: ZipReader, fileNames: string[]): Promise<Account[]> {
   const accounts: Account[] = [];
   for (const fname of fileNames) {
-    const raw = await zip.files[fname]!.async('string');
+    const raw = ((await zip.text(fname)) ?? '');
     let parsed: unknown;
     try {
       parsed = JSON.parse(raw);
@@ -96,8 +96,8 @@ async function parseFollowersJson(zip: JSZip, fileNames: string[]): Promise<Acco
   return accounts;
 }
 
-async function parseFollowingJson(zip: JSZip, fileName: string): Promise<Account[]> {
-  const raw = await zip.files[fileName]!.async('string');
+async function parseFollowingJson(zip: ZipReader, fileName: string): Promise<Account[]> {
+  const raw = ((await zip.text(fileName)) ?? '');
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw);
@@ -113,8 +113,8 @@ async function parseFollowingJson(zip: JSZip, fileName: string): Promise<Account
 
 // ─── Threads helpers ──────────────────────────────────────────────────────────
 
-async function readJson(zip: JSZip, fileName: string): Promise<unknown> {
-  const raw = await zip.files[fileName]!.async('string');
+async function readJson(zip: ZipReader, fileName: string): Promise<unknown> {
+  const raw = ((await zip.text(fileName)) ?? '');
   try {
     return JSON.parse(raw);
   } catch {
@@ -122,7 +122,7 @@ async function readJson(zip: JSZip, fileName: string): Promise<unknown> {
   }
 }
 
-async function parseThreadsFollowers(zip: JSZip, fileNames: string[]): Promise<Account[]> {
+async function parseThreadsFollowers(zip: ZipReader, fileNames: string[]): Promise<Account[]> {
   const accounts: Account[] = [];
   for (const fname of fileNames) {
     const result = threadsFollowersFileSchema.safeParse(await readJson(zip, fname));
@@ -138,7 +138,7 @@ async function parseThreadsFollowers(zip: JSZip, fileNames: string[]): Promise<A
   return accounts;
 }
 
-async function parseThreadsFollowing(zip: JSZip, fileName: string): Promise<Account[]> {
+async function parseThreadsFollowing(zip: ZipReader, fileName: string): Promise<Account[]> {
   const result = threadsFollowingFileSchema.safeParse(await readJson(zip, fileName));
   if (!result.success) {
     throw new SchemaValidationError(fileName, result.error.issues[0]?.message ?? 'unknown');
@@ -201,10 +201,10 @@ function parseAccountsFromHtml(html: string): Account[] {
   return accounts;
 }
 
-async function parseFollowersHtml(zip: JSZip, fileNames: string[]): Promise<Account[]> {
+async function parseFollowersHtml(zip: ZipReader, fileNames: string[]): Promise<Account[]> {
   const accounts: Account[] = [];
   for (const fname of fileNames) {
-    const html = await zip.files[fname]!.async('string');
+    const html = ((await zip.text(fname)) ?? '');
     accounts.push(...parseAccountsFromHtml(html));
   }
   return accounts;
@@ -246,14 +246,20 @@ function detectThreadsFiles(fileNames: string[]): DetectedThreadsFiles {
 }
 
 function hasInstagramRelationshipFiles(fileNames: string[]): boolean {
-  return fileNames.some(n => /(?:followers_\d+|following)\.(?:json|html?)$/i.test(n));
+  return fileNames.some(n => /(?:followers_\d+|following)\.(?:json|html?)$/i.test(n) || BARE_FOLLOWERS.test(n));
 }
 
+// A bare followers.json / followers.html (no page number) inside the
+// followers_and_following folder: accepted in case Meta drops the _1 suffix.
+// Only in that folder, so Threads' your_instagram_activity/threads/followers.json
+// inside an Instagram export is never mistaken for it.
+const BARE_FOLLOWERS = /(?:^|\/)followers_and_following\/followers\.(?:json|html?)$/i;
+
 function detectFiles(fileNames: string[]): DetectedFiles {
-  const followerJson = fileNames.filter((n) => /followers_\d+\.json$/i.test(n)).sort();
+  const followerJson = fileNames.filter((n) => /followers_\d+\.json$/i.test(n) || (BARE_FOLLOWERS.test(n) && /\.json$/i.test(n))).sort();
   const followingJson = fileNames.find((n) => /following\.json$/i.test(n));
 
-  const followerHtml = fileNames.filter((n) => /followers_\d+\.html?$/i.test(n)).sort();
+  const followerHtml = fileNames.filter((n) => /followers_\d+\.html?$/i.test(n) || (BARE_FOLLOWERS.test(n) && /\.html?$/i.test(n))).sort();
   const followingHtml = fileNames.find((n) => /following\.html?$/i.test(n));
 
   const hasJson = followerJson.length > 0 || !!followingJson;
@@ -312,8 +318,11 @@ export function extractExportDateFromFilename(filename: string): number | null {
 
 export interface ParseExportResult {
   snapshot: ParsedSnapshot;
-  // Platforms whose data was also in the ZIP but not parsed (today: Threads
-  // data inside an export that also has Instagram data).
+  // Other platforms parsed from the same ZIP (today: the Threads part of an
+  // export that also has Instagram data). The main snapshot is Instagram.
+  extraSnapshots?: ParsedSnapshot[];
+  // Platforms whose data was also in the ZIP but could not be parsed (e.g. a
+  // Threads part with broken files). The Instagram results still show.
   skippedPlatforms: Platform[];
 }
 
@@ -337,35 +346,58 @@ export async function parseExportZip(zipFile: File | Blob | ArrayBuffer): Promis
   // On mobile Safari, .arrayBuffer() throws NotReadableError near-instantly for
   // a stale File reference or an iCloud file that hasn't finished downloading
   // to the device. That's a distinct failure from a corrupt/invalid ZIP.
-  let input: ArrayBuffer;
-  if (zipFile instanceof ArrayBuffer) {
-    input = zipFile;
-  } else {
-    try {
-      input = await (zipFile as Blob).arrayBuffer();
-    } catch (err) {
-      throw new FileReadError(err);
-    }
+  // The ZIP is read lazily (lazyZip.ts): only the follower and following
+  // files are inflated, so a 1 GB+ export never has to fit in memory.
+  const blob = zipFile instanceof ArrayBuffer ? new Blob([zipFile]) : (zipFile as Blob);
+  let head: ArrayBuffer;
+  try {
+    head = await blob.slice(0, 64).arrayBuffer();
+  } catch (err) {
+    throw new FileReadError(err);
   }
 
   // TikTok's JSON download can arrive as the bare user_data_tiktok.json (some
   // phones unzip it automatically). Accept that file on its own.
-  if (looksLikeJson(input)) return { snapshot: parseBareTikTokJson(input, filenameDate), skippedPlatforms: [] };
+  if (looksLikeJson(head)) {
+    let whole: ArrayBuffer;
+    try { whole = await blob.arrayBuffer(); } catch (err) { throw new FileReadError(err); }
+    return { snapshot: parseBareTikTokJson(whole, filenameDate), skippedPlatforms: [] };
+  }
 
-  let zip: JSZip;
+  let zip: ZipReader;
   try {
-    zip = await JSZip.loadAsync(input);
+    zip = await openZipReader(blob);
   } catch (err) {
     throw new InvalidZipError(err);
   }
 
-  const allFileNames = Object.keys(zip.files);
+  return parseFromReader(zip, filenameDate);
+}
+
+async function parseFromReader(zip: ZipReader, filenameDate: number | null): Promise<ParseExportResult> {
+  const allFileNames = zip.names;
   try {
     return await parseZipContents(zip, allFileNames, filenameDate);
   } catch (err) {
     if (err instanceof MissingFilesError) err.shape = zipShape(allFileNames);
     throw err;
   }
+}
+
+// An export that was already unzipped (phones and Safari on Mac often do it):
+// the member picks the files themselves, or drops the folder. `path` is the
+// file's path inside the export when known (a dropped folder), else its name.
+// The same parser runs on them, as if they came from the ZIP.
+export interface LooseFile { path: string; text(): Promise<string> }
+
+export async function parseExportFiles(files: readonly LooseFile[], exportedAt?: number | null): Promise<ParseExportResult> {
+  const byName = new Map(files.map((f) => [f.path.replace(/^\/+/, ''), f]));
+  const reader: ZipReader = {
+    names: [...byName.keys()],
+    async bytes(name) { const f = byName.get(name); return f ? new TextEncoder().encode(await f.text()) : null; },
+    async text(name) { const f = byName.get(name); return f ? f.text() : null; },
+  };
+  return parseFromReader(reader, exportedAt ?? null);
 }
 
 function zipShape(allFileNames: string[]): ZipShape {
@@ -385,17 +417,17 @@ const baseName = (n: string) => n.slice(n.lastIndexOf('/') + 1);
 
 function instagramListShape(files: string[]): Pick<ZipShape, 'missingList' | 'oddFollowerFile' | 'oddFollowingFile'> {
   const names = files.map(baseName);
-  const followers = names.some(n => /^followers_\d+\.(?:json|html?)$/i.test(n));
+  const followers = names.some(n => /^followers_\d+\.(?:json|html?)$/i.test(n)) || files.some(n => BARE_FOLLOWERS.test(n));
   const following = names.some(n => /^following\.(?:json|html?)$/i.test(n));
   const missingList = !followers && !following ? 'both' : !followers ? 'followers' : !following ? 'following' : null;
   return {
     ...(missingList ? { missingList } : {}),
-    oddFollowerFile: names.some(n => /follower/i.test(n) && /\.(?:json|html?)$/i.test(n) && !/^followers_\d+\./i.test(n)),
+    oddFollowerFile: names.some(n => /follower/i.test(n) && /\.(?:json|html?)$/i.test(n) && !/^followers_\d+\./i.test(n) && !/^followers\.(?:json|html?)$/i.test(n)),
     oddFollowingFile: names.some(n => /following/i.test(n) && /\.(?:json|html?)$/i.test(n) && !/^following\./i.test(n) && !/hashtag/i.test(n)),
   };
 }
 
-async function parseZipContents(zip: JSZip, allFileNames: string[], filenameDate: number | null): Promise<ParseExportResult> {
+async function parseZipContents(zip: ZipReader, allFileNames: string[], filenameDate: number | null): Promise<ParseExportResult> {
 
   const instagramFileNames = allFileNames.filter(n => !isThreadsPath(n));
 
@@ -407,8 +439,7 @@ async function parseZipContents(zip: JSZip, allFileNames: string[], filenameDate
   const threadsFiles = detectThreadsFiles(allFileNames);
   const hasThreads = threadsFiles.followerFileNames.length > 0 || !!threadsFiles.followingFileName;
 
-  // Instagram wins when both are present; the caller is told Threads was
-  // skipped so it can ask the user to export Threads on its own.
+  // Only Threads: parse it on its own.
   if (hasThreads && !hasInstagramRelationshipFiles(instagramFileNames)) {
     const snapshot = await parseThreads(zip, allFileNames, threadsFiles, filenameDate);
     return { snapshot, skippedPlatforms: [] };
@@ -430,7 +461,7 @@ async function parseZipContents(zip: JSZip, allFileNames: string[], filenameDate
   let exportedAt = filenameDate;
   if (format === 'html') {
     followers = await parseFollowersHtml(zip, followerFileNames);
-    const followingHtml = await zip.files[followingFileName]!.async('string');
+    const followingHtml = ((await zip.text(followingFileName)) ?? '');
     following = parseAccountsFromHtml(followingHtml);
     exportedAt ??= extractHtmlGeneratedAt(followingHtml);
   } else {
@@ -459,7 +490,21 @@ async function parseZipContents(zip: JSZip, allFileNames: string[], filenameDate
     },
   );
 
+  // Both in one ZIP: Instagram is the main snapshot and Threads comes along,
+  // so one export shows both. A broken Threads part never blocks Instagram.
+  let extraSnapshots: ParsedSnapshot[] | undefined;
+  let skippedPlatforms: Platform[] = [];
+  if (hasThreads) {
+    try {
+      const threads = await parseThreads(zip, allFileNames, threadsFiles, filenameDate);
+      extraSnapshots = [{ ...threads, exportedAt: threads.exportedAt || (exportedAt ?? Math.floor(Date.now() / 1000)) }];
+    } catch {
+      skippedPlatforms = ['threads'];
+    }
+  }
+
   return {
+    ...(extraSnapshots ? { extraSnapshots } : {}),
     snapshot: {
       exportedAt: exportedAt ?? Math.floor(Date.now() / 1000),
       followers,
@@ -469,12 +514,12 @@ async function parseZipContents(zip: JSZip, allFileNames: string[], filenameDate
       format,
       platform: 'instagram',
     },
-    skippedPlatforms: hasThreads ? ['threads'] : [],
+    skippedPlatforms,
   };
 }
 
 async function parseThreads(
-  zip: JSZip,
+  zip: ZipReader,
   allFileNames: string[],
   files: DetectedThreadsFiles,
   filenameDate: number | null,
@@ -512,7 +557,7 @@ async function parseThreads(
 }
 
 async function parseOptionalRelationships(
-  zip: JSZip,
+  zip: ZipReader,
   fileNames: string[],
   pattern: RegExp,
   parse: (data: unknown) => Account[] | null,
@@ -520,7 +565,7 @@ async function parseOptionalRelationships(
   const fname = fileNames.find(n => pattern.test(n));
   if (!fname) return null;
   try {
-    const raw = await zip.files[fname]!.async('string');
+    const raw = ((await zip.text(fname)) ?? '');
     return parse(JSON.parse(raw));
   } catch {
     return null;

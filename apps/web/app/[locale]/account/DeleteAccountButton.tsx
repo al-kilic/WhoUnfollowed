@@ -108,7 +108,7 @@ function DeleteAccountDialog({ onClose, c }: { onClose: () => void; c: AccountCo
             <button
               onClick={handleDelete}
               disabled={loading}
-              style={{ width: '100%', padding: '14px 16px', borderRadius: 12, border: 'none', background: T.terra, color: T.cream, fontSize: 13, fontWeight: 700, cursor: loading ? 'default' : 'pointer', fontFamily: T.sans, opacity: loading ? 0.7 : 1 }}
+              style={{ width: '100%', padding: '14px 16px', borderRadius: 12, border: 'none', background: T.terra, color: T.onTeal, fontSize: 13, fontWeight: 700, cursor: loading ? 'default' : 'pointer', fontFamily: T.sans, opacity: loading ? 0.7 : 1 }}
             >
               {loading ? c.deleting : c.confirmBtn}
             </button>

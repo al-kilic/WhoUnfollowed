@@ -1,5 +1,7 @@
 import Dexie, { type Table } from 'dexie';
 import type { Pace, ParsedSnapshot, Platform } from '@ig-tracker/core';
+import { sampleGuardMiddleware } from '@/lib/sample/sampleGuard';
+import { isSampleOn } from '@/lib/sample/sampleMode';
 
 export interface SnapshotRecord {
   id?: number;
@@ -52,11 +54,37 @@ export interface PlanRecord {
   updatedAt: number;
 }
 
+// Photos for a planned post (Studio > Plan), resized in the browser. They stay
+// in this browser and are never uploaded. key: see postPhotoKey.
+export interface PostPhotoRecord {
+  key: string;
+  photos: Blob[];
+  updatedAt: number;
+}
+
+// Ask coach conversations. Kept only in this browser; each question sends the
+// last few turns to the coach for that one answer.
+export interface ChatTurnRecord {
+  role: 'user' | 'coach';
+  text: string;
+  deep?: boolean;
+  followUps?: string[];
+}
+export interface ChatRecord {
+  id: string;
+  owner: string;
+  title: string;
+  turns: ChatTurnRecord[];
+  updatedAt: number;
+}
+
 class IgTrackerDb extends Dexie {
   snapshots!: Table<SnapshotRecord, number>;
   triageStates!: Table<TriageRecord, number>;
   stars!: Table<StarRecord, number>;
   plans!: Table<PlanRecord, [string, Platform]>;
+  postPhotos!: Table<PostPhotoRecord, string>;
+  chats!: Table<ChatRecord, string>;
 
   constructor() {
     super('ig-tracker');
@@ -82,6 +110,25 @@ class IgTrackerDb extends Dexie {
       stars: '++id, &[owner+platform+username], [owner+platform]',
       plans: '[owner+platform]',
     });
+    // v6: photos for planned posts. Adds a table only, nothing to migrate.
+    this.version(6).stores({
+      snapshots: '++id, exportedAt, savedAt, cloudId, ownerUserId, anonSessionId',
+      triageStates: '++id, [snapshotKey+username], snapshotKey',
+      stars: '++id, &[owner+platform+username], [owner+platform]',
+      plans: '[owner+platform]',
+      postPhotos: 'key',
+    });
+    // v7: Ask coach chats. Adds a table only, nothing to migrate.
+    this.version(7).stores({
+      snapshots: '++id, exportedAt, savedAt, cloudId, ownerUserId, anonSessionId',
+      triageStates: '++id, [snapshotKey+username], snapshotKey',
+      stars: '++id, &[owner+platform+username], [owner+platform]',
+      plans: '[owner+platform]',
+      postPhotos: 'key',
+      chats: 'id, [owner+updatedAt]',
+    });
+    // Sample mode: nothing about the made-up account is ever stored.
+    this.use(sampleGuardMiddleware(isSampleOn));
   }
 }
 

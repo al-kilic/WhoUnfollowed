@@ -20,7 +20,7 @@ export function PlatformEmptyPanel({ platform, c }: { platform: Platform; c: Das
       </p>
       <Link
         href="/"
-        style={{ display: 'inline-block', fontSize: 14, fontWeight: 600, color: T.cream, textDecoration: 'none', padding: '11px 20px', borderRadius: 10, background: T.teal, border: '1px solid rgba(2,136,143,0.5)' }}
+        style={{ display: 'inline-block', fontSize: 14, fontWeight: 600, color: T.onTeal, textDecoration: 'none', padding: '11px 20px', borderRadius: 10, background: T.teal, border: '1px solid rgba(2,136,143,0.5)' }}
       >
         {c.platformEmpty.cta}
       </Link>

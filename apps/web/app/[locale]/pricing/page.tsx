@@ -8,9 +8,19 @@ import { routing, type AppLocale } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
 import { OG_LOCALE, ogAlternateLocales } from '@/i18n/ogLocale';
 import { PricingClient } from './PricingClient';
+import { getAuthState } from '@/lib/auth/getAuthState';
+import '@/styles/home-base.css';
+import '@/styles/home-header.css';
+import '@/styles/home-page.css';
+import '@/styles/pricing.css';
+import { SiteHeader } from '@/components/site/SiteHeader';
+import { HomeFooter } from '@/components/home/HomeFooter';
+import { getHomeCopy } from '@/components/home/copy';
+import { HM_FONTS } from '@/components/home/fonts';
 import { getPricingFaq } from './faq';
 import { getPricingContent } from './content';
-import { UNLOCK_PRICE_SUMMARY } from '@/lib/pricing';
+import { getPricingMore } from './pricingMore.content';
+import { PRO_AI_PRICE_SUMMARY } from '@/lib/pricing';
 import { getLifetimeAvailability } from '@/lib/lifetimeSeats';
 import { isLifetimeMember } from '@/lib/flags';
 
@@ -19,22 +29,22 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 const SEO_META: Record<AppLocale, { title: string; description: string; ogDescription: string; home: string; pricing: string }> = {
   en: {
     title: 'Pricing',
-    description: `Free to check who doesn't follow you back, no account needed. Pro is a one-time unlock (${UNLOCK_PRICE_SUMMARY}) that shows exactly who unfollowed you and when. No auto-renewal.`,
-    ogDescription: `Free forever, no account needed. Pro is a one-time unlock (${UNLOCK_PRICE_SUMMARY}). No subscription, no auto-renewal.`,
+    description: `Free to check who doesn't follow you back, no account needed. Pro AI (${PRO_AI_PRICE_SUMMARY}) adds a coach that remembers your account and shows exactly who unfollowed you. Cancel any time.`,
+    ogDescription: `Free forever, no account needed. Pro AI is ${PRO_AI_PRICE_SUMMARY}, with a coach that remembers your account. Cancel any time.`,
     home: 'Home',
     pricing: 'Pricing',
   },
   es: {
     title: 'Precios',
-    description: `Gratis para siempre, sin necesidad de cuenta. Pro es un desbloqueo único (${UNLOCK_PRICE_SUMMARY}) que añade historial de snapshots, sincronización en la nube y tendencias. Sin renovación automática.`,
-    ogDescription: `Gratis para siempre, sin necesidad de cuenta. Pro es un desbloqueo único (${UNLOCK_PRICE_SUMMARY}). Sin suscripción, sin renovación automática.`,
+    description: `Gratis para siempre, sin necesidad de cuenta. Pro AI (${PRO_AI_PRICE_SUMMARY}) suma un coach que recuerda tu cuenta y muestra exactamente quién te dejó de seguir. Cancela cuando quieras.`,
+    ogDescription: `Gratis para siempre, sin necesidad de cuenta. Pro AI cuesta ${PRO_AI_PRICE_SUMMARY}, con un coach que recuerda tu cuenta. Cancela cuando quieras.`,
     home: 'Inicio',
     pricing: 'Precios',
   },
   pt: {
     title: 'Preços',
-    description: `Grátis para sempre, sem necessidade de conta. O Pro é um desbloqueio único (${UNLOCK_PRICE_SUMMARY}) que adiciona histórico de snapshots, sincronização na nuvem e tendências. Sem renovação automática.`,
-    ogDescription: `Grátis para sempre, sem necessidade de conta. O Pro é um desbloqueio único (${UNLOCK_PRICE_SUMMARY}). Sem assinatura, sem renovação automática.`,
+    description: `Grátis para sempre, sem necessidade de conta. O Pro AI (${PRO_AI_PRICE_SUMMARY}) traz um coach que lembra da sua conta e mostra exatamente quem deixou de te seguir. Cancele quando quiser.`,
+    ogDescription: `Grátis para sempre, sem necessidade de conta. O Pro AI custa ${PRO_AI_PRICE_SUMMARY}, com um coach que lembra da sua conta. Cancele quando quiser.`,
     home: 'Início',
     pricing: 'Preços',
   },
@@ -78,6 +88,7 @@ export default async function PricingPage({ params }: PageProps) {
   const { user } = await validateRequest();
   const paymentsEnabled = isPaidFeaturesEnabled();
   const isPro = await isPaidSubscriber();
+  const auth = await getAuthState();
   const availability = await getLifetimeAvailability();
   // Only what the card needs; the Stripe price ID stays on the server.
   const lifetime = availability.status === 'open' ? { status: 'open' as const, offer: availability.offer } : availability;
@@ -118,16 +129,22 @@ export default async function PricingPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
+      <div className={`hm hm-page pr-page ${HM_FONTS}`} id="hm">
+      <SiteHeader />
       <PricingClient
         userEmail={user?.email ?? null}
         paymentsEnabled={paymentsEnabled}
         isPro={isPro}
+        isLegacyPro={auth.isLegacyPro}
         lifetime={lifetime}
         isLifetimeMember={lifetimeMember}
         content={content}
+        more={getPricingMore(locale)}
         faq={faq}
         locale={locale}
       />
+      <HomeFooter c={getHomeCopy(locale).footer} />
+      </div>
     </>
   );
 }

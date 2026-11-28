@@ -6,8 +6,10 @@ import { getComparison, COMPARISONS, resolveComparison } from '@/app/compare/com
 import { routing, type AppLocale } from '@/i18n/routing';
 import { OG_LOCALE, ogAlternateLocales } from '@/i18n/ogLocale';
 import { getPathname } from '@/i18n/navigation';
+import { compareFaq } from './faq';
 import { CompareDetailContent } from './CompareDetailContent';
 import { getCompareDetailUiContent } from './detailContent';
+import { SitePage } from '@/components/landing/SitePage';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
@@ -94,11 +96,21 @@ export default async function ComparePage({ params }: PageProps) {
     })),
   };
 
+  // The password row (present on every comparison) drives the FAQ answers.
+  const needsPassword = c.rows.find((r) => r.feature.en === 'Requires Instagram password')?.them ?? false;
+  const faq = compareFaq(resolved.competitorName, needsPassword, locale);
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(comparisonJsonLd) }} />
-      <CompareDetailContent c={resolved} others={others} ui={ui} />
+      <SitePage><CompareDetailContent c={resolved} others={others} ui={ui} faq={faq} /></SitePage>
     </>
   );
 }

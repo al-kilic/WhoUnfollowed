@@ -1,0 +1,82 @@
+/* Guide pages in the homepage look (app/[locale]/instagram). Scoped to .pl,
+   on top of the .hm tokens from home-base.css. */
+.hm.pl main{padding-bottom:clamp(64px,8vw,112px)}
+.hm .pl-hero{padding-top:clamp(56px,8vw,104px);padding-bottom:clamp(40px,5vw,64px);display:grid;gap:18px}
+.hm .pl-hero h1{font-size:clamp(38px,6vw,68px);max-width:880px}
+.hm .pl-h1sub{display:block;margin-top:12px;font:500 clamp(18px,2.2vw,24px)/1.35 var(--ui);letter-spacing:-.01em;color:var(--ink2)}
+.hm .pl-lead{font-size:17px;line-height:1.6;color:var(--ink2);max-width:680px}
+.hm .pl-ctas{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.hm .pl-chips{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13px;color:var(--mute)}
+.hm .pl-chips li{display:inline-flex;align-items:center;gap:6px}
+.hm .pl-chips svg{color:var(--accent)}
+.hm .pl-sec{padding-block:clamp(36px,5vw,64px);border-top:1px solid var(--line)}
+.hm .pl-head{display:grid;gap:10px;max-width:760px;margin-bottom:24px}
+.hm .pl-head h2{font-size:clamp(26px,3.4vw,40px);line-height:1.05}
+.hm .pl-card{border-radius:16px;padding:18px 20px;display:grid;gap:6px;align-content:start}
+.hm .pl-card b,.hm .pl-limit b{font-size:15.5px;font-weight:600;color:var(--ink)}
+.hm .pl-card p,.hm .pl-limit p,.hm .pl-p,.hm .pl-faq p,.hm .pl-steps p{font-size:14.5px;line-height:1.6;color:var(--ink2)}
+.hm .pl-card.hi{box-shadow:inset 0 0 0 1px color-mix(in oklab,var(--accent) 45%,transparent)}
+.hm .pl-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.hm .pl-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.hm .pl-note{margin-top:14px;font-size:14px;color:var(--mute)}
+.hm .pl-steps{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.hm .pl-steps li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:start;border-radius:14px;padding:16px 18px}
+.hm .pl-steps b{display:block;font-size:15px;font-weight:600;margin-bottom:2px}
+.hm .pl-n{font:500 12px/28px var(--mono);width:30px;height:30px;text-align:center;border-radius:999px;color:var(--accent);background:var(--acc-soft)}
+.hm .pl-tip{display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding:12px 16px;border-radius:12px;background:var(--warn-soft);color:var(--ink);font-size:14px;line-height:1.55}
+.hm .pl-tip svg{flex:none;margin-top:3px;color:var(--warn)}
+.hm .pl-more{display:inline-block;margin-top:14px;color:var(--accent);text-decoration:none;font-weight:500;font-size:14.5px}
+.hm .pl-limit{padding:4px 0 4px 16px;border-left:2px solid var(--line2);display:grid;gap:4px}
+.hm .pl-files{list-style:none;margin:12px 0;padding:0;display:grid;gap:6px}
+.hm .pl-files code{font:12.5px var(--mono);padding:5px 10px;border-radius:8px;background:var(--surface2);border:1px solid var(--line);color:var(--ink);overflow-wrap:anywhere}
+.hm .pl-faq{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 32px}
+.hm .pl-faq h3{font:600 16.5px/1.35 var(--ui);letter-spacing:-.005em;margin-bottom:6px}
+.hm .pl-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.hm .pl-links a{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;border-radius:12px;text-decoration:none;font-size:14.5px;color:var(--ink)}
+.hm .pl-links a svg{flex:none;color:var(--accent)}
+.hm .pl-final{margin-top:clamp(36px,5vw,64px);border-radius:22px;padding:clamp(28px,4vw,48px);display:grid;justify-items:center;text-align:center;gap:12px;max-width:min(1140px,calc(100% - 40px))}
+.hm .pl-final h2{font-size:clamp(26px,3.6vw,42px)}
+.hm .pl-final p{color:var(--ink2)}
+@media (max-width:860px){.hm .pl-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hm .pl-faq{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){.hm .pl-two,.hm .pl-grid,.hm .pl-links{grid-template-columns:minmax(0,1fr)}.hm .pl-lead{font-size:16px}}
+/* The weekly brief's article body (app/[locale]/instagram-updates). */
+.hm .pl-brief{max-width:760px}
+.hm .pl-brief h2{font-size:clamp(22px,2.6vw,30px);line-height:1.15;margin:36px 0 12px}
+.hm .pl-brief h3{font-size:18px;line-height:1.3;margin:24px 0 8px}
+.hm .pl-brief .pl-head h2{margin:0}
+.hm .pl-brief p,.hm .pl-brief li{font-size:16px;line-height:1.7;color:var(--ink2)}
+.hm .pl-brief p{margin:0 0 14px}
+.hm .pl-brief ul,.hm .pl-brief ol{margin:0 0 14px;padding-left:22px;display:grid;gap:12px}
+.hm .pl-brief ul{list-style:disc}
+.hm .pl-brief ol{list-style:decimal}
+.hm .pl-brief li::marker{color:var(--accent)}
+.hm .pl-brief strong{color:var(--ink);font-weight:600}
+.hm .pl-brief a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+/* The App Store study (app/research/instagram-unfollower-apps). Chart colors
+   validated with the dataviz palette script for both modes. */
+.hm .pl-study{--st-acc:#e66767;--st-un:#3987e5}
+@media (prefers-color-scheme: light){html:not(.dark) .hm .pl-study{--st-acc:#e34948;--st-un:#2a78d6}}
+html.light .hm .pl-study{--st-acc:#e34948;--st-un:#2a78d6}
+.hm .st-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.hm .st-tile{border-radius:16px;padding:18px 20px;display:grid;gap:6px;align-content:start}
+.hm .st-tile b{font-size:clamp(28px,3.6vw,40px);line-height:1;letter-spacing:-.02em;color:var(--ink)}
+.hm .st-tile p{font-size:14.5px;line-height:1.55;color:var(--ink2);margin:0}
+.hm .st-bar{display:flex;gap:2px;height:28px;margin:8px 0 10px}
+.hm .st-bar span{display:block;height:100%}
+.hm .st-bar span:first-child{border-radius:6px 0 0 6px}
+.hm .st-bar span:last-child{border-radius:0 6px 6px 0}
+.hm .st-legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13.5px;color:var(--ink2);list-style:none;padding:0;margin:0}
+.hm .st-legend li{display:inline-flex;align-items:center;gap:8px}
+.hm .st-legend i{width:12px;height:12px;border-radius:3px;display:inline-block;border:1px solid var(--line2)}
+.hm .st-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+.hm .st-table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:820px}
+.hm .st-table th,.hm .st-table td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.hm .st-table th{font:500 11.5px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mute);background:var(--surface2)}
+.hm .st-table td{color:var(--ink2)}
+.hm .st-table td b{color:var(--ink);font-weight:600}
+.hm .st-table td small{display:block;color:var(--mute);font-size:12px}
+.hm .st-table .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hm .st-tag{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.hm .st-tag i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.hm .st-list{margin:0;padding-left:20px;display:grid;gap:10px}
+.hm .st-list li{font-size:15px;line-height:1.65;color:var(--ink2)}

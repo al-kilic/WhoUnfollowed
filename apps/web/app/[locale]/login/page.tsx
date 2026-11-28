@@ -26,10 +26,10 @@ export default async function LoginPage({ params }: PageProps) {
   // Lets locale-aware Links read the locale without request headers (static rendering).
   setRequestLocale(locale);
 
-  // Already logged in? Don't show the login form again — send them to history.
+  // Already logged in? Don't show the login form again: send them to Studio.
   const { user } = await validateRequest();
   if (user) {
-    redirect({ href: '/history', locale: locale as AppLocale });
+    redirect({ href: '/app', locale: locale as AppLocale });
   }
 
   return <LoginForm locale={locale} />;

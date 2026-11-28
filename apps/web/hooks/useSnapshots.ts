@@ -1,15 +1,23 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useLiveQuery } from 'dexie-react-hooks';
+import { useCallback, useSyncExternalStore } from 'react';
+import { liveQuery } from 'dexie';
 import { format } from 'date-fns';
 import type { ParsedSnapshot } from '@ig-tracker/core';
 import { db, type SnapshotRecord } from '@/lib/db';
 import { getOrCreateAnonSessionId, isOwnedByCurrentViewer } from '@/lib/localOwnership';
 import { PLATFORM_NAME, snapshotPlatform, triageKeyOf } from '@/lib/platform';
+import { createSharedQuery } from '@/lib/sharedQuery';
 export type { SnapshotRecord };
 
+// Saved exports without a paid plan: one while signed out, two with a free
+// account, so a free member can compare two exports (the count of who left,
+// the totals chart) before paying.
 export const FREE_SNAPSHOT_LIMIT = 1;
+export const FREE_ACCOUNT_SNAPSHOT_LIMIT = 2;
+export function freeSnapshotLimit(signedIn: boolean): number {
+  return signedIn ? FREE_ACCOUNT_SNAPSHOT_LIMIT : FREE_SNAPSHOT_LIMIT;
+}
 
 // One-time backfill for snapshots saved before ownership scoping existed
 // (both ownerUserId and anonSessionId are `undefined`, not `null`). Assigns
@@ -70,45 +78,55 @@ export async function pruneOrphanedAnonymousSnapshots(now: number = Date.now() /
   return stale.length;
 }
 
-export function useSnapshotList(currentUserId: string | null): SnapshotRecord[] {
+// Every saved export of the current viewer, newest first, read once and shared
+// by every component that asks (lib/sharedQuery.ts). Studio used to start one
+// live query per component, and each one deserialised every export in full
+// (whole follower lists), several times per page and again on every write.
+const ownedSnapshots = createSharedQuery<SnapshotRecord[]>((key, emit) => {
+  const currentUserId = key || null;
   // The one-time legacy backfill MUST run outside the liveQuery querier below.
   // Dexie 4 throws ReadOnlyError ("Readwrite transaction in liveQuery context")
   // if any write happens inside a live query, which white-screened the homepage
   // for every returning user who had pre-ownership snapshots. Run it imperatively
   // instead; its writes still trigger the liveQuery below to re-run and surface
   // the now-tagged records.
-  useEffect(() => {
-    void migrateLegacyOwnership(currentUserId).catch(() => {});
-    void pruneOrphanedAnonymousSnapshots().catch(() => {});
-  }, [currentUserId]);
+  void migrateLegacyOwnership(currentUserId).catch(() => {});
+  void pruneOrphanedAnonymousSnapshots().catch(() => {});
+  const sub = liveQuery(async () => {
+    // Read-only: never write here (see migrateLegacyOwnership note above).
+    const all = await db.snapshots.orderBy('exportedAt').reverse().toArray();
+    return all.filter(r => isOwnedByCurrentViewer(r, currentUserId));
+  }).subscribe({
+    next: emit,
+    // Defensive fallback keeps a Dexie failure from crashing the whole page.
+    error: () => emit([]),
+  });
+  return () => sub.unsubscribe();
+});
 
-  return useLiveQuery(
-    async () => {
-      // Read-only: never write here (see migrateLegacyOwnership note above).
-      // Defensive fallback keeps a Dexie failure from crashing the whole page.
-      try {
-        const all = await db.snapshots.orderBy('exportedAt').reverse().toArray();
-        return all.filter(r => isOwnedByCurrentViewer(r, currentUserId));
-      } catch {
-        return [] as SnapshotRecord[];
-      }
-    },
-    [currentUserId],
-    [],
-  ) ?? [];
+const EMPTY: SnapshotRecord[] = [];
+const keyOf = (userId: string | null) => userId ?? '';
+
+function useOwnedSnapshots(currentUserId: string | null): SnapshotRecord[] | undefined {
+  const key = keyOf(currentUserId);
+  const subscribe = useCallback((l: () => void) => ownedSnapshots.subscribe(key, l), [key]);
+  const get = useCallback(() => ownedSnapshots.get(key), [key]);
+  return useSyncExternalStore(subscribe, get, () => undefined);
 }
 
-// True once the local snapshot store has been read at least once.
-// useLiveQuery returns `undefined` until its first query resolves, which lets
+export function useSnapshotList(currentUserId: string | null): SnapshotRecord[] {
+  return useOwnedSnapshots(currentUserId) ?? EMPTY;
+}
+
+// True once the local snapshot store has been read at least once, which lets
 // callers tell "still loading" apart from "loaded and genuinely empty".
 export function useSnapshotsLoaded(currentUserId: string | null): boolean {
-  return useLiveQuery(
-    async () => {
-      const all = await db.snapshots.toArray();
-      return all.filter(r => isOwnedByCurrentViewer(r, currentUserId)).length;
-    },
-    [currentUserId],
-  ) !== undefined;
+  return useOwnedSnapshots(currentUserId) !== undefined;
+}
+
+// The same shared list for code outside React render (effects, handlers).
+export function readOwnedSnapshots(currentUserId: string | null): Promise<SnapshotRecord[]> {
+  return ownedSnapshots.read(keyOf(currentUserId));
 }
 
 export async function saveSnapshot(data: ParsedSnapshot, currentUserId: string | null, label?: string): Promise<number> {

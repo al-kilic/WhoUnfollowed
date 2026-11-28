@@ -22,6 +22,18 @@ describe('buildCronEmailReport', () => {
     expect(r.text).toContain('Sent by the daily run: <b>4</b> of 90');
     expect(r.text).toContain('in the last 24h: 5 sent');
     expect(r.text).not.toContain('🚨');
+    expect(r.quiet).toBe(false);
+  });
+  it('is quiet when nothing was sent and nothing went wrong', () => {
+    const b = base();
+    b.passes.reminders.result = { sent: 0, failed: 0 };
+    b.passes.planner.result = { sent: 0, failed: 0 };
+    b.other.sent = 0;
+    expect(buildCronEmailReport(b).quiet).toBe(true);
+    b.passes.wraps.stillDue = 2; b.passes.wraps.cap = 0;
+    const held = buildCronEmailReport(b);
+    expect(held.quiet).toBe(false);
+    expect(held.alert).toBe(true);
   });
 
   it('says when a cap held emails back', () => {
@@ -56,5 +68,19 @@ describe('buildCronEmailReport', () => {
     b.passes.reminders = { result: { sent: 80, failed: 0 }, cap: 80, stillDue: 0 };
     b.passes.planner = { result: { sent: 10, failed: 0 }, cap: 10, stillDue: 0 };
     expect(buildCronEmailReport(b).text).toContain('daily budget of 90 is fully used');
+  });
+
+  it('adds the AI section, and is not quiet when only the AI had activity', () => {
+    const b = base();
+    b.passes.reminders.result = { sent: 0, failed: 0 };
+    b.passes.planner.result = { sent: 0, failed: 0 };
+    b.other.sent = 0;
+    b.ai = { lines: ['AI in the last 24h: <b>$0.120</b> over 9 calls, 2 members'], quiet: false };
+    const r = buildCronEmailReport(b);
+    expect(r.quiet).toBe(false);
+    expect(r.text).toContain('🤖 <b>AI</b>');
+    b.ai = { lines: ['x'], quiet: true };
+    expect(buildCronEmailReport(b).quiet).toBe(true);
+    expect(buildCronEmailReport(b).text).not.toContain('🤖');
   });
 });

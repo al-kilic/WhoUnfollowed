@@ -40,7 +40,7 @@ export function ReminderToggle({ nextAt: initialNextAt, locale, c }: Props) {
         disabled={pending}
         style={{
           fontSize: 13, fontWeight: 600, fontFamily: T.sans,
-          color: on ? T.ink : T.cream, background: on ? 'transparent' : T.teal,
+          color: on ? T.ink : T.onTeal, background: on ? 'transparent' : T.teal,
           border: on ? `1px solid ${T.border3}` : 'none', borderRadius: 10, padding: '8px 16px',
           cursor: pending ? 'not-allowed' : 'pointer', opacity: pending ? 0.7 : 1,
         }}

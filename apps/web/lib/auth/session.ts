@@ -1,9 +1,15 @@
+import { cache } from 'react';
 import { lucia } from './lucia';
 import { cookies } from 'next/headers';
 import type { Session, User } from 'lucia';
 import { devPreviewSession, isDevProPreview } from './devProPreview';
 
-export async function validateRequest(): Promise<
+// One session lookup per server render: layouts, pages and the plan checks in
+// lib/flags.ts all ask, and each used to hit the database. Outside a render
+// (route handlers, server actions) React's cache passes straight through.
+export const validateRequest = cache(validateRequestUncached);
+
+async function validateRequestUncached(): Promise<
   { user: User; session: Session } | { user: null; session: null }
 > {
   if (isDevProPreview()) return devPreviewSession();

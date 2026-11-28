@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Check, X, Minus, ShieldCheck, Sparkles, BarChart3, Tag } from 'lucide-react';
 import { T } from '@/components/landing/tokens';
-import { SiteNav } from '@/components/landing/SiteNav';
-import { LandingFooter } from '@/components/landing/FinalCTA';
+import { SiteHeader } from '@/components/site/SiteHeader';
+import { SiteFooter } from '@/components/site/SiteFooter';
 import type { CompareIndexContent as CompareIndexContentData, Val } from './indexContent';
 
 const CATEGORY_ICON: Record<string, React.ComponentType<{ size?: number; color?: string; strokeWidth?: number }>> = {
@@ -50,7 +50,7 @@ export function CompareIndexContent({ content }: { content: CompareIndexContentD
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <SiteNav />
+      <SiteHeader />
 
       <main style={{ paddingBottom: 80 }}>
         {/* Hero */}
@@ -62,6 +62,9 @@ export function CompareIndexContent({ content }: { content: CompareIndexContentD
           </h1>
           <p style={{ fontSize: 15, color: T.inkDim, lineHeight: 1.65, maxWidth: 560, margin: '0 auto 28px' }}>
             {content.intro}
+          </p>
+          <p style={{ fontSize: 14, margin: '-14px auto 28px' }}>
+            <Link href="/research/instagram-unfollower-apps" style={{ color: T.tealLight }}>{content.studyLink}</Link>
           </p>
         </motion.div>
 
@@ -142,7 +145,7 @@ export function CompareIndexContent({ content }: { content: CompareIndexContentD
               {competitors.map(c => (
                 <div key={c.id} style={{ padding: '16px 10px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRight: `1px solid ${T.border1}`, background: c.highlight ? 'rgba(2,136,143,0.06)' : 'transparent' }}>
                   {c.highlight ? (
-                    <Link href="/" style={{ padding: '8px 16px', borderRadius: 9, background: T.teal, color: T.cream, fontSize: 12, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans, whiteSpace: 'nowrap', boxShadow: `0 4px 16px ${T.tealGlow}` }}>
+                    <Link href="/" style={{ padding: '8px 16px', borderRadius: 9, background: T.teal, color: T.onTeal, fontSize: 12, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans, whiteSpace: 'nowrap', boxShadow: `0 4px 16px ${T.tealGlow}` }}>
                       {content.tryFree}
                     </Link>
                   ) : (
@@ -167,6 +170,7 @@ export function CompareIndexContent({ content }: { content: CompareIndexContentD
             </span>
           ))}
         </div>
+        <p style={{ padding: '0 24px 8px', margin: 0, fontSize: 12, color: T.inkMute, lineHeight: 1.6 }}>{content.mobileNote}</p>
 
         {/* Individual comparison links */}
         <div className="px-4 sm:px-8" style={{ maxWidth: 760, margin: '0 auto', paddingTop: 16 }}>
@@ -181,7 +185,7 @@ export function CompareIndexContent({ content }: { content: CompareIndexContentD
         </div>
       </main>
 
-      <LandingFooter />
+      <SiteFooter />
     </div>
   );
 }

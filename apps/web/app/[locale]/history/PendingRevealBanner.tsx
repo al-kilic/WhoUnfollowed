@@ -32,7 +32,7 @@ export function PendingRevealBanner({ locale, isPro, snapshotIds }: { locale: Ap
       <Link
         href={`/diff?old=${pending.oldId}&current=${pending.newId}`}
         onClick={() => clearPendingReveal()}
-        style={{ padding: '10px 16px', borderRadius: 10, background: T.teal, color: T.cream, fontWeight: 600, fontSize: 14, textDecoration: 'none' }}
+        style={{ padding: '10px 16px', borderRadius: 10, background: T.teal, color: T.onTeal, fontWeight: 600, fontSize: 14, textDecoration: 'none' }}
       >
         {t.cta}
       </Link>

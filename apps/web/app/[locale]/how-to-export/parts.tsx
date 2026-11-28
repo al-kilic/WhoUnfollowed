@@ -12,7 +12,7 @@ export function ZipCTA({ content }: { content: HowToExportContentData }) {
         <div style={{ fontFamily: T.serif, fontSize: 24, color: T.ink, letterSpacing: '-0.01em', marginBottom: 6 }}>{content.zipCtaTitle}</div>
         <div style={{ fontSize: 14, color: T.inkDim }}>{content.zipCtaBody}</div>
       </div>
-      <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 22px', borderRadius: 12, background: T.teal, color: T.cream, fontSize: 14, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans, whiteSpace: 'nowrap' }}>
+      <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '13px 22px', borderRadius: 12, background: T.teal, color: T.onTeal, fontSize: 14, fontWeight: 600, textDecoration: 'none', fontFamily: T.sans, whiteSpace: 'nowrap' }}>
         {content.zipCtaButton}
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7 H11 M11 7 L8 4 M11 7 L8 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
       </Link>
@@ -22,7 +22,7 @@ export function ZipCTA({ content }: { content: HowToExportContentData }) {
 
 export function TabButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
-    <button onClick={onClick} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '9px 16px', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: active ? 600 : 400, background: active ? T.teal : 'transparent', color: active ? T.cream : T.inkDim, transition: 'all 0.15s ease', fontFamily: 'inherit' }}>
+    <button onClick={onClick} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '9px 16px', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: active ? 600 : 400, background: active ? T.teal : 'transparent', color: active ? T.onTeal : T.inkDim, transition: 'all 0.15s ease', fontFamily: 'inherit' }}>
       {children}
     </button>
   );
@@ -48,7 +48,7 @@ export function Step({ n, title, children, anchor, active = false, onWatch, watc
   const badgeStyle: React.CSSProperties = {
     width: 36, height: 36, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center',
     fontFamily: T.mono, fontSize: 13, fontWeight: 700, padding: 0,
-    background: lit ? T.teal : 'var(--t-surface2)', color: lit ? T.cream : T.inkDim,
+    background: lit ? T.teal : 'var(--t-surface2)', color: lit ? T.onTeal : T.inkDim,
     border: lit ? '1px solid transparent' : '1px solid var(--t-border2)',
     boxShadow: synced && active ? '0 0 0 4px rgba(2,136,143,0.22)' : 'none',
     transition: 'background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease',

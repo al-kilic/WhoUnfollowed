@@ -77,6 +77,8 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          # Optional: the alerts chat, or "chatId:topicId" for a forum topic.
+          TELEGRAM_CHAT_ALERTS: ${{ secrets.TELEGRAM_CHAT_ALERTS }}
           STATUS: ${{ steps.check.outputs.status }}
           CHANGED: ${{ steps.check.outputs.changed }}
           DETAIL: ${{ steps.check.outputs.detail }}
@@ -92,7 +94,11 @@ jobs:
             [ -n "$DOWN_SINCE" ] && mins=" (~$(( ($(date +%s) - DOWN_SINCE + 59) / 60 )) dk kesinti)"
             msg="🟢 WhoUnfollowed tekrar ayakta${mins}"
           fi
+          target="${TELEGRAM_CHAT_ALERTS:-$TELEGRAM_CHAT_ID}"
+          chat="$target"; thread=""
+          case "$target" in *:*) chat="${target%:*}"; thread="${target##*:}";; esac
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "chat_id=${chat}" \
+            ${thread:+--data-urlencode "message_thread_id=${thread}"} \
             --data-urlencode "text=${msg}" \
             --data-urlencode "disable_web_page_preview=true" -o /dev/null -w "telegram HTTP %{http_code}\n"

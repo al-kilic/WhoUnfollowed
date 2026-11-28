@@ -10,6 +10,8 @@ import {
   getExpiredEmailContent,
 } from './content';
 import type { UnlockDuration } from '@/lib/stripe';
+import { legalBlock } from './billingTemplates';
+import { getBillingEmailContent } from './billingContent';
 
 // Inline-styled, table-based HTML for broad email-client compatibility (no React
 // Email dependency). Brand: warm teal (#01696F), cream (#F4F0E8), terra accent
@@ -35,7 +37,7 @@ function preheader(text: string): string {
 
 // For templates that embed visitor input (contact notification, export
 // confirmation filename).
-function escapeHtml(value: string): string {
+export function escapeHtml(value: string): string {
   return value
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -182,7 +184,7 @@ export function purchaseConfirmationEmail(opts: {
   const preview = isNew ? c.previewNew : c.previewRenewal;
   const title = isNew ? c.titleNew : c.titleRenewal;
   const body = isNew ? c.bodyNew(planLabel, expiresOn) : c.bodyRenewal(planLabel, expiresOn);
-  const historyUrl = `${APP_URL}${localizedPathname('/history', locale)}`;
+  const historyUrl = `${APP_URL}${localizedPathname('/app/history', locale)}`;
   const text = `${body} ${c.footerNote} ${historyUrl}`;
 
   const content = `
@@ -211,6 +213,8 @@ export function insiderTierConfirmationEmail(opts: { locale?: AppLocale }): Emai
   const c = getInsiderTierEmailContent(locale);
   const homeUrl = `${APP_URL}${localizedPathname('/', locale)}`;
   const text = `${c.body} ${c.perkNote} ${c.footerNote} ${homeUrl}`;
+  // Start-now confirmation, legal cancel note, Terms and Refund links (durable medium).
+  const legal = legalBlock(getBillingEmailContent(locale), locale, { cancel: false });
 
   const content = `
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
@@ -223,11 +227,12 @@ export function insiderTierConfirmationEmail(opts: { locale?: AppLocale }): Emai
         <a href="${homeUrl}" style="display:inline-block;background:${C.teal};color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:11px 22px;border-radius:10px;">${c.button}</a>
       </td></tr>
       <tr><td style="padding:20px 30px 30px;">
-        <p style="margin:0;font-size:12px;line-height:1.6;color:${C.mute};">${c.footerNote}</p>
+        <p style="margin:0 0 12px;font-size:12px;line-height:1.6;color:${C.mute};">${c.footerNote}</p>
+        ${legal.html}
       </td></tr>
     </table>`;
 
-  return { subject: c.subject, html: emailLayout({ locale, preview: c.preview, contentHtml: content }), text };
+  return { subject: c.subject, html: emailLayout({ locale, preview: c.preview, contentHtml: content }), text: `${text} ${legal.text}` };
 }
 
 // Reminder cron: sent once (see profiles.expiryReminderSentAt) a few days

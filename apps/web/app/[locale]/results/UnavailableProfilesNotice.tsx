@@ -98,7 +98,7 @@ export function UnavailableProfilesNotice({ platform, c, deactivatedLabel, open,
               <div style={{
                 width: 42, height: 42, borderRadius: 12, flexShrink: 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: `linear-gradient(135deg, ${T.teal}, ${T.tealMid})`, color: T.cream,
+                background: `linear-gradient(135deg, ${T.teal}, ${T.tealMid})`, color: T.onTeal,
                 boxShadow: '0 6px 18px rgba(var(--t-accent-rgb),0.3)',
               }}>
                 <UserX size={20} />
@@ -156,7 +156,7 @@ export function UnavailableProfilesNotice({ platform, c, deactivatedLabel, open,
               autoFocus
               style={{
                 width: '100%', padding: '11px 16px', borderRadius: 12,
-                border: 'none', background: T.teal, color: T.cream,
+                border: 'none', background: T.teal, color: T.onTeal,
                 fontSize: 13.5, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
               }}
             >

@@ -2,6 +2,13 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useTheme } from 'next-themes';
+import { useLocale } from 'next-intl';
+
+const THEME_LABEL: Record<string, { light: string; dark: string }> = {
+  en: { light: 'Switch to light mode', dark: 'Switch to dark mode' },
+  es: { light: 'Cambiar a modo claro', dark: 'Cambiar a modo oscuro' },
+  pt: { light: 'Mudar para o modo claro', dark: 'Mudar para o modo escuro' },
+};
 
 type Phase = 'idle' | 'falling' | 'rising';
 
@@ -35,6 +42,7 @@ function MoonIcon() {
 }
 
 export function ThemeToggle() {
+  const locale = useLocale();
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [phase, setPhase] = useState<Phase>('idle');
@@ -61,6 +69,7 @@ export function ThemeToggle() {
   }
 
   const isDark = resolvedTheme === 'dark';
+  const themeLabel = THEME_LABEL[locale] ?? THEME_LABEL.en!;
 
   return (
     <>
@@ -83,7 +92,7 @@ export function ThemeToggle() {
         onClick={toggle}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        aria-label={isDark ? themeLabel.light : themeLabel.dark}
         aria-pressed={isDark}
         style={{
           width: 32, height: 32,

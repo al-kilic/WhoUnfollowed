@@ -12,7 +12,7 @@ import { headers } from 'next/headers';
 import { hasLocale } from 'next-intl';
 import { routing } from '@/i18n/routing';
 import { isDisposableEmail } from '@/lib/disposableEmail';
-import { enableReminders, joinCreatorWaitlist } from '@/lib/reminders/store';
+import { enableReminders } from '@/lib/reminders/store';
 
 const ARGON2_OPTIONS = {
   memoryCost: 19456,
@@ -83,17 +83,6 @@ export async function signupAction(formData: FormData) {
       await enableReminders({ email, source: 'signup', locale, userId: user.id });
     } catch (err) {
       console.error('[signup] enabling reminders failed:', err);
-    }
-  }
-
-  // Signups from /waitlist also join the launch waitlist. The form says so
-  // next to the button, so submitting it is the consent. Best-effort like the
-  // reminders above: the account matters more than the list row.
-  if (formData.get('waitlist') === 'on') {
-    try {
-      await joinCreatorWaitlist({ email, locale, userId: user.id });
-    } catch (err) {
-      console.error('[signup] joining the waitlist failed:', err);
     }
   }
 

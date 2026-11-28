@@ -54,9 +54,10 @@ export function priceIdForUnlock(duration: UnlockDuration, now: Date = new Date(
 }
 
 // One Stripe price per step of the Lifetime seat ladder (LIFETIME_TIERS in
-// lib/pricing.ts): $19.99, then $39, then $99. Unset STRIPE_PRICE_LIFETIME on
-// the VPS to pull Lifetime from sale at any time, with no deploy.
-const LIFETIME_PRICE_ENV = ['STRIPE_PRICE_LIFETIME', 'STRIPE_PRICE_LIFETIME_39', 'STRIPE_PRICE_LIFETIME_99'] as const;
+// lib/pricing.ts): one $499 step since 2026-11-11. Unset STRIPE_PRICE_LIFETIME_499
+// on the VPS to pull Lifetime from sale at any time, with no deploy. The old
+// STRIPE_PRICE_LIFETIME / _39 / _99 prices are no longer sold.
+const LIFETIME_PRICE_ENV = ['STRIPE_PRICE_LIFETIME_499'] as const;
 
 export function priceIdForLifetimeTier(tierIndex: number): string | null {
   const key = LIFETIME_PRICE_ENV[tierIndex];

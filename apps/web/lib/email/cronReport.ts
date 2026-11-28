@@ -14,32 +14,46 @@ export interface CronEmailReport {
     reminders: { result: PassResult; cap: number; stillDue: number | null };
     planner: { result: PassResult; cap: number; stillDue: number | null };
     wraps: { result: PassResult; cap: number; stillDue: number | null };
+    // Pro AI goal check-ins (lib/ai/checkins.ts). Optional: older callers omit it.
+    checkins?: { result: PassResult; cap: number; stillDue: number | null };
+    // Weekly brief emails (lib/ai/briefEmail.ts). Optional too.
+    briefs?: { result: PassResult; cap: number; stillDue: number | null };
+    // Posting-day reminders (lib/ai/postingReminder.ts). Optional too.
+    posting?: { result: PassResult; cap: number; stillDue: number | null };
   };
   // Emails sent outside the cron (signup codes, receipts, contact form) since
   // the previous report or the last restart.
   other: { sent: number; failed: number; limited: number; since: Date };
   // Sends Resend refused for hitting its limit during this run.
   limitedInRun: number;
+  // The AI health section (lib/ai/aiHealth.ts). Optional: older callers omit it.
+  ai?: { lines: string[]; quiet: boolean } | null;
 }
 
-const LABEL = { reminders: 'Check-again reminders', planner: 'Planner nudges', wraps: '3-month wraps' } as const;
+const LABEL = { reminders: 'Check-again reminders', planner: 'Planner nudges', wraps: '3-month wraps', checkins: 'Goal check-ins', briefs: 'Weekly brief emails', posting: 'Posting-day reminders' } as const;
 
 const sentOf = (r: PassResult) => ('sent' in r ? r.sent : 0);
 const emails = (n: number) => `${n} ${n === 1 ? 'email' : 'emails'}`;
 
-export function buildCronEmailReport(r: CronEmailReport): { text: string; alert: boolean } {
+// quiet: nothing was sent and nothing went wrong, so there is nothing to report.
+export function buildCronEmailReport(r: CronEmailReport): { text: string; alert: boolean; quiet: boolean } {
   const lines: string[] = [];
   const problems: string[] = [];
   const cronSent = r.expiry.expired + r.expiry.expiringSoon
-    + sentOf(r.passes.reminders.result) + sentOf(r.passes.planner.result) + sentOf(r.passes.wraps.result);
+    + sentOf(r.passes.reminders.result) + sentOf(r.passes.planner.result) + sentOf(r.passes.wraps.result)
+    + (r.passes.checkins ? sentOf(r.passes.checkins.result) : 0)
+    + (r.passes.briefs ? sentOf(r.passes.briefs.result) : 0)
+    + (r.passes.posting ? sentOf(r.passes.posting.result) : 0);
 
   lines.push(`Sent by the daily run: <b>${cronSent}</b> of ${r.budget} budget`);
   if (r.expiry.expired + r.expiry.expiringSoon > 0) {
     lines.push(`• Pro expiry notices: ${r.expiry.expired + r.expiry.expiringSoon}`);
   }
 
-  for (const key of ['reminders', 'planner', 'wraps'] as const) {
-    const { result, cap, stillDue } = r.passes[key];
+  for (const key of ['reminders', 'planner', 'wraps', 'checkins', 'briefs', 'posting'] as const) {
+    const pass = r.passes[key];
+    if (!pass) continue;
+    const { result, cap, stillDue } = pass;
     if ('error' in result) {
       lines.push(`• ${LABEL[key]}: crashed (${escapeTelegramHtml(result.error)})`);
       problems.push(`${LABEL[key]} crashed, check the server logs`);
@@ -70,5 +84,7 @@ export function buildCronEmailReport(r: CronEmailReport): { text: string; alert:
   const head = alert ? '⚠️ <b>Email report: some emails did not go out</b>' : '📧 <b>Email report</b>';
   const body = [head, ...lines];
   if (alert) body.push('', ...problems.map(p => `🚨 ${p}`));
-  return { text: body.join('\n'), alert };
+  const aiActive = !!r.ai && !r.ai.quiet;
+  if (aiActive) body.push('', '🤖 <b>AI</b>', ...r.ai!.lines);
+  return { text: body.join('\n'), alert, quiet: !alert && cronSent + r.other.sent === 0 && !aiActive };
 }

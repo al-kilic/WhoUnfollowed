@@ -8,6 +8,7 @@ import { getPathname } from '@/i18n/navigation';
 import { HowToExportContent } from './HowToExportContent';
 import { getHowToExportContent } from './content';
 import { EXPORT_VIDEO } from '@/components/exportVideo/videoChapters';
+import { SitePage } from '@/components/landing/SitePage';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
@@ -129,7 +130,7 @@ export default async function HowToExportPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buildVideoJsonLd(locale)) }}
       />
-      <HowToExportContent content={content} />
+      <SitePage><HowToExportContent content={content} /></SitePage>
     </>
   );
 }

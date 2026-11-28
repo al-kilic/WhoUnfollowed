@@ -184,7 +184,7 @@ const EN: DashboardContent = {
   openOn: (u, app) => `Open @${u} on ${app}`,
   platformEmpty: {
     title: (app) => `No ${app} snapshot yet`,
-    body: (app) => `Upload your ${app} export to see its Radar here. Your other app's data stays separate.`,
+    body: (app) => `Upload your ${app} export to see its results here. Your other app's data stays separate.`,
     cta: 'Upload an export',
   },
 };
@@ -298,7 +298,7 @@ const ES: DashboardContent = {
   openOn: (u, app) => `Abrir @${u} en ${app}`,
   platformEmpty: {
     title: (app) => `Aún no hay snapshot de ${app}`,
-    body: (app) => `Sube tu exportación de ${app} para ver su Radar aquí. Los datos de tu otra app se mantienen aparte.`,
+    body: (app) => `Sube tu exportación de ${app} para ver sus resultados aquí. Los datos de tu otra app se mantienen aparte.`,
     cta: 'Subir una exportación',
   },
 };
@@ -412,7 +412,7 @@ const PT: DashboardContent = {
   openOn: (u, app) => `Abrir @${u} no ${app}`,
   platformEmpty: {
     title: (app) => `Ainda não há snapshot do ${app}`,
-    body: (app) => `Envie sua exportação do ${app} para ver o Radar dele aqui. Os dados do seu outro app ficam separados.`,
+    body: (app) => `Envie sua exportação do ${app} para ver os resultados aqui. Os dados do seu outro app ficam separados.`,
     cta: 'Enviar uma exportação',
   },
 };

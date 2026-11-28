@@ -1,0 +1,6 @@
+/* Marketing and info pages in the new look (2026-11). They still style
+   most things inline with the old tokens (components/landing/tokens.ts),
+   which .studio maps onto the new palette and font. The old headings were
+   a light serif at weight 400; in Geist they need the new look's weight. */
+.s-site :is(h1, h2, h3) { font-weight: 600 !important; letter-spacing: -0.025em !important; }
+.s-site h1 { line-height: 1.08 !important; }

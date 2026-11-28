@@ -2,7 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-import type JSZip from 'jszip';
+import type { ZipReader } from './lazyZip.js';
 import { MissingFilesError, SchemaValidationError } from './errors.js';
 import type { Account, ParsedSnapshot } from './schemas.js';
 
@@ -158,12 +158,12 @@ export function tiktokListNearCap(snapshot: Pick<ParsedSnapshot, 'followers' | '
   return snapshot.followers.length >= TIKTOK_LIST_CAP * 0.98 || snapshot.following.length >= TIKTOK_LIST_CAP * 0.98;
 }
 
-export async function parseTikTokZip(zip: JSZip, fileNames: string[], filenameDate: number | null): Promise<ParsedSnapshot> {
+export async function parseTikTokZip(zip: ZipReader, fileNames: string[], filenameDate: number | null): Promise<ParsedSnapshot> {
   const jsonName = fileNames.find(n => TIKTOK_JSON_RE.test(n));
   let lists: { followers: Account[]; following: Account[] };
 
   if (jsonName) {
-    const raw = await zip.files[jsonName]!.async('string');
+    const raw = ((await zip.text(jsonName)) ?? '');
     let parsed: unknown;
     try {
       parsed = JSON.parse(raw);
@@ -179,8 +179,8 @@ export async function parseTikTokZip(zip: JSZip, fileNames: string[], filenameDa
     if (!followingName) missing.push('Following.txt');
     if (missing.length === 2) throw new MissingFilesError(missing, 'tiktok');
     lists = {
-      followers: followerName ? parseTikTokTxt(await zip.files[followerName]!.async('string')) : [],
-      following: followingName ? parseTikTokTxt(await zip.files[followingName]!.async('string')) : [],
+      followers: followerName ? parseTikTokTxt(((await zip.text(followerName)) ?? '')) : [],
+      following: followingName ? parseTikTokTxt(((await zip.text(followingName)) ?? '')) : [],
     };
   }
 

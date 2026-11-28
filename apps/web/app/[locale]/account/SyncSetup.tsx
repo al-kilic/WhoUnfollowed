@@ -59,7 +59,7 @@ export function SyncSetup({ hasSyncSetup, passphraseSetAt, isPro, enabledOnText,
           onClick={() => trackUpgradeClick('cloud-sync')}
           style={{
             display: 'inline-block', padding: '10px 18px', borderRadius: 10,
-            background: T.teal, color: T.cream, textDecoration: 'none',
+            background: T.teal, color: T.onTeal, textDecoration: 'none',
             fontSize: 13.5, fontWeight: 600, fontFamily: T.sans,
           }}
         >

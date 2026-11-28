@@ -1,0 +1,57 @@
+name: E2E
+
+# End-to-end journeys (Playwright, Chromium) against a production build with
+# its own Postgres, mocked AI and signed Stripe test events. Runs on pushes
+# and pull requests in the private repo, and is reused by the staging deploy
+# (deploy-staging.yml) so staging only updates when the journeys pass.
+on:
+  push:
+    branches-ignore: [studio] # studio runs it inside deploy-staging.yml
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    if: github.repository == 'al-kilic/whounfollowed-dev'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: igtracker
+          POSTGRES_PASSWORD: localdev
+          POSTGRES_DB: igtracker_e2e
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U igtracker -d igtracker_e2e"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      CI: 'true'
+      E2E_DATABASE_URL: postgres://igtracker:localdev@localhost:5432/igtracker_e2e
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @ig-tracker/core build
+      - name: Install Chromium
+        run: pnpm --filter @ig-tracker/web exec playwright install --with-deps chromium
+      - name: Run the journeys
+        run: pnpm e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            apps/web/e2e/.report
+            apps/web/e2e/.results
+          retention-days: 7

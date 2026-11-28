@@ -40,7 +40,7 @@ export default async function VerifyEmailPage({ params }: PageProps) {
     return;
   }
   if (await isUserVerified(user.id)) {
-    redirect({ href: '/history', locale: l });
+    redirect({ href: '/app', locale: l });
     return;
   }
 

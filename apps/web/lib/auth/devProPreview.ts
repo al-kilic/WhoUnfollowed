@@ -24,6 +24,8 @@ export function devPreviewProfile() {
     expiryReminderSentAt: null,
     expiredEmailSentAt: null,
     lifetimePurchasedAt: lifetime ? new Date() : null,
+    subscriptionInterval: null,
+    currentPeriodEnd: null,
     marketingOptIn: lifetime,
     marketingOptInAt: lifetime ? new Date() : null,
     marketingOptOutAt: null,

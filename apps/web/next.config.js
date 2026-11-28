@@ -12,9 +12,25 @@ process.env.NEXT_TELEMETRY_DISABLED = '1';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
+  // A second local server (e.g. a staging-gate check next to the main dev
+  // server) can use its own build folder: NEXT_DIST_DIR=.next-staging.
+  distDir: process.env.NEXT_DIST_DIR || '.next',
+  // A build in its own folder can point at its own (gitignored) tsconfig, so
+  // `next build` never rewrites the tracked tsconfig.json (e2e: tsconfig.e2e.json).
+  typescript: { tsconfigPath: process.env.NEXT_TSCONFIG_PATH || 'tsconfig.json' },
   // Don't advertise the framework in every response.
   poweredByHeader: false,
   transpilePackages: ['@ig-tracker/core'],
+  // Weekly briefs are read from disk at request time (lib/briefs.ts), so the
+  // standalone build must ship the folder.
+  outputFileTracingIncludes: {
+    '/[locale]/app/plan/brief': ['./content/briefs/**/*'],
+    '/[locale]/instagram-updates': ['./content/briefs/**/*'],
+    '/[locale]/instagram-updates/[date]': ['./content/briefs/**/*'],
+    '/sitemap.xml': ['./content/briefs/**/*'],
+    '/feeds/instagram-updates.xml': ['./content/briefs/**/*'],
+    '/llms-full.txt': ['./content/briefs/**/*'],
+  },
   turbopack: {
     root: path.resolve(__dirname, '../..'),
   },
@@ -59,6 +75,11 @@ const nextConfig = {
       { source: '/blog/instagram-follower-tracker-without-login', destination: '/blog/best-app-to-see-who-unfollowed-me-on-instagram-without-password', permanent: true },
       { source: '/blog/can-you-see-who-unfollowed-you-on-threads-for-free', destination: '/blog/how-to-see-who-unfollowed-you-on-threads', permanent: true },
       { source: '/blog/what-is-a-good-follower-to-following-ratio-on-instagram', destination: '/blog/instagram-follow-ratio-what-it-means-how-to-improve-it', permanent: true },
+      // Launch 2026-11-28: the pre-launch waitlist page is gone; its links and
+      // any indexed copy go to sign-up (free accounts, same as the waitlist made).
+      { source: '/waitlist', destination: '/signup', permanent: true },
+      { source: '/es/waitlist', destination: '/es/signup', permanent: true },
+      { source: '/pt/waitlist', destination: '/pt/signup', permanent: true },
     ];
   },
 };

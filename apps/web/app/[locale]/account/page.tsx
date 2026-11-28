@@ -10,9 +10,10 @@ import { profiles, syncSettings } from '@/lib/db/schema';
 import { isPaidFeaturesEnabled, isProUser } from '@/lib/flags';
 import { isUserVerified } from '@/lib/auth/verification';
 import { isDevProPreview, devPreviewProfile } from '@/lib/auth/devProPreview';
-import { UNLOCK_PRICE_USD, UNLOCK_DAYS_LABEL } from '@/lib/pricing';
-import { SiteNav } from '@/components/landing/SiteNav';
-import { LandingFooter } from '@/components/landing/FinalCTA';
+import { proAiPricesAt } from '@/lib/pricing';
+import { SiteHeader } from '@/components/site/SiteHeader';
+import { StudioFrame } from '@/components/studio/StudioFrame';
+import { SiteFooter } from '@/components/site/SiteFooter';
 import { T } from '@/components/landing/tokens';
 import { Link, getPathname, redirect } from '@/i18n/navigation';
 import { routing, type AppLocale } from '@/i18n/routing';
@@ -24,6 +25,8 @@ import { MarketingConsent } from './MarketingConsent';
 import { ReminderToggle } from './ReminderToggle';
 import { getReminderStateForUser } from '@/lib/reminders/store';
 import { getAccountContent } from './content';
+import { AccountProAi } from './AccountProAi';
+import { getProAiAccess } from '@/lib/ai/access';
 
 // Personalized, auth-gated content (session, subscription, billing). Never
 // let this get swept into the [locale] layout's static generation.
@@ -41,9 +44,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return { title: c.metaTitle, description: c.metaDescription, robots: { index: false, follow: false } };
 }
 
-function fmtDate(d: Date | null | undefined): string | null {
+function fmtDate(d: Date | null | undefined, locale: string): string | null {
   if (!d) return null;
-  return new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  return new Date(d).toLocaleDateString(locale, { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
 function isInsiderProfile(profile: { subscriptionStatus: string; lifetimePurchasedAt: Date | null } | undefined): boolean {
@@ -87,44 +90,39 @@ export default async function AccountPage({ params }: PageProps) {
   const isPro = hasProAccess;
   // Lifetime purchase (lifetimePurchasedAt) is the only Insider signal.
   const isInsider = isInsiderProfile(profile);
+  // Pro AI (subscription, Lifetime or a running legacy unlock).
+  const proAi = preview ? { plan: 'yearly' as const, periodEnd: null } : await getProAiAccess(user.id).catch(() => null);
+  const isSubscriber = !!profile?.stripeSubscriptionId && (proAi?.plan === 'monthly' || proAi?.plan === 'yearly');
 
   const paymentsEnabled = isPaidFeaturesEnabled();
   const status = profile?.subscriptionStatus ?? 'none';
-  const memberSince = fmtDate(profile?.createdAt);
-  const graceEnds = fmtDate(profile?.gracePeriodEndsAt);
+  const memberSince = fmtDate(profile?.createdAt, locale);
+  const graceEnds = fmtDate(profile?.gracePeriodEndsAt, locale);
   const hasSyncSetup = !!syncRow;
   // Functions cannot be passed to the SyncSetup client component, so resolve the
   // "Enabled {date}." text here and strip the function from its content.
   const { enabledOn, ...syncSetupContent } = c.syncSetup;
-  const syncEnabledText = syncRow ? enabledOn(fmtDate(syncRow.passphraseSetAt) ?? '') : '';
+  const syncEnabledText = syncRow ? enabledOn(fmtDate(syncRow.passphraseSetAt, locale) ?? '') : '';
 
   // Every purchase is a one-time unlock, so "renewal" just means the expiry date.
   const renewal =
     paymentsEnabled && profile?.subscriptionExpiresAt
-      ? { label: c.proUntil(fmtDate(profile.subscriptionExpiresAt) ?? ''), amount: '' }
+      ? { label: c.proUntil(fmtDate(profile.subscriptionExpiresAt, locale) ?? ''), amount: '' }
       : null;
 
-  const card: CSSProperties = {
-    background: T.surface1,
-    border: `1px solid ${T.border1}`,
-    borderRadius: 16,
-    padding: 24,
-  };
-  const sectionLabel: CSSProperties = {
-    fontSize: 11,
-    fontFamily: T.mono,
-    letterSpacing: '0.12em',
-    color: T.tealMid,
-    marginBottom: 12,
-    textTransform: 'uppercase',
-  };
+  // The clean Studio look (styles/studio.css), like Studio and /pricing.
+  const card: CSSProperties = { background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12, padding: 20 };
+  const sectionLabel: CSSProperties = { fontSize: 15, fontWeight: 600, color: 'var(--ink)', marginBottom: 10, letterSpacing: '-.01em' };
+  const proAiPrices = proAiPricesAt();
+  const planName = isInsider ? c.pro : proAi && proAi.plan !== 'legacy' ? 'Pro AI' : isPro ? c.pro : c.free;
 
   return (
+    <StudioFrame>
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <SiteNav userEmail={user.email} isPro={isPro} />
+      <SiteHeader />
 
       <main style={{ maxWidth: 920, margin: '0 auto', padding: '48px 24px 80px' }}>
-        <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(28px, 5vw, 40px)', fontWeight: 400, letterSpacing: '-0.02em', marginBottom: 8, lineHeight: 1.1 }}>
+        <h1 style={{ fontSize: 'clamp(26px, 4vw, 34px)', fontWeight: 600, letterSpacing: '-0.03em', marginBottom: 8, lineHeight: 1.1 }}>
           {c.headline}
         </h1>
         <p style={{ fontSize: 14, color: T.inkDim, marginBottom: 36 }}>{c.subhead}</p>
@@ -145,7 +143,7 @@ export default async function AccountPage({ params }: PageProps) {
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
-                  <span style={{ fontFamily: T.serif, fontSize: 24, color: T.ink }}>{isPro ? c.pro : c.free}</span>
+                  <span style={{ fontSize: 22, fontWeight: 600, letterSpacing: '-0.02em', color: T.ink }}>{planName}</span>
                   <span
                     style={{
                       fontSize: 11,
@@ -153,17 +151,19 @@ export default async function AccountPage({ params }: PageProps) {
                       letterSpacing: '0.05em',
                       padding: '4px 10px',
                       borderRadius: 100,
-                      color: isPro ? T.cream : T.inkDim,
+                      color: isPro ? T.onTeal : T.inkDim,
                       background: isInsider ? T.terra : isPro ? T.teal : 'transparent',
                       border: isInsider ? `1px solid ${T.terra}` : isPro ? '1px solid rgba(2,136,143,0.5)' : `1px solid ${T.border3}`,
                     }}
                   >
-                    {isInsider ? c.insiderBadge : isPro ? c.proBadge : c.freeBadge}
+                    {isInsider ? c.insiderBadge : isSubscriber ? c.proAiBadge : isPro ? c.proBadge : c.freeBadge}
                   </span>
                 </div>
                 <div style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.5 }}>
                   {isInsider
-                    ? c.insiderSince(fmtDate(profile?.lifetimePurchasedAt) ?? '')
+                    ? c.insiderSince(fmtDate(profile?.lifetimePurchasedAt, locale) ?? '')
+                    : isSubscriber
+                    ? c.subscriberLine(proAi?.plan === 'yearly')
                     : renewal
                     ? `${renewal.label}${renewal.amount ? ` · ${renewal.amount}` : ''}`
                     : isPro
@@ -171,9 +171,9 @@ export default async function AccountPage({ params }: PageProps) {
                       : c.onFreePlan}
                 </div>
               </div>
-              {paymentsEnabled && !isInsider ? (
-                <UpgradeLink source="account-plan" href={pricingHref} style={{ fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none', padding: '9px 18px', borderRadius: 10, background: T.teal, whiteSpace: 'nowrap' }}>
-                  {isPro ? c.extendPro : c.upgradeToPro}
+              {paymentsEnabled && !isInsider && !isSubscriber ? (
+                <UpgradeLink source="account-plan" href={pricingHref} style={{ fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.onTeal, textDecoration: 'none', padding: '9px 18px', borderRadius: 10, background: T.teal, whiteSpace: 'nowrap' }}>
+                  {c.upgradeToPro}
                 </UpgradeLink>
               ) : null}
             </div>
@@ -190,6 +190,10 @@ export default async function AccountPage({ params }: PageProps) {
             </div>
           </div>
         </section>
+
+        {proAi && (
+          <AccountProAi locale={locale as AppLocale} isSubscriber={isSubscriber} periodEnd={isSubscriber ? (profile?.currentPeriodEnd?.toISOString() ?? null) : null} cancelAt={isSubscriber ? (profile?.cancelAt?.toISOString() ?? null) : null} />
+        )}
 
         {/* What's included / Unlock with Pro */}
         <section style={{ marginBottom: 28 }}>
@@ -216,10 +220,10 @@ export default async function AccountPage({ params }: PageProps) {
             {!isPro && paymentsEnabled && (
               <div style={{ marginTop: 22, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', paddingTop: 18, borderTop: `1px solid ${T.border1}` }}>
                 <span style={{ fontSize: 13, color: T.inkDim }}>
-                  <strong style={{ color: T.ink }}>${UNLOCK_PRICE_USD.monthly}</strong>{' '}
-                  {c.pricingLine(UNLOCK_DAYS_LABEL.monthly, String(UNLOCK_PRICE_USD.yearly))}
+                  <strong style={{ color: T.ink }}>${proAiPrices.monthly}</strong>{' '}
+                  {c.pricingLine(String(proAiPrices.yearly))}
                 </span>
-                <UpgradeLink source="account-features" href={pricingHref} style={{ fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none', padding: '10px 20px', borderRadius: 10, background: T.teal }}>
+                <UpgradeLink source="account-features" href={pricingHref} style={{ fontSize: 13, fontWeight: 600, fontFamily: T.sans, color: T.onTeal, textDecoration: 'none', padding: '10px 20px', borderRadius: 10, background: T.teal }}>
                   {c.upgradeToPro}
                 </UpgradeLink>
               </div>
@@ -273,7 +277,8 @@ export default async function AccountPage({ params }: PageProps) {
         </section>
       </main>
 
-      <LandingFooter />
+      <SiteFooter />
     </div>
+    </StudioFrame>
   );
 }

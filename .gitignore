@@ -3,6 +3,7 @@ node_modules/
 
 # Next.js
 .next/
+.next-*/
 out/
 
 # Build outputs
@@ -13,6 +14,8 @@ dist/
 # Claude Code tooling (agents, skills, local config) — not app source
 .claude/
 .agents/
+# Written by the Next 16 dev server for coding agents; generated, not source
+apps/web/AGENTS.md
 
 # Environment variables — never commit these. The specific patterns below
 # predate this catch-all and are kept for clarity, but .env* is what actually
@@ -48,6 +51,21 @@ Thumbs.db
 # Runtime-generated data files
 apps/web/data/stats.json
 
+# Keys, certificates, logs, coverage
+*.pem
+*.key
+*.p12
+*.log
+coverage/
+
 # Editor
 .vscode/
 .idea/
+
+# Playwright e2e (build, results, reports, generated fixtures)
+apps/web/.next-e2e/
+apps/web/e2e/.results/
+apps/web/e2e/.report/
+apps/web/e2e/.tmp/
+apps/web/tsconfig.e2e.json
+apps/web/next-env.d.ts.e2e-bak

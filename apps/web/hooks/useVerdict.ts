@@ -5,12 +5,14 @@ import { pickVerdict, verdictStats, type ParsedSnapshot } from '@ig-tracker/core
 import type { AppLocale } from '@/i18n/routing';
 import { getVerdictContent } from '@/components/tools/verdict.content';
 import { drawVerdictImage } from '@/components/tools/verdictImage';
+import { drawStudioVerdictImage } from '@/components/tools/verdictStudioImage';
 import { fill, fmt } from '@/components/tools/ToolCard';
 import { Events, track } from '@/lib/analytics';
 
 // Verdict state shared by the card on /results and the poster on the Radar
 // (where the cover also shows the archetype name, so both read one source).
-export function useVerdict(current: ParsedSnapshot, previous: ParsedSnapshot | undefined, locale: AppLocale, placement: 'results' | 'radar') {
+// studio: the photo poster (Radar in Studio); the classic card otherwise.
+export function useVerdict(current: ParsedSnapshot, previous: ParsedSnapshot | undefined, locale: AppLocale, placement: 'results' | 'radar', studio?: { photo?: string | undefined }) {
   const c = getVerdictContent(locale);
   const [spin, setSpin] = useState(0);
   const [busy, setBusy] = useState(false);
@@ -36,7 +38,9 @@ export function useVerdict(current: ParsedSnapshot, previous: ParsedSnapshot | u
     { label: c.stats.followBack, value: `${stats.followBackPct}%` },
   ];
 
-  const render = () => drawVerdictImage({ typeLabel: c.typeLabel, name: archetype.name, line, stats: statRow, footer: c.footer });
+  const render = () => studio
+    ? drawStudioVerdictImage({ typeLabel: c.typeLabel, name: archetype.name, line, stats: statRow, footer: c.footer, photo: studio.photo, ribbon: { mutuals: stats.mutuals, oneWay: stats.oneWay, fans: stats.fans } })
+    : drawVerdictImage({ typeLabel: c.typeLabel, name: archetype.name, line, stats: statRow, footer: c.footer });
   const log = (action: 'share' | 'save' | 'another') => track(Events.verdictShare, { action, archetype: verdict.archetype, placement });
 
   const save = async (fromShare = false) => {

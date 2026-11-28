@@ -14,6 +14,8 @@ interface Props {
   onReExport: () => void;
   onNewAccount: () => void;
   onProceedAnyway: () => void;
+  // Opens the sample account (a partial export can't be shown honestly).
+  onSample?: () => void;
   content: DeltaWarningContent;
 }
 
@@ -37,7 +39,7 @@ function Rich({ parts, strongColor = T.ink }: { parts: string[]; strongColor?: s
   return <>{parts.map((part, i) => (i % 2 === 1 ? <strong key={i} style={{ color: strongColor }}>{part}</strong> : <span key={i}>{part}</span>))}</>;
 }
 
-export function DeltaWarning({ reasons, followerCount, followingCount, onReExport, onNewAccount, onProceedAnyway, content }: Props) {
+export function DeltaWarning({ reasons, followerCount, followingCount, onReExport, onNewAccount, onProceedAnyway, onSample, content }: Props) {
   // A short date range is a different mistake from an incremental export, so
   // it gets its own heading and explanation (unless an incremental signal
   // also fired, which is the stronger explanation).
@@ -158,6 +160,9 @@ export function DeltaWarning({ reasons, followerCount, followingCount, onReExpor
               </li>
               <li>{c.step3}</li>
             </ol>
+            {dateRangeOnly && (
+              <p style={{ margin: '10px 0 0', fontSize: 13, color: T.inkDim, lineHeight: 1.6 }}><Rich parts={content.dateRange.fast} /></p>
+            )}
           </div>
 
           {/* Primary CTA */}
@@ -168,7 +173,7 @@ export function DeltaWarning({ reasons, followerCount, followingCount, onReExpor
             }}
             style={{
               width: '100%', padding: '13px', borderRadius: 12, cursor: 'pointer',
-              background: T.teal, border: 'none', color: T.cream,
+              background: T.teal, border: 'none', color: T.onTeal,
               fontSize: 14, fontWeight: 600, fontFamily: T.sans,
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
               marginBottom: 12,
@@ -180,6 +185,19 @@ export function DeltaWarning({ reasons, followerCount, followingCount, onReExpor
             {c.cta}{' '}
             <span style={{ background: 'rgba(255,255,255,0.2)', padding: '1px 7px', borderRadius: 5, fontWeight: 700 }}>{c.allTime}</span>
           </button>
+
+          {dateRangeOnly && onSample && (
+            <button
+              onClick={onSample}
+              style={{
+                width: '100%', padding: '11px 16px', borderRadius: 12, cursor: 'pointer', marginBottom: 10,
+                background: 'transparent', border: '1px solid rgba(2,136,143,0.35)',
+                color: T.tealLight, fontSize: 13, fontWeight: 600, fontFamily: T.sans,
+              }}
+            >
+              {content.dateRange.sample}
+            </button>
+          )}
 
           {/* Dismiss row */}
           {!showDismissOptions ? (

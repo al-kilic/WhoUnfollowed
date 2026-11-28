@@ -1,0 +1,2 @@
+Animal avatars: Microsoft Fluent Emoji (flat style), MIT License.
+https://github.com/microsoft/fluentui-emoji

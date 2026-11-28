@@ -192,10 +192,10 @@ export function Tutorial({
           position: 'fixed',
           top: tooltipTop, bottom: tooltipBottom, left: tooltipLeft,
           width: tooltipW, zIndex: 1000,
-          background: '#060e10',
-          border: `1px solid rgba(var(--t-accent-rgb),0.5)`,
+          background: T.bgCard,
+          border: `1px solid ${T.border2}`,
           borderRadius: 18,
-          boxShadow: `0 20px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(var(--t-accent-rgb),0.1), 0 0 40px rgba(var(--t-accent-rgb),0.1)`,
+          boxShadow: '0 20px 60px rgba(0,0,0,0.35)',
           padding: '18px 20px 16px',
           animation: 'fade-up 0.35s cubic-bezier(0.16,1,0.3,1) both',
         }}
@@ -210,8 +210,8 @@ export function Tutorial({
             <div style={{
               position: 'absolute', top: 2, left: 2,
               width: 12, height: 12,
-              background: '#060e10',
-              border: `1px solid rgba(var(--t-accent-rgb),0.5)`,
+              background: T.bgCard,
+              border: `1px solid ${T.border2}`,
               transform: arrowPos === 'top' ? 'rotate(45deg)' : 'rotate(225deg)',
               transformOrigin: 'center',
             }} />
@@ -225,19 +225,19 @@ export function Tutorial({
               <div key={i} style={{
                 height: 4, borderRadius: 2,
                 width: i === step ? 22 : 4,
-                background: i === step ? T.tealMid : 'rgba(244,240,232,0.18)',
+                background: i === step ? T.tealMid : T.border2,
                 transition: 'all 0.35s cubic-bezier(0.16,1,0.3,1)',
               }} />
             ))}
-            <span style={{ marginLeft: 4, fontSize: 10, color: 'rgba(244,240,232,0.3)', fontFamily: T.mono }}>
+            <span style={{ marginLeft: 4, fontSize: 10, color: T.inkMute, fontFamily: T.mono }}>
               {step + 1}/{steps.length}
             </span>
           </div>
           <button
             onClick={dismiss}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(244,240,232,0.3)', fontSize: 11, fontFamily: T.sans, padding: '2px 0' }}
-            onMouseEnter={e => (e.currentTarget.style.color = 'rgba(244,240,232,0.65)')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(244,240,232,0.3)')}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: T.inkMute, fontSize: 11, fontFamily: T.sans, padding: '2px 0' }}
+            onMouseEnter={e => (e.currentTarget.style.color = 'var(--t-inkDim)')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'var(--t-inkMute)')}
           >
             {l.skipTour}
           </button>
@@ -248,12 +248,12 @@ export function Tutorial({
           <span style={{ fontSize: 10, fontFamily: T.mono, fontWeight: 700, letterSpacing: '0.14em', color: T.tealMid, background: 'rgba(var(--t-accent-rgb),0.12)', padding: '2px 7px', borderRadius: 5 }}>
             {String(step + 1).padStart(2, '0')}
           </span>
-          <span style={{ fontFamily: T.serif, fontSize: 17, lineHeight: 1.2, letterSpacing: '-0.01em', color: '#f4f0e8' }}>
+          <span style={{ fontFamily: T.sans, fontWeight: 600, fontSize: 16, lineHeight: 1.25, letterSpacing: '-0.01em', color: T.ink }}>
             {current.title}
           </span>
         </div>
 
-        <p style={{ fontSize: 13, color: 'rgba(244,240,232,0.55)', lineHeight: 1.65, margin: '0 0 16px' }}>
+        <p style={{ fontSize: 13, color: T.inkDim, lineHeight: 1.65, margin: '0 0 16px' }}>
           {current.body}
         </p>
 
@@ -261,10 +261,10 @@ export function Tutorial({
           onClick={next}
           style={{
             width: '100%', padding: '10px 16px', borderRadius: 11,
-            background: `linear-gradient(135deg, ${T.tealMid} 0%, ${T.teal} 100%)`,
-            color: '#f4f0e8', border: 'none',
+            background: T.tealMid,
+            color: T.onTeal, border: 'none',
             fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: T.sans,
-            boxShadow: `0 4px 20px rgba(var(--t-accent-rgb),0.35)`,
+            boxShadow: 'none',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
           }}
           onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}

@@ -1,0 +1,23 @@
+# Corrige tus Stories, protege tus videos y hazte encontrar en Threads
+
+Cubre del 9 al 21 de noviembre de 2026.
+
+## Esta semana
+
+- **Ya puedes editar una Story después de publicarla.** Desde el 18 de noviembre, Instagram te deja cambiar texto, música, stickers y dibujos durante 15 minutos después de compartir una Story, así que un error ya no significa borrarla y perder las vistas que ya tenía. Por qué importa: los primeros minutos son cuando más se ve tu Story, y volver a publicarla reiniciaba eso. Haz esto: publica, revisa tu Story enseguida en tu propio teléfono y corrígela ahí mismo (toca los tres puntos y luego Editar historia). [9to5Mac, 18 nov](https://9to5mac.com/2026/11/18/instagram-finally-lets-users-edit-stories-after-publishing-but-theres-a-catch/)
+- **Meta ahora avisa cuando alguien vuelve a subir tus videos en Instagram.** La protección de contenido, que ya existía en Facebook, llegó a Instagram el 17 de noviembre. Los creadores elegibles que se inscriben reciben alertas cuando alguien publica sus videos originales, y deciden qué hacer. Un grupo pequeño también prueba la detección de videos que copian tus palabras aunque la imagen se haya cambiado con IA. Por qué importa: las cuentas grandes que republican tu contenido se quedan con el alcance que debía traer gente a ti. Haz esto: busca la protección de contenido en tu Panel profesional e inscríbete si aparece, porque solo cubre lo que subas desde ese momento. [Social Media Today, 17 nov](https://www.socialmediatoday.com/news/meta-expands-content-protection-to-instagram/874965/)
+- **La búsqueda de Threads ahora tiene filtros de verdad.** El 10 de noviembre, Threads agregó filtros por fecha, tipo de publicación, comunidad o tema y perfil, además de búsqueda exacta. Por qué importa: ahora puedes encontrar preguntas recientes de tu tema y responderlas mientras están frescas, una de las formas más simples de que te vea gente que todavía no te sigue. Haz esto: busca una frase de tu nicho, filtra por los últimos días y responde con algo útil a tres publicaciones. [Social Media Today, 10 nov](https://www.socialmediatoday.com/news/threads-adds-advanced-search-filters/874339/)
+- **El Panel para creadores de Meta ya funciona en la web.** Anunciado el 18 de noviembre: un editor web rediseñado para publicaciones y Reels con vista previa en vivo, subida de videos en lote, una mejor biblioteca de contenido y más estadísticas, para Instagram y Facebook. Por qué importa: planificar una semana de publicaciones en una pantalla grande es más fácil que en el teléfono. Haz esto: abre el panel en una computadora y revisa la vista previa de tus próximas tres publicaciones antes de que salgan. [Social Media Today, 18 nov](https://www.socialmediatoday.com/news/meta-brings-its-updated-creator-dashboard-to-the-web/875143/)
+- **Los datos de música de TikTok siguen mostrando el sonido como herramienta para que te descubran.** El Music Impact Report 2026 de TikTok (con Luminate, más de 4.000 usuarios de EE. UU.) dice que el 45% de los usuarios de EE. UU. descubre música nueva en la app, y que el 94% de las canciones que entraron al Billboard Global 200 en 2025 tuvo antes un momento viral en TikTok. Por qué importa: los sonidos en ascenso pueden llevar una cuenta pequeña a feeds a los que no llegaría sola. Haz esto: elige un sonido en ascenso esta semana y úsalo temprano, no cuando ya está en su pico. [Social Media Today, 18 nov](https://www.socialmediatoday.com/news/tiktok-releases-2026-music-impact-report/875144/)
+
+## 5 ideas para publicar
+
+- **Reel, "el error que corregí":** muestra algo que hacías mal en tu trabajo y cómo lo arreglaste. Gancho: "Hice esto mal durante un año. Así se arregla."
+- **Carrusel, antes y después:** un proyecto o hábito, la primera versión en la diapositiva uno, la actual en la última y los pasos en medio. Gancho: "La misma idea, con dos años de diferencia."
+- **Post en Threads, una pregunta real:** hazle a tu nicho una pregunta concreta que de verdad quieras responder y contesta cada respuesta. Gancho: "Pregunta honesta para quien hace esto cada semana."
+- **Secuencia de Stories, una encuesta:** dos opciones para tu próxima publicación y que elija tu audiencia. Gancho: "Tú eliges qué publico el viernes."
+- **TikTok o Reel con un sonido en ascenso:** un clip de 7 segundos que muestra un resultado, sin hablar. Gancho (en pantalla): "Espera al último segundo."
+
+## Una cosa para probar esta semana
+
+Dedica 10 minutos al día a la búsqueda de Threads. Filtra por el último día, encuentra tres publicaciones de tu tema de gente que no conoces y deja una respuesta que aporte algo real. Al final de la semana, sube una nueva exportación y mira si tus seguidores nuevos subieron frente a la semana anterior.

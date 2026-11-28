@@ -4,9 +4,10 @@ import { ThemeProvider } from 'next-themes';
 import { NextIntlClientProvider } from 'next-intl';
 import { chromeMessagesFor, STATIC_INTL_CONFIG } from '@/lib/i18n/chromeMessages';
 import { FontLoader } from '@/components/FontLoader';
+import { HydrationReporter } from '@/components/HydrationReporter';
 import { AuthProvider } from '@/components/AuthProvider';
-import { AnnouncementBar } from '@/components/AnnouncementBar';
-import { ANNOUNCE_STORAGE_KEY } from '@/components/announcementBar.content';
+import { BetaBadge } from '@/components/BetaBadge';
+import { HM_FONTS } from '@/components/home/fonts';
 import './globals.css';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
@@ -101,7 +102,7 @@ const orgJsonLd = {
       founder: { '@id': `${SITE_URL}/author/alan-kilic#person` },
       logo: { '@type': 'ImageObject', url: `${SITE_URL}/logo.png` },
       description:
-        'Privacy-first, open-source follower analysis for Instagram and Threads. AGPL-3.0 web app, MPL-2.0 parser, no password required, processed in your browser.',
+        'Privacy-first, open-source follower analysis for Instagram, Threads and TikTok, plus Pro AI, a coach that remembers your account, drafts posts in your voice and checks them before you share. AGPL-3.0 web app, MPL-2.0 parser, no password required, exports read in your browser.',
       sameAs: ['https://github.com/al-kilic/WhoUnfollowed'],
       // Homepage, /pricing, /compare, and a handful of other marketing pages
       // (see i18n/localizedPaths.ts) now ship in all three; most of the site
@@ -135,13 +136,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
-        />
-        {/* Google Fonts - landing page design system */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap"
-          rel="stylesheet"
         />
         {/* Fontshare - app pages */}
         <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />
@@ -177,13 +171,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: `(function(){try{var K='wu:acq_source';if(!sessionStorage.getItem(K)){var src='direct';var p=new URLSearchParams(location.search);var u=p.get('utm_source');if(u){src=u;}else if(document.referrer){try{var h=new URL(document.referrer).hostname;if(h&&h.indexOf('whounfollowed.co')===-1){src=h;}}catch(e){}}sessionStorage.setItem(K,src);}}catch(e){}})();`,
           }}
         />
-        {/* Hides the closed announcement strip before first paint, so it
-            never flashes back in (see components/AnnouncementBar.tsx). */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{if(localStorage.getItem(${JSON.stringify(ANNOUNCE_STORAGE_KEY)})==='off')document.documentElement.setAttribute('data-announce','off');}catch(e){}})();`,
-          }}
-        />
         {/* data-domains: the tracker ignores any other host, so local and LAN
             dev servers never write test traffic into the live stats. */}
         {UMAMI_WEBSITE_ID ? (
@@ -205,13 +192,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         ) : null}
       </head>
-      <body>
+      <body className={HM_FONTS}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <NextIntlClientProvider locale="en" messages={chromeMessagesFor('en')} {...STATIC_INTL_CONFIG}>
             <AuthProvider>
               <FontLoader />
-              <AnnouncementBar />
+              <HydrationReporter />
               {children}
+              <BetaBadge />
             </AuthProvider>
           </NextIntlClientProvider>
         </ThemeProvider>

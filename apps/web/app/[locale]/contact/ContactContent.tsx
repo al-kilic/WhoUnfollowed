@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { T } from '@/components/landing/tokens';
-import { SiteNav } from '@/components/landing/SiteNav';
-import { LandingFooter } from '@/components/landing/FinalCTA';
+import { SiteHeader } from '@/components/site/SiteHeader';
+import { SiteFooter } from '@/components/site/SiteFooter';
 import type { ContactContent as ContactContentData } from './content';
 
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
@@ -86,7 +86,7 @@ export function ContactContent({ content }: { content: ContactContentData }) {
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <SiteNav />
+      <SiteHeader />
 
       <main className="px-4 sm:px-8" style={{ maxWidth: 640, margin: '0 auto', paddingTop: 64, paddingBottom: 96 }}>
 
@@ -207,9 +207,9 @@ export function ContactContent({ content }: { content: ContactContentData }) {
                 style={{
                   width: '100%', marginTop: 16, padding: '12px 16px', borderRadius: 12,
                   border: 'none', cursor: status === 'submitting' ? 'default' : 'pointer',
-                  background: T.teal, color: T.cream, fontFamily: T.sans, fontSize: 14, fontWeight: 600,
+                  background: T.teal, color: T.onTeal, fontFamily: T.sans, fontSize: 14, fontWeight: 600,
                   opacity: status === 'submitting' ? 0.7 : 1,
-                  boxShadow: `0 4px 16px ${T.tealGlow}`,
+                  
                 }}
               >
                 {status === 'submitting' ? content.form.sending : content.form.send}
@@ -229,9 +229,9 @@ export function ContactContent({ content }: { content: ContactContentData }) {
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 7,
                   padding: '9px 16px', borderRadius: 10,
-                  background: copied ? 'rgba(2,136,143,0.12)' : T.teal, color: copied ? T.tealLight : T.cream,
+                  background: copied ? 'rgba(2,136,143,0.12)' : T.teal, color: copied ? T.tealLight : T.onTeal,
                   border: 'none', fontSize: 13, fontWeight: 600, fontFamily: T.sans, cursor: 'pointer',
-                  boxShadow: copied ? 'none' : `0 4px 16px ${T.tealGlow}`, transition: 'all 0.15s',
+                  transition: 'all 0.15s',
                 }}
               >
                 {copied ? content.copied : content.copyEmail}
@@ -275,7 +275,7 @@ export function ContactContent({ content }: { content: ContactContentData }) {
         </div>
       </main>
 
-      <LandingFooter />
+      <SiteFooter />
     </div>
   );
 }

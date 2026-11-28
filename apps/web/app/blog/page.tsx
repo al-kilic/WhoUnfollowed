@@ -7,7 +7,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 export const metadata: Metadata = {
   title: 'Blog: Instagram, Privacy & Follower Tracking Guides',
   description: 'Honest guides on seeing who unfollowed you, finding non-followers and ghost followers, and tracking your Instagram safely. No growth hacks, no password required.',
-  alternates: { canonical: `${SITE_URL}/blog` },
+  alternates: { canonical: `${SITE_URL}/blog`, types: { 'application/rss+xml': `${SITE_URL}/feeds/blog.xml` } },
   openGraph: {
     type: 'website',
     title: 'WhoUnfollowed Blog',

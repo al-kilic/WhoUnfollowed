@@ -14,7 +14,11 @@ COPY packages/ ./packages/
 COPY apps/web/ ./apps/web/
 
 RUN pnpm --filter @ig-tracker/core build
-RUN pnpm --filter @ig-tracker/web build
+# Staging passes UMAMI_OFF=1: an empty website id turns off the tracker, the
+# session recorder and the server-side events, which are baked in at build
+# time. Production never sets it and keeps the live id from app/layout.tsx.
+ARG UMAMI_OFF=0
+RUN if [ "$UMAMI_OFF" = "1" ]; then export NEXT_PUBLIC_UMAMI_WEBSITE_ID=; fi && pnpm --filter @ig-tracker/web build
 
 # Stage 2: runtime
 FROM node:20-alpine AS runner

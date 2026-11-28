@@ -18,6 +18,24 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      # This repo holds public stubs for a few private files (the coach
+      # instructions). Production must never run on the stubs: the real files
+      # come from the PRIVATE_OVERLAY_B64 secret (built by the private repo's
+      # overlay script) and only ever live inside the private image.
+      - name: Add the private files
+        env:
+          PRIVATE_OVERLAY_B64: ${{ secrets.PRIVATE_OVERLAY_B64 }}
+        run: |
+          set -euo pipefail
+          if [ -z "${PRIVATE_OVERLAY_B64:-}" ]; then
+            echo "PRIVATE_OVERLAY_B64 is not set: refusing to build production on the public stubs"
+            exit 1
+          fi
+          printf '%s' "$PRIVATE_OVERLAY_B64" | base64 -d | tar -xz -C .
+          test -f .private-overlay || { echo "overlay marker missing"; exit 1; }
+          echo "private overlay from: $(cat .private-overlay)"
+          git status --porcelain --untracked-files=no
+
       - name: Log in to GHCR
         uses: docker/login-action@v4
         with:

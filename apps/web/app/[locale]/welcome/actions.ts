@@ -64,7 +64,9 @@ export async function setPasswordAction(formData: FormData) {
   if (!paid) return { error: 'payment_not_complete' as const };
 
   const type = session.metadata?.type;
-  if (type !== 'unlock' && type !== 'lifetime') return { error: 'invalid_link' as const };
+  if (type !== 'unlock' && type !== 'lifetime' && type !== 'pro_ai') return { error: 'invalid_link' as const };
+  // Pro AI buyers start at their coach (onboarding); everyone else at history.
+  const home = type === 'pro_ai' ? '/app/today' : '/app/history';
 
   if (Date.now() / 1000 - session.created > SESSION_MAX_AGE_SECONDS) {
     return { error: 'invalid_or_expired_session' as const };
@@ -82,7 +84,7 @@ export async function setPasswordAction(formData: FormData) {
     // everyone else logs in normally. Never create a session from the link.
     const { user: current } = await validateRequest();
     if (current?.id === user.id) {
-      redirect({ href: '/history', locale });
+      redirect({ href: home, locale });
       return;
     }
     return { error: 'already_has_password' as const };
@@ -114,6 +116,6 @@ export async function setPasswordAction(formData: FormData) {
   if (updated.length === 0) return { error: 'already_has_password' as const };
 
   await createSession(user.id);
-  redirect({ href: '/history', locale });
+  redirect({ href: home, locale });
   return;
 }

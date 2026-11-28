@@ -1,0 +1,21 @@
+/* Ask coach: the + attach button, its menu and the attached chips. */
+.s-att{position:relative;flex:none;margin-left:-6px}
+.s-att-b{width:34px;height:34px;border-radius:10px;color:var(--mute);border:1px solid var(--line);background:var(--surface)}
+.s-att-b:hover,.s-att-b[aria-expanded=true]{color:var(--ink);border-color:color-mix(in oklab,var(--accent) 45%,var(--line))}
+.s-att-b:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.s-att-m{position:absolute;bottom:calc(100% + 8px);left:0;z-index:30;width:min(290px,calc(100vw - 48px));max-height:340px;overflow:auto;padding:6px;border:1px solid var(--line);border-radius:14px;background:var(--surface);box-shadow:0 18px 40px -18px rgba(0,0,0,.45)}
+.s-att-i{all:unset;box-sizing:border-box;display:flex;gap:10px;align-items:flex-start;width:100%;padding:9px 10px;border-radius:10px;cursor:pointer;color:var(--ink)}
+.s-att-i svg{flex:none;margin-top:2px;color:var(--accent)}
+.s-att-i b{display:block;font-weight:600;font-size:13.5px}
+.s-att-i small{display:block;font-size:12px;color:var(--mute);margin-top:1px}
+.s-att-i:hover,.s-att-i:focus-visible{background:var(--sunk)}
+.s-att-chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px}
+.s-att-c{display:inline-flex;align-items:center;gap:6px;max-width:100%;padding:4px 6px 4px 10px;border:1px solid color-mix(in oklab,var(--accent) 35%,var(--line));border-radius:999px;background:color-mix(in oklab,var(--accent) 8%,transparent);font-size:12.5px;color:var(--ink)}
+.s-att-c>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
+.s-att-c button{all:unset;display:grid;place-items:center;width:18px;height:18px;border-radius:50%;cursor:pointer;color:var(--mute)}
+.s-att-c button:hover,.s-att-c button:focus-visible{color:var(--ink);background:var(--sunk)}
+.s-att-c.ph{padding:3px;border-radius:10px;position:relative}
+.s-att-c.ph img{width:40px;height:40px;object-fit:cover;border-radius:7px;display:block}
+.s-att-c.ph button{position:absolute;top:-6px;right:-6px;background:var(--surface);border:1px solid var(--line)}
+.s-att-n{font-size:12px;color:var(--mute)}
+@media (prefers-reduced-motion:no-preference){.s-att-m{animation:s-att-in .14s ease-out}@keyframes s-att-in{from{opacity:0;transform:translateY(4px)}}}

@@ -3,7 +3,7 @@
 import { useState, useRef, useMemo } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { ExternalLink, Download, Search, ArrowUpDown, Calendar, CaseSensitive, ChevronDown } from 'lucide-react';
-import { format } from 'date-fns';
+import { useLocale } from 'next-intl';
 import type { Account } from '@ig-tracker/core';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -28,6 +28,8 @@ export function AccountList({
   emptyMessage = 'No accounts here.',
   content: c = EN_LIST_TOOLBAR,
 }: AccountListProps) {
+  const locale = useLocale();
+  const dayFmt = useMemo(() => new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric' }), [locale]);
   const [search, setSearch] = useState('');
   const [sortField, setSortField] = useState<'username' | 'date'>('date');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
@@ -108,8 +110,8 @@ export function AccountList({
       {/* Count */}
       <p className="text-xs text-foreground/40">
         {filtered.length === accounts.length
-          ? c.accountsCount(accounts.length.toLocaleString())
-          : c.ofTotal(filtered.length.toLocaleString(), accounts.length.toLocaleString())}
+          ? c.accountsCount(accounts.length.toLocaleString(locale))
+          : c.ofTotal(filtered.length.toLocaleString(locale), accounts.length.toLocaleString(locale))}
       </p>
 
       {/* List */}
@@ -148,7 +150,7 @@ export function AccountList({
                     <p className="text-sm font-medium truncate">@{account.username}</p>
                     {account.followedAt ? (
                       <p className="text-xs text-foreground/40">
-                        {format(new Date(account.followedAt * 1000), 'MMM d, yyyy')}
+                        {dayFmt.format(new Date(account.followedAt * 1000))}
                       </p>
                     ) : null}
                   </div>

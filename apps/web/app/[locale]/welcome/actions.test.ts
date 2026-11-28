@@ -80,13 +80,13 @@ describe('setPasswordAction', () => {
     expect(update).not.toHaveBeenCalled();
   });
 
-  it('sends an already signed-in buyer to history without creating a session', async () => {
+  it('sends an already signed-in buyer to Studio history without creating a session', async () => {
     sessionsRetrieve.mockResolvedValue(paidSession());
     usersFindFirst.mockResolvedValue({ ...passwordlessUser, id: 'u_me', passwordHash: 'my-hash' });
     validateRequest.mockResolvedValue({ user: { id: 'u_me' } });
 
     await setPasswordAction(form());
-    expect(redirect).toHaveBeenCalledWith({ href: '/history', locale: 'en' });
+    expect(redirect).toHaveBeenCalledWith({ href: '/app/history', locale: 'en' });
     expect(createSession).not.toHaveBeenCalled();
   });
 
@@ -97,7 +97,7 @@ describe('setPasswordAction', () => {
     await setPasswordAction(form());
     expect(update).toHaveBeenCalled();
     expect(createSession).toHaveBeenCalledWith('u_new');
-    expect(redirect).toHaveBeenCalledWith({ href: '/history', locale: 'en' });
+    expect(redirect).toHaveBeenCalledWith({ href: '/app/history', locale: 'en' });
   });
 
   it('accepts a checkout fully covered by a promo code', async () => {

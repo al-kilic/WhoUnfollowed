@@ -1,3 +1,4 @@
+import { IMAGE_SANS, IMAGE_SERIF, loadImageFonts } from '@/components/landing/imageFonts';
 // Draws the 3-month wrap as a 1080x1920 story image, in the browser.
 // Counts only: nothing on it names an account.
 
@@ -15,13 +16,11 @@ export interface WrapImageInput {
 
 const W = 1080;
 const H = 1920;
-const SERIF = "'Instrument Serif', Georgia, serif";
-const SANS = "'DM Sans', system-ui, sans-serif";
+const SERIF = IMAGE_SERIF;
+const SANS = IMAGE_SANS;
 
 export async function drawWrapImage(input: WrapImageInput): Promise<Blob> {
-  if (typeof document !== 'undefined' && 'fonts' in document) {
-    try { await document.fonts.ready; } catch { /* system fonts */ }
-  }
+  await loadImageFonts();
   const canvas = document.createElement('canvas');
   canvas.width = W;
   canvas.height = H;

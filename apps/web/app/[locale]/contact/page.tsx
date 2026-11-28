@@ -6,6 +6,7 @@ import { routing, type AppLocale } from '@/i18n/routing';
 import { OG_LOCALE, ogAlternateLocales } from '@/i18n/ogLocale';
 import { getPathname } from '@/i18n/navigation';
 import { ContactContent } from './ContactContent';
+import { SitePage } from '@/components/landing/SitePage';
 import { getContactContent } from './content';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
@@ -70,5 +71,5 @@ export default async function ContactPage({ params }: PageProps) {
   if (!hasLocale(routing.locales, locale)) notFound();
   // Lets locale-aware Links read the locale without request headers (static rendering).
   setRequestLocale(locale);
-  return <ContactContent content={getContactContent(locale)} />;
+  return <SitePage><ContactContent content={getContactContent(locale)} /></SitePage>;
 }

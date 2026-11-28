@@ -14,6 +14,8 @@ export interface HealthCheckContent {
   copyList: string;
   copied: string;
   more: (n: number) => string;
+  // How long requests have waited, from a month count: years once it passes 23 months.
+  age: (months: number) => string;
   checks: Record<HealthCheckId, { title: string; action: string }>;
 }
 
@@ -28,8 +30,9 @@ const en: HealthCheckContent = {
   copyList: 'Copy usernames',
   copied: 'Copied',
   more: n => `and ${n} more`,
+  age: m => (m >= 24 ? `${Math.floor(m / 12)}+ years` : `${m}+ months`),
   checks: {
-    stale_pending: { title: '{count} follow requests have waited {months}+ months', action: 'Cancel them. After six months they are not going to accept, and the request just sits there.' },
+    stale_pending: { title: '{count} follow requests have waited {age}', action: 'Cancel them. After six months they are not going to accept, and the request just sits there.' },
     follow_back_gap_year: { title: 'Of the {total} accounts you followed in {year}, {count} never followed back ({pct}%)', action: 'That year was a follow-for-follow that didn\'t work. Start your cleanup there.' },
     old_one_way: { title: '{count} accounts you followed 2+ years ago never followed back', action: 'After two years they won\'t. Unfollowing them is the safest cleanup there is.' },
     sudden_drop: { title: 'You lost {count} followers ({pct}%) in {days} days', action: 'Look at what you posted in that window. A drop this size usually follows one post or a long pause.' },
@@ -53,8 +56,9 @@ const es: HealthCheckContent = {
   copyList: 'Copiar usuarios',
   copied: 'Copiado',
   more: n => `y ${n} más`,
+  age: m => (m >= 24 ? `${Math.floor(m / 12)}+ años` : `${m}+ meses`),
   checks: {
-    stale_pending: { title: '{count} solicitudes de seguimiento llevan {months}+ meses esperando', action: 'Cancélalas. Después de seis meses no las van a aceptar, y la solicitud solo se queda ahí.' },
+    stale_pending: { title: '{count} solicitudes de seguimiento llevan {age} esperando', action: 'Cancélalas. Después de seis meses no las van a aceptar, y la solicitud solo se queda ahí.' },
     follow_back_gap_year: { title: 'De las {total} cuentas que seguiste en {year}, {count} nunca te siguieron ({pct}%)', action: 'Ese año fue un follow por follow que no funcionó. Empieza la limpieza por ahí.' },
     old_one_way: { title: '{count} cuentas que seguiste hace 2+ años nunca te siguieron', action: 'Después de dos años no lo harán. Dejarlas de seguir es la limpieza más segura.' },
     sudden_drop: { title: 'Perdiste {count} seguidores ({pct}%) en {days} días', action: 'Mira qué publicaste en ese periodo. Una caída así suele venir de una publicación o de una pausa larga.' },
@@ -78,8 +82,9 @@ const pt: HealthCheckContent = {
   copyList: 'Copiar usuários',
   copied: 'Copiado',
   more: n => `e mais ${n}`,
+  age: m => (m >= 24 ? `${Math.floor(m / 12)}+ anos` : `${m}+ meses`),
   checks: {
-    stale_pending: { title: '{count} pedidos para seguir esperam há {months}+ meses', action: 'Cancele. Depois de seis meses não vão aceitar, e o pedido só fica parado lá.' },
+    stale_pending: { title: '{count} pedidos para seguir esperam há {age}', action: 'Cancele. Depois de seis meses não vão aceitar, e o pedido só fica parado lá.' },
     follow_back_gap_year: { title: 'Das {total} contas que você seguiu em {year}, {count} nunca seguiram de volta ({pct}%)', action: 'Aquele ano foi um sigo-de-volta que não deu certo. Comece a limpeza por ali.' },
     old_one_way: { title: '{count} contas que você seguiu há 2+ anos nunca seguiram de volta', action: 'Depois de dois anos, não vão seguir. Deixar de seguir essas é a limpeza mais segura.' },
     sudden_drop: { title: 'Você perdeu {count} seguidores ({pct}%) em {days} dias', action: 'Veja o que você postou nesse período. Uma queda assim costuma vir de um post ou de uma pausa longa.' },

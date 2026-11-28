@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { Link as LocaleLink } from '@/i18n/navigation';
 import { PlatformIcon } from '@/components/PlatformIcon';
 import { T } from '@/components/landing/tokens';
-import { SiteNav } from '@/components/landing/SiteNav';
-import { LandingFooter } from '@/components/landing/FinalCTA';
+import { SiteHeader } from '@/components/site/SiteHeader';
+import { SiteFooter } from '@/components/site/SiteFooter';
 import type { HowToExportContent as HowToExportContentData } from './content';
 import { DeviceSteps } from './DeviceSteps';
 import { DriveSteps } from './DriveSteps';
@@ -23,7 +23,7 @@ export function HowToExportContent({ content }: { content: HowToExportContentDat
 
   return (
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <SiteNav />
+      <SiteHeader />
 
       <main style={{ maxWidth: 1160, margin: '0 auto', padding: '56px 32px 80px' }}>
         <div className="export-narrow">
@@ -112,7 +112,7 @@ export function HowToExportContent({ content }: { content: HowToExportContentDat
         </div>
       </main>
 
-      <LandingFooter />
+      <SiteFooter />
     </div>
   );
 }

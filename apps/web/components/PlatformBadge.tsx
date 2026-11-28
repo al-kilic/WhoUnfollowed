@@ -8,7 +8,7 @@ export function PlatformBadge({ platform }: { platform: Platform }) {
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 5,
-      fontSize: 10, fontFamily: T.mono, letterSpacing: '0.1em', textTransform: 'uppercase',
+      fontSize: 11, fontFamily: T.sans, fontWeight: 500,
       padding: '3px 9px 3px 7px', borderRadius: 20,
       color: threads ? T.ink : T.tealLight,
       background: threads ? 'var(--t-surface2)' : 'rgba(var(--t-accent-rgb),0.08)',

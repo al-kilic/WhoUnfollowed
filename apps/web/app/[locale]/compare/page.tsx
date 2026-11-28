@@ -8,6 +8,7 @@ import { COMPARISONS, resolveComparison } from '@/app/compare/comparisons';
 import { routing, type AppLocale } from '@/i18n/routing';
 import { OG_LOCALE, ogAlternateLocales } from '@/i18n/ogLocale';
 import { getPathname } from '@/i18n/navigation';
+import { SitePage } from '@/components/landing/SitePage';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://whounfollowed.co';
 
@@ -107,7 +108,7 @@ export default async function ComparePage({ params }: PageProps) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(comparisonsJsonLd) }} />
-      <CompareIndexContent content={content} />
+      <SitePage><CompareIndexContent content={content} /></SitePage>
     </>
   );
 }

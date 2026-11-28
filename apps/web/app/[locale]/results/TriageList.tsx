@@ -38,11 +38,11 @@ function stateConfig(options: TriageOptionContent[], state: TriageState): Triage
 }
 
 const OPTION_STYLE: Record<TriageState, { color: string; gradient?: string; bg: string; border: string }> = {
-  not_a_fan: { color: T.terra, bg: 'rgba(168,75,47,0.12)', border: 'rgba(168,75,47,0.35)' },
+  not_a_fan: { color: 'var(--bad)', bg: 'color-mix(in srgb, var(--bad) 10%, transparent)', border: 'color-mix(in srgb, var(--bad) 35%, transparent)' },
   let_it_slide: { color: T.ink, bg: 'var(--t-surface2)', border: 'var(--t-border2)' },
-  done: { color: '#C0392B', gradient: 'linear-gradient(to right, #8B1A1A, #C0392B)', bg: 'rgba(139,26,26,0.1)', border: 'rgba(192,57,43,0.35)' },
-  check_later: { color: '#a0956b', bg: 'rgba(160,149,107,0.1)', border: 'rgba(160,149,107,0.3)' },
-  deactivated: { color: '#6b7280', bg: 'rgba(107,114,128,0.1)', border: 'rgba(107,114,128,0.3)' },
+  done: { color: 'var(--bad)', bg: 'color-mix(in srgb, var(--bad) 14%, transparent)', border: 'color-mix(in srgb, var(--bad) 45%, transparent)' },
+  check_later: { color: 'var(--warn)', bg: 'color-mix(in srgb, var(--warn) 10%, transparent)', border: 'color-mix(in srgb, var(--warn) 32%, transparent)' },
+  deactivated: { color: 'var(--mute)', bg: 'var(--sunk)', border: 'var(--line)' },
 };
 
 function pickWitty(wittys: string[], username: string): string {
@@ -70,8 +70,8 @@ function InfoIcon({ text }: { text: string }) {
         <span style={{
           position: 'absolute', bottom: '130%', left: '50%', transform: 'translateX(-50%)',
           width: 200, padding: '8px 12px', borderRadius: 8, zIndex: 300,
-          background: 'rgba(20,20,20,0.95)', border: '1px solid rgba(255,255,255,0.1)',
-          fontSize: 11, color: 'rgba(244,240,232,0.85)', lineHeight: 1.5,
+          background: 'var(--ink)', border: '1px solid var(--line)',
+          fontSize: 11, color: 'var(--bg)', lineHeight: 1.5,
           whiteSpace: 'normal', textAlign: 'left', pointerEvents: 'none',
           boxShadow: '0 6px 24px rgba(0,0,0,0.4)',
         }}>
@@ -80,7 +80,7 @@ function InfoIcon({ text }: { text: string }) {
             position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)',
             width: 0, height: 0,
             borderLeft: '5px solid transparent', borderRight: '5px solid transparent',
-            borderTop: '5px solid rgba(20,20,20,0.95)',
+            borderTop: '5px solid var(--ink)',
           }}/>
         </span>
       )}
@@ -117,7 +117,7 @@ function Toast({ toast, c, onUndo, onDismiss }: { toast: ToastData; c: TriageLis
         onClick={onUndo}
         style={{
           padding: '4px 12px', borderRadius: 8,
-          border: '1px solid rgba(244,240,232,0.2)',
+          border: '1px solid var(--line)',
           background: 'transparent', color: T.ink,
           fontSize: 12, cursor: 'pointer', fontFamily: T.sans, fontWeight: 600,
         }}
@@ -485,14 +485,14 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
         <div style={{
           display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
           padding: '12px 16px', borderRadius: 12, marginBottom: 16,
-          background: 'linear-gradient(180deg, rgba(var(--t-accent-rgb),0.10), rgba(var(--t-accent-rgb),0.03))',
+          background: 'var(--acc-soft)',
           border: '1px solid rgba(var(--t-accent-rgb),0.25)',
         }}>
           <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>{c.proTeaser.pro}</span>
           <span style={{ flex: 1, minWidth: 200, fontSize: 13, color: T.inkDim, lineHeight: 1.5 }}>
             {c.proTeaser.body}
           </span>
-          <Link href="/pricing" onClick={() => { trackUpgradeClick('triage-carryover'); trackFunnel('Upgrade CTA Clicked', { placement: 'results' }); }} style={{ flexShrink: 0, fontSize: 12, fontWeight: 600, fontFamily: T.sans, color: T.cream, textDecoration: 'none', padding: '8px 16px', borderRadius: 9, background: T.teal }}>
+          <Link href="/pricing" onClick={() => { trackUpgradeClick('triage-carryover'); trackFunnel('Upgrade CTA Clicked', { placement: 'results' }); }} style={{ flexShrink: 0, fontSize: 12, fontWeight: 600, fontFamily: T.sans, color: T.onTeal, textDecoration: 'none', padding: '8px 16px', borderRadius: 9, background: T.teal }}>
             {c.proTeaser.upgradeToPro}
           </Link>
           <button onClick={() => setImportDismissed(true)} aria-label={c.proTeaser.dismissAria} style={{ flexShrink: 0, width: 26, height: 26, borderRadius: 7, border: '1px solid var(--t-border2)', background: 'transparent', color: T.inkMute, cursor: 'pointer', fontFamily: T.sans }}>×</button>
@@ -576,7 +576,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
                   >
                     <span style={{
                       width: 14, height: 14, borderRadius: 4, flexShrink: 0,
-                      border: `1.5px solid ${checked ? T.tealMid : 'rgba(244,240,232,0.25)'}`,
+                      border: `1.5px solid ${checked ? T.tealMid : 'var(--faint)'}`,
                       background: checked ? T.tealMid : 'transparent',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                     }}>
@@ -596,7 +596,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
                   padding: '8px 18px', borderRadius: 10, cursor: selectedCount === 0 ? 'not-allowed' : 'pointer',
                   fontSize: 13, fontWeight: 600, fontFamily: T.sans,
                   background: selectedCount === 0 ? 'rgba(var(--t-accent-rgb),0.15)' : T.teal,
-                  border: 'none', color: selectedCount === 0 ? T.inkMute : T.cream,
+                  border: 'none', color: selectedCount === 0 ? T.inkMute : T.onTeal,
                   transition: 'all 0.15s',
                 }}
               >
@@ -607,7 +607,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
                 style={{
                   padding: '8px 18px', borderRadius: 10, cursor: 'pointer',
                   fontSize: 13, fontFamily: T.sans,
-                  background: 'transparent', border: '1px solid rgba(244,240,232,0.1)',
+                  background: 'transparent', border: '1px solid var(--line)',
                   color: T.inkDim,
                 }}
               >
@@ -678,7 +678,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
       {/* Filter pills */}
       {(() => {
         const allCount = accounts.filter(a => { const s = triage.get(a.username); return s !== 'let_it_slide' && s !== 'deactivated'; }).length;
-        const untriagedColor = '#8b8fa8'; // muted blue-grey, neutral/pending feel
+        const untriagedColor = 'var(--mute)'; // neutral, pending
         const filters: { value: TriageState | 'untriaged' | 'all'; label: string; count: number; color: string; gradient?: string; border?: string; isAll?: boolean; info: string }[] = [
           { value: 'all',       label: c.filters.all,       count: allCount,                                                                            color: T.ink,         isAll: true,  info: c.filters.allInfo },
           { value: 'untriaged', label: c.filters.untriaged, count: accounts.filter(a => !triage.has(a.username)).length,                                color: untriagedColor,              info: c.filters.untriagedInfo },
@@ -726,7 +726,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
                   <span style={{
                     fontSize: 10, fontFamily: 'monospace',
                     padding: '1px 5px', borderRadius: 10,
-                    background: active ? 'rgba(128,128,128,0.15)' : 'var(--t-border1)',
+                    background: active ? 'var(--sunk)' : 'var(--t-border1)',
                     color: active ? 'inherit' : T.inkMute,
                   }}>
                     {f.count}
@@ -781,7 +781,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
           style={{
             height: listHeight, overflowY: 'auto', overflowX: 'hidden',
             borderRadius: 16, border: '1px solid var(--t-border1)',
-            background: 'rgba(244,240,232,0.01)',
+            background: 'var(--surface)',
           }}
         >
           <div style={{ height: virtualizer.getTotalSize(), position: 'relative' }}>
@@ -851,7 +851,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
             <div style={{
               marginTop: 4, borderRadius: 12,
               border: '1px solid var(--t-border1)',
-              background: 'rgba(244,240,232,0.01)',
+              background: 'var(--surface)',
               overflow: 'hidden',
             }}>
               {deactivatedAccounts.map(account => (
@@ -903,7 +903,7 @@ export function TriageList({ accounts, snapshotKey, csvFilename, isPro = false, 
             <div style={{
               marginTop: 4, borderRadius: 12,
               border: '1px solid var(--t-border1)',
-              background: 'rgba(244,240,232,0.01)',
+              background: 'var(--surface)',
               overflow: 'hidden',
             }}>
               {slideAccounts.map(account => (

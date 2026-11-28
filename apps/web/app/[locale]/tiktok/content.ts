@@ -21,7 +21,7 @@ const EN: TikTokPageContent = {
   whatItems: [
     { title: "Who doesn't follow you back", body: 'Every TikTok account you follow that does not follow you, with the date you followed them.' },
     { title: 'Fans and mutuals', body: "People who follow you that you don't follow back, and everyone you follow each other with." },
-    { title: 'Who unfollowed you', body: 'Upload a newer download later and compare snapshots to see exactly who left. Pro keeps unlimited history.' },
+    { title: 'Who unfollowed you', body: 'Upload a newer download later and compare snapshots to see exactly who left. A free account keeps two exports; Pro AI keeps every one and shows the names.' },
     { title: 'Kept apart from Instagram', body: 'TikTok, Instagram and Threads snapshots never mix. Radar, history and comparisons stay per app.' },
   ],
   stepsEyebrow: 'HOW TO EXPORT',
@@ -44,7 +44,7 @@ const EN: TikTokPageContent = {
   faqHeadline: 'TikTok, answered.',
   faq: [
     { q: 'Does TikTok tell you when someone unfollows you?', a: "No. TikTok doesn't notify you when someone unfollows you. Comparing two data downloads is the reliable way to know." },
-    { q: 'Can I see who unfollowed me on TikTok for free?', a: 'Yes. The free plan shows who does not follow you back from one download, with no account. Seeing who unfollowed you between two downloads needs saved snapshots, which Pro keeps.' },
+    { q: 'Can I see who unfollowed me on TikTok for free?', a: 'Yes. The free plan shows who does not follow you back from one download, with no account. Seeing who unfollowed you between two downloads needs saved snapshots: a free account shows how many left, Pro AI shows who.' },
     { q: 'Do I need to give my TikTok password?', a: 'No. You upload the file TikTok gives you. There is no login and no connection to your account.' },
     { q: 'How long does the TikTok download take?', a: 'TikTok prepares it in the background. It is often ready within a day, sometimes a few days. Request it now and come back when it lands.' },
     { q: 'Will TikTok ban me for using this?', a: "No. Download your data is TikTok's own feature. Nothing here touches TikTok or its API." },
@@ -73,7 +73,7 @@ const ES: TikTokPageContent = {
   whatItems: [
     { title: 'Quién no te sigue de vuelta', body: 'Cada cuenta de TikTok que sigues y no te sigue, con la fecha en que la seguiste.' },
     { title: 'Fans y mutuos', body: 'Quienes te siguen y no sigues, y todas las personas con las que se siguen mutuamente.' },
-    { title: 'Quién te dejó de seguir', body: 'Sube una descarga más nueva después y compara snapshots para ver exactamente quién se fue. Pro guarda historial ilimitado.' },
+    { title: 'Quién te dejó de seguir', body: 'Sube una descarga más nueva después y compara snapshots para ver exactamente quién se fue. Una cuenta gratis guarda dos exports; Pro AI guarda todos y muestra los nombres.' },
     { title: 'Separado de Instagram', body: 'Los snapshots de TikTok, Instagram y Threads nunca se mezclan. Radar, historial y comparaciones van por app.' },
   ],
   stepsEyebrow: 'CÓMO EXPORTAR',
@@ -96,7 +96,7 @@ const ES: TikTokPageContent = {
   faqHeadline: 'TikTok, respondido.',
   faq: [
     { q: '¿TikTok te avisa cuando alguien te deja de seguir?', a: 'No. TikTok no te avisa cuando alguien te deja de seguir. Comparar dos descargas de datos es la forma fiable de saberlo.' },
-    { q: '¿Puedo ver gratis quién me dejó de seguir en TikTok?', a: 'Sí. El plan gratis muestra quién no te sigue de vuelta con una descarga, sin cuenta. Ver quién te dejó de seguir entre dos descargas necesita snapshots guardados, que guarda Pro.' },
+    { q: '¿Puedo ver gratis quién me dejó de seguir en TikTok?', a: 'Sí. El plan gratis muestra quién no te sigue de vuelta con una descarga, sin cuenta. Ver quién te dejó de seguir entre dos descargas necesita snapshots guardados: una cuenta gratis muestra cuántos se fueron, Pro AI muestra quiénes.' },
     { q: '¿Tengo que dar mi contraseña de TikTok?', a: 'No. Subes el archivo que TikTok te da. No hay inicio de sesión ni conexión con tu cuenta.' },
     { q: '¿Cuánto tarda la descarga de TikTok?', a: 'TikTok la prepara en segundo plano. Muchas veces está lista en un día, a veces en unos días. Pídela ahora y vuelve cuando llegue.' },
     { q: '¿TikTok me puede banear por usar esto?', a: 'No. Descargar tus datos es una función de TikTok. Nada aquí toca TikTok ni su API.' },
@@ -125,7 +125,7 @@ const PT: TikTokPageContent = {
   whatItems: [
     { title: 'Quem não te segue de volta', body: 'Cada conta do TikTok que você segue e não te segue, com a data em que você seguiu.' },
     { title: 'Fãs e mútuos', body: 'Quem te segue e você não segue, e todo mundo com quem vocês se seguem.' },
-    { title: 'Quem deixou de te seguir', body: 'Envie um download mais novo depois e compare snapshots para ver exatamente quem saiu. O Pro guarda histórico ilimitado.' },
+    { title: 'Quem deixou de te seguir', body: 'Envie um download mais novo depois e compare snapshots para ver exatamente quem saiu. Uma conta grátis guarda dois exports; o Pro AI guarda todos e mostra os nomes.' },
     { title: 'Separado do Instagram', body: 'Snapshots de TikTok, Instagram e Threads nunca se misturam. Radar, histórico e comparações ficam por app.' },
   ],
   stepsEyebrow: 'COMO EXPORTAR',
@@ -148,7 +148,7 @@ const PT: TikTokPageContent = {
   faqHeadline: 'TikTok, respondido.',
   faq: [
     { q: 'O TikTok avisa quando alguém deixa de te seguir?', a: 'Não. O TikTok não avisa quando alguém deixa de te seguir. Comparar dois downloads de dados é o jeito confiável de saber.' },
-    { q: 'Dá para ver de graça quem deixou de me seguir no TikTok?', a: 'Sim. O plano grátis mostra quem não te segue de volta com um download, sem conta. Ver quem deixou de te seguir entre dois downloads precisa de snapshots salvos, que o Pro guarda.' },
+    { q: 'Dá para ver de graça quem deixou de me seguir no TikTok?', a: 'Sim. O plano grátis mostra quem não te segue de volta com um download, sem conta. Ver quem deixou de te seguir entre dois downloads precisa de snapshots salvos: uma conta grátis mostra quantos saíram, o Pro AI mostra quem.' },
     { q: 'Preciso dar minha senha do TikTok?', a: 'Não. Você envia o arquivo que o TikTok te dá. Não tem login nem conexão com sua conta.' },
     { q: 'Quanto tempo leva o download do TikTok?', a: 'O TikTok prepara em segundo plano. Muitas vezes fica pronto em um dia, às vezes em alguns dias. Peça agora e volte quando chegar.' },
     { q: 'O TikTok pode me banir por usar isso?', a: 'Não. Baixar seus dados é um recurso do próprio TikTok. Nada aqui mexe no TikTok ou na API dele.' },

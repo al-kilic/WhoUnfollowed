@@ -340,13 +340,59 @@ describe('parseInstagramZip — HTML format', () => {
 describe('missing-file diagnostics', () => {
   it('says which list is missing and flags a follower file it did not recognise', async () => {
     const z = new JSZip();
-    // A renamed followers file (not followers_N.json) next to a normal following.json.
-    z.file('connections/followers_and_following/followers.json', JSON.stringify([]));
+    // A renamed followers file (not followers_N.json or followers.json) next to a normal following.json.
+    z.file('connections/followers_and_following/followers_list.json', JSON.stringify([]));
     z.file('connections/followers_and_following/following.json', JSON.stringify({ relationships_following: [] }));
     z.file('connections/followers_and_following/following_hashtags.json', JSON.stringify({}));
     const buf = await z.generateAsync({ type: 'arraybuffer' });
     const err = await parseInstagramZip(buf).catch(e => e);
     expect(err).toBeInstanceOf(MissingFilesError);
     expect(err.shape).toMatchObject({ missingList: 'followers', oddFollowerFile: true, oddFollowingFile: false });
+  });
+});
+
+describe('follower file names (weekly report, Nov 2026)', () => {
+  const ig = (followersName: string) => {
+    const z = new JSZip();
+    z.file(`connections/followers_and_following/${followersName}`, JSON.stringify([{ string_list_data: [{ value: 'a', href: 'https://www.instagram.com/a', timestamp: 1_700_000_000 }] }]));
+    z.file('connections/followers_and_following/following.json', JSON.stringify({ relationships_following: [{ title: 'b', string_list_data: [{ href: 'https://www.instagram.com/b', timestamp: 1_700_000_000 }] }] }));
+    return z;
+  };
+  const blob = async (z: JSZip) => new Blob([(await z.generateAsync({ type: 'uint8array' })).slice().buffer as ArrayBuffer]);
+
+  it('accepts a bare followers.json in the followers_and_following folder', async () => {
+    const snap = await parseInstagramZip(await blob(ig('followers.json')));
+    expect(snap.followers.map((a) => a.username)).toEqual(['a']);
+  });
+
+  it('says which list is missing when only following is there', async () => {
+    const z = new JSZip();
+    z.file('connections/followers_and_following/following.json', JSON.stringify({ relationships_following: [] }));
+    z.file('your_instagram_activity/threads/followers.json', '[]');
+    const err = await parseInstagramZip(await blob(z)).catch((e: unknown) => e);
+    expect(err).toBeInstanceOf(MissingFilesError);
+    expect((err as MissingFilesError).shape).toMatchObject({ missingList: 'followers', hasConnectionsFolder: true, oddFollowerFile: false });
+  });
+});
+
+describe('parseExportFiles (an already unzipped export)', () => {
+  const loose = (path: string, body: unknown) => ({ path, text: async () => JSON.stringify(body) });
+  const followers = [{ string_list_data: [{ value: 'a', href: 'https://www.instagram.com/a', timestamp: 1_700_000_000 }] }];
+  const following = { relationships_following: [{ title: 'b', string_list_data: [{ href: 'https://www.instagram.com/b', timestamp: 1_700_000_000 }] }] };
+
+  it('parses the two files picked on their own', async () => {
+    const { parseExportFiles } = await import('./parser.js');
+    const r = await parseExportFiles([loose('followers_1.json', followers), loose('following.json', following)]);
+    expect(r.snapshot.followers.map((x) => x.username)).toEqual(['a']);
+    expect(r.snapshot.following.map((x) => x.username)).toEqual(['b']);
+  });
+
+  it('parses a dropped folder with its paths, and says what is missing when only one file is picked', async () => {
+    const { parseExportFiles } = await import('./parser.js');
+    const r = await parseExportFiles([loose('/instagram-x/connections/followers_and_following/followers_1.json', followers), loose('/instagram-x/connections/followers_and_following/following.json', following), loose('/instagram-x/media/posts_1.json', [])]);
+    expect(r.snapshot.followers).toHaveLength(1);
+    const err = await parseExportFiles([loose('followers_1.json', followers)]).catch((e: unknown) => e);
+    expect(err).toBeInstanceOf(MissingFilesError);
+    expect((err as MissingFilesError).shape?.missingList).toBe('following');
   });
 });

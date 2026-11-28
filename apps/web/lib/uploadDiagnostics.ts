@@ -64,13 +64,17 @@ export function shapeProps(shape: ZipShape) {
   };
 }
 
-// Size above which the browser may run out of memory reading the whole ZIP.
-// Phones are far more constrained than desktops.
+// Size above which we suggest a smaller export. Since Nov 2026 the ZIP is read
+// lazily (packages/core lazyZip.ts: only the follower and following files are
+// inflated, a 1.2 GB export took 9 MB), so this is only a guard for the JSZip
+// fallback, which still loads the whole file. Phones stay lower.
 export function isLikelyMobile(): boolean {
   if (typeof navigator === 'undefined') return false;
   return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
 }
 
-export function largeFileThreshold(mobile: boolean): number {
-  return mobile ? 300 * MB : 1500 * MB;
+export function largeFileThreshold(mobile: boolean, lazy: boolean = true): number {
+  // Without lazy reading (older iOS/Android) the whole file is loaded: the old limits.
+  if (!lazy) return mobile ? 300 * MB : 1500 * MB;
+  return mobile ? 2000 * MB : 6000 * MB;
 }

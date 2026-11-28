@@ -31,13 +31,15 @@ export interface BlogPost {
    * and points at WhoUnfollowed as the fix, instead of a one-size-fits-all
    * prompt. Falls back to a generic CTA when absent. `proNudge`, when set,
    * adds a second line linking to /pricing for tracking-over-time posts
-   * (snapshot history, unfollow alerts, ghost/charts).
+   * (snapshot history, ghost/charts). `coachNudge`, for growth-pain posts
+   * (reach, follower loss, ratio), links to the coach page at /instagram-coach.
    */
   cta?: {
     heading: string;
     body: string;
     buttonLabel: string;
     proNudge?: string;
+    coachNudge?: string;
   };
   /**
    * Optional short Q&A list rendered as a visible "Frequently asked
@@ -56,7 +58,8 @@ export const BLOG_POSTS: BlogPost[] = [
       heading: 'Find out exactly who dropped off.',
       body: 'An overnight dip has names attached to it. Upload your own Instagram export and WhoUnfollowed shows precisely who left, in your browser, in about two minutes. No password, nothing uploaded.',
       buttonLabel: 'See who unfollowed you',
-      proNudge: 'Want to catch the next drop the moment it happens? Pro keeps your snapshot history and emails you when someone unfollows.',
+      coachNudge: 'Want fewer nights like this? Your Pro AI coach reads each new export, tells you what changed and plans your next posts around what already worked for your account.',
+      proNudge: 'Want the next drop by name? Pro AI keeps every export, so each new upload shows exactly who left since the last one.',
     },
     cluster: 'unfollowers',
     title: 'Why Did I Lose Followers Overnight on Instagram?',
@@ -303,7 +306,7 @@ Is it safe to mass unfollow on Instagram? Unfollowing thoughtfully, at a human p
       heading: 'See who unfollowed you, safely.',
       body: 'No risky login. Upload the export Instagram already gives you and WhoUnfollowed shows the exact names in your browser in about two minutes. The parser is open source, so you can verify it yourself.',
       buttonLabel: 'See who unfollowed you',
-      proNudge: 'Checking regularly? Pro stores every snapshot, so each new upload shows you exactly who left since the last one.',
+      proNudge: 'Checking regularly? Pro AI stores every snapshot, so each new upload shows you exactly who left since the last one.',
     },
     cluster: 'unfollowers',
     title: 'Who Unfollowed You on Instagram? How to See (Without Getting Banned)',
@@ -440,7 +443,8 @@ If a tool asks for your Instagram password, close the tab.`,
       heading: 'Fix your ratio at the source.',
       body: 'A cleaner follow ratio starts with cutting the accounts that do not follow you back. WhoUnfollowed finds them in your own export, in your browser, with no password required.',
       buttonLabel: 'See who to unfollow',
-      proNudge: 'Pro charts your follower and following counts over time so you can watch the ratio actually improve.',
+      coachNudge: 'Growing the follower side of the ratio is the harder half. Your Pro AI coach plans your posts around your best days and checks each one before you share it.',
+      proNudge: 'Pro AI charts your follower and following counts over time so you can watch the ratio actually improve.',
     },
     cluster: 'account-health',
     title: 'Your Instagram Follow Ratio: What It Means and How to Actually Improve It',
@@ -695,7 +699,7 @@ If a tool asks for your Instagram login to do this, close the tab. The file Inst
       heading: 'Surface your likely ghosts.',
       body: 'WhoUnfollowed reads your own export in your browser to map your real, reciprocal audience and separate it from dead weight. No password needed.',
       buttonLabel: 'Analyze your audience free',
-      proNudge: 'Pro approximates ghost followers by flagging long-tenure accounts that never engaged back.',
+      proNudge: 'Pro AI approximates ghost followers by flagging long-tenure accounts that never engaged back.',
     },
     cluster: 'account-health',
     title: 'Instagram Ghost Followers: How to Find and Remove Them',
@@ -899,6 +903,8 @@ You can get banned for using a follower tracker, but only if it asks for your lo
     image: '/blog/trackers-safe-hero.jpg',
     imageAlt: 'A padlock and credit cards resting on a keyboard, representing the safety risk of handing over Instagram credentials',
     body: `Most Instagram follower trackers are not safe. The majority ask for your Instagram username and password, store your credentials on their servers, and send your data off your device. That combination puts both your account and your privacy at risk. A small number are safe by design, because they never ask for your login at all. Whether you call them trackers or unfollow checkers, the safety question is the same. Here is how to tell them apart.
+
+We checked this in November 2026: none of the 30 most-rated unfollower apps on the US App Store says it reads Instagram's official data export, and 12 need access to your account. [See the full study](/research/instagram-unfollower-apps).
 
 ## What makes a follower tracker unsafe
 
@@ -1313,7 +1319,7 @@ The fastest real way to unfollow everyone on Instagram is manual, paced batches 
       heading: 'See who followed then dropped you.',
       body: 'Anyone running the follow/unfollow trick on you shows up as an unfollower. Upload your own Instagram export and WhoUnfollowed lists exactly who left, in your browser, in about two minutes. No password, nothing uploaded.',
       buttonLabel: 'See who unfollowed you',
-      proNudge: 'Pro keeps your snapshot history and emails you the moment someone follows then drops you.',
+      proNudge: 'Pro AI keeps every export, so a follow-then-drop shows up by name the next time you upload.',
     },
     cluster: 'unfollowers',
     title: 'Someone Followed You, Then Unfollowed? The Follow/Unfollow Method',
@@ -1381,7 +1387,7 @@ If a follower vanished days after you followed back, you were most likely on the
       heading: 'Stop checking. Get told instead.',
       body: 'Upload your export to WhoUnfollowed and it keeps each snapshot, so every check is an automatic comparison. See who unfollowed you in your browser, free, with no password.',
       buttonLabel: 'See who unfollowed you',
-      proNudge: 'Pro keeps your full snapshot history and emails you the moment someone unfollows.',
+      proNudge: 'Pro AI keeps your full snapshot history, so every new upload shows exactly who unfollowed you since the last one.',
     },
     body: `Once you can finally see who unfollowed you, it is tempting to check constantly. Resist that. Checking every hour turns a useful signal into low-grade anxiety, and follower counts wobble for reasons that have nothing to do with you. Here is a saner cadence, and a way to stop checking by hand entirely.
 
@@ -1954,7 +1960,8 @@ A quick unfollow and refollow is not something Instagram announces to the other 
       heading: 'See which customers walked away.',
       body: 'A follower drop after a launch or a price change has names attached to it. Upload your Instagram export and WhoUnfollowed shows exactly who left, in your browser, whether you run one account or ten.',
       buttonLabel: 'Check your unfollowers',
-      proNudge: 'Managing more than one account? Pro keeps unlimited snapshot history and syncs it across your devices, encrypted in your browser.',
+      coachNudge: "Running a business account? Your Pro AI coach drafts posts in your brand's voice, checks them before they go out and keeps a posting plan with reminders.",
+      proNudge: 'Managing more than one account? Pro AI keeps unlimited snapshot history and syncs it across your devices, encrypted in your browser.',
     },
     body: `A creator loses a follower and it barely registers. People follow and unfollow accounts all day for reasons that have nothing to do with the content. A business account loses a follower and the question is different: was that a customer? Did we do something to lose them? Most brand and small-business accounts never actually answer that, because Instagram gives them the same blank follower count everyone else gets, with zero explanation of who left or why.
 
@@ -2014,7 +2021,7 @@ A business account has more reason to know who's leaving than almost any other k
       heading: 'Confirm what you can actually know.',
       body: 'Whatever the reason, your export shows the one fact that matters right now: whether they are following the account you actually have. Upload it to WhoUnfollowed and see for yourself, in your browser, no password required.',
       buttonLabel: 'Check who\'s really gone',
-      proNudge: 'If this kind of mystery keeps happening, Pro keeps a running history of your exports so you are never stuck guessing which snapshot to compare.',
+      proNudge: 'If this kind of mystery keeps happening, Pro AI keeps a running history of your exports so you are never stuck guessing which snapshot to compare.',
     },
     body: `Someone disappears from your followers list, and when you go looking for an explanation, none of the usual ones fit. Their old profile still loads. It's not marked unavailable, so it's not a block. It's not gone from search either, so it's not a deactivation (per [Instagram's Help Center](https://help.instagram.com/139886812848894), a deactivated profile disappears from search entirely). There's just nothing: no post, no story, no activity, for weeks. It sits there, technically alive, functionally abandoned. That's usually the fingerprint of a fifth scenario nobody accounts for: they didn't unfollow you, deactivate, or block you. They started over on a different account.
 
@@ -2076,7 +2083,8 @@ Chasing certainty here usually isn't worth the energy. Instead of trying to reve
       heading: 'See who left after the pivot.',
       body: 'A content or niche change has a real list of names behind it. Upload two exports, one from before the shift and one after, and WhoUnfollowed shows you exactly who dropped off, in your browser, no password needed.',
       buttonLabel: 'See who unfollowed after the shift',
-      proNudge: 'Planning more changes down the road? Pro keeps your snapshot history so you can watch the effect of each one instead of guessing after the fact.',
+      coachNudge: 'Changing direction? Your Pro AI coach remembers your new niche, drafts posts in your voice and checks each one before you share it.',
+      proNudge: 'Planning more changes down the road? Pro AI keeps your snapshot history so you can watch the effect of each one instead of guessing after the fact.',
     },
     body: `You changed what you post, on purpose, and the follower count started dropping in a way it never did before. No policy violation, no controversy, just a shift from what you used to make to something else, and a chunk of your audience quietly left. It feels like a punishment for trying something new. It's actually closer to the audience doing exactly what it's supposed to do.
 
@@ -2259,7 +2267,7 @@ None of this matters much if what you actually want is a simple, accurate answer
       heading: 'Never lose track of who you actually follow.',
       body: 'One mis-tap during a cleanup and you could lose a follow you meant to keep, with no way to prove it happened. Upload your Instagram export and WhoUnfollowed shows you exactly who dropped off your following list since your last one, so an accidental unfollow does not just vanish.',
       buttonLabel: 'Check your following list',
-      proNudge: 'Pro keeps a running history of every export, so you always have a recent snapshot on hand before your next cleanup.',
+      proNudge: 'Pro AI keeps a running history of every export, so you always have a recent snapshot on hand before your next cleanup.',
     },
     body: `Your thumb catches a profile at the wrong moment, or you're three hundred accounts deep into a following-list cleanup and moving fast, and a few days later it occurs to you: did I actually mean to unfollow that person? Instagram gives you no undo button and no log of what you just did. The unfollow already happened, silently, the same way every unfollow does.
 
@@ -2317,7 +2325,8 @@ The real fix is slowing down during any cleanup session. Work through a followin
       heading: 'Check the list, not just the number.',
       body: 'A flat follower count doesn\'t mean nobody left. It can be hiding real churn that canceled itself out. Upload your Instagram export and WhoUnfollowed shows exactly who was added and who dropped off between two snapshots, in your browser, with no password required.',
       buttonLabel: 'Compare your follower lists',
-      proNudge: 'Pro keeps a running history of every export, so you can watch reach dips against real follower churn over months instead of guessing from two snapshots.',
+      coachNudge: 'Reach down? Your Pro AI coach checks a post before you share it, with the exact fix for the hook, the length and the call to action.',
+      proNudge: 'Pro AI keeps a running history of every export, so you can watch reach dips against real follower churn over months instead of guessing from two snapshots.',
     },
     body: `A Reel that used to land in front of a couple thousand accounts is now reaching a few hundred. Story views are down by half. Comments have thinned out. You check your profile expecting to see why, and the follower count is basically where it was last month. That's the confusing part. If people were the problem, shouldn't the number have moved?
 
@@ -2377,7 +2386,7 @@ A dropping number with no name attached to it will always feel worse than it is.
       heading: 'Know your numbers before a brand asks.',
       body: 'Upload two Instagram exports and WhoUnfollowed shows exactly when your followers arrived and who never engaged, so you walk into a brand conversation already knowing what your audience actually looks like. No password, nothing leaves your browser.',
       buttonLabel: 'Audit your own audience',
-      proNudge: 'Pro keeps your snapshot history, so you can show a brand a steady growth trend instead of reconstructing one from memory the night before a pitch.',
+      proNudge: 'Pro AI keeps your snapshot history, so you can show a brand a steady growth trend instead of reconstructing one from memory the night before a pitch.',
     },
     body: `A brand slides into your DMs about a paid post. You're excited, you start drafting a reply, and somewhere in there a less fun thought shows up: brands run their own audits before they sign anything now. You don't actually know what a stranger's audit tool would say about your follower list. Better to find out yourself, on your own terms, before someone else does.
 
@@ -2439,7 +2448,7 @@ Know what your list looks like before someone with a budget decides to check for
       heading: 'See the batch, not just the vibe.',
       body: 'A wave of bot followers looks obvious once the arrival dates are lined up in front of you. Upload your Instagram export and WhoUnfollowed shows exactly who followed you and when, in your browser, with no password handed to anyone.',
       buttonLabel: 'See who\'s really following you',
-      proNudge: 'Pro can email you the next time a batch like this shows up, instead of you noticing it days later scrolling past the notifications.',
+      proNudge: 'Pro AI keeps every export, so the next batch like this shows up by name on your next upload, instead of you noticing it days later scrolling past the notifications.',
     },
     body: `A pile of new follower notifications overnight looks like a good morning until you actually open the list. Empty grids. No bio, or a bio with a crypto symbol and a link. Usernames ending in a long string of numbers, like they were generated rather than picked. That's not organic growth. It's a bot wave, and it's more common in 2026 than most people realize.
 
@@ -2504,7 +2513,7 @@ The count going up overnight isn't always a good morning. Check who actually sho
       heading: 'Stop guessing which one it was.',
       body: 'Whatever took them off your list, your export shows the one fact you can actually verify: they\'re no longer following you as of this date. Upload two of your own exports and WhoUnfollowed shows exactly who\'s gone, in your browser, no password required.',
       buttonLabel: 'See who\'s actually gone',
-      proNudge: 'Pro keeps a running history of your exports, so the next time a name drops off you already have a recent snapshot to compare it against.',
+      proNudge: 'Pro AI keeps a running history of your exports, so the next time a name drops off you already have a recent snapshot to compare it against.',
     },
     body: `Someone drops off your followers list, and the usual detective work doesn't add up. Their profile isn't marked unavailable to you specifically, so it's probably not a block. It hasn't vanished from search entirely either, at least not yet, so deactivation doesn't quite fit. Then a day or two later, their profile is gone for everyone. Not deactivated, not deleted by choice. Disabled. In 2026, that's a more common ending than it used to be, and it has nothing to do with anything you did.
 
@@ -2567,7 +2576,7 @@ A missing name isn't always a verdict on your content. Sometimes it's an enforce
       heading: 'Get the fact, skip the spiral.',
       body: 'You don\'t need to keep opening their profile to check. Upload your own Instagram export and WhoUnfollowed shows you exactly when they left your followers list, in your browser, with nobody notified on either end.',
       buttonLabel: 'Check quietly',
-      proNudge: 'Pro can alert you the moment it happens instead of you finding out days later mid-scroll.',
+      proNudge: 'Pro AI keeps every export, so the next time it happens it shows up by name on your next upload, not days later mid-scroll.',
     },
     body: `A stranger unfollowing you registers as nothing. An ex unfollowing you can derail an entire afternoon. You notice the follower count first, then go looking for the specific name, and there it is, gone, no message, no warning, no explanation Instagram will ever hand you. The urge that follows, checking their profile again, then again, refreshing a number that isn't going to change, is a genuinely common response, not a personal failing.
 
@@ -2632,7 +2641,8 @@ You don't need to keep watching to know. You need one honest comparison and the 
       heading: 'See who actually stayed.',
       body: 'A viral spike is easy to celebrate and hard to audit from memory. Upload two Instagram exports, one from before the post and one a few weeks after, and WhoUnfollowed shows exactly who stuck around and who left. In your browser, no password.',
       buttonLabel: 'Check who stuck around',
-      proNudge: 'Pro keeps a running history of your exports, so you can watch exactly how each spike settles over time instead of comparing two snapshots after the fact.',
+      coachNudge: 'Want the next wave to stick? Your Pro AI coach plans follow-up posts around what brought people in, with reminders on your posting days.',
+      proNudge: 'Pro AI keeps a running history of your exports, so you can watch exactly how each spike settles over time instead of comparing two snapshots after the fact.',
     },
     body: `One Reel does numbers nothing else you've posted has ever come close to. The follower count jumps hundreds, maybe thousands, in a single day. It feels like the moment everything changes. Then two or three weeks pass, and a chunk of those new names is already gone. Not all of them, but enough that the count you were celebrating has quietly given some of it back. It's not a glitch, and it's not a sign the post was somehow fake. It's the most predictable outcome a viral spike has.
 
@@ -2693,7 +2703,8 @@ A follower count that gives some of a spike back isn't a loss. It's the audience
       heading: 'Stop guessing whether it\'s normal.',
       body: 'A few followers vanishing here and there feels alarming with no way to tell if it is ordinary churn or a real drop. Upload your Instagram export and WhoUnfollowed shows the exact list, spread across weeks or clustered in a single day, so you know which one you are actually looking at.',
       buttonLabel: 'Check your follower trend',
-      proNudge: 'Pro keeps a running history of every export, so ordinary daily churn and a real spike are obvious at a glance instead of something you have to piece together manually.',
+      coachNudge: 'Want to grow faster than the daily churn? Your Pro AI coach plans your weeks around your best posting days and checks each post before it goes out.',
+      proNudge: 'Pro AI keeps a running history of every export, so ordinary daily churn and a real spike are obvious at a glance instead of something you have to piece together manually.',
     },
     faq: [
       { q: 'Is it normal to lose a few followers on Instagram every day?', a: 'Yes. Small daily losses are normal for almost every active account and usually come from dormant accounts being deleted or spam being removed, not from anything wrong with your content.' },
@@ -2747,7 +2758,7 @@ A number on a screen cannot tell you which one you are looking at. A list, check
       heading: 'Know for sure, don\'t guess.',
       body: 'Wondering whether a cleanup cost you a follower in return is worse than just checking. Upload your Instagram export from before and after and WhoUnfollowed shows exactly who dropped off your followers list, in your browser, with no password required.',
       buttonLabel: 'Check who unfollowed you back',
-      proNudge: 'Pro keeps a running history of every export, so a before-and-after comparison around any following-list cleanup is already sitting there when you need it.',
+      proNudge: 'Pro AI keeps a running history of every export, so a before-and-after comparison around any following-list cleanup is already sitting there when you need it.',
     },
     faq: [
       { q: 'Does unfollowing someone on Instagram make them unfollow me back?', a: 'No. Unfollowing someone has no automatic effect on whether they follow you; the two follow relationships are tracked independently by Instagram.' },
@@ -2858,7 +2869,7 @@ Switching to private is a visibility decision, not a following decision. Your li
       heading: 'Skip the spreadsheet.',
       body: 'Matching two follower lists by eye is slow and easy to get wrong. Upload both of your Instagram exports to WhoUnfollowed and see exactly who unfollowed you, by name, in your browser, in under a second. No password, nothing uploaded.',
       buttonLabel: 'Compare your lists',
-      proNudge: 'Pro keeps every export you upload in one running history, so you never have to go hunting for your last saved ZIP before you can compare again.',
+      proNudge: 'Pro AI keeps every export you upload in one running history, so you never have to go hunting for your last saved ZIP before you can compare again.',
     },
     faq: [
       { q: 'Can I compare two Instagram follower lists without an app?', a: 'Yes, by manually cross-checking the usernames in two dated data exports, though it is slow and error-prone past a few hundred followers.' },
@@ -3016,7 +3027,7 @@ Since the list itself cannot show you a name that left, the only working method 
       heading: 'Turn two exports into the real list.',
       body: 'The export alone will not name your unfollowers, but a second one taken later will. Upload both to WhoUnfollowed and it compares them in your browser and shows exactly who left, in about two minutes. No password, nothing uploaded.',
       buttonLabel: 'Compare your exports',
-      proNudge: 'Pro keeps every export you have taken, so a comparison is already sitting there instead of something you have to remember to do yourself.',
+      proNudge: 'Pro AI keeps every export you have taken, so a comparison is already sitting there instead of something you have to remember to do yourself.',
     },
     faq: [
       { q: 'Does my Instagram data export show who unfollowed me?', a: 'No, a single Instagram data export only lists your current followers and following, with no record of anyone who left in the past.' },
@@ -3097,7 +3108,7 @@ If you save a snapshot on the free tier so you can compare it against a later ex
 
 ## What Does the Paid Pro Tier Store, and Why?
 
-Pro adds optional cloud snapshot history so your export record survives a cleared browser or a new device. To provide that, we store an email address, an argon2id-hashed password, an encrypted snapshot blob, and a Stripe billing reference marking when your access expires. That is the complete list. Full card numbers never reach us; Stripe handles that directly. Nothing beyond what running the feature requires gets collected, and the exact handling is spelled out in the [privacy policy](/privacy), not just summarized here.
+Pro AI adds optional cloud snapshot history so your export record survives a cleared browser or a new device. To provide that, we store an email address, an argon2id-hashed password, an encrypted snapshot blob, and a Stripe billing reference marking when your access expires. That is the complete list. Full card numbers never reach us; Stripe handles that directly. Nothing beyond what running the feature requires gets collected, and the exact handling is spelled out in the [privacy policy](/privacy), not just summarized here.
 
 ## Does WhoUnfollowed Sell Data?
 
@@ -3134,7 +3145,7 @@ If you are comparing this against a tool that [asks for your Instagram password 
       heading: 'Close the gap between exports.',
       body: 'A quick unfollow and refollow only slips past a comparison that is spaced too far apart. Keep a fresher pair of exports on hand and WhoUnfollowed will catch more of what happens in between, in your browser, with no password.',
       buttonLabel: 'Check your follower history',
-      proNudge: 'Pro keeps a running history of every export you take, so shortening the gap between snapshots does not mean remembering to do it manually.',
+      proNudge: 'Pro AI keeps a running history of every export you take, so shortening the gap between snapshots does not mean remembering to do it manually.',
     },
     faq: [
       { q: 'If someone unfollows me and refollows quickly, will a follower tracker catch it?', a: 'Not reliably; if they follow again before your next export, they will appear in both snapshots and the comparison will show no change at all.' },
@@ -3189,7 +3200,7 @@ The honest answer is that no export-based method, including this one, can promis
       heading: 'See exactly who unfollowed you on Threads.',
       body: 'No risky login, no password. Upload the export Meta already gives you and WhoUnfollowed shows the names in your browser in about two minutes. The parser is open source, so you can verify it yourself.',
       buttonLabel: 'Check your Threads followers',
-      proNudge: 'Checking regularly? Pro keeps every Threads snapshot you take, so each new upload shows exactly who left since the last one.',
+      proNudge: 'Checking regularly? Pro AI keeps every Threads snapshot you take, so each new upload shows exactly who left since the last one.',
     },
     faq: [
       { q: 'Does Threads tell you who unfollowed you?', a: 'No, Threads never sends a notification or shows a built-in list of people who unfollowed you; comparing two of your own data exports is the reliable way to see it.' },
@@ -3261,7 +3272,7 @@ Looking for Instagram instead? The [same method works there too](/blog/how-to-se
       heading: 'Stop waiting for a notification that never comes.',
       body: 'Threads keeps unfollows silent in both directions. Upload your Threads export and WhoUnfollowed shows you exactly who left, in your browser, in about two minutes. No password, nothing uploaded.',
       buttonLabel: 'See who unfollowed you on Threads',
-      proNudge: 'Pro keeps a running history of your Threads snapshots, so you don\'t have to remember to check yourself.',
+      proNudge: 'Pro AI keeps a running history of your Threads snapshots, so you don\'t have to remember to check yourself.',
     },
     faq: [
       { q: 'Does Threads notify you when someone unfollows you?', a: 'No, Threads never sends a notification, badge, or alert when a follower leaves; the change happens silently.' },
@@ -3377,7 +3388,7 @@ If you're managing both, keep the two exports and the two uploads separate. [Upl
       heading: 'Request the second export. Then compare.',
       body: 'Two exports taken weeks apart are the whole method. Upload both to WhoUnfollowed and it reads them in your browser and shows exactly who unfollowed you in between. No password, nothing uploaded.',
       buttonLabel: 'Compare your exports',
-      proNudge: 'Pro keeps every export you take, so once you have requested a second one, the comparison is already sitting there instead of something you have to do by hand each time.',
+      proNudge: 'Pro AI keeps every export you take, so once you have requested a second one, the comparison is already sitting there instead of something you have to do by hand each time.',
     },
     faq: [
       { q: 'Can you request your Instagram data export more than once?', a: 'Yes, Instagram publishes no limit on the number of times you can request your data export, and each request is independent of any prior one.' },
@@ -3490,6 +3501,7 @@ If you're deciding [whether a follower tracker is safe to use at all](/blog/are-
       heading: 'Clean up for the reasons that actually help.',
       body: "Reach won't change, but your feed and your profile will. Upload your Instagram export to WhoUnfollowed and see exactly who doesn't follow you back, in your browser, no password required.",
       buttonLabel: "See who doesn't follow back",
+      coachNudge: 'Reach comes from your posts, not from trimming your following list. Your Pro AI coach checks a post before you share it and plans your weeks around what works for your account.',
     },
     faq: [
       { q: "Does unfollowing people who don't follow you back improve your Instagram reach?", a: "No, Instagram's published ranking signals for reach are based on engagement (watch time, shares, saves), not on your follow count or follow ratio." },
@@ -3610,7 +3622,7 @@ Have your ZIP ready? [Upload your Threads export](/threads) and see who does not
       heading: 'See who is not following you back on Threads.',
       body: 'Upload your Threads export and WhoUnfollowed lists every account you follow that does not follow you, with the date you followed them. It runs in your browser. No password, no account needed.',
       buttonLabel: 'Find my non-followers on Threads',
-      proNudge: 'Want to know who unfollowed you between two checks? Pro saves each snapshot so every new upload shows who left since the last one.',
+      proNudge: 'Want to know who unfollowed you between two checks? Pro AI saves each snapshot so every new upload shows who left since the last one.',
     },
     faq: [
       { q: 'Can you see who does not follow you back on Threads?', a: 'Not inside the app, but one data export from Meta contains both your followers and following lists, so comparing them shows the accounts that do not follow you back.' },
@@ -3675,7 +3687,7 @@ A single export answers "who am I following that does not follow me back." It ca
       heading: 'Get the list you actually want.',
       body: 'Upload your Instagram export and WhoUnfollowed shows who you follow that does not follow you back, in your browser, in about two minutes. No password, nothing uploaded.',
       buttonLabel: "See who doesn't follow me back",
-      proNudge: 'Want the true unfollowers, the people who left? Pro saves each snapshot, so your next upload shows exactly who dropped off since the last one.',
+      proNudge: 'Want the true unfollowers, the people who left? Pro AI saves each snapshot, so your next upload shows exactly who dropped off since the last one.',
     },
     faq: [
       { q: 'What is the difference between a non-follower and an unfollower?', a: 'A non-follower is someone you follow who does not follow you back, while an unfollower is someone who used to follow you and stopped.' },
@@ -3740,7 +3752,7 @@ If you want the non-follower list right now, [upload your Instagram export](/). 
       heading: 'Skip the chatbot. Read your own list.',
       body: 'No assistant can see who unfollowed you. Your Instagram export can. Upload it to WhoUnfollowed and see who does not follow you back in about two minutes. It reads the file in your browser, with no password, no AI, and nothing uploaded.',
       buttonLabel: 'Check who unfollowed me',
-      proNudge: 'Want the people who actually left? Pro keeps each snapshot, so your next upload shows exactly who unfollowed you since the last one.',
+      proNudge: 'Want the people who actually left? Pro AI keeps each snapshot, so your next upload shows exactly who unfollowed you since the last one.',
     },
     faq: [
       { q: 'Can ChatGPT tell me who unfollowed me on Instagram?', a: 'No, ChatGPT has no access to your Instagram account or follower list in a normal chat, so it cannot tell you who unfollowed you.' },
@@ -3911,13 +3923,13 @@ You want a list of names, not a new copy of your data on someone else's server. 
       heading: 'Use the method that catches everyone.',
       body: 'Your Instagram export is the only complete record of who follows you. Upload it to WhoUnfollowed and see who does not follow you back in about two minutes, in your browser, with no password and nothing uploaded.',
       buttonLabel: 'Find my unfollowers',
-      proNudge: 'Pro keeps every snapshot, so each new upload shows exactly who left since the last one. One-time payment, no auto-renewal.',
+      proNudge: 'Pro AI keeps every export, so each new upload shows exactly who left since the last one. Cancel any time.',
     },
     faq: [
       { q: 'What is the best app to see who unfollowed me on Instagram without my password?', a: 'Use a tool that reads your own Instagram data export, such as WhoUnfollowed, and compare two exports taken at different times; anyone in the older followers list who is missing from the newer one unfollowed you.' },
       { q: 'Does Instagram show you who unfollowed you?', a: 'No, Instagram has no screen that lists who unfollowed you and sends no notification when someone does.' },
       { q: 'Are unfollower apps that ask for my Instagram password safe?', a: 'No, they log in as you from their own servers, which Instagram can flag as suspicious and which goes against Meta\'s rules on automated access.' },
-      { q: 'Is WhoUnfollowed free?', a: 'Checking one export is free and needs no account; saving snapshots so each upload shows who left is part of Pro, a one-time $1.99 for 30 days or $9.99 for 365 days.' },
+      { q: 'Is WhoUnfollowed free?', a: 'Checking one export is free and needs no account; keeping every export so each upload shows who left is part of Pro AI, a monthly or yearly plan you can cancel any time.' },
       { q: 'Can I see who unfollowed me without them knowing?', a: 'Yes, comparing your own data exports never touches anyone else\'s profile, so nobody can tell you checked.' },
       { q: 'Is there a free app to see who unfollowed me on Instagram?', a: 'Most free unfollower apps either want your Instagram login, show a few names before a paywall, or sell your data. Reading your own Instagram export with a browser tool like WhoUnfollowed is free for one export and needs no account.' },
       { q: 'Why do unfollower apps show wrong data or stop working?', a: 'Password-based apps rely on Instagram\'s private API, which changes without notice and rate-limits them, so they break after updates and often return incomplete lists that flag people who never left.' },
@@ -3993,7 +4005,7 @@ One export shows who does not follow you back. Two exports, taken weeks apart, s
 
 This is what WhoUnfollowed is built around. You upload the ZIP and it reads the file in your browser, so it is never sent to a server. There is no password and no login to Instagram. The web app is open source under AGPL-3.0 and the parser under MPL-2.0, with the code on [GitHub](https://github.com/al-kilic/WhoUnfollowed), so the privacy claim is checkable.
 
-On cost: one export is free with no account. Pro saves your snapshots so each new upload shows who left since the last one. It is a one-time $1.99 for 30 days or $9.99 for 365 days, with no auto-renewal. Details on the [pricing page](/pricing).
+On cost: one export is free with no account. Pro AI keeps every export so each new upload shows who left since the last one. It is a monthly or yearly plan you can cancel any time. Details on the [pricing page](/pricing).
 
 ## Which method should I use?
 
@@ -4208,7 +4220,7 @@ Ready to check your own list? [Download your Instagram data](/blog/how-to-downlo
       heading: 'See exactly who unfollowed you on TikTok.',
       body: 'No login, no password. Upload the file TikTok already gives you and WhoUnfollowed shows the names in your browser. The parser is open source, so you can check what it reads.',
       buttonLabel: 'Check your TikTok followers',
-      proNudge: 'Checking every few weeks? Pro keeps every TikTok snapshot, so each new upload shows exactly who left since the last one.',
+      proNudge: 'Checking every few weeks? Pro AI keeps every TikTok snapshot, so each new upload shows exactly who left since the last one.',
     },
     faq: [
       { q: 'Does TikTok show you who unfollowed you?', a: 'No, TikTok has no unfollowers list and sends no notification when someone stops following you; comparing two of your own data downloads is the reliable way to see it.' },
@@ -4279,7 +4291,7 @@ On Instagram too? The [same method works there](/blog/how-to-see-who-unfollowed-
       heading: 'Stop waiting for a notification that never comes.',
       body: 'TikTok keeps unfollows silent. Upload your TikTok data download and WhoUnfollowed shows you exactly who left, in your browser. No password, nothing uploaded.',
       buttonLabel: 'See who unfollowed you on TikTok',
-      proNudge: 'Pro keeps a running history of your TikTok snapshots, so each new download shows who left since the last one.',
+      proNudge: 'Pro AI keeps a running history of your TikTok snapshots, so each new download shows who left since the last one.',
     },
     faq: [
       { q: 'Does TikTok notify you when someone unfollows you?', a: 'No, TikTok sends no notification, badge or alert when a follower leaves; your follower count just drops.' },
@@ -4337,7 +4349,7 @@ Apps that claim to alert you the moment someone unfollows you on TikTok need to 
       heading: 'Put names to the drop.',
       body: 'A lower number tells you nothing. Upload your TikTok data download and WhoUnfollowed shows exactly who left, in your browser, with no password and nothing uploaded.',
       buttonLabel: 'See who left on TikTok',
-      proNudge: 'Pro compares every new download with the last one and keeps the history, so you can see whether a drop was one post or a trend.',
+      proNudge: 'Pro AI compares every new download with the last one and keeps the history, so you can see whether a drop was one post or a trend.',
     },
     faq: [
       { q: 'Why am I losing followers on TikTok?', a: 'The usual reasons are a change in what you post, a long gap between posts, follow-for-follow accounts leaving after you stopped following back, and TikTok removing inactive or fake accounts.' },

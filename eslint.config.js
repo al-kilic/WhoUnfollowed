@@ -5,7 +5,7 @@ import prettierConfig from 'eslint-config-prettier';
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   {
-    ignores: ['**/node_modules/**', '**/dist/**', '**/.next/**', '**/build/**', '**/next-env.d.ts'],
+    ignores: ['**/node_modules/**', '**/dist/**', '**/.next/**', '**/.next-*/**', '**/build/**', '**/next-env.d.ts'],
   },
   {
     files: ['**/*.ts', '**/*.tsx'],

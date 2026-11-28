@@ -4,8 +4,9 @@ import type { Metadata } from 'next';
 import { hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { T } from '@/components/landing/tokens';
-import { SiteNav } from '@/components/landing/SiteNav';
-import { LandingFooter } from '@/components/landing/FinalCTA';
+import { SitePage } from '@/components/landing/SitePage';
+import { SiteHeader } from '@/components/site/SiteHeader';
+import { SiteFooter } from '@/components/site/SiteFooter';
 import { routing, type AppLocale } from '@/i18n/routing';
 import { getPathname } from '@/i18n/navigation';
 import { OG_LOCALE, ogAlternateLocales } from '@/i18n/ogLocale';
@@ -62,8 +63,9 @@ export default async function ChangelogPage({ params }: PageProps) {
   const c = getChangelogContent(locale);
 
   return (
+    <SitePage>
     <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      <SiteNav />
+      <SiteHeader />
 
       <main style={{ maxWidth: 680, margin: '0 auto', padding: '56px 32px 80px' }}>
         <div style={{ marginBottom: 56 }}>
@@ -123,7 +125,8 @@ export default async function ChangelogPage({ params }: PageProps) {
         </div>
       </main>
 
-      <LandingFooter />
+      <SiteFooter />
     </div>
+    </SitePage>
   );
 }

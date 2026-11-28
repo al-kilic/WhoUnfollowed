@@ -2,8 +2,9 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useLocale } from 'next-intl';
+import { exportLabel, isAutoLabel } from '@/lib/exportLabel';
 import { Link } from '@/i18n/navigation';
-import { format } from 'date-fns';
 import { compareSnapshots, snapshotPlatform } from '@ig-tracker/core';
 import type { Account, SnapshotComparison } from '@ig-tracker/core';
 import type { SnapshotRecord } from '@/lib/db';
@@ -11,9 +12,10 @@ import { getSnapshot } from '@/hooks/useSnapshots';
 import { useAuth } from '@/components/AuthProvider';
 import { T } from '@/components/landing/tokens';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { StudioCompareInfo } from '@/components/studio/StudioCompareInfo';
 import { AccountList } from '@/components/AccountList';
 import { StarredLeftNotice } from '@/components/tools/StarredLeftNotice';
-import { LandingFooter } from '@/components/landing/FinalCTA';
+import { SiteFooter } from '@/components/site/SiteFooter';
 import { getDiffContent } from './content';
 import { UnfollowerReveal } from '@/components/UnfollowerReveal';
 import { savePendingReveal } from '@/lib/pendingReveal';
@@ -29,6 +31,7 @@ function DiffSection({
   toolbarContent: ReturnType<typeof getListToolbarContent>; accent?: boolean; defaultOpen?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);
+  const numLocale = useLocale();
 
   const accentColor = accent ? T.terra : T.tealMid;
   const accentBg    = accent ? 'rgba(168,75,47,0.06)' : 'rgba(2,136,143,0.06)';
@@ -61,7 +64,7 @@ function DiffSection({
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <span style={{ fontFamily: T.serif, fontSize: 28, color: accentColor, letterSpacing: '-0.02em' }}>
-            {count.toLocaleString()}
+            {count.toLocaleString(numLocale)}
           </span>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', flexShrink: 0 }}>
             <path d="M3 6 L8 11 L13 6" stroke={T.inkMute} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -87,6 +90,7 @@ function DiffSection({
 // ─── Stat chip ────────────────────────────────────────────────────────────────
 
 function StatChip({ label, value, positive }: { label: string; value: number; positive: boolean }) {
+  const numLocale = useLocale();
   const color = value === 0 ? T.inkMute : positive ? T.tealLight : T.terra;
   const prefix = value > 0 ? '+' : '';
   return (
@@ -97,9 +101,9 @@ function StatChip({ label, value, positive }: { label: string; value: number; po
       border: `1px solid ${value === 0 ? 'var(--t-border1)' : positive ? 'rgba(2,136,143,0.2)' : 'rgba(168,75,47,0.2)'}`,
     }}>
       <span style={{ fontFamily: T.serif, fontSize: 32, color, letterSpacing: '-0.03em', lineHeight: 1 }}>
-        {prefix}{value.toLocaleString()}
+        {prefix}{value.toLocaleString(numLocale)}
       </span>
-      <span style={{ fontSize: 11, color: T.inkDim, fontFamily: T.mono, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+      <span style={{ fontSize: 12, color: T.inkDim, fontFamily: T.sans }}>
         {label}
       </span>
     </div>
@@ -108,7 +112,7 @@ function StatChip({ label, value, positive }: { label: string; value: number; po
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-function DiffPageInner({ locale }: { locale: AppLocale }) {
+function DiffPageInner({ locale, inStudio }: { locale: AppLocale; inStudio: boolean }) {
   const c = getDiffContent(locale);
   const toolbarContent = getListToolbarContent(locale);
   const searchParams = useSearchParams();
@@ -138,11 +142,19 @@ function DiffPageInner({ locale }: { locale: AppLocale }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [oldId, currentId, userId]);
 
+  if (error && inStudio) {
+    return (
+      <div className="s-card" style={{ maxWidth: 520, margin: '48px auto', padding: 24, display: 'grid', gap: 12, justifyItems: 'start' }}>
+        <p role="alert" style={{ margin: 0, fontSize: 14.5, color: 'var(--ink)' }}>{error}</p>
+        <Link href="/app/history" className="s-btn sec">{c.backToHistory.replace(/^←\s*/, '')}</Link>
+      </div>
+    );
+  }
   if (error) {
     return (
       <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16 }}>
         <p style={{ color: T.terra, fontFamily: T.mono, fontSize: 14 }}>{error}</p>
-        <Link href="/history" style={{ color: T.tealLight, fontSize: 13, fontFamily: T.sans }}>{c.backToHistory}</Link>
+        <Link href={inStudio ? '/app/history' : '/history'} style={{ color: T.tealLight, fontSize: 13, fontFamily: T.sans }}>{c.backToHistory}</Link>
       </div>
     );
   }
@@ -156,14 +168,15 @@ function DiffPageInner({ locale }: { locale: AppLocale }) {
   }
 
   const periodDays = Math.round(Math.abs(diff.periodDays));
-  const oldDate    = format(new Date(oldRecord.exportedAt * 1000), 'MMM d, yyyy');
-  const curDate    = format(new Date(currentRecord.exportedAt * 1000), 'MMM d, yyyy');
+  const dayFmt     = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric' });
+  const oldDate    = dayFmt.format(new Date(oldRecord.exportedAt * 1000));
+  const curDate    = dayFmt.format(new Date(currentRecord.exportedAt * 1000));
   const netFollowers = diff.newFollowers.length - diff.lostFollowers.length;
 
   return (
-    <div style={{ minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
-      {/* Nav */}
-      <nav
+    <div style={inStudio ? { ['--t-font-mono' as string]: 'var(--sans)' } : { minHeight: '100vh', background: T.bg, color: T.ink, fontFamily: T.sans }}>
+      {/* Nav (Studio has its own frame) */}
+      {!inStudio && <nav
         className="flex items-center justify-between px-4 sm:px-8 py-4 sticky top-0 z-50"
         style={{ borderBottom: `1px solid ${T.border1}`, backdropFilter: 'blur(14px)', background: T.navBg }}
       >
@@ -175,22 +188,23 @@ function DiffPageInner({ locale }: { locale: AppLocale }) {
           <Link href="/history" style={{ color: T.inkDim, textDecoration: 'none' }}>{c.historyNav}</Link>
           <ThemeToggle />
         </div>
-      </nav>
+      </nav>}
 
-      <main className="px-4 sm:px-8 py-10 sm:py-12" style={{ maxWidth: 860, margin: '0 auto' }}>
+      <main className={inStudio ? undefined : 'px-4 sm:px-8 py-10 sm:py-12'} style={inStudio ? undefined : { maxWidth: 860, margin: '0 auto' }}>
         {/* Header */}
         <div style={{ marginBottom: 40 }}>
-          <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 12 }}>{c.eyebrow}</div>
+          {!inStudio && <div style={{ fontSize: 11, color: T.tealMid, fontFamily: T.mono, letterSpacing: '0.14em', marginBottom: 12 }}>{c.eyebrow}</div>}
           <h1 style={{ fontFamily: T.serif, fontSize: 'clamp(28px, 5vw, 48px)', fontWeight: 400, lineHeight: 1.05, letterSpacing: '-0.03em', color: T.ink, marginBottom: 12 }}>
             {c.headlineTemplate(periodDays)}
+            {inStudio && <StudioCompareInfo locale={locale} />}
           </h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
             <span style={{ padding: '5px 12px', borderRadius: 8, background: 'var(--t-surface2)', border: '1px solid var(--t-border2)', fontSize: 12, color: T.inkDim, fontFamily: T.mono }}>
-              {oldRecord.label} · {oldDate}
+              {isAutoLabel(oldRecord.label) ? exportLabel(oldRecord, locale) : `${oldRecord.label} · ${oldDate}`}
             </span>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8 H13 M9 4 L13 8 L9 12" stroke={T.inkMute} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
             <span style={{ padding: '5px 12px', borderRadius: 8, background: 'rgba(2,136,143,0.08)', border: '1px solid rgba(2,136,143,0.25)', fontSize: 12, color: T.tealLight, fontFamily: T.mono }}>
-              {currentRecord.label} · {curDate}
+              {isAutoLabel(currentRecord.label) ? exportLabel(currentRecord, locale) : `${currentRecord.label} · ${curDate}`}
             </span>
           </div>
         </div>
@@ -266,12 +280,12 @@ function DiffPageInner({ locale }: { locale: AppLocale }) {
         </>)}
       </main>
 
-      <LandingFooter />
+      {!inStudio && <SiteFooter />}
     </div>
   );
 }
 
-export function DiffContent({ locale }: { locale: AppLocale }) {
+export function DiffContent({ locale, inStudio = false }: { locale: AppLocale; inStudio?: boolean }) {
   const c = getDiffContent(locale);
   return (
     <Suspense fallback={
@@ -279,7 +293,7 @@ export function DiffContent({ locale }: { locale: AppLocale }) {
         <span style={{ fontFamily: 'monospace', fontSize: 13, color: 'var(--t-ink-mute)' }}>{c.loading}</span>
       </div>
     }>
-      <DiffPageInner locale={locale} />
+      <DiffPageInner locale={locale} inStudio={inStudio} />
     </Suspense>
   );
 }

@@ -12,6 +12,8 @@ export interface AccountContent {
   freeBadge: string;
   proUntil: (date: string) => string;
   complimentaryAccess: string;
+  proAiBadge: string;
+  subscriberLine: (yearly: boolean) => string;
   onFreePlan: string;
   insiderBadge: string;
   insiderSince: (date: string) => string;
@@ -24,7 +26,8 @@ export interface AccountContent {
   unlockWithPro: string;
   freeSummary: string;
   proFeatures: { title: string; desc: string }[];
-  pricingLine: (monthlyDays: string, yearlyPrice: string) => string;
+  // After the bold monthly price: "a month, or {yearly} a year ...".
+  pricingLine: (yearlyPrice: string) => string;
   cloudSync: string;
   security: string;
   securityDesc: string;
@@ -102,16 +105,18 @@ const EN: AccountContent = {
   freeBadge: 'FREE',
   proUntil: (date) => `Pro until ${date}`,
   complimentaryAccess: 'Complimentary access. Thanks for being here early.',
+  proAiBadge: 'PRO AI',
+  subscriberLine: (y) => (y ? 'Pro AI, billed yearly' : 'Pro AI, billed monthly'),
   onFreePlan: 'You are on the free plan.',
   insiderBadge: 'INSIDER',
   insiderSince: (date) => `Insider since ${date}. Lifetime access, nothing to renew.`,
   extendPro: 'Extend Pro',
-  upgradeToPro: 'Upgrade to Pro',
+  upgradeToPro: 'Get Pro AI',
   betaBanner: 'Free during beta. You have full Pro access at no cost until we launch paid plans. No billing yet.',
   emailLabel: 'Email',
   memberSinceLabel: 'Member since',
   whatsIncluded: "What's included",
-  unlockWithPro: 'Unlock with Pro',
+  unlockWithPro: 'Unlock with Pro AI',
   freeSummary:
     "You're on Free: one snapshot, the full non-followers list, and one CSV export. Pro turns that one-off check into an ongoing picture of your account.",
   proFeatures: [
@@ -124,14 +129,14 @@ const EN: AccountContent = {
     { title: 'Unlimited CSV export', desc: 'Pull any list, as often as you like.' },
     { title: 'Reminder emails', desc: 'A nudge every 2 weeks when a new export will show who left.' },
   ],
-  pricingLine: (monthlyDays, yearlyPrice) =>
-    `for ${monthlyDays}, or $${yearlyPrice} for a year · one-time, no auto-renewal`,
+  pricingLine: (yearlyPrice) =>
+    `a month, or $${yearlyPrice} a year · renews automatically, cancel any time`,
   cloudSync: 'Cloud sync',
   security: 'Security',
   securityDesc: 'Change your password. Any cloud snapshots are re-encrypted under the new password automatically.',
   dangerZone: 'Danger zone',
   dangerDesc:
-    'Deleting your account removes all your data permanently, including cloud snapshots. If you have an active Pro subscription, it is cancelled immediately so you are not charged again. This cannot be undone.',
+    'Deleting your account removes all your data permanently, including cloud snapshots. If you have an active Pro AI subscription, it is cancelled immediately so you are not charged again. This cannot be undone.',
   changePassword: {
     currentPassword: 'Current password',
     newPassword: 'New password',
@@ -155,7 +160,7 @@ const EN: AccountContent = {
     proBadge: 'PRO',
     lockedDesc:
       'Back up your snapshots, encrypted with a key derived from your password, and pick up your history on any device. Included with Pro.',
-    upgradeToPro: 'Upgrade to Pro',
+    upgradeToPro: 'Get Pro AI',
     onTitle: 'Cloud sync is on',
     onDesc:
       'Your snapshots are encrypted in your browser with a key derived from your account password before they are stored. We never see your unencrypted data. Nothing to set up or remember.',
@@ -167,7 +172,7 @@ const EN: AccountContent = {
     areYouSure: 'Are you sure?',
     permanentWarning: 'This permanently deletes your account and all data, including cloud snapshots. This cannot be undone.',
     subCancelWarning:
-      'If you have an active Pro subscription, it will be cancelled immediately as part of this — you will not be charged again.',
+      'If you have an active Pro AI subscription, it will be cancelled immediately as part of this, so you will not be charged again.',
     confirmBtn: 'Yes, delete everything',
     deleting: 'Deleting…',
     cancelBtn: 'Cancel',
@@ -207,16 +212,18 @@ const ES: AccountContent = {
   freeBadge: 'GRATIS',
   proUntil: (date) => `Pro hasta el ${date}`,
   complimentaryAccess: 'Acceso de cortesía. Gracias por estar aquí desde el principio.',
+  proAiBadge: 'PRO AI',
+  subscriberLine: (y) => (y ? 'Pro AI, cobro anual' : 'Pro AI, cobro mensual'),
   insiderBadge: 'INSIDER',
   insiderSince: (date) => `Insider desde ${date}. Acceso de por vida, nada que renovar.`,
   onFreePlan: 'Estás en el plan gratuito.',
   extendPro: 'Extender Pro',
-  upgradeToPro: 'Mejorar a Pro',
+  upgradeToPro: 'Obtener Pro AI',
   betaBanner: 'Gratis durante la beta. Tienes acceso completo a Pro sin coste hasta que lancemos los planes de pago. Sin facturación por ahora.',
   emailLabel: 'Correo',
   memberSinceLabel: 'Miembro desde',
   whatsIncluded: 'Qué incluye',
-  unlockWithPro: 'Desbloquea con Pro',
+  unlockWithPro: 'Desbloquea con Pro AI',
   freeSummary:
     'Estás en el plan Gratis: un snapshot, la lista completa de no seguidores y una exportación CSV. Pro convierte esa comprobación puntual en una visión continua de tu cuenta.',
   proFeatures: [
@@ -229,14 +236,14 @@ const ES: AccountContent = {
     { title: 'Exportación CSV ilimitada', desc: 'Descarga cualquier lista, tantas veces como quieras.' },
     { title: 'Emails de recordatorio', desc: 'Un aviso cada 2 semanas cuando una nueva exportación mostrará quién se fue.' },
   ],
-  pricingLine: (monthlyDays, yearlyPrice) =>
-    `durante ${monthlyDays}, o $${yearlyPrice} al año · pago único, sin renovación automática`,
+  pricingLine: (yearlyPrice) =>
+    `al mes, o $${yearlyPrice} al año · se renueva automáticamente, cancela cuando quieras`,
   cloudSync: 'Sincronización en la nube',
   security: 'Seguridad',
   securityDesc: 'Cambia tu contraseña. Cualquier snapshot en la nube se recifra automáticamente con la nueva contraseña.',
   dangerZone: 'Zona de peligro',
   dangerDesc:
-    'Eliminar tu cuenta borra todos tus datos de forma permanente, incluidos los snapshots en la nube. Si tienes una suscripción Pro activa, se cancela de inmediato para que no se te vuelva a cobrar. Esta acción no se puede deshacer.',
+    'Eliminar tu cuenta borra todos tus datos de forma permanente, incluidos los snapshots en la nube. Si tienes una suscripción Pro AI activa, se cancela de inmediato para que no se te vuelva a cobrar. Esta acción no se puede deshacer.',
   changePassword: {
     currentPassword: 'Contraseña actual',
     newPassword: 'Nueva contraseña',
@@ -260,7 +267,7 @@ const ES: AccountContent = {
     proBadge: 'PRO',
     lockedDesc:
       'Respalda tus snapshots, cifrados con una clave derivada de tu contraseña, y continúa tu historial en cualquier dispositivo. Incluido con Pro.',
-    upgradeToPro: 'Mejorar a Pro',
+    upgradeToPro: 'Obtener Pro AI',
     onTitle: 'La sincronización en la nube está activa',
     onDesc:
       'Tus snapshots se cifran en tu navegador con una clave derivada de la contraseña de tu cuenta antes de guardarse. Nunca vemos tus datos sin cifrar. No hay nada que configurar ni recordar.',
@@ -272,7 +279,7 @@ const ES: AccountContent = {
     areYouSure: '¿Estás seguro?',
     permanentWarning: 'Esto elimina tu cuenta y todos tus datos de forma permanente, incluidos los snapshots en la nube. Esta acción no se puede deshacer.',
     subCancelWarning:
-      'Si tienes una suscripción Pro activa, se cancelará de inmediato como parte de este proceso. No se te volverá a cobrar.',
+      'Si tienes una suscripción Pro AI activa, se cancelará de inmediato como parte de este proceso. No se te volverá a cobrar.',
     confirmBtn: 'Sí, eliminar todo',
     deleting: 'Eliminando…',
     cancelBtn: 'Cancelar',
@@ -312,16 +319,18 @@ const PT: AccountContent = {
   freeBadge: 'GRÁTIS',
   proUntil: (date) => `Pro até ${date}`,
   complimentaryAccess: 'Acesso de cortesia. Obrigado por estar aqui desde o início.',
+  proAiBadge: 'PRO AI',
+  subscriberLine: (y) => (y ? 'Pro AI, cobrança anual' : 'Pro AI, cobrança mensal'),
   onFreePlan: 'Você está no plano gratuito.',
   insiderBadge: 'INSIDER',
   insiderSince: (date) => `Insider desde ${date}. Acesso vitalício, nada para renovar.`,
   extendPro: 'Estender Pro',
-  upgradeToPro: 'Assinar Pro',
+  upgradeToPro: 'Assinar o Pro AI',
   betaBanner: 'Grátis durante a beta. Você tem acesso completo ao Pro sem custo até lançarmos os planos pagos. Sem cobrança por enquanto.',
   emailLabel: 'E-mail',
   memberSinceLabel: 'Membro desde',
   whatsIncluded: 'O que está incluído',
-  unlockWithPro: 'Desbloqueie com o Pro',
+  unlockWithPro: 'Desbloqueie com o Pro AI',
   freeSummary:
     'Você está no plano Grátis: um snapshot, a lista completa de não seguidores e uma exportação CSV. O Pro transforma essa checagem pontual em uma visão contínua da sua conta.',
   proFeatures: [
@@ -334,14 +343,14 @@ const PT: AccountContent = {
     { title: 'Exportação CSV ilimitada', desc: 'Baixe qualquer lista, quantas vezes quiser.' },
     { title: 'Emails de lembrete', desc: 'Um aviso a cada 2 semanas quando uma nova exportação vai mostrar quem saiu.' },
   ],
-  pricingLine: (monthlyDays, yearlyPrice) =>
-    `por ${monthlyDays}, ou $${yearlyPrice} por ano · pagamento único, sem renovação automática`,
+  pricingLine: (yearlyPrice) =>
+    `por mês, ou $${yearlyPrice} por ano · renova automaticamente, cancele quando quiser`,
   cloudSync: 'Sincronização em nuvem',
   security: 'Segurança',
   securityDesc: 'Altere sua senha. Todos os snapshots na nuvem são recriptografados automaticamente com a nova senha.',
   dangerZone: 'Zona de risco',
   dangerDesc:
-    'Excluir sua conta remove todos os seus dados permanentemente, incluindo os snapshots na nuvem. Se você tiver uma assinatura Pro ativa, ela é cancelada imediatamente para que você não seja cobrado novamente. Isso não pode ser desfeito.',
+    'Excluir sua conta remove todos os seus dados permanentemente, incluindo os snapshots na nuvem. Se você tiver uma assinatura Pro AI ativa, ela é cancelada imediatamente para que você não seja cobrado novamente. Isso não pode ser desfeito.',
   changePassword: {
     currentPassword: 'Senha atual',
     newPassword: 'Nova senha',
@@ -365,7 +374,7 @@ const PT: AccountContent = {
     proBadge: 'PRO',
     lockedDesc:
       'Faça backup dos seus snapshots, criptografados com uma chave derivada da sua senha, e continue seu histórico em qualquer dispositivo. Incluído no Pro.',
-    upgradeToPro: 'Assinar Pro',
+    upgradeToPro: 'Assinar o Pro AI',
     onTitle: 'A sincronização em nuvem está ativa',
     onDesc:
       'Seus snapshots são criptografados no seu navegador com uma chave derivada da senha da sua conta antes de serem armazenados. Nunca vemos seus dados sem criptografia. Nada para configurar ou lembrar.',
@@ -377,7 +386,7 @@ const PT: AccountContent = {
     areYouSure: 'Tem certeza?',
     permanentWarning: 'Isso exclui permanentemente sua conta e todos os dados, incluindo os snapshots na nuvem. Isso não pode ser desfeito.',
     subCancelWarning:
-      'Se você tiver uma assinatura Pro ativa, ela será cancelada imediatamente como parte deste processo. Você não será cobrado novamente.',
+      'Se você tiver uma assinatura Pro AI ativa, ela será cancelada imediatamente como parte deste processo. Você não será cobrado novamente.',
     confirmBtn: 'Sim, excluir tudo',
     deleting: 'Excluindo…',
     cancelBtn: 'Cancelar',

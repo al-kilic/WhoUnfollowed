@@ -5,7 +5,7 @@
 //  - gate which internal links can safely use the i18n-aware Link instead of
 //    plain next/link (see i18n/navigation.ts).
 //
-// Every entry here needs a matching pattern in middleware.ts's matcher (kept
+// Every entry here needs a matching pattern in proxy.ts's matcher (kept
 // separate because Next.js requires that array to be a literal, not derived
 // from this one) — otherwise its unprefixed English URL 404s.
 export const LOCALIZED_PATHS: string[] = [
@@ -15,6 +15,9 @@ export const LOCALIZED_PATHS: string[] = [
   '/contact',
   '/what-is-whounfollowed',
   '/how-to-export',
+  '/instagram',
+  '/instagram-coach',
+  '/instagram-updates',
   '/threads',
   '/tiktok',
   '/accessibility',
@@ -37,5 +40,6 @@ export const LOCALIZED_PATHS: string[] = [
   '/welcome',
   '/diff',
   '/unsubscribe',
-  '/waitlist',
+  '/coach',
+  '/app',
 ];

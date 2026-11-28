@@ -1,0 +1,37 @@
+{
+  "_comment": "Niches for the weekly brief. General is always written. Keep this to 4 niches or the Monday job grows. ids are used in file names. names: the niche name in es and pt (English in name).",
+  "niches": [
+    {
+      "id": "photo-video",
+      "name": "Photography and video",
+      "names": {
+        "es": "Fotografía y video",
+        "pt": "Fotografia e vídeo"
+      }
+    },
+    {
+      "id": "fitness",
+      "name": "Fitness and wellness",
+      "names": {
+        "es": "Fitness y bienestar",
+        "pt": "Fitness e bem-estar"
+      }
+    },
+    {
+      "id": "beauty-fashion",
+      "name": "Beauty and fashion",
+      "names": {
+        "es": "Belleza y moda",
+        "pt": "Beleza e moda"
+      }
+    },
+    {
+      "id": "small-business",
+      "name": "Small business and local shops",
+      "names": {
+        "es": "Pequeños negocios y tiendas locales",
+        "pt": "Pequenos negócios e lojas locais"
+      }
+    }
+  ]
+}

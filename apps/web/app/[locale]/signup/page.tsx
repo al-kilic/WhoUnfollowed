@@ -29,7 +29,7 @@ export default async function SignupPage({ params }: PageProps) {
   // Already logged in? Skip the signup form.
   const { user } = await validateRequest();
   if (user) {
-    redirect({ href: '/history', locale: locale as AppLocale });
+    redirect({ href: '/app', locale: locale as AppLocale });
   }
 
   return <SignupForm locale={locale} />;

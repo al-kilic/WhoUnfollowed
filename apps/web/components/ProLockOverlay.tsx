@@ -99,7 +99,7 @@ export function ProLockOverlay({
             padding: '12px 26px',
             borderRadius: 11,
             background: T.teal,
-            color: T.cream,
+            color: T.onTeal,
             textDecoration: 'none',
             fontSize: 14,
             fontWeight: 600,

@@ -28,7 +28,7 @@ export function LoginForm({ locale }: { locale: AppLocale }) {
         if ('needsVerification' in res && res.needsVerification) {
           router.replace('/verify-email');
         } else {
-          router.replace('/history');
+          router.replace('/app');
         }
       }
       return res;

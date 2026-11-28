@@ -18,18 +18,20 @@ export function BlogCtaLink({
   slug,
   kind,
   style,
+  className,
   children,
 }: {
   href: string;
   slug: string;
   kind: 'primary' | 'pro-nudge';
   style?: CSSProperties;
+  className?: string;
   children: ReactNode;
 }) {
   const onClick = () =>
     kind === 'pro-nudge' ? trackUpgradeClick(`blog:${slug}`) : track(Events.blogCtaClick, { slug });
   return (
-    <Link href={href} onClick={onClick} style={style}>
+    <Link href={href} onClick={onClick} style={style} className={className}>
       {children}
     </Link>
   );

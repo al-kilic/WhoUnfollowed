@@ -1,0 +1,77 @@
+/* Studio > Plan > Photo insights (v2) and Posted extras. Uses the Studio
+   tokens from styles/studio.css, so light and dark follow the Studio theme. */
+
+/* Hero: the promise, one primary action, three steps. */
+.s-insh { position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 28px; padding: 28px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); }
+.s-insh::after { content: ""; position: absolute; inset: auto -80px -120px auto; width: 320px; height: 320px; border-radius: 50%; background: radial-gradient(circle, var(--acc-soft), transparent 70%); pointer-events: none; }
+.s-insh .k { font: 600 12px var(--sans); letter-spacing: .02em; color: var(--accent); }
+.s-insh h2 { margin: 8px 0 10px; font: 650 clamp(22px, 2.6vw, 30px)/1.18 var(--sans); letter-spacing: -.02em; color: var(--ink); text-wrap: balance; }
+.s-insh p { margin: 0 0 18px; color: var(--mute); font-size: 14.5px; line-height: 1.55; max-width: 52ch; }
+.s-insh .acts { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.s-insh .steps { list-style: none; margin: 20px 0 0; padding: 0; display: grid; gap: 10px; counter-reset: st; }
+.s-insh .steps li { counter-increment: st; display: flex; gap: 10px; align-items: baseline; font-size: 13.5px; color: var(--ink); }
+.s-insh .steps li::before { content: counter(st); flex: none; width: 20px; height: 20px; display: inline-grid; place-items: center; border-radius: 50%; font: 600 11px var(--sans); color: var(--accent); background: var(--acc-soft); }
+.s-insh .fan { position: relative; min-height: 220px; z-index: 1; }
+.s-insh .fan img { position: absolute; width: 46%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 12px; border: 3px solid var(--surface); box-shadow: 0 18px 40px -22px rgba(0,0,0,.45); }
+.s-insh .fan img:nth-child(1) { left: 4%; top: 14%; transform: rotate(-7deg); }
+.s-insh .fan img:nth-child(2) { left: 28%; top: 0; z-index: 2; transform: rotate(1deg); }
+.s-insh .fan img:nth-child(3) { left: 52%; top: 16%; transform: rotate(8deg); }
+.s-insh .fan .tag { position: absolute; z-index: 3; left: 32%; bottom: 4%; padding: 6px 10px; border-radius: 999px; font: 600 12px var(--sans); background: var(--ink); color: var(--bg); box-shadow: 0 8px 20px -10px rgba(0,0,0,.5); }
+@media (max-width: 760px) { .s-insh { grid-template-columns: 1fr; padding: 20px; } .s-insh .fan { min-height: 180px; order: -1; } }
+
+/* Toolbar over a result: new analysis + earlier runs. */
+.s-insbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.s-insruns { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: thin; }
+.s-insrun { flex: none; display: flex; align-items: center; gap: 8px; padding: 5px 10px 5px 5px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: 500 12.5px var(--sans); cursor: pointer; }
+.s-insrun[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.s-insrun .st { display: flex; }
+.s-insrun .st img, .s-insrun .st i { width: 22px; height: 28px; object-fit: cover; border-radius: 5px; border: 2px solid var(--surface); margin-left: -8px; background: var(--sunk); }
+.s-insrun .st > :first-child { margin-left: 0; }
+.s-insrun small { display: block; color: var(--mute); font-size: 11.5px; }
+
+/* Ranked image cards. */
+.s-inscards { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+.s-inscard { position: relative; display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--surface); animation: s-insin .45s ease both; }
+.s-inscard.win { border-color: color-mix(in oklab, var(--good) 45%, var(--line)); }
+.s-inscard.lose { border-color: color-mix(in oklab, var(--bad) 35%, var(--line)); }
+.s-inscard .ph { position: relative; aspect-ratio: 4 / 5; background: var(--sunk); }
+.s-inscard .ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.s-inscard .ph .ph0 { position: absolute; inset: 0; display: grid; place-items: center; font: 650 28px var(--sans); color: var(--faint); }
+.s-inscard .rk { position: absolute; left: 10px; top: 10px; padding: 4px 9px; border-radius: 999px; font: 700 12.5px var(--sans); background: rgba(10,12,12,.72); color: #fff; backdrop-filter: blur(6px); }
+.s-inscard .x { position: absolute; right: 10px; top: 10px; padding: 4px 9px; border-radius: 999px; font: 600 12px var(--sans); background: var(--surface); color: var(--ink); }
+.s-inscard .x.up { color: var(--good); }
+.s-inscard .x.down { color: var(--bad); }
+.s-inscard .bd { display: grid; gap: 8px; padding: 12px 14px 14px; }
+.s-inscard .vd { justify-self: start; font: 600 11.5px var(--sans); padding: 2px 8px; border-radius: 999px; }
+.s-inscard .vd.win { color: var(--good); background: color-mix(in oklab, var(--good) 14%, transparent); }
+.s-inscard .vd.lose { color: var(--bad); background: color-mix(in oklab, var(--bad) 12%, transparent); }
+.s-inscard .nums { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; color: var(--mute); font-variant-numeric: tabular-nums; }
+.s-inscard .nums b { color: var(--ink); font-weight: 600; }
+.s-inscard .why { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--ink); }
+.s-inscard .tip { margin: 0; display: flex; gap: 6px; font-size: 13px; line-height: 1.45; color: var(--ink); padding: 8px 10px; border-radius: 10px; background: var(--acc-soft); }
+.s-inscard .tip svg { flex: none; margin-top: 2px; color: var(--accent); }
+.s-inscard .bar { height: 4px; border-radius: 4px; background: var(--sunk); overflow: hidden; }
+.s-inscard .bar i { display: block; height: 100%; border-radius: inherit; background: var(--accent); }
+
+/* Shoot next: three numbered idea cards. */
+.s-insnext { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.s-insnext > div { position: relative; padding: 16px 16px 16px 54px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.s-insnext > div::before { content: attr(data-n); position: absolute; left: 16px; top: 12px; font: 700 26px/1 var(--sans); color: var(--accent); letter-spacing: -.03em; }
+.s-insnext b { display: block; font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+.s-insnext span { color: var(--mute); font-size: 13px; line-height: 1.5; }
+.s-inspat { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.s-inspat li { display: flex; gap: 10px; font-size: 14px; line-height: 1.5; }
+.s-inspat li svg { flex: none; margin-top: 3px; color: var(--accent); }
+.s-insex { display: inline-flex; align-items: center; gap: 6px; font: 600 12px var(--sans); color: var(--mute); }
+@keyframes s-insin { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .s-inscard { animation: none; } }
+
+/* Posted: the "add results" nudge and quick add. */
+.s-pnudge { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 12px 14px; border-radius: 14px; border: 1px solid color-mix(in oklab, var(--accent) 35%, var(--line)); background: var(--acc-soft); }
+.s-pnudge b { font-weight: 600; }
+.s-pquick { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.s-psrc { font: 500 11.5px var(--sans); color: var(--mute); padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line); white-space: nowrap; }
+.s-pweek { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; align-items: end; height: 96px; }
+.s-pweek div { display: grid; grid-template-rows: 1fr auto; gap: 4px; height: 100%; text-align: center; font-size: 11px; color: var(--mute); }
+.s-pweek div i { align-self: end; border-radius: 6px 6px 2px 2px; background: color-mix(in oklab, var(--accent) 55%, transparent); min-height: 3px; }
+.s-pweek div.top i { background: var(--accent); }

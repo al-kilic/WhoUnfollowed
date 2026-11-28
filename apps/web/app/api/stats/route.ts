@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getStats, bumpStats } from '@/lib/stats';
+import { getStats, bumpStats, analysesOffset } from '@/lib/stats';
 
 // Kept for compatibility. The landing page no longer relies on this route — it
 // reads stats server-side and records parses via a Server Action — because a
@@ -34,5 +34,5 @@ export async function POST(req: Request) {
 
   const nonFollowerCount = typeof body.nonFollowerCount === 'number' ? body.nonFollowerCount : 0;
   const snapshots = await bumpStats(nonFollowerCount);
-  return NextResponse.json({ ok: true, snapshots });
+  return NextResponse.json({ ok: true, snapshots: snapshots + analysesOffset() });
 }

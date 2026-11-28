@@ -1,0 +1,104 @@
+/* Sign-in and account screens (components/auth/AuthShell.tsx + AuthPanel),
+   on top of studio.css. Colours come from the studio tokens, so light and
+   dark mode both work. Desktop: form left, story panel right. Phones: a slim
+   band of the art, then the form. */
+
+.a-wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; padding: 0 16px 56px; max-width: 1180px; margin: 0 auto; }
+.a-col { width: 100%; max-width: 420px; margin: 0 auto; padding-top: 8px; position: relative; z-index: 1; }
+
+/* Form card */
+.a-card { padding: 30px 26px; box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 24px 48px -32px rgba(0, 0, 0, .25); }
+.a-title { font-size: 26px; font-weight: 650; letter-spacing: -0.025em; line-height: 1.15; margin: 0 0 8px; color: var(--ink); }
+.a-sub { font-size: 14px; line-height: 1.55; color: var(--mute); margin: 0 0 22px; }
+.a-field { display: flex; flex-direction: column; gap: 6px; }
+.a-label { font-size: 13px; font-weight: 500; color: var(--ink); }
+.studio .a-input { padding: 10px 12px; font-size: 14.5px; min-height: 42px; }
+.a-hint { font-size: 12px; line-height: 1.45; color: var(--faint); margin: 0; }
+.a-error { font-size: 13px; line-height: 1.45; color: var(--bad); margin: 0; }
+.studio .a-btn { width: 100%; height: 44px; font-size: 14.5px; font-weight: 600; }
+.studio .a-btn:disabled { opacity: .6; cursor: default; }
+.a-foot { text-align: center; margin-top: 18px; font-size: 13px; color: var(--mute); }
+.a-privacy { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 14px 0 0; font-size: 12.5px; color: var(--faint); text-align: center; }
+.a-privacy svg { color: var(--accent); }
+
+/* Story panel */
+.a-panel { position: relative; overflow: hidden; border-radius: 24px; border: 1px solid var(--line); background: var(--sunk); isolation: isolate; }
+.a-grid { position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background-image: radial-gradient(color-mix(in oklab, var(--ink) 14%, transparent) 1px, transparent 1.2px);
+  background-size: 18px 18px; mask-image: radial-gradient(ellipse 80% 70% at 60% 55%, #000 30%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse 80% 70% at 60% 55%, #000 30%, transparent 75%); }
+.a-copy { padding: 34px 36px 0; max-width: 460px; }
+.a-eyebrow { margin: 0 0 12px; font: 600 11.5px var(--font-mono, ui-monospace, monospace); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.a-ptitle { margin: 0 0 12px; font-size: clamp(26px, 2.6vw, 34px); font-weight: 650; letter-spacing: -0.03em; line-height: 1.1; color: var(--ink); text-wrap: balance; }
+.a-pbody { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--mute); max-width: 40ch; }
+.a-stage { position: relative; display: grid; place-items: center; padding: 6px 24px 0; }
+.a-art { width: min(100%, 420px); height: auto; overflow: visible; }
+.a-proofs { list-style: none; margin: 0; padding: 18px 36px 30px; display: flex; flex-wrap: wrap; gap: 8px 18px; border-top: 1px solid var(--line); }
+.a-proofs li { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--ink); }
+.a-proofs svg { color: var(--accent); flex: none; }
+
+/* Art */
+.a-ring { fill: none; stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 5; }
+.a-spoke { stroke: color-mix(in oklab, var(--ink) 16%, transparent); stroke-width: 1; }
+.a-link { stroke: color-mix(in oklab, var(--ink) 10%, transparent); stroke-width: 1; }
+.a-node { fill: var(--surface); stroke: color-mix(in oklab, var(--ink) 55%, transparent); stroke-width: 1.5; }
+.a-node.new { fill: var(--accent); stroke: var(--accent); }
+.a-spoke.new { stroke: color-mix(in oklab, var(--accent) 55%, transparent); }
+.a-you { fill: var(--ink); }
+.a-dust { fill: color-mix(in oklab, var(--ink) 30%, transparent); }
+.a-you-ring { fill: none; stroke: var(--accent); stroke-width: 1.5; opacity: .7; }
+
+/* Mini "since your last export" card, overlapping the art */
+.a-mini { position: absolute; left: 22px; bottom: 18px; width: 206px; padding: 12px 12px 8px; border-radius: 14px; border: 1px solid var(--line); background: color-mix(in oklab, var(--surface) 92%, transparent); backdrop-filter: blur(6px); box-shadow: 0 18px 36px -24px rgba(0, 0, 0, .35); }
+.a-mini-t { margin: 0 0 8px; font-size: 11.5px; font-weight: 600; color: var(--mute); }
+.a-mini-r { display: flex; align-items: center; gap: 8px; margin: 0; padding: 6px 0; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink); }
+.a-mini-r b { margin-left: auto; font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 999px; }
+.a-mini-r b.left { color: var(--bad); background: color-mix(in oklab, var(--bad) 12%, transparent); }
+.a-mini-r b.new { color: var(--accent); background: color-mix(in oklab, var(--accent) 14%, transparent); }
+.a-av { width: 18px; height: 18px; border-radius: 50%; flex: none; border: 1.5px solid color-mix(in oklab, var(--ink) 45%, transparent); }
+.a-av.left { border-style: dashed; border-color: color-mix(in oklab, var(--bad) 70%, transparent); }
+.a-av.new { background: var(--accent); border-color: var(--accent); }
+
+/* Motion: lines draw in, dots settle, then the ones who left fade out.
+   Slow drift afterwards. Nothing moves with reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .a-spoke, .a-link { stroke-dasharray: 200; stroke-dashoffset: 200; animation: a-draw .9s cubic-bezier(.2, .7, .2, 1) forwards; animation-delay: calc(var(--i) * 40ms + 150ms); }
+  .a-node { opacity: 0; transform-box: fill-box; transform-origin: center; animation: a-pop .5s cubic-bezier(.2, .9, .3, 1.3) forwards; animation-delay: calc(var(--i) * 40ms + 450ms); }
+  .a-node.left { animation: a-pop .5s cubic-bezier(.2, .9, .3, 1.3) forwards, a-leave 1.2s ease forwards; animation-delay: calc(var(--i) * 40ms + 450ms), 2.4s; animation-fill-mode: forwards, both; }
+  .a-spoke.left { animation: a-draw .9s cubic-bezier(.2, .7, .2, 1) forwards, a-cut 1.2s ease forwards; animation-delay: calc(var(--i) * 40ms + 150ms), 2.4s; animation-fill-mode: forwards, both; }
+  .a-you-ring { transform-box: fill-box; transform-origin: center; animation: a-breathe 5s ease-in-out 1.6s infinite; }
+  .a-spin { transform-origin: 200px 200px; animation: a-drift 160s linear 3s infinite; }
+  .a-mini { opacity: 0; transform: translateY(8px); animation: a-rise .6s ease forwards 1.2s; }
+  .a-copy { opacity: 0; animation: a-rise .6s ease forwards .05s; }
+}
+.a-node.left { fill: transparent; stroke: var(--bad); stroke-dasharray: 2 2; opacity: .55; }
+.a-spoke.left { stroke: color-mix(in oklab, var(--bad) 40%, transparent); stroke-dasharray: 3 4; }
+@keyframes a-draw { to { stroke-dashoffset: 0; } }
+@keyframes a-pop { from { opacity: 0; transform: scale(.3); } to { opacity: 1; transform: scale(1); } }
+@keyframes a-leave { from { fill: var(--surface); stroke: color-mix(in oklab, var(--ink) 55%, transparent); stroke-dasharray: none; opacity: 1; } to { opacity: .45; fill: transparent; stroke: var(--bad); stroke-dasharray: 2 2; } }
+@keyframes a-cut { from { stroke: color-mix(in oklab, var(--ink) 16%, transparent); stroke-dasharray: 200; } to { stroke: color-mix(in oklab, var(--bad) 40%, transparent); stroke-dasharray: 3 4; stroke-dashoffset: 0; } }
+@keyframes a-breathe { 0%, 100% { transform: scale(1); opacity: .7; } 50% { transform: scale(1.18); opacity: .25; } }
+@keyframes a-drift { to { transform: rotate(360deg); } }
+@keyframes a-rise { to { opacity: 1; transform: none; } }
+
+/* Desktop: side by side, the panel fills the height next to the form. */
+@media (min-width: 960px) {
+  .a-wrap { grid-template-columns: minmax(360px, 440px) minmax(0, 1fr); gap: 56px; align-items: center; padding: 40px 24px 64px; min-height: calc(100vh - 64px); }
+  .a-col { grid-column: 1; grid-row: 1; margin: 0; padding-top: 0; }
+  .a-panel { grid-column: 2; grid-row: 1; align-self: stretch; display: flex; flex-direction: column; min-height: 560px; }
+  .a-stage { flex: 1; }
+}
+
+/* Phones and tablets: a slim band of the art above the form. */
+@media (max-width: 959px) {
+  .a-panel { margin: 16px 0 20px; border-radius: 20px; display: grid; grid-template-columns: 1fr 120px; align-items: center; }
+  .a-copy { padding: 18px 0 18px 20px; }
+  .a-eyebrow { margin-bottom: 6px; font-size: 10.5px; }
+  .a-ptitle { font-size: 18px; margin: 0; }
+  .a-pbody, .a-proofs, .a-mini, .a-ring { display: none; }
+  .a-stage { padding: 0; height: 120px; overflow: hidden; }
+  .a-art { width: 190px; max-width: none; }
+}
+@media (max-width: 480px) {
+  .a-card { padding: 24px 18px; }
+  .a-title { font-size: 23px; }
+}

@@ -12,12 +12,17 @@ import { purchaseConfirmationEmail, insiderTierConfirmationEmail } from '@/lib/e
 import { routing, type AppLocale } from '@/i18n/routing';
 import { MARKETING_CONSENT_VERSION } from '@/lib/marketingConsent';
 import { enableReminders } from '@/lib/reminders/store';
+import { handleProAiCheckout, handleSubscriptionEvent } from './proAi';
+import { handleTopupCheckout } from '@/lib/aiTopup';
+import { handleChargeRefunded, handleDisputeCreated } from './refunds';
 
 interface CheckoutSession {
   customer: string;
   customer_email: string | null;
   customer_details?: { email?: string | null };
   mode: 'payment' | 'subscription' | 'setup';
+  // Set when checkout required the Terms checkbox (lib/checkoutConsent.ts).
+  consent?: { terms_of_service?: 'accepted' | null } | null;
   metadata?: {
     userId?: string;
     type?: string;
@@ -53,11 +58,43 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
   }
 
-  // Every purchase on this site is a one-time payment (unlock or donation),
-  // never a recurring subscription, so this is the only event type that
-  // matters.
+  // Pro AI is a recurring subscription: renewals, failed payments and
+  // cancellations arrive as subscription events.
+  if (event.type === 'customer.subscription.created' || event.type === 'customer.subscription.updated' || event.type === 'customer.subscription.deleted') {
+    await handleSubscriptionEvent(event.data.object, event.type);
+    return NextResponse.json({ received: true });
+  }
+
+  // A full refund or a dispute takes back the AI access that payment bought.
+  // A failure returns 500 so Stripe retries the event.
+  if (event.type === 'charge.refunded' || event.type === 'charge.dispute.created') {
+    try {
+      const result = event.type === 'charge.refunded'
+        ? await handleChargeRefunded(event.data.object)
+        : await handleDisputeCreated(event.data.object);
+      console.log(`[stripe webhook] ${event.type}: ${result}`);
+    } catch (err) {
+      console.error(`[stripe webhook] ${event.type} failed:`, err instanceof Error ? err.message : err);
+      return NextResponse.json({ error: 'retry' }, { status: 500 });
+    }
+    return NextResponse.json({ received: true });
+  }
+
+  // Everything else on the site is a one-time payment (unlock, Lifetime or
+  // donation), plus the first payment of a Pro AI subscription.
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as CheckoutSession;
+
+    if (session.metadata?.type === 'topup') {
+      await handleTopupCheckout(event.data.object);
+      return NextResponse.json({ received: true });
+    }
+
+    if (session.metadata?.type === 'pro_ai') {
+      await enableBuyerReminders(session);
+      await handleProAiCheckout(event.data.object);
+      return NextResponse.json({ received: true });
+    }
 
     // Buyers get the "time to check again" reminders that make Pro useful
     // (service emails, one-click stop in every one). Best-effort, and an
@@ -174,7 +211,7 @@ export async function POST(request: NextRequest) {
     lines.push(`Plan: ${unlockDuration === 'yearly' ? 'Yearly' : 'Monthly'}`);
     if (acquisitionSource) lines.push(`Source: ${escapeTelegramHtml(acquisitionSource)}`);
 
-    const notify = await sendTelegramMessage(lines.join('\n'));
+    const notify = await sendTelegramMessage(lines.join('\n'), 'sales');
     if (!notify.ok) {
       // Non-fatal: the purchase already went through; just log.
       console.error('[stripe webhook] telegram notify failed:', notify.error);
@@ -276,9 +313,10 @@ async function handleLifetimePurchase(session: CheckoutSession): Promise<void> {
   if (amount) lines.push(`Amount: ${escapeTelegramHtml(amount)}`);
   lines.push(`New account: ${isNewAccount ? 'Yes' : 'No'}`);
   lines.push(`Marketing opt-in: ${marketingOptIn ? 'Yes' : 'No'}`);
+  lines.push(`Terms + immediate start: ${session.consent?.terms_of_service === 'accepted' ? 'accepted' : 'not recorded'}`);
   if (acquisitionSource) lines.push(`Source: ${escapeTelegramHtml(acquisitionSource)}`);
 
-  const notify = await sendTelegramMessage(lines.join('\n'));
+  const notify = await sendTelegramMessage(lines.join('\n'), 'sales');
   if (!notify.ok) {
     // Non-fatal: the purchase already went through; just log.
     console.error('[stripe webhook] telegram notify failed (lifetime):', notify.error);

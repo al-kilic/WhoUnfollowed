@@ -143,7 +143,7 @@ describe('parseExportZip: Instagram + Threads in one ZIP', () => {
   // Threads' following.json sorts before Instagram's in the first ZIP, after
   // it in the second: the result must not depend on archive order.
   for (const threadsFirst of [true, false]) {
-    it(`parses Instagram and reports Threads as skipped (threads first: ${threadsFirst})`, async () => {
+    it(`parses both Instagram and Threads (threads first: ${threadsFirst})`, async () => {
       const z = new JSZip();
       if (threadsFirst) {
         addThreads(z, ['t_follower'], ['t_following'], ['t_gone']);
@@ -153,10 +153,15 @@ describe('parseExportZip: Instagram + Threads in one ZIP', () => {
         addThreads(z, ['t_follower'], ['t_following'], ['t_gone']);
       }
 
-      const { snapshot, skippedPlatforms } = await parseExportZip(await toBuffer(z));
+      const { snapshot, skippedPlatforms, extraSnapshots } = await parseExportZip(await toBuffer(z));
 
       expect(snapshot.platform).toBe('instagram');
-      expect(skippedPlatforms).toEqual(['threads']);
+      expect(skippedPlatforms).toEqual([]);
+      expect(extraSnapshots).toHaveLength(1);
+      const threads = extraSnapshots![0]!;
+      expect(threads.platform).toBe('threads');
+      expect(threads.followers.map(a => a.username)).toEqual(['t_follower']);
+      expect(threads.following.map(a => a.username)).toEqual(['t_following']);
       expect(snapshot.followers.map(a => a.username)).toEqual(['ig_follower']);
       expect(snapshot.following.map(a => a.username)).toEqual(['ig_following']);
       // Threads' recently_unfollowed file has a different schema; it must not
@@ -168,9 +173,22 @@ describe('parseExportZip: Instagram + Threads in one ZIP', () => {
   it('an Instagram-only export has platform instagram and nothing skipped', async () => {
     const z = new JSZip();
     addInstagram(z, ['a'], ['b']);
-    const { snapshot, skippedPlatforms } = await parseExportZip(await toBuffer(z));
+    const { snapshot, skippedPlatforms, extraSnapshots } = await parseExportZip(await toBuffer(z));
     expect(snapshot.platform).toBe('instagram');
     expect(skippedPlatforms).toEqual([]);
+    expect(extraSnapshots).toBeUndefined();
+  });
+
+  it('keeps Instagram when the Threads part is broken, and reports Threads as skipped', async () => {
+    const z = new JSZip();
+    addInstagram(z, ['ig_follower'], ['ig_following']);
+    z.file('threads/followers.json', '{not json');
+    z.file('threads/following.json', '{not json');
+    const { snapshot, skippedPlatforms, extraSnapshots } = await parseExportZip(await toBuffer(z));
+    expect(snapshot.platform).toBe('instagram');
+    expect(snapshot.followers.map(a => a.username)).toEqual(['ig_follower']);
+    expect(extraSnapshots).toBeUndefined();
+    expect(skippedPlatforms).toEqual(['threads']);
   });
 });
 

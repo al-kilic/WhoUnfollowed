@@ -1,0 +1,115 @@
+/* Blog (index, articles, author page) in the new look: Geist, neutral greys,
+   teal accent. Scoped to .bl inside <StudioFrame>, so it reads the studio
+   tokens (light and dark). Presentation only: article text, headings and
+   links come straight from posts.ts. */
+
+.studio .bl { --read: color-mix(in srgb, var(--ink) 84%, var(--bg)); }
+.bl-main { max-width: 720px; margin: 0 auto; padding: 48px 16px 88px; }
+.bl-main.wide { max-width: 1040px; }
+@media (min-width: 640px) { .bl-main { padding: 64px 24px 96px; } }
+
+/* Eyebrow, meta, tags */
+.bl-eyebrow { font: 500 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 0 0 12px; }
+.bl-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; font-size: 13px; color: var(--faint); }
+.bl-meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--line); }
+.bl-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 6px; font-size: 12px; font-weight: 500; border: 1px solid var(--line); background: var(--surface); color: var(--mute); }
+.bl-tag.Guide { color: var(--accent); background: var(--acc-soft); border-color: transparent; }
+.bl-tag.Growth { color: var(--t-amber-c); background: var(--t-amber-s); border-color: transparent; }
+.bl-tag.Privacy { color: var(--t-rose-c); background: var(--t-rose-s); border-color: transparent; }
+
+/* Article header */
+.bl-head { margin-bottom: 28px; }
+.bl-head .bl-meta { margin-bottom: 18px; }
+.bl-title { font-size: clamp(30px, 5vw, 44px); line-height: 1.1; font-weight: 600; letter-spacing: -.03em; color: var(--ink); margin: 0 0 16px; text-wrap: balance; }
+.bl-lede { font-size: 19px; line-height: 1.55; color: var(--mute); margin: 0; text-wrap: pretty; }
+.bl-byline { display: flex; align-items: center; gap: 10px; margin-top: 22px; font-size: 13.5px; color: var(--mute); }
+.bl-byline a { color: var(--ink); font-weight: 500; }
+.bl-byline a:hover { color: var(--accent); }
+.bl-av { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--acc-soft); color: var(--accent); font-weight: 600; font-size: 13px; flex: none; }
+.bl-cover { border-radius: 14px; overflow: hidden; border: 1px solid var(--line); aspect-ratio: 5 / 2; background: var(--sunk); }
+
+/* Body */
+.bl-prose { border-top: 1px solid var(--line); margin-top: 32px; padding-top: 36px; font-size: 17px; line-height: 1.75; color: var(--read); }
+.bl-prose > p { margin: 0 0 24px; text-wrap: pretty; }
+.bl-prose h2 { font-size: clamp(23px, 3.4vw, 28px); line-height: 1.2; font-weight: 600; letter-spacing: -.02em; color: var(--ink); margin: 48px 0 14px; scroll-margin-top: 88px; }
+.bl-prose h3 { font-size: clamp(18px, 2.6vw, 21px); line-height: 1.3; font-weight: 600; letter-spacing: -.01em; color: var(--ink); margin: 36px 0 10px; scroll-margin-top: 88px; }
+.bl-prose a, .bl-link { color: var(--accent); font-weight: 500; text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--accent) 35%, transparent); text-underline-offset: 3px; }
+.bl-prose a:hover, .bl-link:hover { text-decoration-color: var(--accent); }
+.bl-prose strong { color: var(--ink); font-weight: 600; }
+.bl-list { list-style: none; padding: 0; margin: 0 0 24px; display: flex; flex-direction: column; gap: 10px; }
+.bl-list li { display: flex; align-items: flex-start; gap: 12px; }
+.bl-list .mk { flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-top: 12px; }
+.bl-list .num { flex: none; min-width: 22px; font: 600 14px/1.9 var(--mono); color: var(--accent); }
+.bl-fig { margin: 36px 0; }
+.bl-fig img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); }
+.bl-fig.art { border-radius: 12px; overflow: hidden; border: 1px solid var(--line); aspect-ratio: 5 / 2; }
+.bl-table { overflow-x: auto; margin: 0 0 28px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); -webkit-overflow-scrolling: touch; }
+.bl-table table { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.5; }
+.bl-table th { text-align: left; padding: 11px 14px; background: var(--sunk); color: var(--ink); font-weight: 600; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.bl-table td { min-width: 120px; padding: 11px 14px; color: var(--read); border-bottom: 1px solid var(--line); vertical-align: top; }
+.bl-table tr:last-child td { border-bottom: 0; }
+
+/* Sections after the body */
+.bl-sec { margin-top: 44px; padding-top: 32px; border-top: 1px solid var(--line); }
+.bl-h2 { font-size: 23px; line-height: 1.25; font-weight: 600; letter-spacing: -.02em; color: var(--ink); margin: 0 0 18px; }
+.bl-faq { display: flex; flex-direction: column; gap: 20px; }
+.bl-faq h3 { font-size: 16px; line-height: 1.4; font-weight: 600; color: var(--ink); margin: 0 0 6px; }
+.bl-faq p { font-size: 15.5px; line-height: 1.65; color: var(--read); margin: 0; }
+.bl-cta { margin-top: 44px; padding: 28px 24px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); text-align: center; }
+.bl-cta-h { font-size: 22px; line-height: 1.2; font-weight: 600; letter-spacing: -.02em; color: var(--ink); margin: 0 0 8px; text-wrap: balance; }
+.bl-cta-p { font-size: 15px; line-height: 1.6; color: var(--mute); max-width: 470px; margin: 0 auto 18px; }
+.bl-cta .s-btn { height: 40px; padding: 0 18px; font-size: 14px; }
+.bl-cta-nudge { font-size: 13.5px; line-height: 1.6; color: var(--mute); margin: 16px 0 0; }
+.bl-box { margin-top: 32px; padding: 20px 22px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
+.bl-box.acc { background: var(--acc-soft); border-color: color-mix(in srgb, var(--accent) 22%, transparent); }
+.bl-box .bl-eyebrow { margin-bottom: 10px; }
+.bl-pillar { display: block; margin-bottom: 14px; }
+.bl-pillar small { display: block; font-size: 13px; color: var(--mute); margin-bottom: 3px; }
+.bl-pillar b { font-size: 17px; line-height: 1.3; font-weight: 600; color: var(--accent); }
+.bl-series { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid color-mix(in srgb, var(--accent) 18%, transparent); padding-top: 14px; }
+.bl-series a { display: flex; gap: 9px; font-size: 15px; line-height: 1.45; color: var(--ink); }
+.bl-series a:hover { color: var(--accent); }
+.bl-series a span:first-child { color: var(--accent); flex: none; }
+.bl-box > p { font-size: 14.5px; line-height: 1.6; color: var(--mute); margin: 0 0 14px; }
+.bl-gloss { display: flex; flex-direction: column; gap: 14px; }
+.bl-gloss b { display: block; font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+.bl-gloss span { font-size: 14.5px; line-height: 1.6; color: var(--mute); }
+.bl-more { display: flex; flex-direction: column; gap: 10px; }
+.bl-more a { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); transition: border-color .15s; }
+.bl-more a:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.bl-more .th { width: 84px; height: 54px; border-radius: 8px; overflow: hidden; flex: none; border: 1px solid var(--line); }
+.bl-more b { display: block; font-size: 15px; line-height: 1.3; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+.bl-more small { font-size: 12.5px; color: var(--accent); font-weight: 500; }
+.bl-back { margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line); }
+.bl-back a { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--mute); }
+.bl-back a:hover { color: var(--ink); }
+
+/* Index */
+.bl-ihead { margin-bottom: 40px; }
+.bl-ihead h1 { font-size: clamp(28px, 4.6vw, 40px); line-height: 1.1; font-weight: 600; letter-spacing: -.03em; color: var(--ink); margin: 0 0 10px; text-wrap: balance; }
+.bl-ihead p { font-size: 16px; line-height: 1.6; color: var(--mute); margin: 0; }
+.bl-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
+@media (min-width: 640px) { .bl-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { .bl-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.bl-card { display: flex; flex-direction: column; border-radius: 14px; overflow: hidden; background: var(--surface); border: 1px solid var(--line); transition: border-color .15s, transform .15s; height: 100%; }
+.bl-card:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); transform: translateY(-2px); }
+.bl-card .cv { position: relative; height: 164px; overflow: hidden; background: var(--sunk); }
+.bl-card .cv .bl-tag { position: absolute; top: 12px; left: 12px; }
+.bl-card .bd { padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.bl-card h2 { font-size: 16.5px; line-height: 1.3; font-weight: 600; letter-spacing: -.01em; color: var(--ink); margin: 0; }
+.bl-card p { font-size: 14px; line-height: 1.55; color: var(--mute); margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.bl-card .ft { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 12.5px; color: var(--faint); }
+
+/* Author page */
+.bl-author { display: flex; align-items: center; gap: 18px; margin-bottom: 24px; }
+.bl-author .bl-av { width: 64px; height: 64px; font-size: 26px; }
+.bl-author h1 { font-size: clamp(28px, 4.6vw, 40px); line-height: 1.1; font-weight: 600; letter-spacing: -.03em; color: var(--ink); margin: 0 0 6px; }
+.bl-author p { font-size: 14.5px; color: var(--mute); margin: 0; }
+.bl-bio { font-size: 16.5px; line-height: 1.75; color: var(--read); margin-bottom: 24px; }
+.bl-bio p { margin: 0 0 16px; }
+.bl-links { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.bl-plist { display: flex; flex-direction: column; gap: 10px; }
+.bl-plist a { display: block; padding: 14px 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+.bl-plist a:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.bl-plist small { display: block; font: 500 11.5px/1.4 var(--mono); color: var(--faint); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
+.bl-plist b { font-size: 15.5px; line-height: 1.35; font-weight: 600; color: var(--ink); }

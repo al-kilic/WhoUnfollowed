@@ -4,130 +4,147 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-primary: #01696f;
-  --color-primary-dark: #014d52;
-  --color-accent: #a84b2f;
+  --color-primary: var(--t-tealMid);
+  --color-primary-dark: var(--t-tealLight);
+  --color-accent: var(--t-terra);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Satoshi", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "General Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
 }
 
 /* ── Light theme (default) ─────────────────────────────────────────────────── */
 :root {
-  --background: #f4f0e8;
-  --foreground: #1a1a1a;
+  --background: #f3f5f4;
+  --foreground: #0c1312;
 
-  /* Design tokens — light */
-  --t-bg:        #f4f0e8;
-  --t-bgPanel:   #ede8df;
-  --t-bgCard:    #e8e3da;
-  --t-bgDeep:    #f4f0e8;
-  --t-ink:       #1a1a1a;
-  --t-inkDim:    rgba(26,26,26,0.58);
-  --t-inkMute:   rgba(26,26,26,0.36);
-  --t-teal:      #015a5f;
-  --t-tealMid:   #01696f;
-  --t-tealLight: #013d42;
-  --t-tealGlow:  rgba(1,105,111,0.12);
-  --t-terra:     #a84b2f;
-  --t-terraText: #a84b2f;
-  --t-cream:     #f4f0e8;
-  --t-shimmer-hi: #5aabb0; /* light theme: muted teal instead of near-white */
+  /* Design tokens, light. Nov 2026: mapped onto the homepage palette
+     (styles/home-base.css) so every page shares the new look. */
+  --t-bg:        #f3f5f4;
+  --t-bgPanel:   #ecefee;
+  --t-bgCard:    #ffffff;
+  --t-bgDeep:    #f3f5f4;
+  --t-ink:       #0c1312;
+  --t-inkDim:    #3a4543;
+  --t-inkMute:   #5d6967;
+  --t-teal:      #0c1312;
+  --t-tealMid:   #087a80;
+  --t-tealLight: #066469;
+  --t-tealGlow:  rgba(8,122,128,0.09);
+  --t-terra:     #d4392d;
+  --t-terraText: #c2352a;
+  --t-cream:     #f3f5f4;
+  --t-onTeal:    #f3f5f4; /* text on a teal or terra fill */
+  --t-shimmer-hi: #3cc4c2;
 
   /* Derived surface / border tokens */
-  --t-navBg:     rgba(244,240,232,0.88);
-  --t-border1:   rgba(26,26,26,0.07);
-  --t-border2:   rgba(26,26,26,0.10);
-  --t-border3:   rgba(26,26,26,0.14);
-  --t-surface1:  rgba(26,26,26,0.025);
-  --t-surface2:  rgba(26,26,26,0.04);
-  --t-overlay:   #f0ebe2;
-  --t-overlayBorder: rgba(26,26,26,0.10);
+  --t-navBg:     rgba(243,245,244,0.82);
+  --t-border1:   rgba(12,30,28,0.07);
+  --t-border2:   rgba(12,30,28,0.10);
+  --t-border3:   rgba(12,30,28,0.16);
+  --t-surface1:  rgba(255,255,255,0.7);
+  --t-surface2:  #f6f8f7;
+  --t-overlay:   #ffffff;
+  --t-overlayBorder: rgba(12,30,28,0.10);
 
   /* Toggle active pill */
-  --t-toggleActiveBg:   #1a1a1a;
-  --t-toggleActiveText: #f4f0e8;
+  --t-toggleActiveBg:   #0c1312;
+  --t-toggleActiveText: #f3f5f4;
+
+}
+
+/* Fonts: the homepage's. Declared on body, where next/font puts the
+   --font-hm-display / --font-geist variables (HM_FONTS on <body>). */
+body {
+  --t-font-serif: var(--font-hm-display), 'Bricolage Grotesque', system-ui, sans-serif;
+  --t-font-sans:  var(--font-geist), 'Geist', system-ui, sans-serif;
+  --t-font-mono:  var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace;
+  --font-sans: var(--font-geist), 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-hm-display), 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--t-font-sans);
 }
 
 /* ── Dark theme ────────────────────────────────────────────────────────────── */
 html.dark {
-  --background: #0d0d0d;
-  --foreground: #f4f0e8;
+  --background: #0a0c0c;
+  --foreground: #eaf0ef;
 
-  --t-bg:        #0d0d0d;
-  --t-bgPanel:   #141414;
-  --t-bgCard:    #1a1a1a;
-  --t-bgDeep:    #0d0d0d;
-  --t-ink:       #f4f0e8;
-  --t-inkDim:    rgba(244,240,232,0.55);
-  --t-inkMute:   rgba(244,240,232,0.32);
-  --t-teal:      #01696f;
-  --t-tealMid:   #02888f;
-  --t-tealLight: #5fc4c8;
-  --t-tealGlow:  rgba(2,136,143,0.25);
-  --t-terra:     #a84b2f;
-  --t-terraText: #e0805c; /* terra lifted for text on dark */
-  --t-cream:     #f4f0e8;
-  --t-shimmer-hi: #f4f0e8; /* dark theme: keep cream */
+  --t-bg:        #0a0c0c;
+  --t-bgPanel:   #0d1010;
+  --t-bgCard:    #121616;
+  --t-bgDeep:    #0a0c0c;
+  --t-ink:       #eaf0ef;
+  --t-inkDim:    #b4bfbd;
+  --t-inkMute:   #84908d;
+  --t-teal:      #eaf0ef;
+  --t-tealMid:   #3cc4c2;
+  --t-tealLight: #3cc4c2;
+  --t-tealGlow:  rgba(60,196,194,0.13);
+  --t-terra:     #ff6b5e;
+  --t-terraText: #ff6b5e;
+  --t-cream:     #eaf0ef;
+  --t-onTeal:    #0a0f0e;
+  --t-shimmer-hi: #eaf0ef;
 
-  --t-navBg:     rgba(13,13,13,0.75);
-  --t-border1:   rgba(244,240,232,0.06);
-  --t-border2:   rgba(244,240,232,0.08);
-  --t-border3:   rgba(244,240,232,0.12);
-  --t-surface1:  rgba(244,240,232,0.02);
-  --t-surface2:  rgba(244,240,232,0.04);
-  --t-overlay:   rgba(16,20,20,0.98);
-  --t-overlayBorder: rgba(244,240,232,0.10);
+  --t-navBg:     rgba(10,12,12,0.75);
+  --t-border1:   rgba(226,240,238,0.06);
+  --t-border2:   rgba(226,240,238,0.085);
+  --t-border3:   rgba(226,240,238,0.15);
+  --t-surface1:  rgba(255,255,255,0.035);
+  --t-surface2:  #171c1c;
+  --t-overlay:   rgba(18,22,22,0.98);
+  --t-overlayBorder: rgba(226,240,238,0.10);
 
-  --t-toggleActiveBg:   #f4f0e8;
-  --t-toggleActiveText: #0d0d0d;
+  --t-toggleActiveBg:   #eaf0ef;
+  --t-toggleActiveText: #0a0c0c;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
-    --background: #0d0d0d;
-    --foreground: #f4f0e8;
+    --background: #0a0c0c;
+    --foreground: #eaf0ef;
 
-    --t-bg:        #0d0d0d;
-    --t-bgPanel:   #141414;
-    --t-bgCard:    #1a1a1a;
-    --t-bgDeep:    #0d0d0d;
-    --t-ink:       #f4f0e8;
-    --t-inkDim:    rgba(244,240,232,0.55);
-    --t-inkMute:   rgba(244,240,232,0.32);
-    --t-teal:      #01696f;
-    --t-tealMid:   #02888f;
-    --t-tealLight: #5fc4c8;
-    --t-tealGlow:  rgba(2,136,143,0.25);
-    --t-terra:     #a84b2f;
-    --t-terraText: #e0805c; /* terra lifted for text on dark */
-    --t-cream:     #f4f0e8;
+    --t-bg:        #0a0c0c;
+    --t-bgPanel:   #0d1010;
+    --t-bgCard:    #121616;
+    --t-bgDeep:    #0a0c0c;
+    --t-ink:       #eaf0ef;
+    --t-inkDim:    #b4bfbd;
+    --t-inkMute:   #84908d;
+    --t-teal:      #eaf0ef;
+    --t-tealMid:   #3cc4c2;
+    --t-tealLight: #3cc4c2;
+    --t-tealGlow:  rgba(60,196,194,0.13);
+    --t-terra:     #ff6b5e;
+    --t-terraText: #ff6b5e;
+    --t-cream:     #eaf0ef;
+    --t-onTeal:    #0a0f0e;
+    --t-shimmer-hi: #eaf0ef;
 
-    --t-navBg:     rgba(13,13,13,0.75);
-    --t-border1:   rgba(244,240,232,0.06);
-    --t-border2:   rgba(244,240,232,0.08);
-    --t-border3:   rgba(244,240,232,0.12);
-    --t-surface1:  rgba(244,240,232,0.02);
-    --t-surface2:  rgba(244,240,232,0.04);
-    --t-overlay:   rgba(16,20,20,0.98);
-    --t-overlayBorder: rgba(244,240,232,0.10);
+    --t-navBg:     rgba(10,12,12,0.75);
+    --t-border1:   rgba(226,240,238,0.06);
+    --t-border2:   rgba(226,240,238,0.085);
+    --t-border3:   rgba(226,240,238,0.15);
+    --t-surface1:  rgba(255,255,255,0.035);
+    --t-surface2:  #171c1c;
+    --t-overlay:   rgba(18,22,22,0.98);
+    --t-overlayBorder: rgba(226,240,238,0.10);
 
-    --t-toggleActiveBg:   #f4f0e8;
-    --t-toggleActiveText: #0d0d0d;
+    --t-toggleActiveBg:   #eaf0ef;
+    --t-toggleActiveText: #0a0c0c;
   }
 }
 
 html.light {
-  --background: #f4f0e8;
-  --foreground: #1a1a1a;
+  --background: #f3f5f4;
+  --foreground: #0c1312;
 }
 
 /* ── Accent channel ─────────────────────────────────────────────────────────
    RGB triplet of the accent, for translucent fills: rgba(var(--t-accent-rgb), a).
    Same value in light and dark, matching the rgba(2,136,143,a) literals it replaced. */
 :root {
-  --t-accent-rgb: 2,136,143;
+  --t-accent-rgb: 8,122,128;
   /* Always-dark product preview cards (e.g. the Radar teaser on results). */
   --t-previewBg: #060e10;
   --t-previewAccent-rgb: 95,196,200;
@@ -151,6 +168,7 @@ html[data-platform="threads"] {
   --t-inkDim:    rgba(10,10,10,0.58);
   --t-inkMute:   rgba(10,10,10,0.36);
   --t-teal:      #0a0a0a;
+  --t-onTeal:    #fafafa;
   --t-tealMid:   #5c5c5c;
   --t-tealLight: #0a0a0a;
   --t-tealGlow:  rgba(0,0,0,0.08);
@@ -172,6 +190,7 @@ html.dark[data-platform="threads"] {
   --t-inkDim:    rgba(245,245,245,0.58);
   --t-inkMute:   rgba(245,245,245,0.34);
   --t-teal:      #262626;
+  --t-onTeal:    #fafafa;
   --t-tealMid:   #9a9a9a;
   --t-tealLight: #ffffff;
   --t-tealGlow:  rgba(255,255,255,0.14);
@@ -194,6 +213,7 @@ html.dark[data-platform="threads"] {
     --t-inkDim:    rgba(245,245,245,0.58);
     --t-inkMute:   rgba(245,245,245,0.34);
     --t-teal:      #262626;
+    --t-onTeal:    #fafafa;
     --t-tealMid:   #9a9a9a;
     --t-tealLight: #ffffff;
     --t-tealGlow:  rgba(255,255,255,0.14);
@@ -349,13 +369,13 @@ body {
 
 /* Cream dot grid for light sections */
 .bg-dot-grid-light {
-  background-image: radial-gradient(circle, rgba(1,105,111,0.1) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(8,122,128,0.08) 1px, transparent 1px);
   background-size: 28px 28px;
 }
 
 /* Gradient mesh text */
 .text-gradient-brand {
-  background: linear-gradient(125deg, #01696f 0%, #4db8bb 45%, #a84b2f 100%);
+  background: linear-gradient(125deg, #087a80 0%, #3cc4c2 55%, #7c5cd6 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -370,7 +390,7 @@ body {
   position: absolute;
   inset: -1px;
   border-radius: inherit;
-  background: linear-gradient(135deg, #01696f 0%, #4db8bb 50%, #a84b2f 100%);
+  background: linear-gradient(135deg, #087a80 0%, #3cc4c2 55%, #7c5cd6 100%);
   z-index: -1;
   opacity: 0.7;
 }
@@ -557,6 +577,10 @@ body.tutorial-active #tutorial-triage-buttons {
   .export-collapse { display: none !important; }
 }
 
+/* The export video player is always dark, in both themes, so its controls
+   use the dark-theme text colours whatever the page theme is. */
+.export-player { --t-ink: #eaf0ef; --t-inkDim: #b4bfbd; --t-inkMute: #84908d; color: var(--t-ink); }
+
 /* Homepage "How it works" video card. Phones: text, player, guide button.
    Wide screens: text and button stacked on the left, centered against the
    player on the right. */
@@ -572,175 +596,8 @@ body.tutorial-active #tutorial-triage-buttons {
   .flow-video-player { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
 }
 
-/* ── Sitewide announcement strip (components/AnnouncementBar.tsx) ─────────── */
-html[data-announce="off"] .wu-announce { display: none; }
-.wu-announce {
-  position: relative;
-  z-index: 101;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 40px;
-  padding: 0 44px 0 16px;
-  background: linear-gradient(90deg, #0b2426 0%, #01474b 50%, #0b2426 100%);
-  color: #f4f0e8;
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 13.5px;
-  line-height: 1.35;
-  border-bottom: 1px solid rgba(244, 240, 232, 0.12);
-}
-.wu-announce__link {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 6px 12px;
-  padding: 9px 0;
-  color: inherit;
-  text-decoration: none;
-}
-.wu-announce__badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 3px 9px;
-  border-radius: 999px;
-  background: rgba(224, 128, 92, 0.16);
-  color: #f0a283;
-  font-family: 'DM Mono', 'Fira Mono', monospace;
-  font-size: 10.5px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-.wu-announce__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #e0805c;
-  animation: wu-announce-pulse 2.2s ease-in-out infinite;
-}
-.wu-announce__text--short { display: none; }
-.wu-announce__cta {
-  font-weight: 600;
-  white-space: nowrap;
-  text-decoration: underline;
-  text-decoration-color: rgba(244, 240, 232, 0.4);
-  text-underline-offset: 3px;
-  transition: text-decoration-color 0.15s ease;
-}
-.wu-announce__link:hover .wu-announce__cta,
-.wu-announce__link:focus-visible .wu-announce__cta { text-decoration-color: #f4f0e8; }
-.wu-announce__link:focus-visible,
-.wu-announce__close:focus-visible { outline: 2px solid #f0a283; outline-offset: 2px; border-radius: 6px; }
-.wu-announce__close {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border: 0;
-  border-radius: 8px;
-  background: transparent;
-  color: rgba(244, 240, 232, 0.72);
-  cursor: pointer;
-}
-.wu-announce__close:hover { background: rgba(244, 240, 232, 0.1); color: #f4f0e8; }
-@keyframes wu-announce-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(224, 128, 92, 0.5); }
-  50% { box-shadow: 0 0 0 5px rgba(224, 128, 92, 0); }
-}
-@media (max-width: 640px) {
-  .wu-announce { font-size: 13px; }
-  .wu-announce__text--long { display: none; }
-  .wu-announce__text--short { display: inline; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .wu-announce__dot { animation: none; }
-}
-
-/* ── Account pages (components/auth/AuthShell.tsx + AuthControls.tsx) ─────── */
-.wu-auth {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  background: var(--t-bg);
-  color: var(--t-ink);
-  font-family: 'DM Sans', system-ui, sans-serif;
-}
-@media (min-width: 960px) {
-  .wu-auth:not(.wu-auth--compact) { grid-template-columns: minmax(380px, 0.9fr) minmax(0, 1.1fr); }
-}
-.wu-auth-aside {
-  display: none;
-  position: relative;
-  overflow: hidden;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 40px;
-  padding: 36px 44px 40px;
-  background:
-    radial-gradient(90% 70% at 0% 100%, rgba(1, 105, 111, 0.55) 0%, transparent 60%),
-    radial-gradient(60% 50% at 100% 0%, rgba(168, 75, 47, 0.22) 0%, transparent 70%),
-    #0b2426;
-  color: #f4f0e8;
-}
-@media (min-width: 960px) { .wu-auth-aside { display: flex; } }
-.wu-auth-orbit { position: absolute; right: -180px; top: 50%; width: 520px; height: 520px; transform: translateY(-50%); pointer-events: none; }
-.wu-auth-orbit span { position: absolute; inset: 0; border-radius: 50%; border: 1px solid rgba(244, 240, 232, 0.08); }
-.wu-auth-orbit span:nth-child(2) { inset: 80px; border-color: rgba(244, 240, 232, 0.11); }
-.wu-auth-orbit span:nth-child(3) { inset: 170px; border-color: rgba(240, 162, 131, 0.22); animation: wu-auth-spin 40s linear infinite; border-style: dashed; }
-@keyframes wu-auth-spin { to { transform: rotate(360deg); } }
-.wu-auth-brand { position: relative; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; font-family: 'Instrument Serif', Georgia, serif; font-size: 20px; letter-spacing: -0.01em; }
-.wu-auth-brand img { border-radius: 8px; object-fit: contain; box-shadow: 0 4px 14px rgba(1, 105, 111, 0.35); }
-.wu-auth-aside-body { position: relative; display: grid; gap: 18px; max-width: 420px; }
-.wu-auth-eyebrow { display: inline-flex; align-items: center; gap: 8px; margin: 0; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #f0a283; }
-.wu-auth-dot { width: 7px; height: 7px; border-radius: 50%; background: #e0805c; }
-.wu-auth-headline { margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(36px, 3.4vw, 48px); line-height: 1.04; letter-spacing: -0.025em; }
-.wu-auth-points { display: grid; gap: 10px; margin: 6px 0 0; padding: 0; list-style: none; font-size: 14.5px; color: rgba(244, 240, 232, 0.82); }
-.wu-auth-points li { display: flex; align-items: center; gap: 10px; }
-.wu-auth-points svg { color: #5fc4c9; flex-shrink: 0; }
-.wu-auth-teaser { position: relative; display: grid; gap: 6px; max-width: 420px; padding: 16px 18px; border-radius: 14px; background: rgba(244, 240, 232, 0.06); border: 1px solid rgba(244, 240, 232, 0.14); color: inherit; text-decoration: none; transition: background 0.15s, border-color 0.15s; }
-.wu-auth-teaser:hover { background: rgba(244, 240, 232, 0.1); border-color: rgba(244, 240, 232, 0.24); }
-.wu-auth-teaser:focus-visible { outline: 2px solid #f0a283; outline-offset: 3px; }
-.wu-auth-teaser-badge { font-family: 'DM Mono', monospace; font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #f0a283; }
-.wu-auth-teaser-text { font-size: 14px; line-height: 1.45; color: rgba(244, 240, 232, 0.88); }
-.wu-auth-teaser-cta { font-size: 13.5px; font-weight: 600; }
-
-.wu-auth-main { position: relative; display: flex; align-items: center; justify-content: center; padding: 40px 16px; overflow: hidden; }
-.wu-auth-main::before { content: ''; position: absolute; top: -260px; left: 50%; width: 640px; height: 640px; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(circle, var(--t-tealGlow) 0%, transparent 70%); pointer-events: none; }
-.wu-auth-column { position: relative; width: 100%; max-width: 420px; }
-.wu-auth-mobile-brand { margin-bottom: 24px; color: var(--t-ink); }
-@media (min-width: 960px) { .wu-auth:not(.wu-auth--compact) .wu-auth-mobile-brand { display: none; } }
-.wu-auth-card { padding: 32px 28px; border-radius: 20px; background: var(--t-overlay); border: 1px solid var(--t-border2); box-shadow: 0 24px 60px -32px rgba(11, 36, 38, 0.35); }
-@media (min-width: 960px) { .wu-auth:not(.wu-auth--compact) .wu-auth-card { background: transparent; border-color: transparent; box-shadow: none; padding: 0; } }
-.wu-auth-title { margin: 0 0 8px; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: clamp(30px, 4vw, 38px); line-height: 1.08; letter-spacing: -0.02em; color: var(--t-ink); }
-.wu-auth-subtitle { margin: 0 0 24px; font-size: 14.5px; line-height: 1.55; color: var(--t-inkDim); }
-.wu-auth-footer { margin-top: 22px; text-align: center; font-size: 13.5px; color: var(--t-inkDim); }
-
-.wu-auth-field { display: flex; flex-direction: column; gap: 6px; }
-.wu-auth-label { font-size: 13px; font-weight: 600; color: var(--t-ink); }
-.wu-auth-input-wrap { position: relative; }
-.wu-auth-input { width: 100%; height: 46px; padding: 0 14px; border-radius: 12px; font: inherit; font-size: 15px; color: var(--t-ink); background: var(--t-surface1); border: 1px solid var(--t-border2); outline: none; transition: border-color 0.15s, box-shadow 0.15s, background 0.15s; }
-.wu-auth-input--with-toggle { padding-right: 46px; }
-.wu-auth-input:hover { border-color: var(--t-border3); }
-.wu-auth-input:focus { border-color: var(--t-tealMid); box-shadow: 0 0 0 3px var(--t-tealGlow); background: var(--t-bg); }
-.wu-auth-eye { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 34px; height: 34px; border: 0; border-radius: 8px; background: transparent; color: var(--t-inkDim); cursor: pointer; }
-.wu-auth-eye:hover { color: var(--t-ink); background: var(--t-surface2); }
-.wu-auth-eye:focus-visible { outline: 2px solid var(--t-tealMid); outline-offset: 1px; }
-.wu-auth-hint { margin: 0; font-size: 12px; color: var(--t-inkDim); }
-.wu-auth-error { display: flex; align-items: flex-start; gap: 8px; margin: 0; padding: 10px 12px; border-radius: 10px; font-size: 13px; line-height: 1.45; color: var(--t-terraText); background: rgba(168, 75, 47, 0.08); border: 1px solid rgba(168, 75, 47, 0.22); }
-.wu-auth-error svg { flex-shrink: 0; margin-top: 1px; }
-.wu-auth-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 48px; padding: 0 16px; border-radius: 12px; font: inherit; font-size: 15px; font-weight: 600; color: #f4f0e8; background: var(--t-teal); border: 1px solid rgba(2, 136, 143, 0.5); cursor: pointer; transition: filter 0.15s, transform 0.1s, opacity 0.15s; }
-.wu-auth-button:hover:not(:disabled) { filter: brightness(1.12); }
-.wu-auth-button:active:not(:disabled) { transform: translateY(1px); }
-.wu-auth-button:focus-visible { outline: 2px solid var(--t-tealMid); outline-offset: 2px; }
-.wu-auth-button:disabled { opacity: 0.65; cursor: default; }
-.wu-auth-spinner { width: 15px; height: 15px; border-radius: 50%; border: 2px solid rgba(244, 240, 232, 0.35); border-top-color: #f4f0e8; animation: wu-auth-spin 0.7s linear infinite; }
-@media (prefers-reduced-motion: reduce) {
-  .wu-auth-orbit span, .wu-auth-spinner { animation: none; }
-}
+/* Nov 2026 restyle: older pages set headings in the display font through
+   inline styles at weight 400 (right for the old serif). The new display
+   face needs weight to read like the homepage. */
+:is(h1, h2, h3)[style*="--t-font-serif"] { font-weight: 750 !important; letter-spacing: -0.03em; }
+:not(h1, h2, h3)[style*="--t-font-serif"] { font-weight: 650 !important; }

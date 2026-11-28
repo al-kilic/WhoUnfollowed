@@ -1,0 +1,146 @@
+/* /pricing in the homepage's look. Builds on home-*.css (.plan, .bill,
+   .pbtn, .qa details); only what the pricing page adds lives here.
+   Nov 2026 redesign: compact cards with the button under the price, the
+   Pro AI perks, a full comparison table and a slim phone bar. */
+.hm .pr-sec{padding-top:clamp(20px,3vw,40px);padding-bottom:clamp(24px,3vw,40px)}
+.hm .pr-sec .sec-head{justify-items:center;margin-bottom:14px;gap:8px}
+.hm .pr-sec .pill{font-size:11.5px}
+.hm .pr-h1{font-size:clamp(30px,3.6vw,46px);letter-spacing:-.04em;line-height:1.05}
+.hm .pr-sec .sec-head p{max-width:600px;font-size:15px;line-height:1.5;margin:0}
+.hm .pr-wrap{white-space:normal;max-width:620px;text-align:center;line-height:1.45;padding:5px 10px}
+
+/* Plans: three side by side, the same height, button right under the price. */
+.hm .plans.three{grid-template-columns:repeat(3,minmax(0,1fr));max-width:1100px}
+.hm .pr-life .pr-pts li svg{color:var(--warn)}
+.hm .pr-note{color:var(--faint);font-size:12px}
+.hm .pr-err{margin:0;font-size:13px;color:var(--bad)}
+.hm .pr-life.sold{opacity:.85}
+.hm .pr-sold{font:700 20px var(--display)}
+.hm .pr-member{font-weight:600;color:var(--warn);text-align:center;margin:0}
+
+/* Perks: one feature per row, text and a small picture, alternating. */
+.hm .pr-perks{padding-block:clamp(40px,6vw,80px);border-top:1px solid var(--line)}
+.hm .pr-perks .sec-head{margin-bottom:clamp(24px,4vw,48px)}
+.hm .pr-perk-list{display:grid;gap:clamp(28px,5vw,56px);max-width:960px;margin:0 auto}
+.hm .pr-perk{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,48px);align-items:center}
+.hm .pr-perk.flip .pr-perk-t{order:2}
+.hm .pr-perk-t{display:grid;gap:10px;justify-items:start}
+.hm .pr-perk-t h3{margin:0;font:700 clamp(20px,2.2vw,26px)/1.2 var(--display);letter-spacing:-.025em}
+.hm .pr-perk-t p{margin:0;font-size:15px;line-height:1.6;color:var(--ink2)}
+.hm .pr-perk-b{margin-top:6px;padding:8px 14px;font-size:13.5px}
+
+/* The pictures: small labelled samples in the page's own look. */
+.hm .pv{position:relative;margin:0;border:1px solid var(--line);border-radius:18px;background:var(--surface);padding:18px;min-height:180px;display:grid;gap:10px;align-content:center;font-size:13.5px;line-height:1.45;color:var(--ink2)}
+.hm .pv p{margin:0}
+.hm .pv-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.hm .pv-head b{font-weight:600;color:var(--ink)}
+.hm .pv-q{justify-self:end;max-width:80%;padding:9px 12px;border-radius:14px 14px 4px 14px;background:color-mix(in oklab,var(--accent) 14%,transparent);color:var(--ink)}
+.hm .pv-a{display:flex;gap:10px;align-items:flex-start;max-width:92%}
+.hm .pv-a p{padding:9px 12px;border-radius:14px 14px 14px 4px;background:var(--surface2,var(--bg));color:var(--ink)}
+.hm .pv-dot{flex:none;width:22px;height:22px;margin-top:4px;border-radius:50%;background:var(--accent)}
+.hm .pv-badge{font-size:12px;font-weight:600;color:var(--good);background:var(--good-soft);padding:3px 9px;border-radius:999px}
+.hm .pv-list{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.hm .pv-list li{display:flex;gap:9px;align-items:flex-start}
+.hm .pv-fix,.hm .pv-ok{flex:none;width:16px;height:16px;margin-top:2px;border-radius:50%;display:grid;place-items:center}
+.hm .pv-fix{border:2px solid var(--warn)}
+.hm .pv-ok{background:var(--good);color:var(--surface)}
+.hm .pv-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.hm .pv-tabs span{font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line2);color:var(--mute)}
+.hm .pv-tabs span.on{background:color-mix(in oklab,var(--accent) 14%,transparent);border-color:var(--accent);color:var(--ink)}
+.hm .pv-quote{font:600 17px/1.35 var(--display);letter-spacing:-.015em;color:var(--ink)}
+.hm .pv-week{display:grid;grid-template-columns:repeat(7,minmax(max-content,1fr));gap:6px}
+.hm .pv-week div{display:grid;gap:6px;align-content:start;justify-items:center;padding:8px 2px;border:1px solid var(--line);border-radius:10px;min-height:68px}
+.hm .pv-week span{font-size:11.5px;color:var(--mute)}
+.hm .pv-week b{font-size:9.5px;font-weight:600;line-height:1.2;white-space:nowrap;color:var(--ink);background:color-mix(in oklab,var(--accent) 16%,transparent);padding:3px 4px;border-radius:6px}
+.hm .pv-week div.on{border-color:color-mix(in oklab,var(--accent) 45%,transparent)}
+.hm .pv-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--line)}
+.hm .pv-av{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:600;color:var(--mute);background:color-mix(in oklab,var(--ink) 10%,transparent)}
+.hm .pv-h{color:var(--ink);min-width:0;overflow:hidden;text-overflow:ellipsis}
+.hm .pv-gone{margin-left:auto;font-size:11.5px;font-weight:600;color:var(--bad);background:color-mix(in oklab,var(--bad) 12%,transparent);padding:3px 8px;border-radius:999px}
+.hm .pv-chart{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:110px auto;column-gap:8px;row-gap:6px}
+.hm .pv-y{grid-row:1;writing-mode:vertical-rl;transform:rotate(180deg);font-size:11px;color:var(--mute);text-align:center}
+.hm .pv-bars{grid-row:1;grid-column:2;display:flex;align-items:flex-end;gap:10px;border-left:1px solid var(--line2);border-bottom:1px solid var(--line2);padding:0 8px}
+.hm .pv-bars i{flex:1;border-radius:6px 6px 2px 2px;background:color-mix(in oklab,var(--accent) 40%,transparent)}
+.hm .pv-x{grid-row:2;grid-column:2;display:flex;gap:10px;padding:0 8px}
+.hm .pv-x span{flex:1;text-align:center;font-size:11px;color:var(--mute)}
+
+/* Comparison table. */
+.hm .pr-compare{padding-block:clamp(40px,6vw,80px);border-top:1px solid var(--line)}
+.hm .pr-tbl-wrap{max-width:960px;margin:0 auto;overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+.hm .pr-tbl-wrap:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.hm .pr-tbl{width:100%;min-width:560px;border-collapse:collapse;font-size:13.5px}
+.hm .pr-tbl th,.hm .pr-tbl td{padding:10px 14px;border-bottom:1px solid var(--line);text-align:center;vertical-align:middle}
+.hm .pr-tbl thead th{position:sticky;top:0;background:var(--surface);font-weight:600;font-size:13px}
+.hm .pr-tbl th[scope=row]{text-align:left;font-weight:400;color:var(--ink2);line-height:1.4;width:52%}
+.hm .pr-tbl thead th:first-child{text-align:left}
+.hm .pr-tbl .hl{background:color-mix(in oklab,var(--accent) 6%,transparent)}
+.hm .pr-tbl thead th.hl{color:var(--accent)}
+.hm .pr-grp th{text-align:left;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);background:var(--bg);font-weight:600}
+.hm .pr-tbl tbody:last-child tr:last-child>*{border-bottom:0}
+.hm .pr-yes{display:inline-flex;color:var(--accent)}
+.hm .pr-no{color:var(--faint);font-size:18px;line-height:1}
+.hm .pr-txt{font-size:12.5px;color:var(--ink2)}
+.hm .pr-foot{max-width:960px;margin:12px auto 0;font-size:12.5px;line-height:1.5;color:var(--mute)}
+
+/* Privacy promise and FAQ. */
+.hm .pr-priv .wrap{max-width:860px}
+.hm .pr-priv-c{display:flex;gap:16px;align-items:flex-start;padding:22px 24px;border-radius:20px;background:var(--surface);border:1px solid var(--line)}
+.hm .pr-priv-i{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--good);background:var(--good-soft)}
+.hm .pr-priv-c b{display:block;font:700 18px/1.25 var(--display);letter-spacing:-.02em;margin-bottom:8px}
+.hm .pr-priv-c ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.hm .pr-priv-c li{display:flex;gap:9px;font-size:14px;color:var(--ink2)}
+.hm .pr-priv-c li svg{flex:none;margin-top:3px;color:var(--accent)}
+.hm .pr-faq .wrap{max-width:860px}
+
+/* Phone bar: hidden on wide screens, slides in once the cards are gone. */
+.hm .pr-sticky{display:none}
+@media (max-width:1000px){
+  .hm .plans.three{grid-template-columns:minmax(0,1fr);max-width:520px}
+  .hm .plans .plan.hl{order:-1}
+  .hm .pr-perk,.hm .pr-perk.flip{grid-template-columns:minmax(0,1fr)}
+  .hm .pr-perk.flip .pr-perk-t{order:0}
+  .hm .pr-sticky{display:flex;position:fixed;left:12px;right:12px;bottom:12px;z-index:40;align-items:center;justify-content:space-between;gap:12px;padding:10px 10px 10px 16px;border-radius:16px;background:var(--surface);border:1px solid var(--line2);box-shadow:0 12px 32px -12px rgba(0,0,0,.45);transform:translateY(140%);transition:transform .25s var(--ease)}
+  .hm .pr-sticky.on{transform:none}
+  .hm .pr-sticky div{display:grid;line-height:1.25}
+  .hm .pr-sticky b{font:700 16px var(--display)}
+  .hm .pr-sticky span{font-size:12px;color:var(--mute)}
+  .hm .pr-sticky .pbtn{width:auto;flex:none;padding:10px 16px}
+}
+@media (max-width:560px){.hm .pv-week{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (prefers-reduced-motion: reduce){.hm .pr-sticky{transition:none}}
+
+/* The site header is see-through (with a blur that not every browser keeps),
+   so the cards' text showed through it while scrolling. On this page it is
+   solid. Scoped to .pr-page so it never leaks to other pages. */
+.pr-page .hm-hdr .nav,.pr-page .hm-hdr .nav.scrolled{background:var(--bg)}
+
+/* ---------- Plan cards v2 on /pricing ----------
+   Six slots per card (head, price, for, action, points, foot). On wide screens
+   the three cards share one grid through subgrid, so prices, buttons, points
+   and feet sit on the same lines across cards. */
+.hm .pr-sec .bill{margin:0 auto 18px}
+.hm .pr-for{display:grid;gap:6px;align-content:start}
+.hm .pr-for p{margin:0;font-size:13.5px;line-height:1.5;color:var(--mute)}
+.hm .pr-for .pr-pm{color:var(--ink2);font-weight:500}
+.hm .pr-for .pr-launch{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--warn)}
+.hm .pr-launch i{flex:none;width:6px;height:6px;margin-top:6px;border-radius:50%;background:currentColor}
+.hm .pr-std{font:500 15px var(--ui);color:var(--faint);text-decoration-thickness:1px}
+.hm .pr-act{display:grid;gap:8px;align-content:start}
+.hm .pr-small{margin:0;font-size:12px;line-height:1.45;color:var(--mute);text-align:center}
+.hm .pr-pts{list-style:none;padding:14px 0 0;margin:0;display:grid;gap:9px;align-content:start;border-top:1px solid var(--line)}
+.hm .pr-pts li{display:flex;gap:10px;font-size:13.5px;line-height:1.4;color:var(--ink2)}
+.hm .pr-pts li svg{flex:none;margin-top:3px;color:var(--accent)}
+.hm .pr-life .pr-pts li svg{color:var(--warn)}
+.hm .pr-foot-s{display:grid;gap:12px;align-content:end}
+.hm .pr-cmp{margin:0}
+.hm .pr-seats{display:grid;gap:7px;padding:12px 14px;border-radius:14px;background:var(--warn-soft)}
+.hm .pr-seats-h{display:flex;justify-content:space-between;font-size:12px;font-weight:500;color:var(--ink2)}
+.hm .pr-seats-h b{color:var(--warn);font-variant-numeric:tabular-nums}
+.hm .pr-seats .meter{height:4px;border-radius:99px;background:color-mix(in oklab,var(--warn) 22%,transparent);overflow:hidden}
+.hm .pr-seats .meter i{display:block;height:100%;border-radius:inherit;background:var(--warn)}
+.hm .pr-opt{display:flex;gap:9px;align-items:flex-start;font-size:12px;line-height:1.45;color:var(--mute);cursor:pointer}
+.hm .pr-opt input{flex:none;width:15px;height:15px;margin:1px 0 0;accent-color:var(--accent)}
+@media (min-width:1001px){
+  .hm .plans.three{grid-template-rows:repeat(6,auto);row-gap:14px;column-gap:18px;align-items:stretch}
+  .hm .plans.three .plan{display:grid;grid-row:span 6;grid-template-rows:subgrid;gap:14px}
+}

@@ -8,6 +8,12 @@ export interface AuthState {
   userEmail: string | null;
   isPro: boolean;
   isInsider: boolean;
+  // Pro AI access (subscription, Lifetime or a running legacy unlock).
+  hasProAi: boolean;
+  // Old one-time Pro unlock still running (coach on trial credits; offer the upgrade).
+  isLegacyPro: boolean;
+  // Optional name from You > profile.
+  displayName: string | null;
   // False until the login state is known. Lets UI that differs by login state
   // (the nav's account area) wait instead of flashing the logged-out version.
   ready: boolean;
@@ -15,11 +21,11 @@ export interface AuthState {
 
 export type ServerAuthState = Omit<AuthState, 'ready'>;
 
-const LOGGED_OUT: ServerAuthState = { userId: null, userEmail: null, isPro: false, isInsider: false };
+const LOGGED_OUT: ServerAuthState = { userId: null, userEmail: null, isPro: false, isInsider: false, hasProAi: false, isLegacyPro: false, displayName: null };
 
 const AuthContext = createContext<AuthState>({ ...LOGGED_OUT, ready: false });
 
-// Provides the current login state to client components (notably SiteNav).
+// Provides the current login state to client components (notably the site header).
 //
 // The root layout renders this without a value: reading the session cookie
 // there would make every page, marketing and blog included, render per

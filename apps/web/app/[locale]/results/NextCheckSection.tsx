@@ -6,7 +6,7 @@ import { track, Events } from '@/lib/analytics';
 import { EmailOptInForm } from '@/components/EmailOptInForm';
 import { keepAnonymousExportsOnThisDevice } from '@/lib/localOwnership';
 import { startCheckout, type CheckoutPlan } from '@/lib/checkoutClient';
-import { unlockPricesAt, isLaunchPricing, STANDARD_UNLOCK_PRICE_USD } from '@/lib/pricing';
+import { proAiPricesAt, isLaunchPricing, STANDARD_PRO_AI_PRICE_USD } from '@/lib/pricing';
 import type { AppLocale } from '@/i18n/routing';
 import { getNextCheckContent } from './nextCheck.content';
 
@@ -40,13 +40,13 @@ export function NextCheckSection({ locale, isPro, userEmail, nonFollowersCount }
     if (!isPro) track(Events.offerView, { placement: 'results-next-check' });
   }, [isPro]);
 
-  const prices = unlockPricesAt();
+  const prices = proAiPricesAt();
   const launch = isLaunchPricing();
   const dateLabel = reminderUntil
     ? new Date(reminderUntil).toLocaleDateString(locale, { day: 'numeric', month: 'long' })
     : '';
 
-  async function buy(plan: 'yearly' | 'monthly') {
+  async function buy(plan: 'pro_ai_yearly' | 'pro_ai_monthly') {
     setLoading(plan);
     setError(false);
     const ok = await startCheckout({ plan, placement: 'results', locale });
@@ -56,7 +56,7 @@ export function NextCheckSection({ locale, isPro, userEmail, nonFollowersCount }
   const reminder = (
     <div style={{ display: 'grid', gap: 10, alignContent: 'start', padding: '22px 22px 20px', borderRadius: 18, background: T.surface1, border: `1px solid ${T.border2}` }}>
       <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>{c.reminderEyebrow}</span>
-      <h2 style={{ fontFamily: T.serif, fontWeight: 400, fontSize: 23, lineHeight: 1.2, letterSpacing: '-0.01em', color: T.ink, margin: 0 }}>{c.reminderTitle}</h2>
+      <h2 style={{ fontFamily: T.sans, fontWeight: 600, fontSize: 20, lineHeight: 1.25, letterSpacing: '-0.02em', color: T.ink, margin: 0 }}>{c.reminderTitle}</h2>
       {reminderUntil || already ? (
         <p role="status" style={{ margin: 0, fontSize: 14, lineHeight: 1.55, color: T.tealMid, fontWeight: 600 }}>
           {already ? c.reminderAlready : fill(c.reminderDone, { date: dateLabel })}
@@ -100,7 +100,7 @@ export function NextCheckSection({ locale, isPro, userEmail, nonFollowersCount }
         border: `1.5px solid ${T.tealMid}`,
       }}>
         <span style={{ fontSize: 10.5, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: T.tealLight, fontFamily: T.mono }}>{c.offerEyebrow}</span>
-        <h2 style={{ fontFamily: T.serif, fontWeight: 400, fontSize: 23, lineHeight: 1.2, letterSpacing: '-0.01em', color: T.ink, margin: 0 }}>{c.offerTitle}</h2>
+        <h2 style={{ fontFamily: T.sans, fontWeight: 600, fontSize: 20, lineHeight: 1.25, letterSpacing: '-0.02em', color: T.ink, margin: 0 }}>{c.offerTitle}</h2>
         <p style={{ margin: 0, fontSize: 14, lineHeight: 1.55, color: T.inkDim }}>{c.offerBody}</p>
         {nonFollowersCount >= 300 && (
           <p style={{ margin: 0, fontSize: 13, lineHeight: 1.5, color: T.ink, background: T.surface1, border: `1px solid ${T.border1}`, borderRadius: 10, padding: '8px 11px' }}>
@@ -109,27 +109,27 @@ export function NextCheckSection({ locale, isPro, userEmail, nonFollowersCount }
         )}
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 14px', marginTop: 4 }}>
           <button
-            onClick={() => void buy('yearly')}
+            onClick={() => void buy('pro_ai_yearly')}
             disabled={loading !== null}
             style={{
-              padding: '11px 18px', borderRadius: 11, border: 'none', background: T.teal, color: T.cream,
+              padding: '11px 18px', borderRadius: 11, border: 'none', background: T.teal, color: T.onTeal,
               fontSize: 14, fontWeight: 600, fontFamily: T.sans, cursor: loading ? 'not-allowed' : 'pointer',
               opacity: loading ? 0.7 : 1, boxShadow: '0 8px 24px rgba(var(--t-accent-rgb),0.3)',
             }}
           >
-            {loading === 'yearly' ? c.redirecting : fill(c.offerCta, { price: `$${prices.yearly}` })}
+            {loading === 'pro_ai_yearly' ? c.redirecting : fill(c.offerCta, { price: `$${prices.yearly}` })}
           </button>
           <button
-            onClick={() => void buy('monthly')}
+            onClick={() => void buy('pro_ai_monthly')}
             disabled={loading !== null}
             style={{ background: 'none', border: 'none', padding: 0, fontSize: 13, color: T.inkDim, fontFamily: T.sans, textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer' }}
           >
-            {loading === 'monthly' ? c.redirecting : fill(c.offerMonthly, { price: `$${prices.monthly}` })}
+            {loading === 'pro_ai_monthly' ? c.redirecting : fill(c.offerMonthly, { price: `$${prices.monthly}` })}
           </button>
         </div>
         {launch && (
           <span style={{ fontSize: 12, fontWeight: 600, color: T.terraText }}>
-            {fill(c.offerLaunch, { std: `$${STANDARD_UNLOCK_PRICE_USD.yearly}` })}
+            {fill(c.offerLaunch, { std: `$${STANDARD_PRO_AI_PRICE_USD.yearly}` })}
           </span>
         )}
         {error && <p role="alert" style={{ margin: 0, fontSize: 12.5, color: T.terraText }}>{c.offerError}</p>}

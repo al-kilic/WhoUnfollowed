@@ -39,14 +39,14 @@ export function UnsubscribeForm({ c: base }: { c: UnsubscribeContent }) {
 
   if (state === 'done') {
     return (
-      <AuthShell compact title={c.doneTitle} subtitle={c.doneBody} footer={home}>
+      <AuthShell title={c.doneTitle} subtitle={c.doneBody} footer={home}>
         <div />
       </AuthShell>
     );
   }
 
   return (
-    <AuthShell compact title={c.title} subtitle={c.body} footer={home}>
+    <AuthShell title={c.title} subtitle={c.body} footer={home}>
       {!token ? (
         <AuthError>{c.missing}</AuthError>
       ) : (

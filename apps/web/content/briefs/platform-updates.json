@@ -1,0 +1,83 @@
+{
+  "updated": "2026-11-23",
+  "items": [
+    {
+      "id": "ig-edit-story-after-posting",
+      "platform": "instagram",
+      "kind": "feature",
+      "summary": "Stories can be edited for 15 minutes after posting (text, music, stickers, drawings), so a typo no longer means deleting the Story and losing its views.",
+      "status": "live",
+      "firstSeen": "2026-11-18",
+      "lastVerified": "2026-11-23",
+      "statusChangedAt": null,
+      "source": "https://9to5mac.com/2026/11/18/instagram-finally-lets-users-edit-stories-after-publishing-but-theres-a-catch/",
+      "note": null,
+      "supersedes": null
+    },
+    {
+      "id": "ig-content-protection",
+      "platform": "instagram",
+      "kind": "feature",
+      "summary": "Content protection: eligible creators who enroll get alerts when someone reposts their original videos. It only covers uploads made after enrolling.",
+      "status": "rolling_out",
+      "firstSeen": "2026-11-17",
+      "lastVerified": "2026-11-23",
+      "statusChangedAt": null,
+      "source": "https://www.socialmediatoday.com/news/meta-expands-content-protection-to-instagram/874965/",
+      "note": "eligible creators only, check the Professional Dashboard",
+      "supersedes": null
+    },
+    {
+      "id": "ig-content-protection-speech-match",
+      "platform": "instagram",
+      "kind": "feature",
+      "summary": "Content protection also detecting videos that copy a creator's spoken words even when the visuals were changed with AI.",
+      "status": "testing",
+      "firstSeen": "2026-11-17",
+      "lastVerified": "2026-11-23",
+      "statusChangedAt": null,
+      "source": "https://www.socialmediatoday.com/news/meta-expands-content-protection-to-instagram/874965/",
+      "note": "a small group of creators",
+      "supersedes": null
+    },
+    {
+      "id": "threads-search-filters",
+      "platform": "threads",
+      "kind": "feature",
+      "summary": "Threads search has filters for date, post type, community or topic and profile, plus exact match, so recent questions in a niche are easy to find and answer.",
+      "status": "live",
+      "firstSeen": "2026-11-10",
+      "lastVerified": "2026-11-23",
+      "statusChangedAt": null,
+      "source": "https://www.socialmediatoday.com/news/threads-adds-advanced-search-filters/874339/",
+      "note": null,
+      "supersedes": null
+    },
+    {
+      "id": "meta-creator-dashboard-web",
+      "platform": "meta",
+      "kind": "feature",
+      "summary": "Meta's Creator Dashboard works on the web: a composer for posts and Reels with live previews, bulk video upload, a content library and more insights, for Instagram and Facebook.",
+      "status": "rolling_out",
+      "firstSeen": "2026-11-18",
+      "lastVerified": "2026-11-23",
+      "statusChangedAt": null,
+      "source": "https://www.socialmediatoday.com/news/meta-brings-its-updated-creator-dashboard-to-the-web/875143/",
+      "note": null,
+      "supersedes": null
+    },
+    {
+      "id": "tiktok-music-impact-2026",
+      "platform": "tiktok",
+      "kind": "data",
+      "summary": "TikTok's 2026 Music Impact Report (with Luminate, 4,000+ US users): 45% of US users discover new music on TikTok, and 94% of songs that entered the Billboard Global 200 in 2025 had a viral TikTok moment first.",
+      "status": "live",
+      "firstSeen": "2026-11-18",
+      "lastVerified": "2026-11-23",
+      "statusChangedAt": null,
+      "source": "https://www.socialmediatoday.com/news/tiktok-releases-2026-music-impact-report/875144/",
+      "note": "US data, from TikTok itself",
+      "supersedes": null
+    }
+  ]
+}

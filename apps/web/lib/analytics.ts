@@ -29,6 +29,7 @@ export function track(eventName: string, eventData?: Record<string, unknown>): v
 // -> checkout -> subscribe.
 export const Events = {
   zipUpload: 'zip-upload',          // { platform }
+  hydrationError: 'hydration-error', // { path, code } React threw away the server HTML (components/HydrationReporter.tsx)
   radarView: 'radar-view',           // { platform, pro, has_previous }
   lockedView: 'locked-view',          // { feature }
   teaserSeen: 'teaser-seen',          // { placement } fired once when an upgrade teaser is actually on screen (locked-view fires on render)
@@ -45,8 +46,6 @@ export const Events = {
   reminderOptin: 'reminder-optin',    // { source }
   revealView: 'reveal-view',          // { count_bucket }
   creatorWaitlist: 'creator-waitlist', // { placement }
-  announceClick: 'announce-click',     // { locale } sitewide "something big is coming" strip -> /waitlist
-  waitlistJoin: 'waitlist-join',       // { mode: signup | account } joined from /waitlist
   keepExportClick: 'keep-export-click', // { placement } signed-out "keep this export" card -> signup
   // Tools. Props are fixed literals or counts only, never usernames.
   verdictShare: 'verdict-share',      // { action: share | save | another, archetype, placement }
@@ -58,6 +57,7 @@ export const Events = {
   wrapCompleted: 'wrap-completed',    // { screens }
   wrapShare: 'wrap-share',            // { action: share | save }
   wrapProTap: 'wrap-pro-tap',         // { what: follows | left, pro }
+  accountType: 'account-type',        // { type: personal | creator | business, niche: fixed niche id | other | none }
 } as const;
 
 // Coarse size for list lengths, so counts never identify anyone.
@@ -114,9 +114,9 @@ type FunnelEventMap = {
   'Large File Warning': { size: SizeBucket; device: 'mobile' | 'desktop' };
   'Large File Choice': { choice: 'continue' | 'smaller_export' | 'cancel' };
   'Export Warning Shown': { reason: DeltaReason | 'multiple' };
-  'Export Warning Choice': { choice: 're_export' | 'new_account' | 'proceed_anyway' };
+  'Export Warning Choice': { choice: 're_export' | 'new_account' | 'proceed_anyway' | 'sample' };
   'Snapshot Saved': { storage: 'local' | 'cloud' };
-  'Upgrade CTA Clicked': { placement: 'results' | 'pricing' | 'reveal' | 'diff' | 'home' };
+  'Upgrade CTA Clicked': { placement: 'results' | 'pricing' | 'reveal' | 'diff' | 'home' | 'studio' };
 };
 
 export function trackFunnel<E extends keyof FunnelEventMap>(

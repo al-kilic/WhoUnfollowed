@@ -20,28 +20,6 @@ export interface ResultsContent {
   tutorialLabels: { featureTour: string; skipTour: string; next: string; gotIt: string };
   // One line under the headline for free users: this page is today, the next export shows who left.
   todayHint: { text: string; link: string };
-  radarTeaser: {
-    eyebrow: string;
-    headline: () => string;
-    body: string;
-    checks: string[];
-    // Entries of `checks` that only apply to Instagram (hidden for Threads).
-    instagramOnlyChecks: string[];
-    ctaPrimary: string;
-    ctaSecondary: string;
-    previewLabel: string;
-    followBackRate: string;
-    mutualsLabel: (n: string) => string;
-    dontFollowBackLabel: (n: string) => string;
-    today: string;
-    nextExport: string;
-    longNonFollowersLabel: string;
-    oldRequestsLabel: string;
-  };
-  radarPulse: {
-    prefix: string;
-    linkText: string;
-  };
 }
 
 const EN: ResultsContent = {
@@ -90,34 +68,6 @@ const EN: ResultsContent = {
   todayHint: {
     text: "This is today's snapshot, so it shows who doesn't follow you back, not who unfollowed you. Upload your next export in a few weeks to see who left.",
     link: 'How that works',
-  },
-  radarTeaser: {
-    eyebrow: 'Who unfollowed you',
-    headline: () => "Today's list can't show who unfollowed you. Your next export can.",
-    body: 'Upload a new export in a few weeks and we compare it with this one. Free shows how many people left. Pro shows every name and date, keeps every export, and adds Radar: ghost followers, old requests and your follower trend.',
-    checks: [
-      'Compare any two snapshots',
-      'Follower growth chart',
-      'Ghost-follower detection',
-      'Pending requests, sorted by wait time',
-      'Who you recently unfollowed',
-      'How long a non-follower has kept you waiting',
-    ],
-    instagramOnlyChecks: ['Pending requests, sorted by wait time'],
-    ctaPrimary: 'See who unfollows you next',
-    ctaSecondary: 'Preview Radar, no account needed →',
-    previewLabel: 'your Radar preview · today',
-    followBackRate: 'of who you follow, follows back',
-    mutualsLabel: (n) => `${n} mutuals`,
-    dontFollowBackLabel: (n) => `${n} don't follow back`,
-    today: 'today',
-    nextExport: 'your next export plots here',
-    longNonFollowersLabel: "you've followed 3+ years, never followed back",
-    oldRequestsLabel: 'follow requests waiting 6+ months',
-  },
-  radarPulse: {
-    prefix: 'See your summary, verdict and fixes in',
-    linkText: 'Radar ↗',
   },
 };
 
@@ -168,34 +118,6 @@ const ES: ResultsContent = {
     text: 'Esto es un snapshot de hoy: muestra quién no te sigue de vuelta, no quién te dejó de seguir. Sube tu próxima exportación en unas semanas para ver quién se fue.',
     link: 'Cómo funciona',
   },
-  radarTeaser: {
-    eyebrow: 'Quién te dejó de seguir',
-    headline: () => 'La lista de hoy no puede mostrar quién te dejó de seguir. Tu próxima exportación sí.',
-    body: 'Sube una nueva exportación en unas semanas y la comparamos con esta. Gratis ves cuántas personas se fueron. Pro muestra cada nombre y fecha, guarda cada exportación y suma Radar: seguidores fantasma, solicitudes viejas y la tendencia de tus seguidores.',
-    checks: [
-      'Compara dos snapshots cualesquiera',
-      'Gráfico de crecimiento de seguidores',
-      'Detección de seguidores fantasma',
-      'Solicitudes pendientes, ordenadas por tiempo de espera',
-      'A quién dejaste de seguir recientemente',
-      'Cuánto tiempo te ha hecho esperar un no seguidor',
-    ],
-    instagramOnlyChecks: ['Solicitudes pendientes, ordenadas por tiempo de espera'],
-    ctaPrimary: 'Ver quién te deja de seguir',
-    ctaSecondary: 'Prueba Radar, sin necesidad de cuenta →',
-    previewLabel: 'tu vista previa de Radar · hoy',
-    followBackRate: 'de a quienes sigues, te siguen de vuelta',
-    mutualsLabel: (n) => `${n} mutuos`,
-    dontFollowBackLabel: (n) => `${n} no te siguen de vuelta`,
-    today: 'hoy',
-    nextExport: 'tu próxima exportación se grafica aquí',
-    longNonFollowersLabel: 'sigues hace 3+ años y nunca te siguieron',
-    oldRequestsLabel: 'solicitudes esperando 6+ meses',
-  },
-  radarPulse: {
-    prefix: 'Mira tu resumen, veredicto y qué arreglar en',
-    linkText: 'Radar ↗',
-  },
 };
 
 const PT: ResultsContent = {
@@ -244,34 +166,6 @@ const PT: ResultsContent = {
   todayHint: {
     text: 'Isto é um snapshot de hoje: mostra quem não te segue de volta, não quem deixou de te seguir. Envie sua próxima exportação daqui a algumas semanas para ver quem saiu.',
     link: 'Como funciona',
-  },
-  radarTeaser: {
-    eyebrow: 'Quem deixou de te seguir',
-    headline: () => 'A lista de hoje não mostra quem deixou de te seguir. Sua próxima exportação mostra.',
-    body: 'Envie uma nova exportação daqui a algumas semanas e a gente compara com esta. No grátis você vê quantas pessoas saíram. O Pro mostra cada nome e data, guarda cada exportação e inclui o Radar: seguidores fantasmas, pedidos antigos e a tendência dos seus seguidores.',
-    checks: [
-      'Compare dois snapshots quaisquer',
-      'Gráfico de crescimento de seguidores',
-      'Detecção de seguidores fantasmas',
-      'Solicitações pendentes, ordenadas por tempo de espera',
-      'Quem você deixou de seguir recentemente',
-      'Há quanto tempo um não seguidor te faz esperar',
-    ],
-    instagramOnlyChecks: ['Solicitações pendentes, ordenadas por tempo de espera'],
-    ctaPrimary: 'Ver quem deixa de te seguir',
-    ctaSecondary: 'Experimente o Radar, sem precisar de conta →',
-    previewLabel: 'sua prévia do Radar · hoje',
-    followBackRate: 'de quem você segue, te segue de volta',
-    mutualsLabel: (n) => `${n} mútuos`,
-    dontFollowBackLabel: (n) => `${n} não te seguem de volta`,
-    today: 'hoje',
-    nextExport: 'sua próxima exportação aparece aqui',
-    longNonFollowersLabel: 'você segue há 3+ anos e nunca te seguiram',
-    oldRequestsLabel: 'pedidos esperando há 6+ meses',
-  },
-  radarPulse: {
-    prefix: 'Veja seu resumo, veredito e o que arrumar no',
-    linkText: 'Radar ↗',
   },
 };
 

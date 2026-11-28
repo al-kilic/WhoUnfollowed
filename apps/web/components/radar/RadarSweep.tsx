@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { runHealthChecks, type HealthFinding, type ParsedSnapshot } from '@ig-tracker/core';
 import { T } from '@/components/landing/tokens';
+import { IMAGE_MONO } from '@/components/landing/imageFonts';
 import { lockedContentStyle } from '@/components/ProLockOverlay';
 import type { AppLocale } from '@/i18n/routing';
 import { PLATFORM_NAME, snapshotPlatform } from '@/lib/platform';
@@ -48,7 +49,7 @@ function Scope({ findings, active, setActive, aria }: { findings: HealthFinding[
           <g key={f.id} onMouseEnter={() => setActive(i)} onMouseLeave={() => setActive(null)} style={{ cursor: 'default' }}>
             <circle cx={x} cy={y} r={on ? 20 : 15} fill={tone(f.impact)} opacity={0.18} className={i === 0 ? 'wu-ping' : undefined} style={{ transformOrigin: `${x}px ${y}px` }} />
             <circle cx={x} cy={y} r={on ? 13 : 11} fill={tone(f.impact)} stroke="var(--t-bg)" strokeWidth={2} style={{ transition: 'r 0.2s' }} />
-            <text x={x} y={y + 3.8} textAnchor="middle" fontSize={11} fontFamily="'DM Mono', monospace" fontWeight={600} fill="#F4F0E8">{i + 1}</text>
+            <text x={x} y={y + 3.8} textAnchor="middle" fontSize={11} fontFamily={IMAGE_MONO} fontWeight={600} fill="#F4F0E8">{i + 1}</text>
           </g>
         );
       })}

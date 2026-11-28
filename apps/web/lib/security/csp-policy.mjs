@@ -13,8 +13,8 @@ const ANALYTICS = 'https://analytics.whounfollowed.co';
 export const CSP_DIRECTIVES = {
   'default-src': ["'self'"],
   'script-src': ["'self'", "'unsafe-inline'", ANALYTICS],
-  'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://api.fontshare.com'],
-  'font-src': ["'self'", 'data:', 'https://fonts.gstatic.com', 'https://api.fontshare.com', 'https://cdn.fontshare.com'],
+  'style-src': ["'self'", "'unsafe-inline'", 'https://api.fontshare.com'],
+  'font-src': ["'self'", 'data:', 'https://api.fontshare.com', 'https://cdn.fontshare.com'],
   'img-src': ["'self'", 'data:', 'blob:'],
   'media-src': ["'self'", 'blob:'],
   'connect-src': ["'self'", ANALYTICS],

@@ -113,7 +113,7 @@ export function ChangePassword({ c }: { c: AccountContent['changePassword'] }) {
         disabled={pending || !current || !next || !confirm}
         style={{
           alignSelf: 'flex-start', padding: '10px 18px', borderRadius: 10, fontSize: 14, fontWeight: 600,
-          color: T.cream, background: T.teal, border: '1px solid rgba(2,136,143,0.5)',
+          color: T.onTeal, background: T.teal, border: '1px solid rgba(2,136,143,0.5)',
           cursor: pending ? 'default' : 'pointer', opacity: pending || !current || !next || !confirm ? 0.6 : 1,
         }}
       >

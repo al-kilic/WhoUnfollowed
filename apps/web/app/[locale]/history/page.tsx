@@ -4,10 +4,8 @@ import { hasLocale } from 'next-intl';
 import { validateRequest } from '@/lib/auth/session';
 import { isProUser, getSubscriptionStatus } from '@/lib/flags';
 import { isUserVerified } from '@/lib/auth/verification';
-import { db } from '@/lib/db/index';
-import { profiles } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
 import { HistoryClient } from './HistoryClient';
+import { getGracePeriodEnd } from '@/lib/gracePeriod';
 import type { Metadata } from 'next';
 import { AnalyticsEvent } from '@/components/AnalyticsEvent';
 import { routing, type AppLocale } from '@/i18n/routing';
@@ -44,14 +42,7 @@ export default async function HistoryPage({ params, searchParams }: PageProps) {
     getSubscriptionStatus(),
   ]);
 
-  let gracePeriodEndsAt: string | null = null;
-  if (status === 'grace' && user) {
-    const profile = await db.query.profiles.findFirst({
-      where: eq(profiles.userId, user.id),
-      columns: { gracePeriodEndsAt: true },
-    });
-    gracePeriodEndsAt = profile?.gracePeriodEndsAt?.toISOString() ?? null;
-  }
+  const gracePeriodEndsAt = await getGracePeriodEnd(user?.id ?? null, status);
 
   return (
     <>

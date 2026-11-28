@@ -44,7 +44,7 @@ export function CombinedExportNotice({ content, onContinue }: Props) {
           style={{
             width: '100%', padding: '12px 20px', borderRadius: 12, cursor: 'pointer',
             fontSize: 14, fontWeight: 600, fontFamily: T.sans,
-            color: T.cream, background: T.teal, border: '1px solid rgba(2,136,143,0.5)',
+            color: T.onTeal, background: T.teal, border: '1px solid rgba(2,136,143,0.5)',
           }}
         >
           {content.continueCta}

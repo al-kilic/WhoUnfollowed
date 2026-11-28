@@ -132,7 +132,7 @@ export function EmailCaptureModal({ csvFilename, onClose, onDownload }: Props) {
             width: '100%', padding: '12px 0', borderRadius: 10,
             cursor: busy || !canDownload ? 'not-allowed' : 'pointer',
             background: canDownload ? T.teal : 'rgba(2,136,143,0.15)',
-            border: 'none', color: canDownload ? T.cream : T.inkMute,
+            border: 'none', color: canDownload ? T.onTeal : T.inkMute,
             fontSize: 13, fontWeight: 600, fontFamily: T.sans, transition: 'all 0.15s',
           }}
         >

@@ -116,6 +116,20 @@ export type FeedbackInput = z.infer<typeof feedbackSchema>;
 // /contact page's form, or the lightweight floating widget on the homepage.
 export const contactSources = ['contact_page', 'homepage_widget'] as const;
 
+// The homepage feedback widget: a type, the note, and optional extras. The
+// founder gets it in English (fixed labels; the note translated server-side).
+export const siteFeedbackTypes = ['bug', 'idea', 'confusing', 'missing', 'praise'] as const;
+export const siteFeedbackSchema = z.object({
+  type: z.enum(siteFeedbackTypes),
+  message: z.string().trim().min(1).max(2000),
+  rating: z.number().int().min(1).max(5).optional(),
+  where: z.string().trim().max(200).optional(),
+  email: z.string().trim().toLowerCase().email().max(320).optional(),
+  locale: z.enum(['en', 'es', 'pt']),
+});
+export type SiteFeedbackType = (typeof siteFeedbackTypes)[number];
+export type SiteFeedbackInput = z.infer<typeof siteFeedbackSchema>;
+
 export const contactMessageSchema = z.object({
   name: z.string().trim().max(120).optional(),
   // Optional here: the homepage widget allows an anonymous note with no

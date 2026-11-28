@@ -107,7 +107,7 @@ export function DonateWidget() {
           cursor: pending ? 'default' : 'pointer',
           opacity: pending ? 0.6 : 1,
           background: T.teal,
-          color: T.cream,
+          color: T.onTeal,
         }}
       >
         {pending ? t('donateRedirecting') : t('donateButton')}

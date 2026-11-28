@@ -18,6 +18,8 @@ export const T = {
   terra:     'var(--t-terra)',
   terraText: 'var(--t-terraText)',
   cream:     'var(--t-cream)',
+  // Text on a teal or terra fill: cream in light, near-black in dark.
+  onTeal:    'var(--t-onTeal)',
 
   // Derived surface / border
   navBg:     'var(--t-navBg)',
@@ -33,8 +35,9 @@ export const T = {
   toggleActiveBg:   'var(--t-toggleActiveBg)',
   toggleActiveText: 'var(--t-toggleActiveText)',
 
-  // Fonts (static)
-  serif: "'Instrument Serif', Georgia, serif",
-  sans:  "'DM Sans', system-ui, sans-serif",
-  mono:  "'DM Mono', 'Fira Mono', monospace",
+  // Fonts. CSS variables with the site's fonts as fallback, so Studio (/app)
+  // can switch shared components to its own font (see app/[locale]/app/studio.css).
+  serif: "var(--t-font-serif, 'Instrument Serif', Georgia, serif)",
+  sans:  "var(--t-font-sans, 'DM Sans', system-ui, sans-serif)",
+  mono:  "var(--t-font-mono, 'DM Mono', 'Fira Mono', monospace)",
 } as const;

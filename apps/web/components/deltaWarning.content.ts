@@ -39,6 +39,10 @@ export interface DeltaWarningContent {
     body: string[];
     notIncremental: string;
     newAccount: string;
+    // The redo is quicker than people expect; said under the steps.
+    fast: string[];
+    // A way to stay while the new export is on its way.
+    sample: string;
   };
 }
 
@@ -74,6 +78,8 @@ export const DELTA_WARNING_EN: DeltaWarningContent = {
     body: ['This export only covers ', 'recent follows', '. Everyone who followed you before the date range is missing from the file, so they would wrongly show up as not following you back.'],
     notIncremental: 'My export is complete',
     newAccount: 'My account is less than a year old. This is everyone.',
+    fast: ['Faster this time: tick only ', 'Followers and following', '. That export is small and usually ready within minutes.'],
+    sample: 'Look around with a sample account while you wait',
   },
 };
 
@@ -109,6 +115,8 @@ export const DELTA_WARNING_ES: DeltaWarningContent = {
     body: ['Este export solo cubre ', 'seguimientos recientes', '. Quien te siguió antes del rango de fechas no está en el archivo, así que aparecería por error como alguien que no te sigue de vuelta.'],
     notIncremental: 'Mi export está completo',
     newAccount: 'Mi cuenta tiene menos de un año. Esto es todo.',
+    fast: ['Esta vez es más rápido: marca solo ', 'Seguidores y seguidos', '. Ese export es pequeño y suele estar listo en minutos.'],
+    sample: 'Explora con una cuenta de ejemplo mientras esperas',
   },
 };
 
@@ -144,5 +152,7 @@ export const DELTA_WARNING_PT: DeltaWarningContent = {
     body: ['Este export só cobre ', 'seguidas recentes', '. Quem seguiu você antes do período não está no arquivo, então apareceria por engano como alguém que não te segue de volta.'],
     notIncremental: 'Meu export está completo',
     newAccount: 'Minha conta tem menos de um ano. Isso é tudo.',
+    fast: ['Desta vez é mais rápido: marque só ', 'Seguidores e seguindo', '. Esse export é pequeno e costuma ficar pronto em minutos.'],
+    sample: 'Explore com uma conta de exemplo enquanto espera',
   },
 };

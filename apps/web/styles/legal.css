@@ -1,0 +1,48 @@
+/* Legal and policy pages (privacy, terms, refund, cookies, accessibility) in
+   the new look. Same reading column and type scale as blog articles
+   (styles/blog.css), scoped to .lg inside <StudioFrame> so it reads the
+   studio tokens in light and dark. Presentation only. */
+
+.studio .lg { --read: color-mix(in srgb, var(--ink) 84%, var(--bg)); background: var(--bg); min-height: 100vh; }
+.lg-main { max-width: 720px; margin: 0 auto; padding: 48px 16px 88px; }
+@media (min-width: 640px) { .lg-main { padding: 64px 24px 96px; } }
+
+.lg-eyebrow { font: 500 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 0 0 12px; }
+.lg-title { font-size: clamp(30px, 5vw, 44px); line-height: 1.1; font-weight: 600; letter-spacing: -.03em; color: var(--ink); margin: 0 0 14px; text-wrap: balance; }
+.lg-dates { font-size: 13.5px; color: var(--faint); margin: 0; }
+
+.lg-box { margin-top: 24px; padding: 16px 20px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); font-size: 14.5px; line-height: 1.65; color: var(--mute); }
+.lg-box p { margin: 0; }
+.lg-box strong { color: var(--ink); font-weight: 600; }
+.lg-box.acc { background: var(--acc-soft); border-color: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--ink); font-size: 16px; line-height: 1.6; }
+.lg-box .lg-eyebrow { margin-bottom: 8px; }
+
+/* On this page */
+.lg-toc { margin-top: 28px; padding: 18px 20px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
+.lg-toc ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px 24px; }
+@media (min-width: 640px) { .lg-toc ul { grid-template-columns: 1fr 1fr; } }
+.lg-toc li { font-size: 14.5px; line-height: 1.45; }
+.lg-toc a { color: var(--ink); }
+.lg-toc a:hover { color: var(--accent); }
+
+/* Body */
+.lg-prose { border-top: 1px solid var(--line); margin-top: 32px; padding-top: 8px; font-size: 17px; line-height: 1.75; color: var(--read); }
+.lg-sec h2 { font-size: clamp(21px, 3vw, 25px); line-height: 1.25; font-weight: 600; letter-spacing: -.02em; color: var(--ink); margin: 40px 0 12px; scroll-margin-top: 88px; }
+.lg-sec p { margin: 0 0 18px; text-wrap: pretty; }
+.lg-sec > div > :last-child { margin-bottom: 0; }
+.lg-prose a { color: var(--accent); font-weight: 500; text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--accent) 35%, transparent); text-underline-offset: 3px; overflow-wrap: anywhere; }
+.lg-prose a:hover { text-decoration-color: var(--accent); }
+.lg-prose strong { color: var(--ink); font-weight: 600; }
+.lg-list { list-style: none; padding: 0; margin: 0 0 18px; display: flex; flex-direction: column; gap: 10px; }
+.lg-list li { display: flex; align-items: flex-start; gap: 12px; }
+.lg-list li::before { content: ''; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-top: 12px; }
+.lg-small { font-size: 14.5px; color: var(--mute); }
+
+/* "We never collect" rows */
+.lg-never { display: flex; flex-direction: column; gap: 8px; margin: 4px 0 0; padding: 0; list-style: none; }
+.lg-never li { display: flex; align-items: flex-start; gap: 12px; padding: 11px 14px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); font-size: 15.5px; line-height: 1.55; color: var(--ink); }
+.lg-never b { flex: none; font: 600 11.5px/1.9 var(--mono); letter-spacing: .06em; color: var(--bad); }
+
+.lg-back { margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--line); }
+.lg-back a { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--mute); }
+.lg-back a:hover { color: var(--ink); }
