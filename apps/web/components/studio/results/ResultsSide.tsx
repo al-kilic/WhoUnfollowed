@@ -8,6 +8,7 @@ import { PLATFORM_NAME, snapshotPlatform } from '@/lib/platform';
 import { useStudio } from '../StudioContext';
 import type { RadarData } from '../radar/RadarGate';
 import { getResultsContent } from './results.content';
+import { ResultsFeedback } from './ResultsFeedback';
 
 type Line = [typeof UserMinus, string, (() => void) | null, (string | undefined)?, (() => void)?];
 
@@ -66,6 +67,7 @@ export function ResultsSide({ d, a, cmp, triage, onLeft, onFilter }: {
       {hasProAi
         ? <Link href="/app/today" className="s-card s-readrow"><Sparkles size={14} /><span className="s-grow"><b>{t.read}</b><span className="s-sub-t">{t.readBody}</span></span><ArrowRight size={14} /></Link>
         : <button type="button" className="s-card s-readrow" onClick={() => openUpgrade('coach')}><Sparkles size={14} /><span className="s-grow"><b>{t.read}</b><span className="s-sub-t">{t.readBody}</span></span><span className="s-badge"><Lock size={11} />{c.plan.proAi}</span></button>}
+      <ResultsFeedback />
       <span className="s-sub-t s-row" style={{ gap: 6, fontSize: 12, padding: '0 4px' }}><Lock size={12} />{t.privacy}</span>
     </div>
   );

@@ -74,7 +74,7 @@ export const EN = {
     stayLab: 'Stay consistent', stayH: 'A plan only works if you post. We nudge you.',
     stay: [
       ['Posting-day reminders', 'Your plan nudges you on the days you post.', 'Thu 18:00 · time to post'],
-      ['Goal check-ins', 'An email with your progress toward your goal.', 'Check-in · sample'],
+      ['Goal check-ins', 'An email with your progress toward your goal.', 'On the day you pick'],
       ['Time to check again', 'A reminder to re-export, so you see who left.', 'Free with an account'],
     ],
     cta: 'See Pro AI', ctaNote: 'Writing, checks and plans are built for Instagram posts. Your coach works from your own export.',

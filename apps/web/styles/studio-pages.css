@@ -1214,3 +1214,23 @@ html.dark .studio .s-xnote { --wo: #f0895f; --wo-soft: color-mix(in srgb, #f0895
    (e.g. the platform switcher on Results but not on History), so moving
    between pages of a section never shifts the layout. */
 .studio .s-top { min-height: 40px; }
+
+/* Results: one feedback ask after a real parse (ResultsFeedback.tsx). */
+.s-fb { padding: 14px 16px; display: grid; gap: 10px; }
+.s-fb-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.s-fb-h b { font-weight: 600; font-size: 13.5px; }
+.s-fb-x { display: grid; place-items: center; width: 26px; height: 26px; margin: -4px -6px -4px 0; border: 0; border-radius: 7px; background: none; color: var(--mute); cursor: pointer; }
+.s-fb-x:hover { color: var(--ink); background: var(--sunk); }
+.s-fb-moods { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.s-fb-moods button { height: 40px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); font-size: 20px; line-height: 1; cursor: pointer; transition: transform .15s, border-color .15s, background .15s; }
+.s-fb-moods button:hover { transform: translateY(-1px); border-color: var(--ink); }
+.s-fb-moods button.on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface)); }
+.s-fb-moods button:focus-visible, .s-fb-x:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.s-fb-more { gap: 8px; }
+.s-fb-more > .s-sub-t { font-size: 12.5px; }
+.s-fb-reasons { display: flex; flex-wrap: wrap; gap: 6px; }
+.s-fb-reasons .s-chip2 { height: auto; min-height: 30px; padding: 5px 11px; white-space: normal; text-align: left; line-height: 1.3; }
+.s-fb-c { width: 100%; resize: vertical; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); font: inherit; font-size: 13px; }
+.s-fb-c:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+.s-fb-err { font-size: 12.5px; color: var(--bad); }
+.s-fb-ok { margin: 0; font-size: 13.5px; color: var(--ink); }

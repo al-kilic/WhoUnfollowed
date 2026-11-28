@@ -73,7 +73,7 @@ export const ES: HomeCopy = {
     stayLab: 'Sé constante', stayH: 'Un plan solo funciona si publicas. Te lo recordamos.',
     stay: [
       ['Recordatorios de publicación', 'Tu plan te avisa los días que publicas.', 'jue 18:00 · hora de publicar'],
-      ['Seguimiento de objetivos', 'Un email con tu progreso hacia tu objetivo.', 'Seguimiento · ejemplo'],
+      ['Seguimiento de objetivos', 'Un email con tu progreso hacia tu objetivo.', 'El día que elijas'],
       ['Hora de revisar otra vez', 'Un aviso para exportar de nuevo y ver quién se fue.', 'Gratis con una cuenta'],
     ],
     cta: 'Ver Pro AI', ctaNote: 'Escribir, revisar y planificar están pensados para posts de Instagram. Tu coach trabaja con tu propia exportación.',

@@ -1,17 +1,21 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 // A small fixed "Beta" badge on staging. The middleware sets the readable
 // wu_staging cookie whenever the staging gate is on (a runtime setting), so
 // the badge also appears on pages rendered at build time. NEXT_PUBLIC_STAGING=1
-// forces it on for images built for staging.
+// forces it on for images built for staging. Never on the homepage (/, /es,
+// /pt), which should look exactly like production.
+const HOME = /^\/(?:es|pt)?\/?$/;
 export function BetaBadge() {
+  const path = usePathname();
   const [on, setOn] = useState(process.env.NEXT_PUBLIC_STAGING === '1');
   useEffect(() => {
     try { if (/(?:^|;\s*)wu_staging=1(?:;|$)/.test(document.cookie)) setOn(true); } catch { /* no cookies: no badge */ }
   }, []);
-  if (!on) return null;
+  if (!on || HOME.test(path ?? '')) return null;
   return (
     <span aria-label="Beta test version" style={{
       position: 'fixed', bottom: 14, left: 14, zIndex: 2147483000,

@@ -538,8 +538,8 @@
 .hm .dk{position:relative;width:min(400px,100%);margin-inline:auto;display:grid;gap:14px;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .5s var(--ease);animation:hm-boot 1s cubic-bezier(.2,.8,.15,1) .35s both}
 .hm .dk::before{content:"";position:absolute;inset:-60px -40px;z-index:-1;pointer-events:none;background:radial-gradient(closest-side,color-mix(in oklab,var(--bad) 13%,transparent),transparent 75%)}
 .hm .dk-head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px 12px;padding:14px 16px 14px;border-radius:16px;border:1px solid var(--line2);background:color-mix(in oklab,var(--surface) 80%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-.hm .dk-n{display:flex;align-items:center;gap:12px;min-width:0}
-.hm .dk-cnt{font-family:var(--display);font-weight:800;font-size:40px;line-height:.9;letter-spacing:-.05em;color:var(--bad);min-width:2ch}
+.hm .dk-n{display:flex;align-items:center;gap:14px;min-width:0}
+.hm .dk-cnt{flex:none;font-family:var(--display);font-weight:800;font-size:40px;line-height:.9;letter-spacing:-.04em;padding-right:.08em;color:var(--bad);font-variant-numeric:tabular-nums}
 .hm .dk-cnt.tick{animation:hm-ntick .5s var(--ease)}
 .hm .dk-t{display:grid;gap:2px;min-width:0;font-size:12.5px;color:var(--mute);line-height:1.3}
 .hm .dk-t>b{font-size:14.5px;font-weight:600;color:var(--ink)}
@@ -1328,3 +1328,22 @@ html.light .hm .plans .plan.hl{--surface:#0d1514;--surface2:#16201f;--surface3:#
 @media (prefers-reduced-motion:reduce){.hm .bill::before,.hm .plans .plan{transition:none}}
 
 .hm .pt-tag::first-letter{text-transform:uppercase}
+
+/* ---------- Footer v2 (Nov 2026): one top line, a roomy brand column ----------
+   The brand row and the column headings share a 28px first line, the donate
+   group gets its own two lines instead of squeezing into one, and the link
+   columns keep an even rhythm. */
+.hm .fgrid{grid-template-columns:minmax(300px,1.5fr) repeat(4,minmax(0,1fr));gap:32px 40px;align-items:start}
+.hm .fgrid h4{height:28px;display:flex;align-items:center;margin:0 0 10px}
+.hm .fgrid a.brand{height:28px;align-items:center;gap:10px;font-size:15px;font-weight:600}
+.hm .fgrid a.brand img{border-radius:7px}
+.hm .fgrid > div:not(.fbrand) a{padding:5px 0;line-height:1.35}
+.hm .fbrand p{margin:10px 0 20px;max-width:340px;line-height:1.55}
+.hm .donate{display:grid;grid-template-columns:auto auto minmax(0,120px);justify-content:start;align-items:center;gap:8px;white-space:normal}
+.hm .donate .dh2{grid-column:1/-1;margin:0;font-size:13px}
+.hm .donate .amt{height:32px;padding:0 14px;font-size:12.5px}
+.hm .donate .amt.custom{width:auto;height:32px;padding:0 4px 0 12px}
+.hm .donate .go{width:24px;height:24px}
+.hm .dmsg{margin-top:8px}
+@media (max-width:1100px){.hm .fgrid{grid-template-columns:repeat(4,minmax(0,1fr))}.hm .fbrand{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:40px;align-items:start}.hm .fbrand .brand{grid-column:1}.hm .fbrand p{grid-column:1;margin-bottom:0}.hm .fbrand .donate{grid-column:2;grid-row:1/3}.hm .fbrand .dmsg{grid-column:2}}
+@media (max-width:720px){.hm .fgrid{grid-template-columns:1fr 1fr;gap:28px 24px}.hm .fbrand{display:block}.hm .fbrand p{margin-bottom:20px}}
